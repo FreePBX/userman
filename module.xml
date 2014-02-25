@@ -1,0 +1,27 @@
+<module>
+	<rawname>userman</rawname>
+	<name>User Management</name>
+	<version>2.11.0alpha1</version>
+	<publisher>Schmoozecom.com</publisher>
+	<license>AGPL</license>
+	<repo>standard</repo>
+	<description>
+		This Module manages all FreePBX users excluding Administrators (at this time). 
+		It allows an Administrator to create a User Account that can be used by other applications for login or API purposes.
+		Modules like iSymphony or Rest API or the Upcoming User Control Panel will use this module to manage their users.
+	</description>
+	<changelog>
+		*2.11.0alpha1* Initial Module
+	</changelog>
+	<info></info>
+	<category>Admin</category>
+	<menuitems>
+		<userman>User Management</userman>
+	</menuitems>
+	<depends>
+		<version>2.11</version>
+	</depends>
+	<supported>
+		<version>2.11</version>
+	</supported>
+</module>
