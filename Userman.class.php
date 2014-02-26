@@ -30,7 +30,8 @@ class Userman implements BMO {
 	private $userSettingsTable = 'freepbx_users_settings';
 	public function __construct($freepbx = null) {
 		if ($freepbx == null) {
-			//TODO: 2.11 work here
+			include(dirname(__FILE__).'/DB_Helper.class.php');
+			$this->db = new Database();
 		} else {
 			$this->FreePBX = $freepbx;
 			$this->db = $freepbx->Database;
