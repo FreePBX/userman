@@ -74,8 +74,7 @@ class Userman implements BMO {
 	
 	public function doConfigPageInit($display) {
 		if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'deluser') {
-			$user = $this->getUserByID($_REQUEST['user']);
-			$ret = $this->deleteUser($user['username']);
+			$ret = $this->deleteUserByID($_REQUEST['user']);
 			$this->message = array(
 				'message' => $ret['message'],
 				'type' => $ret['type']
@@ -96,7 +95,7 @@ class Userman implements BMO {
 			if(!empty($username) && empty($prevUsername)) {
 				$ret = $this->addUser($username,$password);
 				if($ret['status']) {
-					$this->setGlobalSetting($ret['id'],'assigned',$_POST['assigned']);
+					$this->setGlobalSettingByID($ret['id'],'assigned',$_POST['assigned']);
 					$this->message = array(
 						'message' => $ret['message'],
 						'type' => $ret['type']
@@ -196,13 +195,13 @@ class Userman implements BMO {
 		if(!$user) {
 			return array("status" => false, "type" => "danger", "message" => _("User Does Not Exist"));
 		}
-		$sql = "DELETE FROM ".$this->userTable." WHERE `username` = :username";
+		$sql = "DELETE FROM ".$this->userTable." WHERE `id` = :id";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':username' => $username));
+		$sth->execute(array(':id' => $id));
 		
 		$sql = "DELETE FROM ".$this->userSettingsTable." WHERE `uid` = :uid";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':uid' => $user['id']));
+		$sth->execute(array(':uid' => $id));
 		return array("status" => true, "type" => "success", "message" => _("User Successfully Deleted"));
 	}
 	
