@@ -64,7 +64,24 @@ class Userman implements BMO {
 	public function writeConfig($conf){
 	}
 	
+	public function setMessage($message,$type='info') {
+		$this->message = array(
+			'message' => $message,
+			'type' => $type
+		);
+		return true;
+	}
+	
 	public function doConfigPageInit($display) {
+		if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'deluser') {
+			$user = $this->getUserByID($_REQUEST['user']);
+			$ret = $this->deleteUser($user['username']);
+			$this->message = array(
+				'message' => $ret['message'],
+				'type' => $ret['type']
+			);
+			return true;
+		}
 		if(isset($_POST['submit'])) {
 			$username = !empty($_POST['username']) ? $_POST['username'] : '';
 			$password = !empty($_POST['password']) ? $_POST['password'] : '';
@@ -78,7 +95,8 @@ class Userman implements BMO {
 			}
 			if(!empty($username) && empty($prevUsername)) {
 				$ret = $this->addUser($username,$password);
-				if(!$ret['status']) {
+				if($ret['status']) {
+					$this->setGlobalSetting($ret['id'],'assigned',$_POST['assigned']);
 					$this->message = array(
 						'message' => $ret['message'],
 						'type' => $ret['type']
@@ -92,7 +110,8 @@ class Userman implements BMO {
 			} elseif(!empty($username) && !empty($prevUsername)) {
 				$password = ($password != '******') ? $password : null;
 				$ret = $this->updateUser($prevUsername, $username, $password);
-				if(!$ret['status']) {
+				if($ret['status']) {
+					$this->setGlobalSettingByID($ret['id'],'assigned',$_POST['assigned']);
 					$this->message = array(
 						'message' => $ret['message'],
 						'type' => $ret['type']
@@ -114,6 +133,7 @@ class Userman implements BMO {
 	}
 	
 	public function myShowPage() {
+		global $module_hook;
 		$category = !empty($_REQUEST['category']) ? $_REQUEST['category'] : '';
 		$html = '';
 		$html .= load_view(dirname(__FILE__).'/views/header.php',array());
@@ -125,10 +145,23 @@ class Userman implements BMO {
 			default:
 				if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'showuser' && !empty($_REQUEST['user'])) {
 					$user = $this->getUserByID($_REQUEST['user']);
+					$assigned = $this->getGlobalSettingByID($_REQUEST['user'],'assigned');
 				} else {
 					$user = array();
+					$assigned = array();
 				}
-				$html .= load_view(dirname(__FILE__).'/views/users.php',array("user" => $user, "message" => $this->message));
+				$fpbxusers = array();
+				$cul = array();
+				foreach(core_users_list() as $list) {
+					$cul[$list[0]] = array(
+						"name" => $list[1],
+						"vmcontext" => $list[2]
+					);
+				}
+				foreach($cul as $e => $u) {
+					$fpbxusers[] = array("ext" => $e, "name" => $u['name'], "selected" => in_array($e,$assigned));
+				}
+				$html .= load_view(dirname(__FILE__).'/views/users.php',array("fpbxusers" => $fpbxusers, "hookHtml" => $module_hook->hookHtml, "user" => $user, "message" => $this->message));
 			break;
 		}
 		$html .= load_view(dirname(__FILE__).'/views/footer.php',array());
@@ -137,7 +170,7 @@ class Userman implements BMO {
 	}
 	
 	public function getAllUsers() {
-		$sql = "SELECT * FROM ".$this->userTable;
+		$sql = "SELECT * FROM ".$this->userTable." order by id";
 		$users = $this->db->query($sql,PDO::FETCH_ASSOC);
 		return $users;
 	}
@@ -158,8 +191,8 @@ class Userman implements BMO {
 		return $user;
 	}
 	
-	public function deleteUser($username) {
-		$user = $this->getUserByUsername($username);
+	public function deleteUserByID($id) {
+		$user = $this->getUserByID($id);
 		if(!$user) {
 			return array("status" => false, "type" => "danger", "message" => _("User Does Not Exist"));
 		}
@@ -174,6 +207,9 @@ class Userman implements BMO {
 	}
 	
 	public function addUser($username, $password, $encrypt = true) {
+		if(empty($username) || empty($password)) {
+			return array("status" => false, "type" => "danger", "message" => _("Username/Password Can Not Be Blank!"));
+		}
 		if($this->getUserByUsername($username)) {
 			return array("status" => false, "type" => "danger", "message" => _("User Already Exists"));
 		}
@@ -181,7 +217,7 @@ class Userman implements BMO {
 		$sth = $this->db->prepare($sql);
 		$password = ($encypt) ? sha1($password) : $password;
 		$sth->execute(array(':username' => $username, ':password' => $password));
-		return array("status" => true, "type" => "success", "message" => _("User Successfully Added"));
+		return array("status" => true, "type" => "success", "message" => _("User Successfully Added"), "id" => $this->db->lastInsertId());
 	}
 	
 	public function updateUser($prevUsername, $username, $password=null) {
@@ -195,7 +231,7 @@ class Userman implements BMO {
 				$sth = $this->db->prepare($sql);
 				$sth->execute(array(':username' => $username, ':prevusername' => $prevUsername));
 			} else {
-				return array("status" => true, "type" => "info", "message" => _("Nothing Changed, Did you mean that?"));
+				return array("status" => true, "type" => "success", "message" => _("Updated User"), "id" => $user['id']);
 			}
 		} else {
 			if(sha1($password) != $user['password']) {
@@ -203,13 +239,13 @@ class Userman implements BMO {
 				$sth = $this->db->prepare($sql);
 				$sth->execute(array(':username' => $username, ':prevusername' => $prevUsername, ':password' => sha1($password)));	
 			} else {
-				return array("status" => true, "type" => "info", "message" => _("Nothing Changed, Did you mean that?"));
+				return array("status" => true, "type" => "success", "message" => _("Updated User"), "id" => $user['id']);
 			}
 		}
 		
 		//if username and/or password changed then clear the UCP sessions for this user (which will force a logout)
 		if($prevUsername != $username || (isset($password) || sha1($password) != $user['password'])) {
-			$this->expireUserSessions($user['id']);
+			//$this->expireUserSessions($user['id']);
 		}
 		
 		return array("status" => true, "type" => "success", "message" => _("User Successfully Updated"));
@@ -230,10 +266,10 @@ class Userman implements BMO {
 		
 	}
 	
-	public function getAllGlobalSettings($username) {
-		$sql = "SELECT a.val, a.type, a.key FROM ".$this->userSettingsTable." a, ".$this->userTable." b WHERE b.id = a.uid AND b.username = :username AND a.module is null";
+	public function getAllGlobalSettingsByID($uid) {
+		$sql = "SELECT a.val, a.type, a.key FROM ".$this->userSettingsTable." a, ".$this->userTable." b WHERE b.id = a.uid AND b.id = :id AND a.module = 'global'";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':username' => $username));
+		$sth->execute(array(':id' => $uid));
 		$result = $sth->fetch(\PDO::FETCH_ASSOC);
 		if($result) {
 			$fout = array();
@@ -245,10 +281,10 @@ class Userman implements BMO {
 		return false;
 	}
 	
-	public function getGlobalSetting($username,$setting) {
-		$sql = "SELECT a.val, a.type FROM ".$this->userSettingsTable." a, ".$this->userTable." b WHERE b.id = a.uid AND b.username = :username AND a.key = :setting AND a.module is null";
+	public function getGlobalSettingByID($uid,$setting) {
+		$sql = "SELECT a.val, a.type FROM ".$this->userSettingsTable." a, ".$this->userTable." b WHERE b.id = a.uid AND b.id = :id AND a.key = :setting AND a.module = 'global'";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':username' => $username, ':setting' => $setting));
+		$sth->execute(array(':id' => $uid, ':setting' => $setting));
 		$result = $sth->fetch(\PDO::FETCH_ASSOC);
 		if($result) {
 			return ($result['type'] == 'json-arr' && $this->isJson($result['val'])) ? json_decode($result['val'],true) : $result['val'];
@@ -256,19 +292,18 @@ class Userman implements BMO {
 		return false;
 	}
 	
-	public function setGlobalSetting($username,$setting,$value) {
+	public function setGlobalSettingByID($uid,$setting,$value) {
 		$type = is_array($value) ? 'json-arr' : null;
 		$value = is_array($value) ? json_encode($value) : $value;
-		$user = $this->getUserByUsername($username);
 		$sql = "REPLACE INTO ".$this->userSettingsTable." (`uid`, `module`, `key`, `val`, `type`) VALUES(:uid, :module, :setting, :value, :type)";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':uid' => $user['id'], ':module' => null, ':setting' => $setting, ':value' => $value, ':type' => $type));	
+		$sth->execute(array(':uid' => $uid, ':module' => 'global', ':setting' => $setting, ':value' => $value, ':type' => $type));	
 	}
 	
-	public function getAllModuleSettings($username,$module) {
-		$sql = "SELECT a.val, a.type, a.key FROM ".$this->userSettingsTable." a, ".$this->userTable." b WHERE b.id = a.uid AND b.username = :username AND a.module = :module";
+	public function getAllModuleSettingsByID($uid,$module) {
+		$sql = "SELECT a.val, a.type, a.key FROM ".$this->userSettingsTable." a, ".$this->userTable." b WHERE b.id = :id AND b.id = a.uid AND a.module = :module";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':username' => $username, ':module' => $module));
+		$sth->execute(array(':id' => $uid, ':module' => $module));
 		$result = $sth->fetch(\PDO::FETCH_ASSOC);
 		if($result) {
 			$fout = array();
@@ -280,19 +315,23 @@ class Userman implements BMO {
 		return false;
 	}
 	
-	public function getModuleSetting($username,$module,$setting) {
-		$sql = "SELECT a.val, a.type FROM ".$this->userSettingsTable." a, ".$this->userTable." b WHERE b.id = a.uid AND b.username = :username AND a.module = :module AND a.key = :setting";
+	public function getModuleSettingByID($uid,$module,$setting) {
+		$sql = "SELECT a.val, a.type FROM ".$this->userSettingsTable." a, ".$this->userTable." b WHERE b.id = :id AND b.id = a.uid AND a.module = :module AND a.key = :setting";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':username' => $username, ':setting' => $setting, ':module' => $module));
+		$sth->execute(array(':id' => $uid, ':setting' => $setting, ':module' => $module));
 		$result = $sth->fetch(\PDO::FETCH_ASSOC);
 		if($result) {
-			return ($result['type'] == 'json-arr' && $this->isJson($result['type'])) ? json_decode($result['type'],true) : $result;
+			return ($result['type'] == 'json-arr' && $this->isJson($result['val'])) ? json_decode($result['val'],true) : $result['val'];
 		}
 		return false;
 	}
 	
-	public function setModuleSetting($username,$module,$setting,$value) {
-		
+	public function setModuleSettingByID($uid,$module,$setting,$value) {
+		$type = is_array($value) ? 'json-arr' : null;
+		$value = is_array($value) ? json_encode($value) : $value;
+		$sql = "REPLACE INTO ".$this->userSettingsTable." (`uid`, `module`, `key`, `val`, `type`) VALUES(:id, :module, :setting, :value, :type)";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':id' => $uid, ':module' => $module, ':setting' => $setting, ':value' => $value, ':type' => $type));	
 	}
 	
 	function isJson($string) {

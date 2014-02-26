@@ -36,17 +36,15 @@ function userman_configpageinit($pagename) {
 		return true; 
 	}
 	
-	if ($tech_hardware != null || $extdisplay != '' || $pagename == 'users') {
+
+	//$currentcomponent->addprocessfunc('userman_configprocess', 1);
+	
+	if ($tech_hardware != null || $extdisplay != '' || $pagename == 'users' || $action == 'add') {
 		// On a 'new' user, 'tech_hardware' is set, and there's no extension. Hook into the page. 
 		if ($tech_hardware != null ) {
 			userman_applyhooks();
-		} elseif ($action=="add") { 
-			// We don't need to display anything on an 'add', but we do need to handle returned data. 
-			if ($_REQUEST['display'] == 'users') {
-				userman_applyhooks();
-			} else {
-				$currentcomponent->addprocessfunc('userman_configprocess', 1);
-			}
+		} elseif ($action == 'add') {
+			$currentcomponent->addprocessfunc('userman_configprocess', 1);
 		} elseif ($extdisplay != '' || $pagename == 'users') { 
 			// We're now viewing an extension, so we need to display _and_ process. 
 			userman_applyhooks();
@@ -81,7 +79,7 @@ function userman_configpageload() {
 		if($extdisplay != '') {
 			$section = _("Users that can access this Extension");
 			foreach($userman->getAllUsers() as $user) {
-				$status = in_array($extdisplay, $userman->getGlobalSetting($user['username'],'assigned'));
+				$status = in_array($extdisplay, $userman->getGlobalSettingByID($user['id'],'assigned'));
 				$currentcomponent->addguielem($section, new gui_checkbox( 'userman|'.$user['id'],$status, $user['username'], _('If checked this User will be able to access this user/extension'),'true','',''));
 			}
 		} else {
@@ -92,9 +90,9 @@ function userman_configpageload() {
 		}
 	} else {
 		foreach($userman->getAllUsers() as $user) {
-			$assigned = $userman->getGlobalSetting($user['username'],'assigned');
+			$assigned = $userman->getGlobalSettingByID($user['id'],'assigned');
 			$assigned = array_diff($assigned, array($extdisplay));
-			$userman->setGlobalSetting($user['username'],'assigned',$assigned);
+			$userman->setGlobalSettingByID($user['id'],'assigned',$assigned);
 		}
 	}
 }
@@ -107,10 +105,12 @@ function userman_configprocess() {
 	switch ($action) {
 		case "add":
 			if(isset($_REQUEST['userman|add']) && !empty($_REQUEST['userman|password'])) {
-				dbug('inside');
-				$ret = $userman->addUser($extension,$_REQUEST['userman|password']);
-				if($ret['status']) {
-					$userman->setGlobalSetting($user['username'],'assigned',array($extension));
+				$extension = isset($_REQUEST['extension']) ? $_REQUEST['extension'] : null;
+				if(!empty($extension)) {
+					$ret = $userman->addUser($extension,$_REQUEST['userman|password']);
+					if($ret['status']) {
+						$userman->setGlobalSettingByID($ret['id'],'assigned',array($extension));
+					}
 				}
 			}
 		break;
@@ -123,7 +123,7 @@ function userman_configprocess() {
 				}
 			}
 			foreach($userman->getAllUsers() as $user) {
-				$assigned = $userman->getGlobalSetting($user['username'],'assigned');
+				$assigned = $userman->getGlobalSettingByID($user['id'],'assigned');
 				if(in_array($user['id'],$users)) {
 					//add
 					if(in_array($extension, $assigned)) {
@@ -137,7 +137,7 @@ function userman_configprocess() {
 					}
 					$assigned = array_diff($assigned, array($extension));
 				}
-				$userman->setGlobalSetting($user['username'],'assigned',$assigned);
+				$userman->setGlobalSettingByID($user['id'],'assigned',$assigned);
 			}
 		break;
 	}

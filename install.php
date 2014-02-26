@@ -9,15 +9,13 @@ $sqls[] = "CREATE TABLE `freepbx_users` (
 )";
 $sqls[] = "CREATE TABLE `freepbx_users_settings` (
   `uid` int(11) NOT NULL,
-  `module` char(65) DEFAULT NULL,
-  `key` char(255) DEFAULT NULL,
-  `val` longblob,
+  `module` char(65) NOT NULL,
+  `key` char(255) NOT NULL,
+  `val` longblob NOT NULL,
   `type` char(16) DEFAULT NULL,
-  `id` char(255) DEFAULT NULL,
-  PRIMARY KEY (`uid`),
-  UNIQUE KEY `index4` (`uid`,`module`,`key`,`id`),
+  UNIQUE KEY `index4` (`uid`,`module`,`key`),
   KEY `index2` (`uid`,`key`),
-  KEY `index6` (`module`,`id`)
+  KEY `index6` (`module`,`uid`)
 )";
 foreach($sqls as $sql) {
 	$result = $db->query($sql);
