@@ -86,6 +86,7 @@ class Userman implements BMO {
 			$username = !empty($_POST['username']) ? $_POST['username'] : '';
 			$password = !empty($_POST['password']) ? $_POST['password'] : '';
 			$prevUsername = !empty($_POST['prevUsername']) ? $_POST['prevUsername'] : '';
+			$assigned = !empty($_POST['assigned']) ? $_POST['assigned'] : array();
 			if(empty($password)) {
 				$this->message = array(
 					'message' => _('The Password Can Not Be blank!'),
@@ -96,7 +97,7 @@ class Userman implements BMO {
 			if(!empty($username) && empty($prevUsername)) {
 				$ret = $this->addUser($username,$password);
 				if($ret['status']) {
-					$this->setGlobalSettingByID($ret['id'],'assigned',$_POST['assigned']);
+					$this->setGlobalSettingByID($ret['id'],'assigned',$assigned);
 					$this->message = array(
 						'message' => $ret['message'],
 						'type' => $ret['type']
@@ -111,7 +112,7 @@ class Userman implements BMO {
 				$password = ($password != '******') ? $password : null;
 				$ret = $this->updateUser($prevUsername, $username, $password);
 				if($ret['status']) {
-					$this->setGlobalSettingByID($ret['id'],'assigned',$_POST['assigned']);
+					$this->setGlobalSettingByID($ret['id'],'assigned',$assigned);
 					$this->message = array(
 						'message' => $ret['message'],
 						'type' => $ret['type']
