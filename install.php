@@ -3,6 +3,7 @@ $sqls = array();
 $sqls[] = "CREATE TABLE `freepbx_users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(255) DEFAULT NULL,
+  `description` varchar(250) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username_UNIQUE` (`username`)
