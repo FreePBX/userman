@@ -25,6 +25,7 @@
  */
 
 class Userman implements BMO {
+    private $registeredFunctions = array();
 	private $message = '';
 	private $userTable = 'freepbx_users';
 	private $userSettingsTable = 'freepbx_users_settings';
@@ -171,6 +172,18 @@ class Userman implements BMO {
 		return $html;
 	}
 
+    private function callHooks($action,$data=null) {
+        foreach($this->registeredFunctions[$action] as $function) {
+            if(function_exists($function) && !empty($data['id'])) {
+                $function($data['id'], $_REQUEST['display'], $data);
+            }
+        }
+    }
+
+    public function registerHook($action,$function) {
+        $this->registeredFunctions[$action][] = $function;
+    }
+
 	public function getAllUsers() {
 		$sql = "SELECT * FROM ".$this->userTable." order by id";
         $sth = $this->db->prepare($sql);
@@ -206,10 +219,12 @@ class Userman implements BMO {
 		$sql = "DELETE FROM ".$this->userSettingsTable." WHERE `uid` = :uid";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':uid' => $id));
+        $this->callHooks('delUser',array("id" => $id));
 		return array("status" => true, "type" => "success", "message" => _("User Successfully Deleted"));
 	}
 
 	public function addUser($username, $password, $description='', $encrypt = true) {
+        global $module_hook;
 		if(empty($username) || empty($password)) {
 			return array("status" => false, "type" => "danger", "message" => _("Username/Password Can Not Be Blank!"));
 		}
@@ -220,7 +235,10 @@ class Userman implements BMO {
 		$sth = $this->db->prepare($sql);
 		$password = ($encrypt) ? sha1($password) : $password;
 		$sth->execute(array(':username' => $username, ':password' => $password, ':description' => $description));
-		return array("status" => true, "type" => "success", "message" => _("User Successfully Added"), "id" => $this->db->lastInsertId());
+
+        $id = $this->db->lastInsertId();
+        $this->callHooks('addUser',array("id" => $id, "username" => $username, "description" => $description));
+		return array("status" => true, "type" => "success", "message" => _("User Successfully Added"), "id" => $id);
 	}
 
 	public function updateUser($prevUsername, $username, $description='', $password=null) {
@@ -234,22 +252,18 @@ class Userman implements BMO {
 				$sth = $this->db->prepare($sql);
 				$sth->execute(array(':username' => $username, ':prevusername' => $prevUsername, ':description' => $description));
 			}
-            return array("status" => true, "type" => "success", "message" => _("Updated User"), "id" => $user['id']);
+            $message = _("Updated User");
 		} else {
 			if(sha1($password) != $user['password']) {
 				$sql = "UPDATE ".$this->userTable." SET `username` = :username, `password` = :password, , `description` = :description WHERE `username` = :prevusername";
 				$sth = $this->db->prepare($sql);
 				$sth->execute(array(':username' => $username, ':prevusername' => $prevUsername, ':description' => $description, ':password' => sha1($password)));
             }
-            return array("status" => true, "type" => "success", "message" => _("Updated User"), "id" => $user['id']);
+            $message = _("Updated User");
 		}
 
-		//if username and/or password changed then clear the UCP sessions for this user (which will force a logout)
-		if($prevUsername != $username || (isset($password) || sha1($password) != $user['password'])) {
-			//$this->expireUserSessions($user['id']);
-		}
-
-		return array("status" => true, "type" => "success", "message" => _("User Successfully Updated"));
+        $this->callHooks('updateUser',array("id" => $user['id'], "prevUsername" => $prevUsername, "username" => $username, "description" => $description));
+		return array("status" => true, "type" => "success", "message" => $message, "id" => $user['id']);
 	}
 
 	public function checkCredentials($username, $password_sha1) {
