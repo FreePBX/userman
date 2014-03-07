@@ -89,6 +89,7 @@ class Userman implements BMO {
             $description = !empty($_POST['description']) ? $_POST['description'] : '';
 			$prevUsername = !empty($_POST['prevUsername']) ? $_POST['prevUsername'] : '';
 			$assigned = !empty($_POST['assigned']) ? $_POST['assigned'] : array();
+            $default = !empty($_POST['defaultextension']) ? $_POST['defaultextension'] : 'none';
 			if(empty($password)) {
 				$this->message = array(
 					'message' => _('The Password Can Not Be blank!'),
@@ -97,7 +98,7 @@ class Userman implements BMO {
 				return false;
 			}
 			if(!empty($username) && empty($prevUsername)) {
-				$ret = $this->addUser($username, $password, $description);
+				$ret = $this->addUser($username, $password, $default, $description);
 				if($ret['status']) {
 					$this->setGlobalSettingByID($ret['id'],'assigned',$assigned);
 					$this->message = array(
@@ -112,7 +113,7 @@ class Userman implements BMO {
 				}
 			} elseif(!empty($username) && !empty($prevUsername)) {
 				$password = ($password != '******') ? $password : null;
-				$ret = $this->updateUser($prevUsername, $username, $description, $password);
+				$ret = $this->updateUser($prevUsername, $username, $default, $description, $password);
 				if($ret['status']) {
 					$this->setGlobalSettingByID($ret['id'],'assigned',$assigned);
 					$this->message = array(
@@ -149,11 +150,15 @@ class Userman implements BMO {
 				if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'showuser' && !empty($_REQUEST['user'])) {
 					$user = $this->getUserByID($_REQUEST['user']);
 					$assigned = $this->getGlobalSettingByID($_REQUEST['user'],'assigned');
+                    $assigned = !(empty($assigned)) ? $assigned : array();
+                    $default = $user['default_extension'];
 				} else {
 					$user = array();
 					$assigned = array();
+                    $default = null;
 				}
 				$fpbxusers = array();
+                $dfpbxusers = array();
 				$cul = array();
 				foreach(core_users_list() as $list) {
 					$cul[$list[0]] = array(
@@ -164,13 +169,45 @@ class Userman implements BMO {
 				foreach($cul as $e => $u) {
 					$fpbxusers[] = array("ext" => $e, "name" => $u['name'], "selected" => in_array($e,$assigned));
 				}
-				$html .= load_view(dirname(__FILE__).'/views/users.php',array("fpbxusers" => $fpbxusers, "hookHtml" => $module_hook->hookHtml, "user" => $user, "message" => $this->message));
+
+                $iuext = $this->getAllInUseExtensions();
+                $dfpbxusers[] = array("ext" => 'none', "name" => 'none', "selected" => false);
+                foreach($cul as $e => $u) {
+                    if($e != $default && in_array($e,$iuext)) {
+                        continue;
+                    }
+                    $dfpbxusers[] = array("ext" => $e, "name" => $u['name'], "selected" => ($e == $default));
+                }
+				$html .= load_view(dirname(__FILE__).'/views/users.php',array("dfpbxusers" => $dfpbxusers, "fpbxusers" => $fpbxusers, "hookHtml" => $module_hook->hookHtml, "user" => $user, "message" => $this->message));
 			break;
 		}
 		$html .= load_view(dirname(__FILE__).'/views/footer.php',array());
 
 		return $html;
 	}
+
+    public function getUserByDefaultExtension($extension) {
+        $sql = "SELECT * FROM ".$this->userTable." WHERE default_extension = :extension";
+        $sth = $this->db->prepare($sql);
+        $sth->execute(array(':extension' => $extension));
+        $user = $sth->fetch(PDO::FETCH_ASSOC);
+        return $user;
+    }
+
+    private function getAllInUseExtensions() {
+        $sql = 'SELECT default_extension FROM '.$this->userTable;
+        $sth = $this->db->prepare($sql);
+        $sth->execute();
+        $devices = $sth->fetchAll(PDO::FETCH_ASSOC);
+        $used = array();
+        foreach($devices as $device) {
+            if($device['default_extension'] == 'none') {
+                continue;
+            }
+            $used[] = $device['default_extension'];
+        }
+        return $used;
+    }
 
     private function callHooks($action,$data=null) {
         foreach($this->registeredFunctions[$action] as $function) {
@@ -223,7 +260,7 @@ class Userman implements BMO {
 		return array("status" => true, "type" => "success", "message" => _("User Successfully Deleted"));
 	}
 
-	public function addUser($username, $password, $description='', $encrypt = true) {
+	public function addUser($username, $password, $default='none', $description='', $encrypt = true) {
         global $module_hook;
 		if(empty($username) || empty($password)) {
 			return array("status" => false, "type" => "danger", "message" => _("Username/Password Can Not Be Blank!"));
@@ -231,33 +268,33 @@ class Userman implements BMO {
 		if($this->getUserByUsername($username)) {
 			return array("status" => false, "type" => "danger", "message" => _("User Already Exists"));
 		}
-		$sql = "INSERT INTO ".$this->userTable." (`username`,`password`,`description`) VALUES (:username,:password,:description)";
+		$sql = "INSERT INTO ".$this->userTable." (`username`,`password`,`description`,`default_extension,) VALUES (:username,:password,:description,:default_extension)";
 		$sth = $this->db->prepare($sql);
 		$password = ($encrypt) ? sha1($password) : $password;
-		$sth->execute(array(':username' => $username, ':password' => $password, ':description' => $description));
+		$sth->execute(array(':username' => $username, ':password' => $password, ':description' => $description, ':default_extension' => $default));
 
         $id = $this->db->lastInsertId();
         $this->callHooks('addUser',array("id" => $id, "username" => $username, "description" => $description));
 		return array("status" => true, "type" => "success", "message" => _("User Successfully Added"), "id" => $id);
 	}
 
-	public function updateUser($prevUsername, $username, $description='', $password=null) {
+	public function updateUser($prevUsername, $username, $default='none', $description='', $password=null) {
 		$user = $this->getUserByUsername($prevUsername);
 		if(!$user || empty($user)) {
 			return array("status" => false, "type" => "danger", "message" => _("User Does Not Exist"));
 		}
 		if(!isset($password)) {
-			if(($prevUsername != $username) || ($user['description'] != $description)) {
-				$sql = "UPDATE ".$this->userTable." SET `username` = :username, `description` = :description WHERE `username` = :prevusername";
+			if(($prevUsername != $username) || ($user['description'] != $description) || $user['default_extension'] != $default) {
+				$sql = "UPDATE ".$this->userTable." SET `username` = :username, `description` = :description, `default_extension` = :default_extension WHERE `username` = :prevusername";
 				$sth = $this->db->prepare($sql);
-				$sth->execute(array(':username' => $username, ':prevusername' => $prevUsername, ':description' => $description));
+				$sth->execute(array(':username' => $username, ':prevusername' => $prevUsername, ':description' => $description, ':default_extension' => $default));
 			}
             $message = _("Updated User");
 		} else {
 			if(sha1($password) != $user['password']) {
-				$sql = "UPDATE ".$this->userTable." SET `username` = :username, `password` = :password, , `description` = :description WHERE `username` = :prevusername";
+				$sql = "UPDATE ".$this->userTable." SET `username` = :username, `password` = :password, , `description` = :description, `default_extension` = :default_extension WHERE `username` = :prevusername";
 				$sth = $this->db->prepare($sql);
-				$sth->execute(array(':username' => $username, ':prevusername' => $prevUsername, ':description' => $description, ':password' => sha1($password)));
+				$sth->execute(array(':username' => $username, ':prevusername' => $prevUsername, ':description' => $description, ':password' => sha1($password), ':default_extension' => $default));
             }
             $message = _("Updated User");
 		}

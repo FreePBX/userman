@@ -31,7 +31,17 @@
         	<td><input type="password" name="password" maxlength="150" value="<?php echo !empty($user['password']) ? '******' : ''; ?>"></td>
 		</tr>
 		<tr class="userman">
-    		<td><a href="#" class="info"><?php echo _("Assigned Extensions")?>:<span><?php echo _("")?></span></a></td>
+			<td><a href="#" class="info"><?php echo _("Default Assigned Extension")?>:<span><?php echo _("")?></span></a></td>
+			<td>
+				<select name="defaultextension">
+					<?php foreach($dfpbxusers as $dfpbxuser) {?>
+						<option value="<?php echo $dfpbxuser['ext']?>" <?php echo $dfpbxuser['selected'] ? 'selected' : '' ?>><?php echo $dfpbxuser['name']?> &lt;<?php echo $dfpbxuser['ext']?>&gt;</option>
+					<?php } ?>
+				</select>
+			</td>
+		</tr>
+		<tr class="userman">
+    		<td><a href="#" class="info"><?php echo _("Additional Assigned Extensions")?>:<span><?php echo _("")?></span></a></td>
 			<td>
 				<div class="extensions-list">
 				<?php foreach($fpbxusers as $fpbxuser) {?>

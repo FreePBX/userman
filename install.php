@@ -5,6 +5,7 @@ $sqls[] = "CREATE TABLE `freepbx_users` (
   `username` varchar(255) DEFAULT NULL,
   `description` varchar(250) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
+  `default_extension` varchar(45) NOT NULL DEFAULT 'none',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username_UNIQUE` (`username`)
 )";
@@ -23,4 +24,10 @@ foreach($sqls as $sql) {
 	if (DB::IsError($result)) {
 		die_freepbx($result->getDebugInfo());
 	}
+}
+
+if (!$db->getAll('SHOW COLUMNS FROM `freepbx_users` WHERE FIELD = "default_extension"')) {
+	out("Adding txgain and rxgain column to digital table");
+    $sql = "ALTER TABLE `freepbx_users` ADD COLUMN `default_extension` VARCHAR(45) NOT NULL DEFAULT 'none' AFTER `password`";
+    $result = $db->query($sql);
 }
