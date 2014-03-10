@@ -41,5 +41,7 @@ if (!$db->getAll('SHOW COLUMNS FROM `freepbx_users` WHERE FIELD = "default_exten
 }
 
 if (!$db->getAll('SHOW COLUMNS FROM `freepbx_users` WHERE FIELD = "fname"')) {
+    out("Adding additional fields");
     $sql = "ALTER TABLE `freepbx_users` ADD COLUMN `fname` VARCHAR(100) NULL DEFAULT NULL AFTER `default_extension`, ADD COLUMN `lname` VARCHAR(100) NULL DEFAULT NULL AFTER `fname`, ADD COLUMN `title` VARCHAR(100) NULL DEFAULT NULL AFTER `lname`, ADD COLUMN `department` VARCHAR(100) NULL DEFAULT NULL AFTER `title`, ADD COLUMN `email` VARCHAR(100) NULL DEFAULT NULL AFTER `department`, ADD COLUMN `cell` VARCHAR(100) NULL DEFAULT NULL AFTER `email`, ADD COLUMN `work` VARCHAR(100) NULL DEFAULT NULL AFTER `cell`, ADD COLUMN `home` VARCHAR(100) NULL DEFAULT NULL AFTER `work`";
+    $result = $db->query($sql);
 }
