@@ -292,7 +292,7 @@ class Userman implements BMO {
             $message = _("Updated User");
 		} else {
 			if(sha1($password) != $user['password']) {
-				$sql = "UPDATE ".$this->userTable." SET `username` = :username, `password` = :password, , `description` = :description, `default_extension` = :default_extension WHERE `username` = :prevusername";
+				$sql = "UPDATE ".$this->userTable." SET `username` = :username, `password` = :password, `description` = :description, `default_extension` = :default_extension WHERE `username` = :prevusername";
 				$sth = $this->db->prepare($sql);
 				$sth->execute(array(':username' => $username, ':prevusername' => $prevUsername, ':description' => $description, ':password' => sha1($password), ':default_extension' => $default));
             }
