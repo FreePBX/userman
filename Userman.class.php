@@ -82,6 +82,7 @@ class Userman implements BMO {
 				'type' => $ret['type']
 			);
 			return true;
+            //fw1uz-hqX
 		}
 		if(isset($_POST['submit'])) {
 			$username = !empty($_POST['username']) ? $_POST['username'] : '';
@@ -89,6 +90,15 @@ class Userman implements BMO {
             $description = !empty($_POST['description']) ? $_POST['description'] : '';
 			$prevUsername = !empty($_POST['prevUsername']) ? $_POST['prevUsername'] : '';
 			$assigned = !empty($_POST['assigned']) ? $_POST['assigned'] : array();
+            $extraData = array(
+                'fname' => isset($_POST['fname']) ? $_POST['fname'] : '',
+                'lname' => isset($_POST['lname']) ? $_POST['lname'] : '',
+                'title' => isset($_POST['title']) ? $_POST['title'] : '',
+                'email' => isset($_POST['email']) ? $_POST['email'] : '',
+                'cell' => isset($_POST['cell']) ? $_POST['cell'] : '',
+                'work' => isset($_POST['work']) ? $_POST['work'] : '',
+                'home' => isset($_POST['home']) ? $_POST['home'] : ''
+             );
             $default = !empty($_POST['defaultextension']) ? $_POST['defaultextension'] : 'none';
 			if(empty($password)) {
 				$this->message = array(
@@ -100,7 +110,7 @@ class Userman implements BMO {
 			if(!empty($username) && empty($prevUsername)) {
 				$ret = $this->addUser($username, $password, $default, $description);
 				if($ret['status']) {
-					$this->setGlobalSettingByID($ret['id'],'assigned',$assigned);
+					$this->setGlobalSettingByID($ret['id'],'assigned',$assigned,$extraData);
 					$this->message = array(
 						'message' => $ret['message'],
 						'type' => $ret['type']
@@ -113,7 +123,7 @@ class Userman implements BMO {
 				}
 			} elseif(!empty($username) && !empty($prevUsername)) {
 				$password = ($password != '******') ? $password : null;
-				$ret = $this->updateUser($prevUsername, $username, $default, $description, $password);
+				$ret = $this->updateUser($prevUsername, $username, $default, $description, $extraData, $password);
 				if($ret['status']) {
 					$this->setGlobalSettingByID($ret['id'],'assigned',$assigned);
 					$this->message = array(
@@ -260,7 +270,7 @@ class Userman implements BMO {
 		return array("status" => true, "type" => "success", "message" => _("User Successfully Deleted"));
 	}
 
-	public function addUser($username, $password, $default='none', $description='', $encrypt = true) {
+	public function addUser($username, $password, $default='none', $description='', $extraData=array(), $encrypt = true) {
         global $module_hook;
 		if(empty($username) || empty($password)) {
 			return array("status" => false, "type" => "danger", "message" => _("Username/Password Can Not Be Blank!"));
@@ -274,11 +284,12 @@ class Userman implements BMO {
 		$sth->execute(array(':username' => $username, ':password' => $password, ':description' => $description, ':default_extension' => $default));
 
         $id = $this->db->lastInsertId();
+        $this->updateUserExtraData($id,$extraData);
         $this->callHooks('addUser',array("id" => $id, "username" => $username, "description" => $description));
 		return array("status" => true, "type" => "success", "message" => _("User Successfully Added"), "id" => $id);
 	}
 
-	public function updateUser($prevUsername, $username, $default='none', $description='', $password=null) {
+	public function updateUser($prevUsername, $username, $default='none', $description='', $extraData=array(), $password=null) {
 		$user = $this->getUserByUsername($prevUsername);
 		if(!$user || empty($user)) {
 			return array("status" => false, "type" => "danger", "message" => _("User Does Not Exist"));
@@ -299,9 +310,28 @@ class Userman implements BMO {
             $message = _("Updated User");
 		}
 
+        $this->updateUserExtraData($user['id'],$extraData);
+
         $this->callHooks('updateUser',array("id" => $user['id'], "prevUsername" => $prevUsername, "username" => $username, "description" => $description));
 		return array("status" => true, "type" => "success", "message" => $message, "id" => $user['id']);
 	}
+
+    public function updateUserExtraData($uid,$data=array()) {
+        if(empty($data)) {
+            return true;
+        }
+        $sql = "UPDATE ".$this->userTable." SET `fname` = :fname, `lname` = :lname, `title` = :title, `email` = :email, `cell` = :cell, `work` = :work, `home` = :home, `department` = :department WHERE `id` = :uid";
+        $sth = $this->db->prepare($sql);
+        $fname = isset($data['fname']) ? $data['fname'] : '';
+        $lname = isset($data['lname']) ? $data['lname'] : '';
+        $title = isset($data['title']) ? $data['title'] : '';
+        $email = isset($data['email']) ? $data['email'] : '';
+        $cell = isset($data['cell']) ? $data['cell'] : '';
+        $home = isset($data['home']) ? $data['home'] : '';
+        $work = isset($data['work']) ? $data['work'] : '';
+        $department = isset($data['department']) ? $data['department'] : '';
+        $sth->execute(array(':fname' => $fname, ':lname' => $lname, ':title' => $title, ':email' => $email, ':cell' => $cell, ':work' => $work, ':home' => $home, ':department' => $department, ':uid' => $uid));
+    }
 
 	public function checkCredentials($username, $password_sha1) {
 		$sql = "SELECT id, password FROM ".$this->userTable." WHERE username = :username";
