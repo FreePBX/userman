@@ -150,7 +150,6 @@ class Userman implements BMO {
 		global $module_hook;
 		$category = !empty($_REQUEST['category']) ? $_REQUEST['category'] : '';
 		$html = '';
-		$html .= load_view(dirname(__FILE__).'/views/header.php',array());
 
 		$users = $this->getAllUsers();
 
@@ -191,7 +190,6 @@ class Userman implements BMO {
 				$html .= load_view(dirname(__FILE__).'/views/users.php',array("dfpbxusers" => $dfpbxusers, "fpbxusers" => $fpbxusers, "hookHtml" => $module_hook->hookHtml, "user" => $user, "message" => $this->message));
 			break;
 		}
-		$html .= load_view(dirname(__FILE__).'/views/footer.php',array());
 
 		return $html;
 	}
@@ -278,14 +276,14 @@ class Userman implements BMO {
 		if($this->getUserByUsername($username)) {
 			return array("status" => false, "type" => "danger", "message" => _("User Already Exists"));
 		}
-		$sql = "INSERT INTO ".$this->userTable." (`username`,`password`,`description`,`default_extension,) VALUES (:username,:password,:description,:default_extension)";
+		$sql = "INSERT INTO ".$this->userTable." (`username`,`password`,`description`,`default_extension`) VALUES (:username,:password,:description,:default_extension)";
 		$sth = $this->db->prepare($sql);
 		$password = ($encrypt) ? sha1($password) : $password;
 		$sth->execute(array(':username' => $username, ':password' => $password, ':description' => $description, ':default_extension' => $default));
 
         $id = $this->db->lastInsertId();
         $this->updateUserExtraData($id,$extraData);
-        $this->callHooks('addUser',array("id" => $id, "username" => $username, "description" => $description));
+        $this->callHooks('addUser',array("id" => $id, "username" => $username, "description" => $description, "password" => $password, "encrypted" => $encrypt, "extraData" => $extraData));
 		return array("status" => true, "type" => "success", "message" => _("User Successfully Added"), "id" => $id);
 	}
 
@@ -312,7 +310,7 @@ class Userman implements BMO {
 
         $this->updateUserExtraData($user['id'],$extraData);
 
-        $this->callHooks('updateUser',array("id" => $user['id'], "prevUsername" => $prevUsername, "username" => $username, "description" => $description));
+        $this->callHooks('updateUser',array("id" => $user['id'], "prevUsername" => $prevUsername, "username" => $username, "description" => $description, "password" => $password, "extraData" => $extraData));
 		return array("status" => true, "type" => "success", "message" => $message, "id" => $user['id']);
 	}
 
