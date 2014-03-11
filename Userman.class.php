@@ -292,21 +292,16 @@ class Userman implements BMO {
 		if(!$user || empty($user)) {
 			return array("status" => false, "type" => "danger", "message" => _("User Does Not Exist"));
 		}
-		if(!isset($password)) {
-			if(($prevUsername != $username) || ($user['description'] != $description) || $user['default_extension'] != $default) {
-				$sql = "UPDATE ".$this->userTable." SET `username` = :username, `description` = :description, `default_extension` = :default_extension WHERE `username` = :prevusername";
-				$sth = $this->db->prepare($sql);
-				$sth->execute(array(':username' => $username, ':prevusername' => $prevUsername, ':description' => $description, ':default_extension' => $default));
-			}
-            $message = _("Updated User");
-		} else {
-			if(sha1($password) != $user['password']) {
-				$sql = "UPDATE ".$this->userTable." SET `username` = :username, `password` = :password, `description` = :description, `default_extension` = :default_extension WHERE `username` = :prevusername";
-				$sth = $this->db->prepare($sql);
-				$sth->execute(array(':username' => $username, ':prevusername' => $prevUsername, ':description' => $description, ':password' => sha1($password), ':default_extension' => $default));
-            }
-            $message = _("Updated User");
-		}
+        if(isset($password) && (sha1($password) != $user['password'])) {
+            $sql = "UPDATE ".$this->userTable." SET `username` = :username, `password` = :password, `description` = :description, `default_extension` = :default_extension WHERE `username` = :prevusername";
+            $sth = $this->db->prepare($sql);
+            $sth->execute(array(':username' => $username, ':prevusername' => $prevUsername, ':description' => $description, ':password' => sha1($password), ':default_extension' => $default));
+        } elseif(($prevUsername != $username) || ($user['description'] != $description) || $user['default_extension'] != $default) {
+            $sql = "UPDATE ".$this->userTable." SET `username` = :username, `description` = :description, `default_extension` = :default_extension WHERE `username` = :prevusername";
+            $sth = $this->db->prepare($sql);
+            $sth->execute(array(':username' => $username, ':prevusername' => $prevUsername, ':description' => $description, ':default_extension' => $default));
+        }
+        $message = _("Updated User");
 
         $this->updateUserExtraData($user['id'],$extraData);
 
