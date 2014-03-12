@@ -31,6 +31,11 @@ function userman_configpageinit($pagename) {
 	$extension = isset($_REQUEST['extension'])?$_REQUEST['extension']:null;
 	$tech_hardware = isset($_REQUEST['tech_hardware'])?$_REQUEST['tech_hardware']:null;
 
+    if(version_compare(getVersion(), '12.0', '<') && $pagename == 'userman') {
+        $userman = setup_userman();
+        $userman->doConfigPageInit($_REQUEST['display']);
+    }
+
     // We only want to hook 'users' or 'extensions' pages.
 	if ($pagename != 'users' && $pagename != 'extensions')  {
 		return true;
