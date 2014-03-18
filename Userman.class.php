@@ -108,9 +108,9 @@ class Userman implements BMO {
 				return false;
 			}
 			if(!empty($username) && empty($prevUsername)) {
-				$ret = $this->addUser($username, $password, $default, $description);
+				$ret = $this->addUser($username, $password, $default, $description, $extraData);
 				if($ret['status']) {
-					$this->setGlobalSettingByID($ret['id'],'assigned',$assigned,$extraData);
+					$this->setGlobalSettingByID($ret['id'],'assigned',$assigned);
 					$this->message = array(
 						'message' => $ret['message'],
 						'type' => $ret['type']
