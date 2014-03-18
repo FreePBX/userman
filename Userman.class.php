@@ -148,6 +148,15 @@ class Userman implements BMO {
 
 	public function myShowPage() {
 		global $module_hook;
+		if (!defined('DASHBOARD_FREEPBX_BRAND')) {
+			if (!empty($_SESSION['DASHBOARD_FREEPBX_BRAND'])) {
+				define('DASHBOARD_FREEPBX_BRAND', $_SESSION['DASHBOARD_FREEPBX_BRAND']);
+			} else {
+				define('DASHBOARD_FREEPBX_BRAND', 'FreePBX');
+			}
+		} else {
+			$_SESSION['DASHBOARD_FREEPBX_BRAND'] = DASHBOARD_FREEPBX_BRAND;
+		}
 		$action = !empty($_REQUEST['action']) ? $_REQUEST['action'] : '';
 		$html = '';
 
