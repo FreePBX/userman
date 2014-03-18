@@ -191,6 +191,7 @@ class Userman implements BMO {
 				$html .= load_view(dirname(__FILE__).'/views/users.php',array("dfpbxusers" => $dfpbxusers, "fpbxusers" => $fpbxusers, "hookHtml" => $module_hook->hookHtml, "user" => $user, "message" => $this->message));
 			break;
 			default:
+				$html .= load_view(dirname(__FILE__).'/views/general.php',array());
 			break;
 		}
 
@@ -583,5 +584,5 @@ class Userman implements BMO {
 				$function($data['id'], $_REQUEST['display'], $data);
 			}
 		}
-
+	}
 }
