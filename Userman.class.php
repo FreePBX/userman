@@ -148,15 +148,16 @@ class Userman implements BMO {
 
 	public function myShowPage() {
 		global $module_hook;
-		$category = !empty($_REQUEST['category']) ? $_REQUEST['category'] : '';
+		$action = !empty($_REQUEST['action']) ? $_REQUEST['action'] : '';
 		$html = '';
 
 		$users = $this->getAllUsers();
 
 		$html .= load_view(dirname(__FILE__).'/views/rnav.php',array("users"=>$users));
-		switch($category) {
-			default:
-				if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'showuser' && !empty($_REQUEST['user'])) {
+		switch($action) {
+			case 'showuser':
+			case 'adduser':
+				if($action == 'showuser' && !empty($_REQUEST['user'])) {
 					$user = $this->getUserByID($_REQUEST['user']);
 					$assigned = $this->getGlobalSettingByID($_REQUEST['user'],'assigned');
                     $assigned = !(empty($assigned)) ? $assigned : array();
@@ -189,53 +190,64 @@ class Userman implements BMO {
                 }
 				$html .= load_view(dirname(__FILE__).'/views/users.php',array("dfpbxusers" => $dfpbxusers, "fpbxusers" => $fpbxusers, "hookHtml" => $module_hook->hookHtml, "user" => $user, "message" => $this->message));
 			break;
+			default:
+			break;
 		}
 
 		return $html;
 	}
 
-    public function getUserByDefaultExtension($extension) {
-        $sql = "SELECT * FROM ".$this->userTable." WHERE default_extension = :extension";
-        $sth = $this->db->prepare($sql);
-        $sth->execute(array(':extension' => $extension));
-        $user = $sth->fetch(PDO::FETCH_ASSOC);
-        return $user;
-    }
+	/**
+	 * Registers a hookable call
+	 *
+	 * This registers a global function to a hook action
+	 *
+	 * @param string $action Hook action of: addUser,updateUser or delUser
+	 * @return bool
+	 */
+	public function registerHook($action,$function) {
+		$this->registeredFunctions[$action][] = $function;
+		return true;
+	}
 
-    private function getAllInUseExtensions() {
-        $sql = 'SELECT default_extension FROM '.$this->userTable;
-        $sth = $this->db->prepare($sql);
-        $sth->execute();
-        $devices = $sth->fetchAll(PDO::FETCH_ASSOC);
-        $used = array();
-        foreach($devices as $device) {
-            if($device['default_extension'] == 'none') {
-                continue;
-            }
-            $used[] = $device['default_extension'];
-        }
-        return $used;
-    }
-
-    private function callHooks($action,$data=null) {
-        foreach($this->registeredFunctions[$action] as $function) {
-            if(function_exists($function) && !empty($data['id'])) {
-                $function($data['id'], $_REQUEST['display'], $data);
-            }
-        }
-    }
-
-    public function registerHook($action,$function) {
-        $this->registeredFunctions[$action][] = $function;
-    }
-
+	/**
+	 * Get All Users
+	 *
+	 * Get a List of all User Manager users and their data
+	 *
+	 * @return array
+	 */
 	public function getAllUsers() {
 		$sql = "SELECT * FROM ".$this->userTable." order by id";
-        $sth = $this->db->prepare($sql);
-        $sth->execute();
+		$sth = $this->db->prepare($sql);
+		$sth->execute();
 		return $sth->fetchAll(PDO::FETCH_ASSOC);
 	}
 
+	/**
+	 * Get User Information by the Default Extension
+	 *
+	 * This gets user information from the user which has said extension defined as it's default
+	 *
+	 * @param string $extension The User (from Device/User Mode) or Extension to which this User is attached
+	 * @return bool
+	 */
+	public function getUserByDefaultExtension($extension) {
+		$sql = "SELECT * FROM ".$this->userTable." WHERE default_extension = :extension";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':extension' => $extension));
+		$user = $sth->fetch(PDO::FETCH_ASSOC);
+		return $user;
+	}
+
+	/**
+	 * Get User Information by Username
+	 *
+	 * This gets user information by username
+	 *
+	 * @param string $username The User Manager Username
+	 * @return bool
+	 */
 	public function getUserByUsername($username) {
 		$sql = "SELECT * FROM ".$this->userTable." WHERE username = :username";
 		$sth = $this->db->prepare($sql);
@@ -244,6 +256,14 @@ class Userman implements BMO {
 		return $user;
 	}
 
+	/**
+	 * Get User Information by User ID
+	 *
+	 * This gets user information by User Manager User ID
+	 *
+	 * @param string $id The ID of the user from User Manager
+	 * @return bool
+	 */
 	public function getUserByID($id) {
 		$sql = "SELECT * FROM ".$this->userTable." WHERE id = :id";
 		$sth = $this->db->prepare($sql);
@@ -252,6 +272,15 @@ class Userman implements BMO {
 		return $user;
 	}
 
+	/**
+	 * Get User Information by Username
+	 *
+	 * This gets user information by username.
+	 * !!This should never be called externally outside of User Manager!!
+	 *
+	 * @param string $id The ID of the user from User Manager
+	 * @return array
+	 */
 	public function deleteUserByID($id) {
 		$user = $this->getUserByID($id);
 		if(!$user) {
@@ -264,10 +293,23 @@ class Userman implements BMO {
 		$sql = "DELETE FROM ".$this->userSettingsTable." WHERE `uid` = :uid";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':uid' => $id));
-        $this->callHooks('delUser',array("id" => $id));
+		$this->callHooks('delUser',array("id" => $id));
 		return array("status" => true, "type" => "success", "message" => _("User Successfully Deleted"));
 	}
 
+	/**
+	 * Add a user to User Manager
+	 *
+	 * This adds a new user to user manager
+	 *
+	 * @param string $username The username
+	 * @param string $password The user Password
+	 * @param string $default The default user extension, there is an integrity constraint here so there can't be duplicates
+	 * @param string $description a short description of this account
+	 * @param array $extraData A hash of extra data to provide about this account (work, email, telephone, etc)
+	 * @param bool $encrypt Whether to encrypt the password or not. If this is false the system will still assume its hashed as sha1, so this is only useful if importing accounts with previous sha1 passwords
+	 * @return array
+	 */
 	public function addUser($username, $password, $default='none', $description='', $extraData=array(), $encrypt = true) {
         global $module_hook;
 		if(empty($username) || empty($password)) {
@@ -287,6 +329,19 @@ class Userman implements BMO {
 		return array("status" => true, "type" => "success", "message" => _("User Successfully Added"), "id" => $id);
 	}
 
+	/**
+	 * Update a User in User Manager
+	 *
+	 * This Updates a User in User Manager
+	 *
+	 * @param string $username The username
+	 * @param string $password The user Password
+	 * @param string $default The default user extension, there is an integrity constraint here so there can't be duplicates
+	 * @param string $description a short description of this account
+	 * @param array $extraData A hash of extra data to provide about this account (work, email, telephone, etc)
+	 * @param string $password The updated password, if null then password isn't updated
+	 * @return array
+	 */
 	public function updateUser($prevUsername, $username, $default='none', $description='', $extraData=array(), $password=null) {
 		$user = $this->getUserByUsername($prevUsername);
 		if(!$user || empty($user)) {
@@ -309,7 +364,16 @@ class Userman implements BMO {
 		return array("status" => true, "type" => "success", "message" => $message, "id" => $user['id']);
 	}
 
-    public function updateUserExtraData($uid,$data=array()) {
+	/**
+	 * Update User Extra Data
+	 *
+	 * This updates Extra Data about the user
+	 * (fname,lname,title,email,cell,work,home,department)
+	 *
+	 * @param int $id The User Manager User ID
+	 * @param array $data A hash of data to update (see above)
+	 */
+    public function updateUserExtraData($id,$data=array()) {
         if(empty($data)) {
             return true;
         }
@@ -323,28 +387,42 @@ class Userman implements BMO {
         $home = isset($data['home']) ? $data['home'] : '';
         $work = isset($data['work']) ? $data['work'] : '';
         $department = isset($data['department']) ? $data['department'] : '';
-        $sth->execute(array(':fname' => $fname, ':lname' => $lname, ':title' => $title, ':email' => $email, ':cell' => $cell, ':work' => $work, ':home' => $home, ':department' => $department, ':uid' => $uid));
+        $sth->execute(array(':fname' => $fname, ':lname' => $lname, ':title' => $title, ':email' => $email, ':cell' => $cell, ':work' => $work, ':home' => $home, ':department' => $department, ':uid' => $id));
     }
 
-	public function checkCredentials($username, $password_sha1) {
-		$sql = "SELECT id, password FROM ".$this->userTable." WHERE username = :username";
-		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':username' => $username));
-		$result = $sth->fetch(\PDO::FETCH_ASSOC);
-		if(!empty($result) && ($password_sha1 == $result['password'])) {
-			return $result['id'];
-		}
-		return false;
+	/**
+	 * Get the assigned devices (Extensions or ﻿(device/user mode) Users) for this User
+	 *
+	 * Get the assigned devices (Extensions or ﻿(device/user mode) Users) for this User as a Hashed Array
+	 *
+	 * @param int $id The ID of the user from User Manager
+	 * @return array
+	 */
+	public function getAssignedDevices($id) {
+        return $this->getGlobalSettingByID($id,'assigned');
 	}
 
-	public function getAssignedDevices($uid) {
-        return $this->getGlobalSettingByID($uid,'assigned');
-	}
-
-    public function setAssignedDevices($uid,$devices=array()) {
-        $this->setGlobalSettingByID($uid,'assigned',$devices);
+	/**
+	 * Set the assigned devices (Extensions or ﻿(device/user mode) Users) for this User
+	 *
+	 * Set the assigned devices (Extensions or ﻿(device/user mode) Users) for this User as a Hashed Array
+	 *
+	 * @param int $id The ID of the user from User Manager
+	 * @param array $devices The devices to add to this user as an array
+	 * @return array
+	 */
+    public function setAssignedDevices($id,$devices=array()) {
+        return $this->setGlobalSettingByID($id,'assigned',$devices);
     }
 
+	/**
+	 * Get Globally Defined Sub Settings
+	 *
+	 * Gets all Globally Defined Sub Settings
+	 *
+	 * @param int $uid The ID of the user from User Manager
+	 * @return mixed false if nothing, else array
+	 */
 	public function getAllGlobalSettingsByID($uid) {
 		$sql = "SELECT a.val, a.type, a.key FROM ".$this->userSettingsTable." a, ".$this->userTable." b WHERE b.id = a.uid AND b.id = :id AND a.module = 'global'";
 		$sth = $this->db->prepare($sql);
@@ -360,6 +438,15 @@ class Userman implements BMO {
 		return false;
 	}
 
+	/**
+	 * Get a single setting from a User
+	 *
+	 * Gets a single Globally Defined Sub Setting
+	 *
+	 * @param int $uid The ID of the user from User Manager
+	 * @param string $setting The keyword that references said setting
+	 * @return mixed false if nothing, else array
+	 */
 	public function getGlobalSettingByID($uid,$setting) {
 		$sql = "SELECT a.val, a.type FROM ".$this->userSettingsTable." a, ".$this->userTable." b WHERE b.id = a.uid AND b.id = :id AND a.key = :setting AND a.module = 'global'";
 		$sth = $this->db->prepare($sql);
@@ -371,7 +458,20 @@ class Userman implements BMO {
 		return false;
 	}
 
+	/**
+	 * Set Globally Defined Sub Setting
+	 *
+	 * Sets a Globally Defined Sub Setting
+	 *
+	 * @param int $uid The ID of the user from User Manager
+	 * @param string $setting The keyword that references said setting
+	 * @param mixed $value Can be an array, boolean or string or integer
+	 * @return mixed false if nothing, else array
+	 */
 	public function setGlobalSettingByID($uid,$setting,$value) {
+		if(is_bool($value)) {
+			$value = ($value) ? 1 : 0;
+		}
 		$type = is_array($value) ? 'json-arr' : null;
 		$value = is_array($value) ? json_encode($value) : $value;
 		$sql = "REPLACE INTO ".$this->userSettingsTable." (`uid`, `module`, `key`, `val`, `type`) VALUES(:uid, :module, :setting, :value, :type)";
@@ -379,6 +479,15 @@ class Userman implements BMO {
 		$sth->execute(array(':uid' => $uid, ':module' => 'global', ':setting' => $setting, ':value' => $value, ':type' => $type));
 	}
 
+	/**
+ 	* Get All Defined Sub Settings by Module Name
+	 *
+	 * Get All Defined Sub Settings by Module Name
+	 *
+	 * @param int $uid The ID of the user from User Manager
+	 * @param string $module The module rawname (this can be anything really, another reference ID)
+	 * @return mixed false if nothing, else array
+	 */
 	public function getAllModuleSettingsByID($uid,$module) {
 		$sql = "SELECT a.val, a.type, a.key FROM ".$this->userSettingsTable." a, ".$this->userTable." b WHERE b.id = :id AND b.id = a.uid AND a.module = :module";
 		$sth = $this->db->prepare($sql);
@@ -394,6 +503,16 @@ class Userman implements BMO {
 		return false;
 	}
 
+	/**
+	 * Get a single setting from a User by Module
+	 *
+	 * Gets a single Module Defined Sub Setting
+	 *
+	 * @param int $uid The ID of the user from User Manager
+	 * @param string $module The module rawname (this can be anything really, another reference ID)
+	 * @param string $setting The keyword that references said setting
+	 * @return mixed false if nothing, else array
+	 */
 	public function getModuleSettingByID($uid,$module,$setting) {
 		$sql = "SELECT a.val, a.type FROM ".$this->userSettingsTable." a, ".$this->userTable." b WHERE b.id = :id AND b.id = a.uid AND a.module = :module AND a.key = :setting";
 		$sth = $this->db->prepare($sql);
@@ -405,7 +524,21 @@ class Userman implements BMO {
 		return false;
 	}
 
+	/**
+	 * Set a Module Sub Setting
+	 *
+	 * Sets a Module Defined Sub Setting
+	 *
+	 * @param int $uid The ID of the user from User Manager
+	 * @param string $module The module rawname (this can be anything really, another reference ID)
+	 * @param string $setting The keyword that references said setting
+	 * @param mixed $value Can be an array, boolean or string or integer
+	 * @return mixed false if nothing, else array
+	 */
 	public function setModuleSettingByID($uid,$module,$setting,$value) {
+		if(is_bool($value)) {
+			$value = ($value) ? 1 : 0;
+		}
 		$type = is_array($value) ? 'json-arr' : null;
 		$value = is_array($value) ? json_encode($value) : $value;
 		$sql = "REPLACE INTO ".$this->userSettingsTable." (`uid`, `module`, `key`, `val`, `type`) VALUES(:id, :module, :setting, :value, :type)";
@@ -413,8 +546,42 @@ class Userman implements BMO {
 		$sth->execute(array(':id' => $uid, ':module' => $module, ':setting' => $setting, ':value' => $value, ':type' => $type));
 	}
 
-	function isJson($string) {
+	public function checkCredentials($username, $password_sha1) {
+		$sql = "SELECT id, password FROM ".$this->userTable." WHERE username = :username";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':username' => $username));
+		$result = $sth->fetch(\PDO::FETCH_ASSOC);
+		if(!empty($result) && ($password_sha1 == $result['password'])) {
+			return $result['id'];
+		}
+		return false;
+	}
+
+	private function isJson($string) {
 		json_decode($string);
 		return (json_last_error() == JSON_ERROR_NONE);
 	}
+
+	private function getAllInUseExtensions() {
+		$sql = 'SELECT default_extension FROM '.$this->userTable;
+		$sth = $this->db->prepare($sql);
+		$sth->execute();
+		$devices = $sth->fetchAll(PDO::FETCH_ASSOC);
+		$used = array();
+		foreach($devices as $device) {
+			if($device['default_extension'] == 'none') {
+				continue;
+			}
+			$used[] = $device['default_extension'];
+		}
+		return $used;
+	}
+
+	private function callHooks($action,$data=null) {
+		foreach($this->registeredFunctions[$action] as $function) {
+			if(function_exists($function) && !empty($data['id'])) {
+				$function($data['id'], $_REQUEST['display'], $data);
+			}
+		}
+
 }
