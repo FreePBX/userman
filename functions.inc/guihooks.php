@@ -178,7 +178,7 @@ function userman_configprocess() {
 		case "edit":
 			if(isset($_REQUEST['userman|assign']) && $_REQUEST['userman|assign'] != 'none') {
 				$userO = $userman->getUserByDefaultExtension($extension);
-				if($userO['id'] != $_REQUEST['userman|assign']) {
+				if(!empty($userO['id']) && ($userO['id'] != $_REQUEST['userman|assign'])) {
 					$assigned = $userman->getGlobalSettingByID($userO['id'],'assigned');
 					$assigned = array_diff($assigned, array($extension));
 					$userman->setGlobalSettingByID($userO['id'],'assigned',$assigned);
@@ -200,11 +200,13 @@ function userman_configprocess() {
 			//also remove extension from assigned devices, since we probably did it
 			} elseif(isset($_REQUEST['userman|assign']) && $_REQUEST['userman|assign'] == 'none') {
 				$userO = $userman->getUserByDefaultExtension($extension);
-				$assigned = $userman->getGlobalSettingByID($userO['id'],'assigned');
-				$assigned = array_diff($assigned, array($extension));
-				$userman->setGlobalSettingByID($userO['id'],'assigned',$assigned);
-				//run this last so that hooks to other modules get the correct information
-				$userman->updateUser($userO['username'],$userO['username'],'none');
+				if(!empty($userO['id'])) {
+					$assigned = $userman->getGlobalSettingByID($userO['id'],'assigned');
+					$assigned = array_diff($assigned, array($extension));
+					$userman->setGlobalSettingByID($userO['id'],'assigned',$assigned);
+					//run this last so that hooks to other modules get the correct information
+					$userman->updateUser($userO['username'],$userO['username'],'none');
+				}
 			}
 		break;
 	}
