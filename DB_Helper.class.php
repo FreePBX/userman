@@ -256,7 +256,7 @@ if (!class_exists('Database')) {
 	class Database extends PDO {
 		public function __construct() {
 			global $amp_conf;
-			$dsn = "mysql:host=localhost;dbname=".$amp_conf['AMPDBNAME'];
+			$dsn = "mysql:host=".$amp_conf['AMPDBHOST'].";dbname=".$amp_conf['AMPDBNAME'];
 			$username = $amp_conf['AMPDBUSER'];
 			$password = $amp_conf['AMPDBPASS'];
 			parent::__construct($dsn, $username, $password);
