@@ -195,6 +195,13 @@ function userman_configprocess() {
 					}
 					//run this last so that hooks to other modules get the correct information
 					$userman->updateUser($ret['username'],$ret['username'],$extension);
+				} elseif(empty($userO['id'])) {
+					$user = $userman->getUserByID($_REQUEST['userman|assign']);
+					//run this last so that hooks to other modules get the correct information
+					$ret = $userman->updateUser($user['username'],$user['username'],$extension);
+					if($ret['status']) {
+						$userman->setGlobalSettingByID($ret['id'],'assigned',array($extension));
+					}
 				}
 			//Set to none so remove the extension as a default from this user
 			//also remove extension from assigned devices, since we probably did it
