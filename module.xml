@@ -1,9 +1,10 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>2.11.0beta9</version>
-	<publisher>Schmoozecom.com</publisher>
-	<license>AGPL</license>
+	<version>2.11.0beta10</version>
+	<publisher>Schmooze Com Inc</publisher>
+	<license>AGPLv3+</license>
+	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
 	<repo>standard</repo>
 	<description>
 		This Module manages all FreePBX users excluding Administrators (at this time).
@@ -11,6 +12,7 @@
 		Modules like iSymphony or Rest API or the Upcoming User Control Panel will use this module to manage their users.
 	</description>
 	<changelog>
+		*2.11.0beta10* Update license
 		*2.11.0beta9* Fixe bug when assigning a user to an extension
 		*2.11.0beta8* Fixes FREEPBX-7253 dont try to use the array if its false
 		*2.11.0beta7* Fixes FREEPBX-7245 forgetting user data on inital add
