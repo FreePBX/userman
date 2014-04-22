@@ -59,9 +59,9 @@
 			<td><input type="text" name="home" maxlength="100" value="<?php echo !empty($user['home']) ? $user['home'] : ''; ?>"></td>
 		</tr>
 		<tr class="userman">
-			<td><a href="#" class="info"><?php echo _("Default Assigned Extension")?>:<span><?php echo _("Default extension to which data will be retrieved or written")?></span></a></td>
+			<td><a href="#" class="info"><?php echo _("Linked Extension")?>:<span><?php echo _("This is the extension this user is linked to from the Extensions page. A single user can only be linked to one extension and one extension can only be linked to a single user. If using Rest Apps on a phone this is the extension that will be mapped to the API permissions set below for this user.")?></span></a></td>
 			<td>
-				<select name="defaultextension">
+				<select id="defaultextension" name="defaultextension">
 					<?php foreach($dfpbxusers as $dfpbxuser) {?>
 						<option value="<?php echo $dfpbxuser['ext']?>" <?php echo $dfpbxuser['selected'] ? 'selected' : '' ?>><?php echo $dfpbxuser['name']?> &lt;<?php echo $dfpbxuser['ext']?>&gt;</option>
 					<?php } ?>
