@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>2.11.3</version>
+	<version>2.11.4</version>
 	<publisher>Schmooze Com Inc</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -12,6 +12,7 @@
 		Modules like iSymphony or Rest API or the Upcoming User Control Panel will use this module to manage their users.
 	</description>
 	<changelog>
+		*2.11.4* Prevent duplicate usernames when changing username
 		*2.11.3* FREEPBX-7405 Unlink Extension from User when Extension is deleted
 		*2.11.2* Cleanup and languaging and some javascript helpers
 		*2.11.0beta10* Update license
