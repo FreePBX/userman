@@ -126,6 +126,9 @@ class Userman implements BMO {
 	}
 
 	public function myShowPage() {
+		if(!function_exists('core_users_list')) {
+			return _("Module Core is disabled. Please enable it");
+		}
 		global $module_hook;
 		if (!defined('DASHBOARD_FREEPBX_BRAND')) {
 			if (!empty($_SESSION['DASHBOARD_FREEPBX_BRAND'])) {
