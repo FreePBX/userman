@@ -339,14 +339,14 @@ class Userman implements BMO {
 		if(!$user || empty($user)) {
 			return array("status" => false, "type" => "danger", "message" => sprintf(_("User '%s' Does Not Exist"),$user));
 		}
-		if($this->getUserByUsername($username)) {
-			return array("status" => false, "type" => "danger", "message" => sprintf(_("User '%s' Already Exists"),$username));
-		}
 		if(isset($password) && (sha1($password) != $user['password'])) {
 			$sql = "UPDATE ".$this->userTable." SET `username` = :username, `password` = :password, `description` = :description, `default_extension` = :default_extension WHERE `username` = :prevusername";
 			$sth = $this->db->prepare($sql);
 			$sth->execute(array(':username' => $username, ':prevusername' => $prevUsername, ':description' => $description, ':password' => sha1($password), ':default_extension' => $default));
 		} elseif(($prevUsername != $username) || ($user['description'] != $description) || $user['default_extension'] != $default) {
+			if($this->getUserByUsername($username)) {
+				return array("status" => false, "type" => "danger", "message" => sprintf(_("User '%s' Already Exists"),$username));
+			}
 			$sql = "UPDATE ".$this->userTable." SET `username` = :username, `description` = :description, `default_extension` = :default_extension WHERE `username` = :prevusername";
 			$sth = $this->db->prepare($sql);
 			$sth->execute(array(':username' => $username, ':prevusername' => $prevUsername, ':description' => $description, ':default_extension' => $default));
