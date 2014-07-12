@@ -373,15 +373,16 @@ class Userman implements BMO {
 			return true;
 		}
 		$sql = "UPDATE ".$this->userTable." SET `fname` = :fname, `lname` = :lname, `title` = :title, `email` = :email, `cell` = :cell, `work` = :work, `home` = :home, `department` = :department WHERE `id` = :uid";
+		$defaults = $this->getUserByID($id);
 		$sth = $this->db->prepare($sql);
-		$fname = isset($data['fname']) ? $data['fname'] : '';
-		$lname = isset($data['lname']) ? $data['lname'] : '';
-		$title = isset($data['title']) ? $data['title'] : '';
-		$email = isset($data['email']) ? $data['email'] : '';
-		$cell = isset($data['cell']) ? $data['cell'] : '';
-		$home = isset($data['home']) ? $data['home'] : '';
-		$work = isset($data['work']) ? $data['work'] : '';
-		$department = isset($data['department']) ? $data['department'] : '';
+		$fname = isset($data['fname']) ? $data['fname'] : $defaults['fname'];
+		$lname = isset($data['lname']) ? $data['lname'] : $defaults['lname'];
+		$title = isset($data['title']) ? $data['title'] : $defaults['title'];
+		$email = isset($data['email']) ? $data['email'] : $defaults['email'];
+		$cell = isset($data['cell']) ? $data['cell'] : $defaults['cell'];
+		$home = isset($data['home']) ? $data['home'] : $defaults['home'];
+		$work = isset($data['work']) ? $data['work'] : $defaults['work'];
+		$department = isset($data['department']) ? $data['department'] : $defaults['work'];
 		$sth->execute(array(':fname' => $fname, ':lname' => $lname, ':title' => $title, ':email' => $email, ':cell' => $cell, ':work' => $work, ':home' => $home, ':department' => $department, ':uid' => $id));
 	}
 
@@ -573,9 +574,11 @@ class Userman implements BMO {
 	}
 
 	private function callHooks($action,$data=null) {
-		foreach($this->registeredFunctions[$action] as $function) {
-			if(function_exists($function) && !empty($data['id'])) {
-				$function($data['id'], $_REQUEST['display'], $data);
+		if(isset($this->registeredFunctions[$action])) {
+			foreach($this->registeredFunctions[$action] as $function) {
+				if(function_exists($function) && !empty($data['id'])) {
+					$function($data['id'], $_REQUEST['display'], $data);
+				}
 			}
 		}
 	}
