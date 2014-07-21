@@ -11,7 +11,7 @@
 <?php if(!empty($message)) {?>
 	<div class="alert alert-<?php echo $message['type']?>"><?php echo $message['message']?></div>
 <?php } ?>
-<form autocomplete="off" name="editM" action="<?php $_SERVER['PHP_SELF'] ?>" method="post">
+<form autocomplete="off" name="editM" action="" method="post">
 	<input type="hidden" name="prevUsername" value="<?php echo !empty($user['username']) ? $user['username'] : ''; ?>">
 	<input type="hidden" name="user" value="<?php echo !empty($user['id']) ? $user['id'] : ''; ?>">
 	<table>
