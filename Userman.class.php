@@ -210,7 +210,7 @@ class Userman implements BMO {
 	 * @return array
 	 */
 	public function getAllUsers() {
-		$sql = "SELECT * FROM ".$this->userTable." order by id";
+		$sql = "SELECT * FROM ".$this->userTable." ORDER BY username";
 		$sth = $this->db->prepare($sql);
 		$sth->execute();
 		return $sth->fetchAll(PDO::FETCH_ASSOC);
