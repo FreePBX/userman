@@ -344,7 +344,7 @@ class Userman implements BMO {
 			$sth = $this->db->prepare($sql);
 			$sth->execute(array(':username' => $username, ':prevusername' => $prevUsername, ':description' => $description, ':password' => sha1($password), ':default_extension' => $default));
 		} elseif(($prevUsername != $username) || ($user['description'] != $description) || $user['default_extension'] != $default) {
-			if($this->getUserByUsername($username)) {
+			if(($prevUsername != $username) && $this->getUserByUsername($username)) {
 				return array("status" => false, "type" => "danger", "message" => sprintf(_("User '%s' Already Exists"),$username));
 			}
 			$sql = "UPDATE ".$this->userTable." SET `username` = :username, `description` = :description, `default_extension` = :default_extension WHERE `username` = :prevusername";
