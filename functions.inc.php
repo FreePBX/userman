@@ -10,9 +10,8 @@ function setup_userman() {
 		}
 		$userman = Userman::create();
 		return $userman;
-	} else {
-		return FreePBX::create()->Userman;
 	}
+	return FreePBX::create()->Userman;
 }
 
 include('functions.inc/guihooks.php');
