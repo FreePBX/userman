@@ -12,6 +12,7 @@
 	<div class="alert alert-<?php echo $message['type']?>"><?php echo $message['message']?></div>
 <?php } ?>
 <form autocomplete="off" name="editM" action="" method="post">
+	<input type="hidden" name="type" value="user">
 	<input type="hidden" name="prevUsername" value="<?php echo !empty($user['username']) ? $user['username'] : ''; ?>">
 	<input type="hidden" name="user" value="<?php echo !empty($user['id']) ? $user['id'] : ''; ?>">
 	<table>
@@ -62,8 +63,8 @@
 			<td><a href="#" class="info"><?php echo _("Send Welcome Email")?>:<span><?php echo _("Whether to send a welcome email to this user when this page is saved.")?></span></a></td>
 			<td>
 				<span class="radioset">
-					<input type="radio" id="sendEmail1" name="sendEmail" value="yes" ><label for="sendEmail1">Yes</label>
-					<input type="radio" id="sendEmail2" name="sendEmail" value="no" checked><label for="sendEmail2">No</label>
+					<input type="radio" id="sendEmail1" name="sendEmail" value="yes" <?php echo (!isset($_REQUEST['action']) || $_REQUEST['action'] != 'showuser') ? 'checked' : ''?>><label for="sendEmail1">Yes</label>
+					<input type="radio" id="sendEmail2" name="sendEmail" value="no" <?php echo (isset($_REQUEST['action']) && $_REQUEST['action'] == 'showuser') ? 'checked' : ''?>><label for="sendEmail2">No</label>
 				</span>
 			</td>
 		</tr>
