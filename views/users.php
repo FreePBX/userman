@@ -59,6 +59,15 @@
 			<td><input type="text" autocomplete="off" name="home" maxlength="100" value="<?php echo !empty($user['home']) ? $user['home'] : ''; ?>"></td>
 		</tr>
 		<tr class="userman">
+			<td><a href="#" class="info"><?php echo _("Send Welcome Email")?>:<span><?php echo _("Whether to send a welcome email to this user when this page is saved.")?></span></a></td>
+			<td>
+				<span class="radioset">
+					<input type="radio" id="sendEmail1" name="sendEmail" value="yes" ><label for="sendEmail1">Yes</label>
+					<input type="radio" id="sendEmail2" name="sendEmail" value="no" checked><label for="sendEmail2">No</label>
+				</span>
+			</td>
+		</tr>
+		<tr class="userman">
 			<td><a href="#" class="info"><?php echo _("Linked Extension")?>:<span><?php echo _("This is the extension this user is linked to from the Extensions page. A single user can only be linked to one extension and one extension can only be linked to a single user. If using Rest Apps on a phone this is the extension that will be mapped to the API permissions set below for this user.")?></span></a></td>
 			<td>
 				<select id="defaultextension" name="defaultextension">

@@ -9,6 +9,8 @@ class Userman implements BMO {
 	private $message = '';
 	private $userTable = 'freepbx_users';
 	private $userSettingsTable = 'freepbx_users_settings';
+	private $brand = 'FreePBX';
+
 	public function __construct($freepbx = null) {
 		if ($freepbx == null) {
 			include(dirname(__FILE__).'/DB_Helper.class.php');
@@ -17,6 +19,18 @@ class Userman implements BMO {
 			$this->FreePBX = $freepbx;
 			$this->db = $freepbx->Database;
 		}
+
+		if (!defined('DASHBOARD_FREEPBX_BRAND')) {
+			if (!empty($_SESSION['DASHBOARD_FREEPBX_BRAND'])) {
+				define('DASHBOARD_FREEPBX_BRAND', $_SESSION['DASHBOARD_FREEPBX_BRAND']);
+			} else {
+				define('DASHBOARD_FREEPBX_BRAND', 'FreePBX');
+			}
+		} else {
+			$_SESSION['DASHBOARD_FREEPBX_BRAND'] = DASHBOARD_FREEPBX_BRAND;
+		}
+
+		$this->brand = DASHBOARD_FREEPBX_BRAND;
 	}
 
 	function &create() {
@@ -121,6 +135,9 @@ class Userman implements BMO {
 					'type' => 'danger'
 				);
 				return false;
+			}
+			if($_POST['sendEmail'] == 'yes') {
+				$this->sendWelcomeEmail($username, $password);
 			}
 		}
 	}
@@ -553,6 +570,40 @@ class Userman implements BMO {
 		return false;
 	}
 
+	public function sendWelcomeEmail($username, $password =  null) {
+		$user = $this->getUserByUsername($username);
+		if(empty($user) || empty($user['email'])) {
+			return false;
+		}
+		$user['host'] = 'http://'.$_SERVER["SERVER_NAME"];
+		$user['brand'] = $this->brand;
+
+		$user['password'] = !empty($password) ? $password : "<" . _('hidden') . ">";
+
+		$user['modules'] = $this->callHooks('welcome',array('id' => $user['id'], 'brand' => $user['brand'], 'host' => $user['host']));
+		$user['services'] = '';
+		foreach($user['modules'] as $mod) {
+			$user['services'] = $mod . "\n";
+		}
+
+		$template = file_get_contents(__DIR__.'/views/emails/welcome_text.tpl');
+		preg_match_all('/%([\w|\d]*)%/',$template,$matches);
+
+		foreach($matches[1] as $match) {
+			$replacement = !empty($user[$match]) ? $user[$match] : '';
+			$template = str_replace('%'.$match.'%',$replacement,$template);
+		}
+		$email_options = array('useragent' => $this->brand, 'protocol' => 'mail');
+		$email = new CI_Email();
+		$from = 'freepbx@freepbx.org';
+
+		$email->from($from);
+		$email->to($user['email']);
+		$email->subject(sprintf(_('You %s Account'),$this->brand));
+		$email->message($template);
+		$email->send();
+	}
+
 	private function isJson($string) {
 		json_decode($string);
 		return (json_last_error() == JSON_ERROR_NONE);
@@ -574,12 +625,14 @@ class Userman implements BMO {
 	}
 
 	private function callHooks($action,$data=null) {
+		$ret = array();
 		if(isset($this->registeredFunctions[$action])) {
 			foreach($this->registeredFunctions[$action] as $function) {
 				if(function_exists($function) && !empty($data['id'])) {
-					$function($data['id'], $_REQUEST['display'], $data);
+					$ret[$function] = $function($data['id'], $_REQUEST['display'], $data);
 				}
 			}
 		}
+		return $ret;
 	}
 }
