@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>2.11.11</version>
+	<version>12.0.1</version>
 	<publisher>Schmooze Com Inc</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -12,6 +12,7 @@
 		Modules like iSymphony or Rest API or the Upcoming User Control Panel will use this module to manage their users.
 	</description>
 	<changelog>
+		*12.0.1* Redo module_hook calls to use static obj
 		*2.11.11* Send emails out on new user creation or on editing
 		*2.11.10* FREEPBX-7494 Userman automaticly links like extensions with leading 0
 		*2.11.9* Finishing touches to creating new user from extensions page
@@ -42,9 +43,9 @@
 	</menuitems>
 	<depends>
 		<phpversion>5.3.3</phpversion>
-		<version>2.11</version>
+		<version>12.0.1rc16</version>
 	</depends>
 	<supported>
-		<version>2.11</version>
+		<version>12.0</version>
 	</supported>
 </module>

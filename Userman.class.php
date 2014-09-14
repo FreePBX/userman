@@ -157,7 +157,7 @@ class Userman implements BMO {
 		if(!function_exists('core_users_list')) {
 			return _("Module Core is disabled. Please enable it");
 		}
-		global $module_hook;
+		$module_hook = moduleHook::create();
 		if (!defined('DASHBOARD_FREEPBX_BRAND')) {
 			if (!empty($_SESSION['DASHBOARD_FREEPBX_BRAND'])) {
 				define('DASHBOARD_FREEPBX_BRAND', $_SESSION['DASHBOARD_FREEPBX_BRAND']);
@@ -334,7 +334,7 @@ class Userman implements BMO {
 	 * @return array
 	 */
 	public function addUser($username, $password, $default='none', $description='', $extraData=array(), $encrypt = true) {
-		global $module_hook;
+		$module_hook = moduleHook::create();
 		if(empty($username) || empty($password)) {
 			return array("status" => false, "type" => "danger", "message" => _("Username/Password Can Not Be Blank!"));
 		}
