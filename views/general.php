@@ -9,7 +9,7 @@
 			<td colspan="2"><h4><span class="guielToggleBut">-  </span><?php echo _("Email Settings")?></h4><hr></td>
 		</tr>
 		<tr class="userman">
-			<td><a href="#" class="info"><?php echo _("Email Body")?>:<span><?php echo sprintf(_("Email Body for the welcome email. Variables are:<ul><li>fname: First name</li><li>lname: Last name</li><li>brand: %s</li><li>title: title</li><li>username: Username</li><li>password: Password</li></ul>"),$brand)?></span></a></td>
+			<td><a href="#" class="info"><?php echo _("Email Body")?>:<span><?php echo sprintf(_("Text to be used for the body of the welcome email. Useable variables are:<ul><li>fname: First name</li><li>lname: Last name</li><li>brand: %s</li><li>title: title</li><li>username: Username</li><li>password: Password</li></ul>"),$brand)?></span></a></td>
 			<td>
 				<textarea name="email" rows="15" cols="80"><?php echo !empty($email) ? $email : file_get_contents(__DIR__.'/emails/welcome_text.tpl')?></textarea>
 			</td>
