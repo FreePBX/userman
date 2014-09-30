@@ -9,6 +9,8 @@ class Userman implements BMO {
 	private $message = '';
 	private $userTable = 'freepbx_users';
 	private $userSettingsTable = 'freepbx_users_settings';
+	private $brand = 'FreePBX';
+
 	public function __construct($freepbx = null) {
 		if ($freepbx == null) {
 			include(dirname(__FILE__).'/DB_Helper.class.php');
@@ -17,6 +19,18 @@ class Userman implements BMO {
 			$this->FreePBX = $freepbx;
 			$this->db = $freepbx->Database;
 		}
+
+		if (!defined('DASHBOARD_FREEPBX_BRAND')) {
+			if (!empty($_SESSION['DASHBOARD_FREEPBX_BRAND'])) {
+				define('DASHBOARD_FREEPBX_BRAND', $_SESSION['DASHBOARD_FREEPBX_BRAND']);
+			} else {
+				define('DASHBOARD_FREEPBX_BRAND', 'FreePBX');
+			}
+		} else {
+			$_SESSION['DASHBOARD_FREEPBX_BRAND'] = DASHBOARD_FREEPBX_BRAND;
+		}
+
+		$this->brand = DASHBOARD_FREEPBX_BRAND;
 	}
 
 	function &create() {
@@ -64,63 +78,77 @@ class Userman implements BMO {
 			return true;
 		}
 		if(isset($_POST['submit'])) {
-			$username = !empty($_POST['username']) ? $_POST['username'] : '';
-			$password = !empty($_POST['password']) ? $_POST['password'] : '';
-			$description = !empty($_POST['description']) ? $_POST['description'] : '';
-			$prevUsername = !empty($_POST['prevUsername']) ? $_POST['prevUsername'] : '';
-			$assigned = !empty($_POST['assigned']) ? $_POST['assigned'] : array();
-			$extraData = array(
-				'fname' => isset($_POST['fname']) ? $_POST['fname'] : '',
-				'lname' => isset($_POST['lname']) ? $_POST['lname'] : '',
-				'title' => isset($_POST['title']) ? $_POST['title'] : '',
-				'email' => isset($_POST['email']) ? $_POST['email'] : '',
-				'cell' => isset($_POST['cell']) ? $_POST['cell'] : '',
-				'work' => isset($_POST['work']) ? $_POST['work'] : '',
-				'home' => isset($_POST['home']) ? $_POST['home'] : ''
-			);
-			$default = !empty($_POST['defaultextension']) ? $_POST['defaultextension'] : 'none';
-			if(empty($password)) {
-				$this->message = array(
-					'message' => _('The Password Can Not Be blank!'),
-					'type' => 'danger'
-				);
-				return false;
-			}
-			if(!empty($username) && empty($prevUsername)) {
-				$ret = $this->addUser($username, $password, $default, $description, $extraData);
-				if($ret['status']) {
-					$this->setGlobalSettingByID($ret['id'],'assigned',$assigned);
-					$this->message = array(
-						'message' => $ret['message'],
-						'type' => $ret['type']
+			switch($_POST['type']) {
+				case 'user':
+					$username = !empty($_POST['username']) ? $_POST['username'] : '';
+					$password = !empty($_POST['password']) ? $_POST['password'] : '';
+					$description = !empty($_POST['description']) ? $_POST['description'] : '';
+					$prevUsername = !empty($_POST['prevUsername']) ? $_POST['prevUsername'] : '';
+					$assigned = !empty($_POST['assigned']) ? $_POST['assigned'] : array();
+					$extraData = array(
+						'fname' => isset($_POST['fname']) ? $_POST['fname'] : '',
+						'lname' => isset($_POST['lname']) ? $_POST['lname'] : '',
+						'title' => isset($_POST['title']) ? $_POST['title'] : '',
+						'email' => isset($_POST['email']) ? $_POST['email'] : '',
+						'cell' => isset($_POST['cell']) ? $_POST['cell'] : '',
+						'work' => isset($_POST['work']) ? $_POST['work'] : '',
+						'home' => isset($_POST['home']) ? $_POST['home'] : ''
 					);
-				} else {
+					$default = !empty($_POST['defaultextension']) ? $_POST['defaultextension'] : 'none';
+					if(empty($password)) {
+						$this->message = array(
+							'message' => _('The Password Can Not Be blank!'),
+							'type' => 'danger'
+						);
+						return false;
+					}
+					if(!empty($username) && empty($prevUsername)) {
+						$ret = $this->addUser($username, $password, $default, $description, $extraData);
+						if($ret['status']) {
+							$this->setGlobalSettingByID($ret['id'],'assigned',$assigned);
+							$this->message = array(
+								'message' => $ret['message'],
+								'type' => $ret['type']
+							);
+						} else {
+							$this->message = array(
+								'message' => $ret['message'],
+								'type' => $ret['type']
+							);
+						}
+					} elseif(!empty($username) && !empty($prevUsername)) {
+						$password = ($password != '******') ? $password : null;
+						$ret = $this->updateUser($prevUsername, $username, $default, $description, $extraData, $password);
+						if($ret['status']) {
+							$this->setGlobalSettingByID($ret['id'],'assigned',$assigned);
+							$this->message = array(
+								'message' => $ret['message'],
+								'type' => $ret['type']
+							);
+						} else {
+							$this->message = array(
+								'message' => $ret['message'],
+								'type' => $ret['type']
+							);
+						}
+					} else {
+						$this->message = array(
+							'message' => _('Username Can Not Be Blank'),
+							'type' => 'danger'
+						);
+						return false;
+					}
+					if($_POST['sendEmail'] == 'yes') {
+						$this->sendWelcomeEmail($username, $password);
+					}
+				break;
+				case 'general':
+					$this->setGlobalsetting('emailbody',$_POST['email']);
 					$this->message = array(
-						'message' => $ret['message'],
-						'type' => $ret['type']
+						'message' => _('Saved'),
+						'type' => 'success'
 					);
-				}
-			} elseif(!empty($username) && !empty($prevUsername)) {
-				$password = ($password != '******') ? $password : null;
-				$ret = $this->updateUser($prevUsername, $username, $default, $description, $extraData, $password);
-				if($ret['status']) {
-					$this->setGlobalSettingByID($ret['id'],'assigned',$assigned);
-					$this->message = array(
-						'message' => $ret['message'],
-						'type' => $ret['type']
-					);
-				} else {
-					$this->message = array(
-						'message' => $ret['message'],
-						'type' => $ret['type']
-					);
-				}
-			} else {
-				$this->message = array(
-					'message' => _('Username Can Not Be Blank'),
-					'type' => 'danger'
-				);
-				return false;
+				break;
 			}
 		}
 	}
@@ -181,8 +209,11 @@ class Userman implements BMO {
 				}
 				$html .= load_view(dirname(__FILE__).'/views/users.php',array("dfpbxusers" => $dfpbxusers, "fpbxusers" => $fpbxusers, "hookHtml" => $module_hook->hookHtml, "user" => $user, "message" => $this->message));
 			break;
+			case 'general':
+				$html .= load_view(dirname(__FILE__).'/views/general.php',array("email" => $this->getGlobalsetting('emailbody'), "message" => $this->message, "brand" => $this->brand));
+			break;
 			default:
-				$html .= load_view(dirname(__FILE__).'/views/general.php',array());
+				$html .= load_view(dirname(__FILE__).'/views/welcome.php',array());
 			break;
 		}
 
@@ -542,6 +573,11 @@ class Userman implements BMO {
 		$sth->execute(array(':id' => $uid, ':module' => $module, ':setting' => $setting, ':value' => $value, ':type' => $type));
 	}
 
+	/**
+	 * Check Credentials against username with a passworded sha
+	 * @param {string} $username      The username
+	 * @param {string} $password_sha1 The sha
+	 */
 	public function checkCredentials($username, $password_sha1) {
 		$sql = "SELECT id, password FROM ".$this->userTable." WHERE username = :username";
 		$sth = $this->db->prepare($sql);
@@ -551,6 +587,84 @@ class Userman implements BMO {
 			return $result['id'];
 		}
 		return false;
+	}
+
+	/**
+	 * Set a global User Manager Setting
+	 * @param {[type]} $key   [description]
+	 * @param {[type]} $value [description]
+	 */
+	public function setGlobalsetting($key, $value) {
+		$settings = $this->getGlobalsettings();
+		$settings[$key] = $value;
+		$sql = "REPLACE INTO module_xml (`id`, `data`) VALUES('userman_data', ?)";
+		$sth = $this->db->prepare($sql);
+		return $sth->execute(array(json_encode($settings)));
+	}
+
+	/**
+	 * Get a global User Manager Setting
+	 * @param {[type]} $key [description]
+	 */
+	public function getGlobalsetting($key) {
+		$sql = "SELECT data FROM module_xml WHERE id = 'userman_data'";
+		$sth = $this->db->prepare($sql);
+		$sth->execute();
+		$result = $sth->fetch(\PDO::FETCH_ASSOC);
+		$results = !empty($result['data']) ? json_decode($result['data'], true) : array();
+		return !empty($results[$key]) ? $results[$key] : null;
+	}
+
+	/**
+	 * Get all global user manager settings
+	 */
+	public function getGlobalsettings() {
+		$sql = "SELECT data FROM module_xml WHERE id = 'userman_data'";
+		$sth = $this->db->prepare($sql);
+		$sth->execute();
+		$result = $sth->fetch(\PDO::FETCH_ASSOC);
+		return !empty($result) ? json_decode($result, true) : array();
+	}
+
+	/**
+	 * Sends a welcome email
+	 * @param {string} $username The username to send to
+	 * @param {string} $password =              null If you want to send the password set it here
+	 */
+	public function sendWelcomeEmail($username, $password =  null) {
+		global $amp_conf;
+		$user = $this->getUserByUsername($username);
+		if(empty($user) || empty($user['email'])) {
+			return false;
+		}
+		$user['host'] = 'http://'.$_SERVER["SERVER_NAME"];
+		$user['brand'] = $this->brand;
+
+		$user['password'] = !empty($password) ? $password : "<" . _('hidden') . ">";
+
+		$user['modules'] = $this->callHooks('welcome',array('id' => $user['id'], 'brand' => $user['brand'], 'host' => $user['host']));
+		$user['services'] = '';
+		foreach($user['modules'] as $mod) {
+			$user['services'] = $mod . "\n";
+		}
+
+		$dbemail = $this->getGlobalsetting('emailbody');
+		$template = !empty($dbemail) ? $dbemail : file_get_contents(__DIR__.'/views/emails/welcome_text.tpl');
+		preg_match_all('/%([\w|\d]*)%/',$template,$matches);
+
+		foreach($matches[1] as $match) {
+			$replacement = !empty($user[$match]) ? $user[$match] : '';
+			$template = str_replace('%'.$match.'%',$replacement,$template);
+		}
+		$email_options = array('useragent' => $this->brand, 'protocol' => 'mail');
+		$email = new CI_Email();
+		$from = !empty($amp_conf['AMPUSERMANEMAILFROM']) ? $amp_conf['AMPUSERMANEMAILFROM'] : 'freepbx@freepbx.org';
+
+		$email->from($from);
+		$email->to($user['email']);
+		$email->subject(sprintf(_('You %s Account'),$this->brand));
+		$email->message($template);
+		$email->send();
 	}
 
 	private function isJson($string) {
@@ -574,12 +688,14 @@ class Userman implements BMO {
 	}
 
 	private function callHooks($action,$data=null) {
+		$ret = array();
 		if(isset($this->registeredFunctions[$action])) {
 			foreach($this->registeredFunctions[$action] as $function) {
 				if(function_exists($function) && !empty($data['id'])) {
-					$function($data['id'], $_REQUEST['display'], $data);
+					$ret[$function] = $function($data['id'], $_REQUEST['display'], $data);
 				}
 			}
 		}
+		return $ret;
 	}
 }

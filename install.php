@@ -45,3 +45,19 @@ if (!$db->getAll('SHOW COLUMNS FROM `freepbx_users` WHERE FIELD = "fname"')) {
     $sql = "ALTER TABLE `freepbx_users` ADD COLUMN `fname` VARCHAR(100) NULL DEFAULT NULL AFTER `default_extension`, ADD COLUMN `lname` VARCHAR(100) NULL DEFAULT NULL AFTER `fname`, ADD COLUMN `title` VARCHAR(100) NULL DEFAULT NULL AFTER `lname`, ADD COLUMN `department` VARCHAR(100) NULL DEFAULT NULL AFTER `title`, ADD COLUMN `email` VARCHAR(100) NULL DEFAULT NULL AFTER `department`, ADD COLUMN `cell` VARCHAR(100) NULL DEFAULT NULL AFTER `email`, ADD COLUMN `work` VARCHAR(100) NULL DEFAULT NULL AFTER `cell`, ADD COLUMN `home` VARCHAR(100) NULL DEFAULT NULL AFTER `work`";
     $result = $db->query($sql);
 }
+
+$freepbx_conf =& freepbx_conf::create();
+
+$set = array();
+$set['value'] = '';
+$set['defaultval'] =& $set['value'];
+$set['readonly'] = 0;
+$set['hidden'] = 0;
+$set['level'] = 0;
+$set['module'] = 'userman';
+$set['category'] = 'User Management Module';
+$set['emptyok'] = 1;
+$set['name'] = 'Email "From:" Address';
+$set['description'] = 'The From: field for emails when using the user management email feature.';
+$set['type'] = CONF_TYPE_TEXT;
+$freepbx_conf->define_conf_setting('AMPUSERMANEMAILFROM',$set,true);
