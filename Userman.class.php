@@ -24,7 +24,7 @@ class Userman implements BMO {
 			if (!empty($_SESSION['DASHBOARD_FREEPBX_BRAND'])) {
 				define('DASHBOARD_FREEPBX_BRAND', $_SESSION['DASHBOARD_FREEPBX_BRAND']);
 			} else {
-				define('DASHBOARD_FREEPBX_BRAND', 'FreePBX');
+				define('DASHBOARD_FREEPBX_BRAND', FreePBX::Config()->get("DASHBOARD_FREEPBX_BRAND"));
 			}
 		} else {
 			$_SESSION['DASHBOARD_FREEPBX_BRAND'] = DASHBOARD_FREEPBX_BRAND;
@@ -158,15 +158,7 @@ class Userman implements BMO {
 			return _("Module Core is disabled. Please enable it");
 		}
 		$module_hook = moduleHook::create();
-		if (!defined('DASHBOARD_FREEPBX_BRAND')) {
-			if (!empty($_SESSION['DASHBOARD_FREEPBX_BRAND'])) {
-				define('DASHBOARD_FREEPBX_BRAND', $_SESSION['DASHBOARD_FREEPBX_BRAND']);
-			} else {
-				define('DASHBOARD_FREEPBX_BRAND', 'FreePBX');
-			}
-		} else {
-			$_SESSION['DASHBOARD_FREEPBX_BRAND'] = DASHBOARD_FREEPBX_BRAND;
-		}
+
 		$action = !empty($_REQUEST['action']) ? $_REQUEST['action'] : '';
 		$html = '';
 
