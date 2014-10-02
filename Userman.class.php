@@ -690,4 +690,39 @@ class Userman implements BMO {
 		}
 		return $ret;
 	}
+
+	public function migrateVoicemailUsers($context = "default") {
+		echo "Starting to migrate Voicemail users\\n";
+		$config = $this->FreePBX->LoadConfig();
+		$config->loadConfig("voicemail.conf");
+		$context = empty($context) ? "default" : $context;
+		if($context == "general" || empty($config->ProcessedConfig[$context])) {
+			echo "Invalid Context: '".$context."'";
+			return false;
+		}
+
+		foreach($config->ProcessedConfig[$context] as $exten => $vu) {
+			$vars = explode(",",$vu);
+			$password = $vars[0];
+			$displayname = $vars[1];
+			$z = $this->getUserByDefaultExtension($exten);
+			if(!empty($z)) {
+				echo "Voicemail User '".$z['username']."' already has '".$exten."' as it's default extension. Skipping\\n";
+				continue;
+			}
+			$z = $this->getUserByUsername($exten);
+			if(!empty($z)) {
+				echo "Voicemail User '".$z['username']."' already exists. Skipping\\n";
+				continue;
+			}
+			$user = $this->addUser($exten, $password, $exten, $displayname);
+			if(!empty($user['id'])) {
+				echo "Added ".$exten." with password of ".$password."\\n";
+				$this->setAssignedDevices($user['id'], array($exten));
+			} else {
+				echo "Could not add ".$exten." because: ".$user['message']."\\n";
+			}
+		}
+		echo "\\nNow run: amportal a ucp enableall\\nTo give all users access to UCP";
+	}
 }
