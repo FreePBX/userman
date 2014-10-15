@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>12.0.4</version>
+	<version>12.0.5</version>
 	<publisher>Schmooze Com Inc</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -12,6 +12,7 @@
 		Modules like iSymphony or Rest API or the Upcoming User Control Panel will use this module to manage their users.
 	</description>
 	<changelog>
+		*12.0.5* User proper 12 hooking
 		*12.0.4* FREEPBX-7797 require confirmation before user delete
 		*12.0.3* FREEPBX-8049 Auto Generation of User Management from ARI (amportal a userman migrate)
 		*12.0.2* Tweaks and cleanup

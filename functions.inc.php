@@ -3,16 +3,7 @@
 //	Copyright 2013 Schmooze Com Inc.
 //
 function setup_userman() {
-	if(version_compare(getVersion(), '12.0', '>=') && class_exists('FreePBX')) {
-		return FreePBX::create()->Userman;
-	} else {
-		if(!interface_exists('BMO')) {
-			include(dirname(__FILE__).'/BMO.class.php');
-			include(dirname(__FILE__).'/Userman.class.php');
-		}
-		return Userman::create();
-	}
-
+	return FreePBX::create()->Userman;
 }
 
 include('functions.inc/guihooks.php');

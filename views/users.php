@@ -89,6 +89,7 @@
 			</td>
 		</tr>
 	</table>
+	<?php echo $moduleHtml;?>
 	<?php echo $hookHtml;?>
 	<table>
 		<tr>
