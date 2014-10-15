@@ -1,7 +1,7 @@
 <h2><?php echo (isset($_REQUEST['action']) && $_REQUEST['action'] == 'showuser') ? _("Edit User") : _("Add User")?></h2>
 <?php if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'showuser') {?>
 	<p>
-		<a href="config.php?display=userman&amp;action=deluser&amp;user=<?php echo $user['id']?>">
+		<a id="delete" href="config.php?display=userman&amp;action=deluser&amp;user=<?php echo $user['id']?>">
 			<span>
 				<img width="16" height="16" border="0" title="<?php echo sprintf(_('Delete User %s'),$user['username'])?>" alt="<?php echo sprintf(_('Delete User %s'),$user['username'])?>" src="images/core_delete.png"><?php echo sprintf(_('Delete User %s'),$user['username'])?>
 			</span>
@@ -89,6 +89,7 @@
 			</td>
 		</tr>
 	</table>
+	<?php echo $moduleHtml;?>
 	<?php echo $hookHtml;?>
 	<table>
 		<tr>

@@ -4,7 +4,8 @@
 //	Copyright 2013 Schmooze Com Inc.
 //
 
-class Userman implements BMO {
+namespace FreePBX\modules;
+class Userman implements \BMO {
 	private $registeredFunctions = array();
 	private $message = '';
 	private $userTable = 'freepbx_users';
@@ -12,19 +13,14 @@ class Userman implements BMO {
 	private $brand = 'FreePBX';
 
 	public function __construct($freepbx = null) {
-		if ($freepbx == null) {
-			include(dirname(__FILE__).'/DB_Helper.class.php');
-			$this->db = new Database();
-		} else {
-			$this->FreePBX = $freepbx;
-			$this->db = $freepbx->Database;
-		}
+		$this->FreePBX = $freepbx;
+		$this->db = $freepbx->Database;
 
 		if (!defined('DASHBOARD_FREEPBX_BRAND')) {
 			if (!empty($_SESSION['DASHBOARD_FREEPBX_BRAND'])) {
 				define('DASHBOARD_FREEPBX_BRAND', $_SESSION['DASHBOARD_FREEPBX_BRAND']);
 			} else {
-				define('DASHBOARD_FREEPBX_BRAND', FreePBX::Config()->get("DASHBOARD_FREEPBX_BRAND"));
+				define('DASHBOARD_FREEPBX_BRAND', \FreePBX::Config()->get("DASHBOARD_FREEPBX_BRAND"));
 			}
 		} else {
 			$_SESSION['DASHBOARD_FREEPBX_BRAND'] = DASHBOARD_FREEPBX_BRAND;
@@ -36,7 +32,7 @@ class Userman implements BMO {
 	function &create() {
 		static $obj;
 		if (!isset($obj) || !is_object($obj)) {
-			$obj = new Userman();
+			$obj = new \Userman();
 		}
 		return $obj;
 	}
@@ -157,7 +153,12 @@ class Userman implements BMO {
 		if(!function_exists('core_users_list')) {
 			return _("Module Core is disabled. Please enable it");
 		}
-		$module_hook = moduleHook::create();
+		$module_hook = \moduleHook::create();
+		$mods = $this->FreePBX->Hooks->processHooks();
+		$moduleHtml = '';
+		foreach($mods as $mod) {
+			$moduleHtml .= $mod;
+		}
 
 		$action = !empty($_REQUEST['action']) ? $_REQUEST['action'] : '';
 		$html = '';
@@ -199,7 +200,7 @@ class Userman implements BMO {
 					}
 					$dfpbxusers[] = array("ext" => $e, "name" => $u['name'], "selected" => ($e == $default));
 				}
-				$html .= load_view(dirname(__FILE__).'/views/users.php',array("dfpbxusers" => $dfpbxusers, "fpbxusers" => $fpbxusers, "hookHtml" => $module_hook->hookHtml, "user" => $user, "message" => $this->message));
+				$html .= load_view(dirname(__FILE__).'/views/users.php',array("dfpbxusers" => $dfpbxusers, "fpbxusers" => $fpbxusers, "moduleHtml" => $moduleHtml, "hookHtml" => $module_hook->hookHtml, "user" => $user, "message" => $this->message));
 			break;
 			case 'general':
 				$html .= load_view(dirname(__FILE__).'/views/general.php',array("email" => $this->getGlobalsetting('emailbody'), "message" => $this->message, "brand" => $this->brand));
@@ -236,7 +237,7 @@ class Userman implements BMO {
 		$sql = "SELECT * FROM ".$this->userTable." ORDER BY username";
 		$sth = $this->db->prepare($sql);
 		$sth->execute();
-		return $sth->fetchAll(PDO::FETCH_ASSOC);
+		return $sth->fetchAll(\PDO::FETCH_ASSOC);
 	}
 
 	/**
@@ -251,7 +252,7 @@ class Userman implements BMO {
 		$sql = "SELECT * FROM ".$this->userTable." WHERE default_extension = :extension";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':extension' => $extension));
-		$user = $sth->fetch(PDO::FETCH_ASSOC);
+		$user = $sth->fetch(\PDO::FETCH_ASSOC);
 		return $user;
 	}
 
@@ -267,7 +268,7 @@ class Userman implements BMO {
 		$sql = "SELECT * FROM ".$this->userTable." WHERE username = :username";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':username' => $username));
-		$user = $sth->fetch(PDO::FETCH_ASSOC);
+		$user = $sth->fetch(\PDO::FETCH_ASSOC);
 		return $user;
 	}
 
@@ -283,7 +284,7 @@ class Userman implements BMO {
 		$sql = "SELECT * FROM ".$this->userTable." WHERE id = :id";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':id' => $id));
-		$user = $sth->fetch(PDO::FETCH_ASSOC);
+		$user = $sth->fetch(\PDO::FETCH_ASSOC);
 		return $user;
 	}
 
@@ -309,7 +310,16 @@ class Userman implements BMO {
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':uid' => $id));
 		$this->callHooks('delUser',array("id" => $id));
+		$this->delUser($id);
 		return array("status" => true, "type" => "success", "message" => _("User Successfully Deleted"));
+	}
+
+	/**
+	 * This is here so that the processhooks callback has the righ function name to hook into
+	 * @param {int} $id the user id of the deleted user
+	 */
+	public function delUser($id) {
+		$this->FreePBX->Hooks->processHooks($id, $_REQUEST['display'], array("id" => $id));
 	}
 
 	/**
@@ -326,7 +336,6 @@ class Userman implements BMO {
 	 * @return array
 	 */
 	public function addUser($username, $password, $default='none', $description='', $extraData=array(), $encrypt = true) {
-		$module_hook = moduleHook::create();
 		if(empty($username) || empty($password)) {
 			return array("status" => false, "type" => "danger", "message" => _("Username/Password Can Not Be Blank!"));
 		}
@@ -341,6 +350,7 @@ class Userman implements BMO {
 		$id = $this->db->lastInsertId();
 		$this->updateUserExtraData($id,$extraData);
 		$this->callHooks('addUser',array("id" => $id, "username" => $username, "description" => $description, "password" => $password, "encrypted" => $encrypt, "extraData" => $extraData));
+		$this->FreePBX->Hooks->processHooks($id, $_REQUEST['display'], array("id" => $id, "username" => $username, "description" => $description, "password" => $password, "encrypted" => $encrypt, "extraData" => $extraData));
 		return array("status" => true, "type" => "success", "message" => _("User Successfully Added"), "id" => $id);
 	}
 
@@ -379,6 +389,7 @@ class Userman implements BMO {
 		$this->updateUserExtraData($user['id'],$extraData);
 
 		$this->callHooks('updateUser',array("id" => $user['id'], "prevUsername" => $prevUsername, "username" => $username, "description" => $description, "password" => $password, "extraData" => $extraData));
+		$this->FreePBX->Hooks->processHooks($user['id'], $_REQUEST['display'], array("id" => $user['id'], "prevUsername" => $prevUsername, "username" => $username, "description" => $description, "password" => $password, "extraData" => $extraData));
 		return array("status" => true, "type" => "success", "message" => $message, "id" => $user['id']);
 	}
 
@@ -629,15 +640,21 @@ class Userman implements BMO {
 		if(empty($user) || empty($user['email'])) {
 			return false;
 		}
+
 		$user['host'] = 'http://'.$_SERVER["SERVER_NAME"];
 		$user['brand'] = $this->brand;
 
 		$user['password'] = !empty($password) ? $password : "<" . _('hidden') . ">";
 
-		$user['modules'] = $this->callHooks('welcome',array('id' => $user['id'], 'brand' => $user['brand'], 'host' => $user['host']));
+		$mods = $this->callHooks('welcome',array('id' => $user['id'], 'brand' => $user['brand'], 'host' => $user['host']));
 		$user['services'] = '';
-		foreach($user['modules'] as $mod) {
-			$user['services'] = $mod . "\n";
+		foreach($mods as $mod) {
+			$user['services'] .= $mod . "\n";
+		}
+
+		$mods = $this->FreePBX->Hooks->processHooks($user['id'], $_REQUEST['display'], array('id' => $user['id'], 'brand' => $user['brand'], 'host' => $user['host']));
+		foreach($mods as $mod) {
+			$user['services'] .= $mod . "\n";
 		}
 
 		$dbemail = $this->getGlobalsetting('emailbody');
@@ -668,7 +685,7 @@ class Userman implements BMO {
 		$sql = 'SELECT default_extension FROM '.$this->userTable;
 		$sth = $this->db->prepare($sql);
 		$sth->execute();
-		$devices = $sth->fetchAll(PDO::FETCH_ASSOC);
+		$devices = $sth->fetchAll(\PDO::FETCH_ASSOC);
 		$used = array();
 		foreach($devices as $device) {
 			if($device['default_extension'] == 'none') {
@@ -689,5 +706,40 @@ class Userman implements BMO {
 			}
 		}
 		return $ret;
+	}
+
+	public function migrateVoicemailUsers($context = "default") {
+		echo "Starting to migrate Voicemail users\\n";
+		$config = $this->FreePBX->LoadConfig();
+		$config->loadConfig("voicemail.conf");
+		$context = empty($context) ? "default" : $context;
+		if($context == "general" || empty($config->ProcessedConfig[$context])) {
+			echo "Invalid Context: '".$context."'";
+			return false;
+		}
+
+		foreach($config->ProcessedConfig[$context] as $exten => $vu) {
+			$vars = explode(",",$vu);
+			$password = $vars[0];
+			$displayname = $vars[1];
+			$z = $this->getUserByDefaultExtension($exten);
+			if(!empty($z)) {
+				echo "Voicemail User '".$z['username']."' already has '".$exten."' as it's default extension. Skipping\\n";
+				continue;
+			}
+			$z = $this->getUserByUsername($exten);
+			if(!empty($z)) {
+				echo "Voicemail User '".$z['username']."' already exists. Skipping\\n";
+				continue;
+			}
+			$user = $this->addUser($exten, $password, $exten, $displayname);
+			if(!empty($user['id'])) {
+				echo "Added ".$exten." with password of ".$password."\\n";
+				$this->setAssignedDevices($user['id'], array($exten));
+			} else {
+				echo "Could not add ".$exten." because: ".$user['message']."\\n";
+			}
+		}
+		echo "\\nNow run: amportal a ucp enableall\\nTo give all users access to UCP";
 	}
 }
