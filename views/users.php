@@ -40,6 +40,10 @@
 			<td><input type="text" autocomplete="off" name="lname" maxlength="100" value="<?php echo !empty($user['lname']) ? $user['lname'] : ''; ?>"></td>
 		</tr>
 		<tr class="userman">
+			<td><a href="#" class="info"><?php echo _("Display Name")?>:<span><?php echo _("Display Name. Used in User Control Panel and Contact Manager to display a customized user name")?></span></a></td>
+			<td><input type="text" autocomplete="off" name="displayname" maxlength="100" value="<?php echo !empty($user['displayname']) ? $user['displayname'] : ''; ?>"></td>
+		</tr>
+		<tr class="userman">
 			<td><a href="#" class="info"><?php echo _("Title")?>:<span><?php echo _("The user's title.")?></span></a></td>
 			<td><input type="text" autocomplete="off" name="title" maxlength="100" value="<?php echo !empty($user['title']) ? $user['title'] : ''; ?>"></td>
 		</tr>

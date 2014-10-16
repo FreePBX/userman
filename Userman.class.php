@@ -88,7 +88,8 @@ class Userman implements \BMO {
 						'email' => isset($_POST['email']) ? $_POST['email'] : '',
 						'cell' => isset($_POST['cell']) ? $_POST['cell'] : '',
 						'work' => isset($_POST['work']) ? $_POST['work'] : '',
-						'home' => isset($_POST['home']) ? $_POST['home'] : ''
+						'home' => isset($_POST['home']) ? $_POST['home'] : '',
+						'displayname' => isset($_POST['displayname']) ? $_POST['displayname'] : ''
 					);
 					$default = !empty($_POST['defaultextension']) ? $_POST['defaultextension'] : 'none';
 					if(empty($password)) {
@@ -412,7 +413,7 @@ class Userman implements \BMO {
 		if(empty($data)) {
 			return true;
 		}
-		$sql = "UPDATE ".$this->userTable." SET `fname` = :fname, `lname` = :lname, `title` = :title, `email` = :email, `cell` = :cell, `work` = :work, `home` = :home, `department` = :department WHERE `id` = :uid";
+		$sql = "UPDATE ".$this->userTable." SET `fname` = :fname, `lname` = :lname, `displayname` = :displayname, `title` = :title, `email` = :email, `cell` = :cell, `work` = :work, `home` = :home, `department` = :department WHERE `id` = :uid";
 		$defaults = $this->getUserByID($id);
 		$sth = $this->db->prepare($sql);
 		$fname = isset($data['fname']) ? $data['fname'] : $defaults['fname'];
@@ -422,8 +423,9 @@ class Userman implements \BMO {
 		$cell = isset($data['cell']) ? $data['cell'] : $defaults['cell'];
 		$home = isset($data['home']) ? $data['home'] : $defaults['home'];
 		$work = isset($data['work']) ? $data['work'] : $defaults['work'];
+		$displayname = isset($data['displayname']) ? $data['displayname'] : $defaults['displayname'];
 		$department = isset($data['department']) ? $data['department'] : $defaults['work'];
-		$sth->execute(array(':fname' => $fname, ':lname' => $lname, ':title' => $title, ':email' => $email, ':cell' => $cell, ':work' => $work, ':home' => $home, ':department' => $department, ':uid' => $id));
+		$sth->execute(array(':fname' => $fname, ':lname' => $lname, ':displayname' => $displayname, ':title' => $title, ':email' => $email, ':cell' => $cell, ':work' => $work, ':home' => $home, ':department' => $department, ':uid' => $id));
 	}
 
 	/**

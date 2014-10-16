@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>12.0.6</version>
+	<version>12.0.7</version>
 	<publisher>Schmooze Com Inc</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -9,9 +9,10 @@
 	<description>
 		This Module manages all FreePBX users excluding Administrators (at this time).
 		It allows an Administrator to create a User Account that can be used by other applications for login or API purposes.
-		Modules like iSymphony or Rest API or the Upcoming User Control Panel will use this module to manage their users.
+		Modules like iSymphony, Rest API and User Control Panel use this module to manage their users.
 	</description>
 	<changelog>
+		*12.0.7* Add new Display Name Field
 		*12.0.6* Escape out class
 		*12.0.5* User proper 12 hooking
 		*12.0.4* FREEPBX-7797 require confirmation before user delete
