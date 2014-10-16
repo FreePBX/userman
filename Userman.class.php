@@ -316,10 +316,14 @@ class Userman implements \BMO {
 
 	/**
 	 * This is here so that the processhooks callback has the righ function name to hook into
+	 *
+	 * Note: Should never be called externally, use the above function!!
+	 *
 	 * @param {int} $id the user id of the deleted user
 	 */
-	public function delUser($id) {
-		$this->FreePBX->Hooks->processHooks($id, $_REQUEST['display'], array("id" => $id));
+	private function delUser($id) {
+		$display = !empty($_REQUEST['display']) ? $_REQUEST['display'] : "";
+		$this->FreePBX->Hooks->processHooks($id, $display, array("id" => $id));
 	}
 
 	/**
@@ -336,11 +340,12 @@ class Userman implements \BMO {
 	 * @return array
 	 */
 	public function addUser($username, $password, $default='none', $description='', $extraData=array(), $encrypt = true) {
+		$display = !empty($_REQUEST['display']) ? $_REQUEST['display'] : "";
 		if(empty($username) || empty($password)) {
 			return array("status" => false, "type" => "danger", "message" => _("Username/Password Can Not Be Blank!"));
 		}
 		if($this->getUserByUsername($username)) {
-			return array("status" => false, "type" => "danger", "message" => sprintf(_("User '%s' Does Not Exist"),$username));
+			return array("status" => false, "type" => "danger", "message" => sprintf(_("User '%s' Already Exists"),$username));
 		}
 		$sql = "INSERT INTO ".$this->userTable." (`username`,`password`,`description`,`default_extension`) VALUES (:username,:password,:description,:default_extension)";
 		$sth = $this->db->prepare($sql);
@@ -350,7 +355,7 @@ class Userman implements \BMO {
 		$id = $this->db->lastInsertId();
 		$this->updateUserExtraData($id,$extraData);
 		$this->callHooks('addUser',array("id" => $id, "username" => $username, "description" => $description, "password" => $password, "encrypted" => $encrypt, "extraData" => $extraData));
-		$this->FreePBX->Hooks->processHooks($id, $_REQUEST['display'], array("id" => $id, "username" => $username, "description" => $description, "password" => $password, "encrypted" => $encrypt, "extraData" => $extraData));
+		$this->FreePBX->Hooks->processHooks($id, $display, array("id" => $id, "username" => $username, "description" => $description, "password" => $password, "encrypted" => $encrypt, "extraData" => $extraData));
 		return array("status" => true, "type" => "success", "message" => _("User Successfully Added"), "id" => $id);
 	}
 
@@ -368,6 +373,7 @@ class Userman implements \BMO {
 	 * @return array
 	 */
 	public function updateUser($prevUsername, $username, $default='none', $description='', $extraData=array(), $password=null) {
+		$display = !empty($_REQUEST['display']) ? $_REQUEST['display'] : "";
 		$user = $this->getUserByUsername($prevUsername);
 		if(!$user || empty($user)) {
 			return array("status" => false, "type" => "danger", "message" => sprintf(_("User '%s' Does Not Exist"),$user));
@@ -389,7 +395,7 @@ class Userman implements \BMO {
 		$this->updateUserExtraData($user['id'],$extraData);
 
 		$this->callHooks('updateUser',array("id" => $user['id'], "prevUsername" => $prevUsername, "username" => $username, "description" => $description, "password" => $password, "extraData" => $extraData));
-		$this->FreePBX->Hooks->processHooks($user['id'], $_REQUEST['display'], array("id" => $user['id'], "prevUsername" => $prevUsername, "username" => $username, "description" => $description, "password" => $password, "extraData" => $extraData));
+		$this->FreePBX->Hooks->processHooks($user['id'], $display, array("id" => $user['id'], "prevUsername" => $prevUsername, "username" => $username, "description" => $description, "password" => $password, "extraData" => $extraData));
 		return array("status" => true, "type" => "success", "message" => $message, "id" => $user['id']);
 	}
 
@@ -666,7 +672,7 @@ class Userman implements \BMO {
 			$template = str_replace('%'.$match.'%',$replacement,$template);
 		}
 		$email_options = array('useragent' => $this->brand, 'protocol' => 'mail');
-		$email = new CI_Email();
+		$email = new \CI_Email();
 		$from = !empty($amp_conf['AMPUSERMANEMAILFROM']) ? $amp_conf['AMPUSERMANEMAILFROM'] : 'freepbx@freepbx.org';
 
 		$email->from($from);
@@ -697,11 +703,12 @@ class Userman implements \BMO {
 	}
 
 	private function callHooks($action,$data=null) {
+		$display = !empty($_REQUEST['display']) ? $_REQUEST['display'] : "";
 		$ret = array();
 		if(isset($this->registeredFunctions[$action])) {
 			foreach($this->registeredFunctions[$action] as $function) {
 				if(function_exists($function) && !empty($data['id'])) {
-					$ret[$function] = $function($data['id'], $_REQUEST['display'], $data);
+					$ret[$function] = $function($data['id'], $display, $data);
 				}
 			}
 		}
