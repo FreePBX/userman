@@ -242,6 +242,29 @@ class Userman implements \BMO {
 	}
 
 	/**
+	 * Get all Users as contacts
+	 *
+	 * @return array
+	 */
+	public function getAllContactInfo() {
+		$sql = "SELECT id, username, description, fname, lname, coalesce(displayname, CONCAT_WS(' ', fname, lname)) AS displayname, title, department, email, cell, work, home FROM ".$this->userTable;
+		$sth = $this->db->prepare($sql);
+		$sth->execute();
+		$users = $sth->fetchAll(\PDO::FETCH_ASSOC);
+		if(empty($users)) {
+			return array();
+		}
+		foreach($users as &$user) {
+			$mods = $this->FreePBX->Hooks->processHooks($user);
+			foreach($mods as $mod) {
+				$user = array_merge($user, $mod);
+			}
+		}
+
+		return $users;
+	}
+
+	/**
 	 * Get User Information by the Default Extension
 	 *
 	 * This gets user information from the user which has said extension defined as it's default
@@ -640,6 +663,54 @@ class Userman implements \BMO {
 		return !empty($result) ? json_decode($result, true) : array();
 	}
 
+	private function callHooks($action,$data=null) {
+		$display = !empty($_REQUEST['display']) ? $_REQUEST['display'] : "";
+		$ret = array();
+		if(isset($this->registeredFunctions[$action])) {
+			foreach($this->registeredFunctions[$action] as $function) {
+				if(function_exists($function) && !empty($data['id'])) {
+					$ret[$function] = $function($data['id'], $display, $data);
+				}
+			}
+		}
+		return $ret;
+	}
+
+	public function migrateVoicemailUsers($context = "default") {
+		echo "Starting to migrate Voicemail users\\n";
+		$config = $this->FreePBX->LoadConfig();
+		$config->loadConfig("voicemail.conf");
+		$context = empty($context) ? "default" : $context;
+		if($context == "general" || empty($config->ProcessedConfig[$context])) {
+			echo "Invalid Context: '".$context."'";
+			return false;
+		}
+
+		foreach($config->ProcessedConfig[$context] as $exten => $vu) {
+			$vars = explode(",",$vu);
+			$password = $vars[0];
+			$displayname = $vars[1];
+			$z = $this->getUserByDefaultExtension($exten);
+			if(!empty($z)) {
+				echo "Voicemail User '".$z['username']."' already has '".$exten."' as it's default extension. Skipping\\n";
+				continue;
+			}
+			$z = $this->getUserByUsername($exten);
+			if(!empty($z)) {
+				echo "Voicemail User '".$z['username']."' already exists. Skipping\\n";
+				continue;
+			}
+			$user = $this->addUser($exten, $password, $exten, $displayname);
+			if(!empty($user['id'])) {
+				echo "Added ".$exten." with password of ".$password."\\n";
+				$this->setAssignedDevices($user['id'], array($exten));
+			} else {
+				echo "Could not add ".$exten." because: ".$user['message']."\\n";
+			}
+		}
+		echo "\\nNow run: amportal a ucp enableall\\nTo give all users access to UCP";
+	}
+
 	/**
 	 * Sends a welcome email
 	 * @param {string} $username The username to send to
@@ -705,53 +776,5 @@ class Userman implements \BMO {
 			$used[] = $device['default_extension'];
 		}
 		return $used;
-	}
-
-	private function callHooks($action,$data=null) {
-		$display = !empty($_REQUEST['display']) ? $_REQUEST['display'] : "";
-		$ret = array();
-		if(isset($this->registeredFunctions[$action])) {
-			foreach($this->registeredFunctions[$action] as $function) {
-				if(function_exists($function) && !empty($data['id'])) {
-					$ret[$function] = $function($data['id'], $display, $data);
-				}
-			}
-		}
-		return $ret;
-	}
-
-	public function migrateVoicemailUsers($context = "default") {
-		echo "Starting to migrate Voicemail users\\n";
-		$config = $this->FreePBX->LoadConfig();
-		$config->loadConfig("voicemail.conf");
-		$context = empty($context) ? "default" : $context;
-		if($context == "general" || empty($config->ProcessedConfig[$context])) {
-			echo "Invalid Context: '".$context."'";
-			return false;
-		}
-
-		foreach($config->ProcessedConfig[$context] as $exten => $vu) {
-			$vars = explode(",",$vu);
-			$password = $vars[0];
-			$displayname = $vars[1];
-			$z = $this->getUserByDefaultExtension($exten);
-			if(!empty($z)) {
-				echo "Voicemail User '".$z['username']."' already has '".$exten."' as it's default extension. Skipping\\n";
-				continue;
-			}
-			$z = $this->getUserByUsername($exten);
-			if(!empty($z)) {
-				echo "Voicemail User '".$z['username']."' already exists. Skipping\\n";
-				continue;
-			}
-			$user = $this->addUser($exten, $password, $exten, $displayname);
-			if(!empty($user['id'])) {
-				echo "Added ".$exten." with password of ".$password."\\n";
-				$this->setAssignedDevices($user['id'], array($exten));
-			} else {
-				echo "Could not add ".$exten." because: ".$user['message']."\\n";
-			}
-		}
-		echo "\\nNow run: amportal a ucp enableall\\nTo give all users access to UCP";
 	}
 }
