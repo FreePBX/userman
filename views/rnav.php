@@ -6,7 +6,7 @@
 		<li><a href='config.php?display=userman&amp;action=adduser'><?php echo _('Add New User')?></a></li>
 		<li><hr></li>
 		<?php foreach($users as $user) {?>
-			<li><a href='config.php?display=userman&amp;action=showuser&amp;user=<?php echo $user['id']?>'><?php echo $user['username']?></a></li>
+			<li><a href='config.php?display=userman&amp;action=showuser&amp;user=<?php echo $user['id']?>'><?php echo $user['dn']?></a></li>
 		<?php }?>
 	</ul>
 </div>

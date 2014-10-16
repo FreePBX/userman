@@ -82,14 +82,14 @@ class Userman implements \BMO {
 					$prevUsername = !empty($_POST['prevUsername']) ? $_POST['prevUsername'] : '';
 					$assigned = !empty($_POST['assigned']) ? $_POST['assigned'] : array();
 					$extraData = array(
-						'fname' => isset($_POST['fname']) ? $_POST['fname'] : '',
-						'lname' => isset($_POST['lname']) ? $_POST['lname'] : '',
-						'title' => isset($_POST['title']) ? $_POST['title'] : '',
-						'email' => isset($_POST['email']) ? $_POST['email'] : '',
-						'cell' => isset($_POST['cell']) ? $_POST['cell'] : '',
-						'work' => isset($_POST['work']) ? $_POST['work'] : '',
-						'home' => isset($_POST['home']) ? $_POST['home'] : '',
-						'displayname' => isset($_POST['displayname']) ? $_POST['displayname'] : ''
+						'fname' => isset($_POST['fname']) ? $_POST['fname'] : null,
+						'lname' => isset($_POST['lname']) ? $_POST['lname'] : null,
+						'title' => isset($_POST['title']) ? $_POST['title'] : null,
+						'email' => isset($_POST['email']) ? $_POST['email'] : null,
+						'cell' => isset($_POST['cell']) ? $_POST['cell'] : null,
+						'work' => isset($_POST['work']) ? $_POST['work'] : null,
+						'home' => isset($_POST['home']) ? $_POST['home'] : null,
+						'displayname' => isset($_POST['displayname']) ? $_POST['displayname'] : null
 					);
 					$default = !empty($_POST['defaultextension']) ? $_POST['defaultextension'] : 'none';
 					if(empty($password)) {
@@ -235,7 +235,7 @@ class Userman implements \BMO {
 	 * @return array
 	 */
 	public function getAllUsers() {
-		$sql = "SELECT * FROM ".$this->userTable." ORDER BY username";
+		$sql = "SELECT *, coalesce(displayname, username) as dn FROM ".$this->userTable." ORDER BY username";
 		$sth = $this->db->prepare($sql);
 		$sth->execute();
 		return $sth->fetchAll(\PDO::FETCH_ASSOC);
@@ -340,8 +340,9 @@ class Userman implements \BMO {
 	 * @param bool $encrypt Whether to encrypt the password or not. If this is false the system will still assume its hashed as sha1, so this is only useful if importing accounts with previous sha1 passwords
 	 * @return array
 	 */
-	public function addUser($username, $password, $default='none', $description='', $extraData=array(), $encrypt = true) {
+	public function addUser($username, $password, $default='none', $description=null, $extraData=array(), $encrypt = true) {
 		$display = !empty($_REQUEST['display']) ? $_REQUEST['display'] : "";
+		$description = !empty($description) ? $description : null;
 		if(empty($username) || empty($password)) {
 			return array("status" => false, "type" => "danger", "message" => _("Username/Password Can Not Be Blank!"));
 		}
@@ -373,8 +374,9 @@ class Userman implements \BMO {
 	 * @param string $password The updated password, if null then password isn't updated
 	 * @return array
 	 */
-	public function updateUser($prevUsername, $username, $default='none', $description='', $extraData=array(), $password=null) {
+	public function updateUser($prevUsername, $username, $default='none', $description=null, $extraData=array(), $password=null) {
 		$display = !empty($_REQUEST['display']) ? $_REQUEST['display'] : "";
+		$description = !empty($description) ? $description : null;
 		$user = $this->getUserByUsername($prevUsername);
 		if(!$user || empty($user)) {
 			return array("status" => false, "type" => "danger", "message" => sprintf(_("User '%s' Does Not Exist"),$user));
@@ -416,15 +418,16 @@ class Userman implements \BMO {
 		$sql = "UPDATE ".$this->userTable." SET `fname` = :fname, `lname` = :lname, `displayname` = :displayname, `title` = :title, `email` = :email, `cell` = :cell, `work` = :work, `home` = :home, `department` = :department WHERE `id` = :uid";
 		$defaults = $this->getUserByID($id);
 		$sth = $this->db->prepare($sql);
-		$fname = isset($data['fname']) ? $data['fname'] : $defaults['fname'];
-		$lname = isset($data['lname']) ? $data['lname'] : $defaults['lname'];
-		$title = isset($data['title']) ? $data['title'] : $defaults['title'];
-		$email = isset($data['email']) ? $data['email'] : $defaults['email'];
-		$cell = isset($data['cell']) ? $data['cell'] : $defaults['cell'];
-		$home = isset($data['home']) ? $data['home'] : $defaults['home'];
-		$work = isset($data['work']) ? $data['work'] : $defaults['work'];
-		$displayname = isset($data['displayname']) ? $data['displayname'] : $defaults['displayname'];
-		$department = isset($data['department']) ? $data['department'] : $defaults['work'];
+		$fname = !empty($data['fname']) ? $data['fname'] : (!isset($data['fname']) && !empty($defaults['fname']) ? $defaults['fname'] : null);
+		$lname = !empty($data['lname']) ? $data['lname'] : (!isset($data['lname']) && !empty($defaults['lname']) ? $defaults['lname'] : null);
+		$title = !empty($data['title']) ? $data['title'] : (!isset($data['title']) && !empty($defaults['title']) ? $defaults['title'] : null);
+		$email = !empty($data['email']) ? $data['email'] : (!isset($data['email']) && !empty($defaults['email']) ? $defaults['email'] : null);
+		$cell = !empty($data['cell']) ? $data['cell'] : (!isset($data['cell']) && !empty($defaults['cell']) ? $defaults['cell'] : null);
+		$home = !empty($data['home']) ? $data['home'] : (!isset($data['home']) && !empty($defaults['home']) ? $defaults['home'] : null);
+		$work = !empty($data['work']) ? $data['work'] : (!isset($data['work']) && !empty($defaults['work']) ? $defaults['work'] : null);
+		$displayname = !empty($data['displayname']) ? $data['displayname'] : (!isset($data['displayname']) && !empty($defaults['displayname']) ? $defaults['displayname'] : null);
+		$department = !empty($data['department']) ? $data['department'] : (!isset($data['department']) && !empty($defaults['department']) ? $defaults['department'] : null);
+
 		$sth->execute(array(':fname' => $fname, ':lname' => $lname, ':displayname' => $displayname, ':title' => $title, ':email' => $email, ':cell' => $cell, ':work' => $work, ':home' => $home, ':department' => $department, ':uid' => $id));
 	}
 
