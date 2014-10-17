@@ -49,7 +49,7 @@
 	<info></info>
 	<category>Admin</category>
 	<menuitems>
-		<userman beta="yes">User Management</userman>
+		<userman>User Management</userman>
 	</menuitems>
 	<depends>
 		<phpversion>5.3.3</phpversion>
