@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>12.0.10</version>
+	<version>12.0.11</version>
 	<publisher>Schmooze Com Inc</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -12,6 +12,7 @@
 		Modules like iSymphony, Rest API and User Control Panel use this module to manage their users.
 	</description>
 	<changelog>
+		*12.0.11* Remove beta status
 		*12.0.10* Invisible display names...
 		*12.0.9* Provide a method to get contact details (hookable)
 		*12.0.8* NULL values if they are empty
@@ -48,7 +49,7 @@
 	<info></info>
 	<category>Admin</category>
 	<menuitems>
-		<userman beta="yes">User Management</userman>
+		<userman>User Management</userman>
 	</menuitems>
 	<depends>
 		<phpversion>5.3.3</phpversion>
