@@ -760,7 +760,7 @@ class Userman implements \BMO {
 
 		$email->from($from);
 		$email->to($user['email']);
-		$email->subject(sprintf(_('You %s Account'),$this->brand));
+		$email->subject(sprintf(_('Your %s Account'),$this->brand));
 		$email->message($template);
 		$email->send();
 	}
