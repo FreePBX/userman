@@ -11,6 +11,7 @@ class Userman implements \BMO {
 	private $userTable = 'freepbx_users';
 	private $userSettingsTable = 'freepbx_users_settings';
 	private $brand = 'FreePBX';
+	private $contacts = array();
 
 	public function __construct($freepbx = null) {
 		$this->FreePBX = $freepbx;
@@ -247,6 +248,9 @@ class Userman implements \BMO {
 	 * @return array
 	 */
 	public function getAllContactInfo() {
+		if(!empty($this->contacts)) {
+			return $this->contacts;
+		}
 		$sql = "SELECT id, username, description, fname, lname, coalesce(displayname, CONCAT_WS(' ', fname, lname)) AS displayname, title, department, email, cell, work, home FROM ".$this->userTable;
 		$sth = $this->db->prepare($sql);
 		$sth->execute();
@@ -255,13 +259,16 @@ class Userman implements \BMO {
 			return array();
 		}
 		foreach($users as &$user) {
+			//dont let displayname escape without a value
+			$user['displayname'] = !empty($user['displayname']) ? $user['displayname'] : $user['username'];
 			$mods = $this->FreePBX->Hooks->processHooks($user);
 			foreach($mods as $mod) {
 				$user = array_merge($user, $mod);
 			}
 		}
 
-		return $users;
+		$this->contacts = $users;
+		return $this->contacts;
 	}
 
 	/**
