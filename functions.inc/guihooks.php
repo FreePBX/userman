@@ -232,8 +232,10 @@ function userman_configprocess() {
 			$userO = $userman->getUserByDefaultExtension($extension);
 			if(!empty($userO['id'])) {
 				$assigned = $userman->getGlobalSettingByID($userO['id'],'assigned');
-				$assigned = array_diff($assigned, array($extension));
-				$userman->setGlobalSettingByID($userO['id'],'assigned',$assigned);
+				if(!empty($assigned)) {
+					$assigned = array_diff($assigned, array($extension));
+					$userman->setGlobalSettingByID($userO['id'],'assigned',$assigned);
+				}
 				//run this last so that hooks to other modules get the correct information
 				$userman->updateUser($userO['username'],$userO['username'],'none');
 			}
