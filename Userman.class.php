@@ -141,7 +141,8 @@ class Userman implements \BMO {
 					}
 				break;
 				case 'general':
-					$this->setGlobalsetting('emailbody',$_POST['email']);
+					$this->setGlobalsetting('emailbody',$_POST['emailbody']);
+					$this->setGlobalsetting('emailsubject',$_POST['emailsubject']);
 					$this->message = array(
 						'message' => _('Saved'),
 						'type' => 'success'
@@ -205,7 +206,7 @@ class Userman implements \BMO {
 				$html .= load_view(dirname(__FILE__).'/views/users.php',array("dfpbxusers" => $dfpbxusers, "fpbxusers" => $fpbxusers, "moduleHtml" => $moduleHtml, "hookHtml" => $module_hook->hookHtml, "user" => $user, "message" => $this->message));
 			break;
 			case 'general':
-				$html .= load_view(dirname(__FILE__).'/views/general.php',array("email" => $this->getGlobalsetting('emailbody'), "message" => $this->message, "brand" => $this->brand));
+				$html .= load_view(dirname(__FILE__).'/views/general.php',array("subject" => $this->getGlobalsetting('emailsubject'), "email" => $this->getGlobalsetting('emailbody'), "message" => $this->message, "brand" => $this->brand));
 			break;
 			default:
 				$html .= load_view(dirname(__FILE__).'/views/welcome.php',array());
@@ -760,7 +761,14 @@ class Userman implements \BMO {
 
 		$email->from($from);
 		$email->to($user['email']);
-		$email->subject(sprintf(_('Your %s Account'),$this->brand));
+		$dbsubject = $this->getGlobalsetting('emailsubject');
+		$subject = !empty($dbsubject) ? $dbsubject : _('Your %brand% Account');
+		preg_match_all('/%([\w|\d]*)%/',$subject,$matches);
+		foreach($matches[1] as $match) {
+			$replacement = !empty($user[$match]) ? $user[$match] : '';
+			$subject = str_replace('%'.$match.'%',$replacement,$template);
+		}
+		$email->subject($subject);
 		$email->message($template);
 		$email->send();
 	}
