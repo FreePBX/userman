@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>12.0.14</version>
+	<version>12.0.15</version>
 	<publisher>Schmooze Com Inc</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -12,6 +12,7 @@
 		Modules like iSymphony, Rest API and User Control Panel use this module to manage their users.
 	</description>
 	<changelog>
+		*12.0.15* Global Settings Regression
 		*12.0.14* FREEPBX-8189 Unable to edit subject of UCP welcome message
 		*12.0.13* FREEPBX-8246 Unable to delete extension with no links in userman
 		*12.0.12* Fix spelling FREEPBX-8189
