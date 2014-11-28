@@ -10,7 +10,7 @@
 .extensions-list {
 	border: 1px black dotted;
 	padding: 2px;
-	overflow: scroll;
+	overflow: auto;
 	height: 150px;
 	font-size: 85%;
 	min-width: 200px;
