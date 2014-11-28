@@ -668,7 +668,7 @@ class Userman implements \BMO {
 		$sth = $this->db->prepare($sql);
 		$sth->execute();
 		$result = $sth->fetch(\PDO::FETCH_ASSOC);
-		return !empty($result) ? json_decode($result, true) : array();
+		return !empty($result['data']) ? json_decode($result['data'], true) : array();
 	}
 
 	private function callHooks($action,$data=null) {
