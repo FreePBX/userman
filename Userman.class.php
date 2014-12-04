@@ -254,7 +254,7 @@ class Userman implements \BMO {
 		if(!empty($this->contacts)) {
 			return $this->contacts;
 		}
-		$sql = "SELECT id, username, description, fname, lname, coalesce(displayname, CONCAT_WS(' ', fname, lname)) AS displayname, title, company, department, email, cell, work, home, fax FROM ".$this->userTable;
+		$sql = "SELECT id, default_extension as internal, username, description, fname, lname, coalesce(displayname, CONCAT_WS(' ', fname, lname)) AS displayname, title, company, department, email, cell, work, home, fax FROM ".$this->userTable;
 		$sth = $this->db->prepare($sql);
 		$sth->execute();
 		$users = $sth->fetchAll(\PDO::FETCH_ASSOC);
@@ -264,6 +264,7 @@ class Userman implements \BMO {
 		foreach($users as &$user) {
 			//dont let displayname escape without a value
 			$user['displayname'] = !empty($user['displayname']) ? $user['displayname'] : $user['username'];
+			$user['internal'] = !empty($user['internal']) && $user['internal'] != "none" ? $user['internal'] : "";
 			$user = $this->getExtraContactInfo($user);
 		}
 
