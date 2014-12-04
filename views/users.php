@@ -48,6 +48,10 @@
 			<td><input type="text" autocomplete="off" name="title" maxlength="100" value="<?php echo !empty($user['title']) ? $user['title'] : ''; ?>"></td>
 		</tr>
 		<tr class="userman">
+			<td><a href="#" class="info"><?php echo _("Company")?>:<span><?php echo _("The user's company.")?></span></a></td>
+			<td><input type="text" autocomplete="off" name="company" maxlength="100" value="<?php echo !empty($user['company']) ? $user['company'] : ''; ?>"></td>
+		</tr>
+		<tr class="userman">
 			<td><a href="#" class="info"><?php echo _("Email Address")?>:<span><?php echo _("The email address to associate with this user.")?></span></a></td>
 			<td><input type="text" autocomplete="off" name="email" maxlength="100" value="<?php echo !empty($user['email']) ? $user['email'] : ''; ?>"></td>
 		</tr>
@@ -62,6 +66,10 @@
 		<tr class="userman">
 			<td><a href="#" class="info"><?php echo _("Home Phone Number")?>:<span><?php echo _("The user's home phone number.")?></span></a></td>
 			<td><input type="text" autocomplete="off" name="home" maxlength="100" value="<?php echo !empty($user['home']) ? $user['home'] : ''; ?>"></td>
+		</tr>
+		<tr class="userman">
+			<td><a href="#" class="info"><?php echo _("Fax Number")?>:<span><?php echo _("The user's fax number.")?></span></a></td>
+			<td><input type="text" autocomplete="off" name="fax" maxlength="100" value="<?php echo !empty($user['fax']) ? $user['fax'] : ''; ?>"></td>
 		</tr>
 		<tr class="userman">
 			<td><a href="#" class="info"><?php echo _("Send Welcome Email")?>:<span><?php echo _("Choose whether the user should receive a welcome email sent to his/her address when these contents are saved.")?></span></a></td>

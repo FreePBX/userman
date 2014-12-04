@@ -10,11 +10,13 @@ $sqls[] = "CREATE TABLE IF NOT EXISTS `freepbx_users` (
   `lname` varchar(100) DEFAULT NULL,
   `displayname` varchar(200) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
+  `company` varchar(100) DEFAULT NULL,
   `department` varchar(100) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
   `cell` varchar(100) DEFAULT NULL,
   `work` varchar(100) DEFAULT NULL,
   `home` varchar(100) DEFAULT NULL,
+  `fax` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username_UNIQUE` (`username`)
 )";
@@ -42,7 +44,7 @@ if (!$db->getAll('SHOW COLUMNS FROM `freepbx_users` WHERE FIELD = "default_exten
 }
 
 if (!$db->getAll('SHOW COLUMNS FROM `freepbx_users` WHERE FIELD = "displayname"')) {
-    out("Adding additional fields");
+    out("Adding additional field displayname");
     $sql = "ALTER TABLE `freepbx_users` ADD COLUMN `displayname` VARCHAR(200) NULL DEFAULT NULL AFTER `lname`";
     $result = $db->query($sql);
 }
@@ -51,6 +53,18 @@ if (!$db->getAll('SHOW COLUMNS FROM `freepbx_users` WHERE FIELD = "fname"')) {
     out("Adding additional fields");
     $sql = "ALTER TABLE `freepbx_users` ADD COLUMN `fname` VARCHAR(100) NULL DEFAULT NULL AFTER `default_extension`, ADD COLUMN `lname` VARCHAR(100) NULL DEFAULT NULL AFTER `fname`, ADD COLUMN `title` VARCHAR(100) NULL DEFAULT NULL AFTER `lname`, ADD COLUMN `department` VARCHAR(100) NULL DEFAULT NULL AFTER `title`, ADD COLUMN `email` VARCHAR(100) NULL DEFAULT NULL AFTER `department`, ADD COLUMN `cell` VARCHAR(100) NULL DEFAULT NULL AFTER `email`, ADD COLUMN `work` VARCHAR(100) NULL DEFAULT NULL AFTER `cell`, ADD COLUMN `home` VARCHAR(100) NULL DEFAULT NULL AFTER `work`";
     $result = $db->query($sql);
+}
+
+if (!$db->getAll('SHOW COLUMNS FROM `freepbx_users` WHERE FIELD = "company"')) {
+  out("Adding additional field company");
+  $sql = "ALTER TABLE `freepbx_users` ADD COLUMN `company` VARCHAR(100) NULL DEFAULT NULL AFTER `title`";
+  $result = $db->query($sql);
+}
+
+if (!$db->getAll('SHOW COLUMNS FROM `freepbx_users` WHERE FIELD = "fax"')) {
+  out("Adding additional field fax");
+  $sql = "ALTER TABLE `freepbx_users` ADD COLUMN `fax` VARCHAR(100) NULL DEFAULT NULL AFTER `home`";
+  $result = $db->query($sql);
 }
 
 

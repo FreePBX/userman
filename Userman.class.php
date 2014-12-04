@@ -86,10 +86,12 @@ class Userman implements \BMO {
 						'fname' => isset($_POST['fname']) ? $_POST['fname'] : null,
 						'lname' => isset($_POST['lname']) ? $_POST['lname'] : null,
 						'title' => isset($_POST['title']) ? $_POST['title'] : null,
+						'company' => isset($_POST['company']) ? $_POST['company'] : null,
 						'email' => isset($_POST['email']) ? $_POST['email'] : null,
 						'cell' => isset($_POST['cell']) ? $_POST['cell'] : null,
 						'work' => isset($_POST['work']) ? $_POST['work'] : null,
 						'home' => isset($_POST['home']) ? $_POST['home'] : null,
+						'fax' => isset($_POST['fax']) ? $_POST['fax'] : null,
 						'displayname' => isset($_POST['displayname']) ? $_POST['displayname'] : null
 					);
 					$default = !empty($_POST['defaultextension']) ? $_POST['defaultextension'] : 'none';
@@ -252,7 +254,7 @@ class Userman implements \BMO {
 		if(!empty($this->contacts)) {
 			return $this->contacts;
 		}
-		$sql = "SELECT id, username, description, fname, lname, coalesce(displayname, CONCAT_WS(' ', fname, lname)) AS displayname, title, department, email, cell, work, home FROM ".$this->userTable;
+		$sql = "SELECT id, username, description, fname, lname, coalesce(displayname, CONCAT_WS(' ', fname, lname)) AS displayname, title, company, department, email, cell, work, home, fax FROM ".$this->userTable;
 		$sth = $this->db->prepare($sql);
 		$sth->execute();
 		$users = $sth->fetchAll(\PDO::FETCH_ASSOC);
@@ -262,14 +264,25 @@ class Userman implements \BMO {
 		foreach($users as &$user) {
 			//dont let displayname escape without a value
 			$user['displayname'] = !empty($user['displayname']) ? $user['displayname'] : $user['username'];
-			$mods = $this->FreePBX->Hooks->processHooks($user);
-			foreach($mods as $mod) {
-				$user = array_merge($user, $mod);
-			}
+			$user = $this->getExtraContactInfo($user);
 		}
 
 		$this->contacts = $users;
 		return $this->contacts;
+	}
+
+	/**
+	 * Get additional contact information from other modules that may hook into Userman
+	 * @param array $user The User Array
+	 */
+	public function getExtraContactInfo($user) {
+		$mods = $this->FreePBX->Hooks->processHooks($user);
+		foreach($mods as $mod) {
+			if(!empty($mod) && is_array($mod)) {
+				$user = array_merge($user, $mod);
+			}
+		}
+		return $user;
 	}
 
 	/**
@@ -317,6 +330,7 @@ class Userman implements \BMO {
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':id' => $id));
 		$user = $sth->fetch(\PDO::FETCH_ASSOC);
+		$user = $this->getExtraContactInfo($user);
 		return $user;
 	}
 
@@ -446,20 +460,37 @@ class Userman implements \BMO {
 		if(empty($data)) {
 			return true;
 		}
-		$sql = "UPDATE ".$this->userTable." SET `fname` = :fname, `lname` = :lname, `displayname` = :displayname, `title` = :title, `email` = :email, `cell` = :cell, `work` = :work, `home` = :home, `department` = :department WHERE `id` = :uid";
+		$sql = "UPDATE ".$this->userTable." SET `fname` = :fname, `lname` = :lname, `displayname` = :displayname, `company` = :company, `title` = :title, `email` = :email, `cell` = :cell, `work` = :work, `home` = :home, `fax` = :fax, `department` = :department WHERE `id` = :uid";
 		$defaults = $this->getUserByID($id);
 		$sth = $this->db->prepare($sql);
 		$fname = !empty($data['fname']) ? $data['fname'] : (!isset($data['fname']) && !empty($defaults['fname']) ? $defaults['fname'] : null);
 		$lname = !empty($data['lname']) ? $data['lname'] : (!isset($data['lname']) && !empty($defaults['lname']) ? $defaults['lname'] : null);
 		$title = !empty($data['title']) ? $data['title'] : (!isset($data['title']) && !empty($defaults['title']) ? $defaults['title'] : null);
+		$company = !empty($data['company']) ? $data['company'] : (!isset($data['company']) && !empty($defaults['company']) ? $defaults['company'] : null);
 		$email = !empty($data['email']) ? $data['email'] : (!isset($data['email']) && !empty($defaults['email']) ? $defaults['email'] : null);
 		$cell = !empty($data['cell']) ? $data['cell'] : (!isset($data['cell']) && !empty($defaults['cell']) ? $defaults['cell'] : null);
 		$home = !empty($data['home']) ? $data['home'] : (!isset($data['home']) && !empty($defaults['home']) ? $defaults['home'] : null);
 		$work = !empty($data['work']) ? $data['work'] : (!isset($data['work']) && !empty($defaults['work']) ? $defaults['work'] : null);
+		$fax = !empty($data['fax']) ? $data['fax'] : (!isset($data['fax']) && !empty($defaults['fax']) ? $defaults['fax'] : null);
 		$displayname = !empty($data['displayname']) ? $data['displayname'] : (!isset($data['displayname']) && !empty($defaults['displayname']) ? $defaults['displayname'] : null);
 		$department = !empty($data['department']) ? $data['department'] : (!isset($data['department']) && !empty($defaults['department']) ? $defaults['department'] : null);
 
-		$sth->execute(array(':fname' => $fname, ':lname' => $lname, ':displayname' => $displayname, ':title' => $title, ':email' => $email, ':cell' => $cell, ':work' => $work, ':home' => $home, ':department' => $department, ':uid' => $id));
+		$sth->execute(
+			array(
+				':fname' => $fname,
+				':lname' => $lname,
+				':displayname' => $displayname,
+				':title' => $title,
+				':company' => $company,
+				':email' => $email,
+				':cell' => $cell,
+				':work' => $work,
+				':home' => $home,
+				':fax' => $fax,
+				':department' => $department,
+				':uid' => $id
+			)
+		);
 	}
 
 	/**
