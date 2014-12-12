@@ -730,6 +730,7 @@ class Userman implements \BMO {
 			$vars = explode(",",$vu);
 			$password = $vars[0];
 			$displayname = $vars[1];
+			$email = !empty($vars[2]) ? $vars[2] : '';
 			$z = $this->getUserByDefaultExtension($exten);
 			if(!empty($z)) {
 				echo "Voicemail User '".$z['username']."' already has '".$exten."' as it's default extension. Skipping\\n";
@@ -740,10 +741,13 @@ class Userman implements \BMO {
 				echo "Voicemail User '".$z['username']."' already exists. Skipping\\n";
 				continue;
 			}
-			$user = $this->addUser($exten, $password, $exten, $displayname);
+			$user = $this->addUser($exten, $password, $exten, _('Migrated user from voicemail'), array('email' => $email, 'displayname' => $displayname));
 			if(!empty($user['id'])) {
 				echo "Added ".$exten." with password of ".$password."\\n";
 				$this->setAssignedDevices($user['id'], array($exten));
+				if(!empty($email)) {
+					$this->sendWelcomeEmail($exten, $password);
+				}
 			} else {
 				echo "Could not add ".$exten." because: ".$user['message']."\\n";
 			}
@@ -798,7 +802,7 @@ class Userman implements \BMO {
 		preg_match_all('/%([\w|\d]*)%/',$subject,$matches);
 		foreach($matches[1] as $match) {
 			$replacement = !empty($user[$match]) ? $user[$match] : '';
-			$subject = str_replace('%'.$match.'%',$replacement,$template);
+			$subject = str_replace('%'.$match.'%',$replacement,$subject);
 		}
 		$email->subject($subject);
 		$email->message($template);
