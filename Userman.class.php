@@ -798,7 +798,7 @@ class Userman implements \BMO {
 		preg_match_all('/%([\w|\d]*)%/',$subject,$matches);
 		foreach($matches[1] as $match) {
 			$replacement = !empty($user[$match]) ? $user[$match] : '';
-			$subject = str_replace('%'.$match.'%',$replacement,$template);
+			$subject = str_replace('%'.$match.'%',$replacement,$subject);
 		}
 		$email->subject($subject);
 		$email->message($template);
