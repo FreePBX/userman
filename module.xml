@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>12.0.17</version>
+	<version>12.0.18</version>
 	<publisher>Schmooze Com Inc</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -12,6 +12,7 @@
 		Modules like iSymphony, Rest API and User Control Panel use this module to manage their users.
 	</description>
 	<changelog>
+		*12.0.18* FREEPBX-8435 FREEPBX-8428 Changes for command line functions
 		*12.0.17* Some updates for contact manager
 		*12.0.16* Add additional fields for contact manager
 		*12.0.15* Global Settings Regression
