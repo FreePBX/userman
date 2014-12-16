@@ -222,7 +222,7 @@ class Userman implements \BMO {
 				$fpbxusers = array();
 				$dfpbxusers = array();
 				$cul = array();
-				foreach($this->FreePBX->Core->usersList() as $list) {
+				foreach($this->FreePBX->Core->listUsers() as $list) {
 					$cul[$list[0]] = array(
 						"name" => $list[1],
 						"vmcontext" => $list[2]

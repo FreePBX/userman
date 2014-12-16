@@ -38,6 +38,7 @@ echo $htmlmessage;
 							</div>
 						</div>
 					</div>
+					<?php echo load_view(dirname(__FILE__).'/passwordmodal.php')?>
 				</div>
 			</div>
 		</div>

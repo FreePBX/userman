@@ -22,7 +22,7 @@ $(".extension-checkbox").change(function() {
 
 
 $("#delete").on("click", function(event) {
-	if (!confirm("Are you sure you want to delete this user?")) {
+	if (!confirm(_("Are you sure you want to delete this user?"))) {
 		event.preventDefault();
 	}
 });
@@ -107,10 +107,6 @@ $('input[id^="actonthis"],#action-toggle-all').change(function(){
 });
 //This does the bulk delete... 
 $("#delchecked").on("click",function(){
-	var cmessage = _("Are you sure you want to delete these users?"); 
-	if(!confirm(cmessage)){
-		return false;
-	}
 	$('input[id^="actonthis"]').each(function(){
 		if($(this).is(":checked")){
 			var rowid = $(this).val();
@@ -185,3 +181,53 @@ $('a[id^="del"]').on("click",function(){
 		}
 	});
 });
+
+//Making Password Modal work
+$("#pwmlink").on("click", function(){
+	var pwuid = $(this).data('pwuid');
+	$("#pwuid").val(pwuid);
+	$("#pwsub").attr("disabled", false);
+	$("#pwsub").html(_("Update Password"));
+});
+$("#pwsub").on("click", function(){
+	var button = $(this);
+	button.html('Updating');
+	button.attr("disabled", true);
+	var uid = $("#pwuid").val();
+	var pass = $("#password").val();
+	$.ajax({
+		url: "/admin/ajax.php",
+		data: {
+			module:'userman',
+			command:'updatePassword',
+			id: uid,
+			newpass: pass
+		},
+		type: "GET",
+		dataType: "json",
+		success: function(data){
+			console.log(data);
+				button.html(data.message);
+
+		},
+		error: function(xhr, status, e){
+			console.dir(xhr);
+			console.log(status);
+			console.log(e);
+		}
+	});
+});
+
+$( "form" ).submit(function() {
+	if(!this.checkValidity()){
+		for(i = 0; i < this.elements.length; i++){
+			if(!this.elements[i].validity.valid){
+				warnInvalid($(this.elements[i]));
+			}
+		}
+		return false;
+	};
+});
+			
+
+
