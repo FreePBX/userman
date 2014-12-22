@@ -80,7 +80,7 @@ class Userman implements \BMO {
 			);
 			return true;
 		}
-		if(isset($_POST['submit'])) {
+		if(isset($_POST['submit']) || isset($_POST['submitsend'])) {
 			switch($_POST['type']) {
 				case 'user':
 					$username = !empty($_POST['username']) ? $_POST['username'] : '';
@@ -144,7 +144,7 @@ class Userman implements \BMO {
 						);
 						return false;
 					}
-					if($_POST['sendEmail'] == 'yes') {
+					if(isset($_POST['submitsend'])) {
 						$this->sendWelcomeEmail($username, $password);
 					}
 				break;
@@ -764,14 +764,36 @@ class Userman implements \BMO {
 			$email = !empty($vars[2]) ? $vars[2] : '';
 			$z = $this->getUserByDefaultExtension($exten);
 			if(!empty($z)) {
-				echo "Voicemail User '".$z['username']."' already has '".$exten."' as it's default extension. Updating email and displayname from Voicemail.\\n";
-				$this->updateUser($z['username'], $z['username'], $z['default_extension'], $z['description'], array('email' => $email, 'displayname' => $displayname));
+				echo "Voicemail User '".$z['username']."' already has '".$exten."' as it's default extension.";
+				if(empty($z['email']) && empty($z['displayname'])) {
+					echo "Updating email and displayname from Voicemail.\\n";
+					$this->updateUser($z['username'], $z['username'], $z['default_extension'], $z['description'], array('email' => $email, 'displayname' => $displayname));
+				} elseif(empty($z['displayname'])) {
+					echo "Updating displayname from Voicemail.\\n";
+					$this->updateUser($z['username'], $z['username'], $z['default_extension'], $z['description'], array('displayname' => $displayname));
+				} elseif(empty($z['email'])) {
+					echo "Updating email from Voicemail.\\n";
+					$this->updateUser($z['username'], $z['username'], $z['default_extension'], $z['description'], array('email' => $email));
+				} else {
+					echo "\\n";
+				}
 				continue;
 			}
 			$z = $this->getUserByUsername($exten);
 			if(!empty($z)) {
-				echo "Voicemail User '".$z['username']."' already exists. Updating email and displayname from Voicemail.\\n";
-				$this->updateUser($z['username'], $z['username'], $z['default_extension'], $z['description'], array('email' => $email, 'displayname' => $displayname));
+				echo "Voicemail User '".$z['username']."' already exists.";
+				if(empty($z['email']) && empty($z['displayname'])) {
+					echo "Updating email and displayname from Voicemail.\\n";
+					$this->updateUser($z['username'], $z['username'], $z['default_extension'], $z['description'], array('email' => $email, 'displayname' => $displayname));
+				} elseif(empty($z['displayname'])) {
+					echo "Updating displayname from Voicemail.\\n";
+					$this->updateUser($z['username'], $z['username'], $z['default_extension'], $z['description'], array('displayname' => $displayname));
+				} elseif(empty($z['email'])) {
+					echo "Updating email from Voicemail.\\n";
+					$this->updateUser($z['username'], $z['username'], $z['default_extension'], $z['description'], array('email' => $email));
+				} else {
+					echo "\\n";
+				}
 				continue;
 			}
 			$user = $this->addUser($exten, $password, $exten, _('Migrated user from voicemail'), array('email' => $email, 'displayname' => $displayname));
