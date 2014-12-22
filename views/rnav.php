@@ -1,12 +1,5 @@
-<div class='rnav'>
-	<ul>
-		<li class="rnav-heading"><?php echo _('Settings')?></li>
-		<li><a href='config.php?display=userman&amp;action=general'><?php echo _('General')?></a></li>
-		<li class="rnav-heading"><?php echo _('User List')?></li>
-		<li><a href='config.php?display=userman&amp;action=adduser'><?php echo _('Add New User')?></a></li>
-		<li><hr></li>
-		<?php foreach($users as $user) {?>
-			<li><a href='config.php?display=userman&amp;action=showuser&amp;user=<?php echo $user['id']?>'><?php echo $user['dn']?></a></li>
-		<?php }?>
-	</ul>
+<div class="list-group">
+	<a href='config.php?display=userman' class="list-group-item"><i class="fa fa-th-list"></i>&nbsp;&nbsp;&nbsp;<?php echo _('User List')?></a>
+	<a href='config.php?display=userman&amp;action=adduser' class="list-group-item"><i class="fa fa-plus"></i>&nbsp&nbsp&nbsp;<?php echo _('Add New User')?></a>
+	<a href='#' class="list-group-item hidden" id = "delchecked"><i class="fa fa-trash-o"></i>&nbsp&nbsp&nbsp;<?php echo _('Delete Selected')?></a>
 </div>
