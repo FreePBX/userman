@@ -66,29 +66,7 @@ $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
 	//Add hash to url for reloading
 	window.location.hash = e.target.hash.replace()
 });
-$('#editusermodal').on('show.bs.modal', function (e) {
-	var uid = $(e.relatedTarget).data('uid');
-	$.ajax({
-		url: "/admin/ajax.php",
-		data: {
-			module:'userman',
-			command:'getuserfields',
-			id:uid
-		},
-		type: "GET",
-		dataType: "json",
-		success: function(data){
-			$.each(data, function(key, value){
-				$('[name='+key+']').val(value);
-			});
-		},
-		error: function(xhr, status, e){
-			console.dir(xhr);
-			console.log(status);
-			console.log(e);
-		}
-	});
-});
+
 
 $('#action-toggle-all').on("change",function(){
 	var tval = $(this).prop('checked');
@@ -183,7 +161,7 @@ $('a[id^="del"]').on("click",function(){
 });
 
 //Making Password Modal work
-$("#pwmlink").on("click", function(){
+$('a[id^="pwmlink"]').on("click", function(){
 	var pwuid = $(this).data('pwuid');
 	$("#pwuid").val(pwuid);
 	$("#pwsub").attr("disabled", false);

@@ -17,7 +17,7 @@ $userrows .= <<<HERE
 <td>$description</td>
 <td><a href="config.php?display=userman&action=showuser&user=$uid">
 	<i class="fa fa-edit"></i></a>&nbsp;&nbsp;
-	<a data-toggle="modal" data-pwuid="$uid" data-target="#setpw" id="pwmlink"> 
+	<a data-toggle="modal" data-pwuid="$uid" data-target="#setpw" id="pwmlink$uid"> 
 	<i class="fa fa-key"></i></a>&nbsp;&nbsp;
 	<a href="#" id="del$uid" data-uid="$uid" >
 	<i class="fa fa-trash-o"></i></a></td>
