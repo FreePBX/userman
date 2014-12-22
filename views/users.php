@@ -4,11 +4,11 @@ if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'showuser'){
 	$formaction = 'config.php?display=userman&action=showuser&user=' . $user['id'];
 }else{
 	$heading = '<h1>' . _("Add User") . '</h1>';
-	$formaction = 'config.php?display=userman';	
-	
+	$formaction = 'config.php?display=userman';
+
 }
 if(!empty($message)){
-$htmlmessage = '<div class="alert alert-' . $message['type'] . ' fade">' . $message['message'] . '</div>'; 	
+$htmlmessage = '<div class="alert alert-' . $message['type'] . ' fade">' . $message['message'] . '</div>';
 }
 
 echo $heading;
@@ -50,7 +50,7 @@ echo $htmlmessage;
 									<span id="username-help" class="help-block fpbx-help-block"><?php echo _("This is the name that the user will use when logging in.")?></span>
 								</div>
 							</div>
-						</div>					
+						</div>
 						<!--END LOGIN NAME-->
 						<!--DESCRIPTION-->
 						<div class="element-container">
@@ -74,7 +74,7 @@ echo $htmlmessage;
 									<span id="description-help" class="help-block fpbx-help-block"><?php echo _("A brief description for this user.")?></span>
 								</div>
 							</div>
-						</div>					
+						</div>
 						<!--END DESCRIPTION-->
 						<!--PASSWORD-->
 						<div class="element-container">
@@ -98,7 +98,7 @@ echo $htmlmessage;
 									<span id="password-help" class="help-block fpbx-help-block"><?php echo _("The user's password.")?></span>
 								</div>
 							</div>
-						</div>					
+						</div>
 						<!--END Password-->
 						</div>
 						<!-- End Login details -->
@@ -128,8 +128,8 @@ echo $htmlmessage;
 									<span id="fname-help" class="help-block fpbx-help-block"><?php echo _("The user's first name.")?></span>
 								</div>
 							</div>
-						</div>					
-						<!--END FIRSTNAME-->	
+						</div>
+						<!--END FIRSTNAME-->
 						<!--LASTNAME-->
 						<div class="element-container">
 							<div class="row">
@@ -152,8 +152,8 @@ echo $htmlmessage;
 									<span id="lname-help" class="help-block fpbx-help-block"><?php echo _("The user's last name.")?></span>
 								</div>
 							</div>
-						</div>			
-						<!--END LASTNAME-->	
+						</div>
+						<!--END LASTNAME-->
 						<!--DISPLAYNAME-->
 						<div class="element-container">
 							<div class="row">
@@ -176,8 +176,8 @@ echo $htmlmessage;
 									<span id="displayname-help" class="help-block fpbx-help-block"><?php echo _("Display Name. Used in User Control Panel and Contact Manager to display a customized user name")?></span>
 								</div>
 							</div>
-						</div>			
-						<!--END DISPLAYNAME-->	
+						</div>
+						<!--END DISPLAYNAME-->
 						<!--TITLE-->
 						<div class="element-container">
 							<div class="row">
@@ -200,8 +200,8 @@ echo $htmlmessage;
 									<span id="title-help" class="help-block fpbx-help-block"><?php echo _("The user's title.")?></span>
 								</div>
 							</div>
-						</div>			
-						<!--END TITLE-->	
+						</div>
+						<!--END TITLE-->
 						<!--COMPANY-->
 						<div class="element-container">
 							<div class="row">
@@ -224,8 +224,8 @@ echo $htmlmessage;
 									<span id="company-help" class="help-block fpbx-help-block"><?php echo _("The user's company.")?></span>
 								</div>
 							</div>
-						</div>			
-						<!--END COMPANY-->	
+						</div>
+						<!--END COMPANY-->
 						<!--EMAIL-->
 						<div class="element-container">
 							<div class="row">
@@ -248,8 +248,8 @@ echo $htmlmessage;
 									<span id="email-help" class="help-block fpbx-help-block"><?php echo _("The email address to associate with this user.")?></span>
 								</div>
 							</div>
-						</div>			
-						<!--END EMAIL-->	
+						</div>
+						<!--END EMAIL-->
 						<!--Cell Number-->
 						<div class="element-container">
 							<div class="row">
@@ -272,8 +272,8 @@ echo $htmlmessage;
 									<span id="cell-help" class="help-block fpbx-help-block"><?php echo _("The user's cell (mobile) phone number.")?></span>
 								</div>
 							</div>
-						</div>			
-						<!--END CELL-->	
+						</div>
+						<!--END CELL-->
 						<!--WORK Number-->
 						<div class="element-container">
 							<div class="row">
@@ -296,8 +296,8 @@ echo $htmlmessage;
 									<span id="work-help" class="help-block fpbx-help-block"><?php echo _("The user's work phone number.")?></span>
 								</div>
 							</div>
-						</div>			
-						<!--END WORK-->	
+						</div>
+						<!--END WORK-->
 						<!--Home Number-->
 						<div class="element-container">
 							<div class="row">
@@ -320,8 +320,8 @@ echo $htmlmessage;
 									<span id="home-help" class="help-block fpbx-help-block"><?php echo _("The user's home phone number.")?></span>
 								</div>
 							</div>
-						</div>			
-						<!--END HOME-->	
+						</div>
+						<!--END HOME-->
 						<!--fax Number-->
 						<div class="element-container">
 							<div class="row">
@@ -344,8 +344,8 @@ echo $htmlmessage;
 									<span id="fax-help" class="help-block fpbx-help-block"><?php echo _("The user's fax phone number.")?></span>
 								</div>
 							</div>
-						</div>			
-						<!--END FAX-->	
+						</div>
+						<!--END FAX-->
 						<!--Send Welcome Email-->
 						<div class="element-container">
 							<div class="row">
@@ -371,8 +371,8 @@ echo $htmlmessage;
 									<span id="sendEmail-help" class="help-block fpbx-help-block"><?php echo _("Choose whether the user should receive a welcome email sent to his/her address when these contents are saved.")?></span>
 								</div>
 							</div>
-						</div>			
-						<!--END SEND WELCOME EMAIL-->	
+						</div>
+						<!--END SEND WELCOME EMAIL-->
 						<!--Linked Extensions-->
 						<div class="element-container">
 							<div class="row">
@@ -399,7 +399,7 @@ echo $htmlmessage;
 									<span id="defaultextension-help" class="help-block fpbx-help-block"><?php echo _("This is the extension this user is linked to from the Extensions page. A single user can only be linked to one extension, and one extension can only be linked to a single user. If using Rest Apps on a phone, this is the extension that will be mapped to the API permissions set below for this user.")?></span>
 								</div>
 							</div>
-						</div>			
+						</div>
 						<!--END LINKED EXTENSIONS-->
 						<!--Additional Extensions-->
 						<div class="element-container">
@@ -427,7 +427,7 @@ echo $htmlmessage;
 									<span id="assigned-help" class="help-block fpbx-help-block"><?php echo _("Additional Extensions over which this user will have control.")?></span>
 								</div>
 							</div>
-						</div>			
+						</div>
 						<!--END ADDITIONAL EXTENSIONS-->
 						</div>
 						<!--END User Details-->
@@ -446,5 +446,3 @@ echo $htmlmessage;
 		</div>
 	</div>
 </div>
-
-

@@ -58,7 +58,13 @@ class Userman implements \BMO {
 
 	public function writeConfig($conf){
 	}
-	
+
+	/**
+	 * Set display message in user manager
+	 * Used when upating or adding a user
+	 * @param [type] $message [description]
+	 * @param string $type    [description]
+	 */
 	public function setMessage($message,$type='info') {
 		$this->message = array(
 			'message' => $message,
@@ -78,8 +84,8 @@ class Userman implements \BMO {
 			debug($this->message);
 			return true;
 		}
-		if(isset($request['submittype'])) {
-			switch($request['type']) {
+		if(isset($_POST['submittype']) || isset($_POST['submitsend'])) {
+			switch($_POST['type']) {
 				case 'user':
 					$username = !empty($request['username']) ? $request['username'] : '';
 					$password = !empty($request['password']) ? $request['password'] : '';
@@ -142,7 +148,7 @@ class Userman implements \BMO {
 						);
 						return false;
 					}
-					if($request['sendEmail'] == 'yes') {
+					if(isset($_POST['submitsend'])) {
 						$this->sendWelcomeEmail($username, $password);
 					}
 				break;
@@ -157,12 +163,18 @@ class Userman implements \BMO {
 			}
 		}
 	}
-	
+
 	public function getActionBar($request){
 		$buttons = array();
 		switch($request['display']) {
 			case 'userman':
 				$buttons = array(
+					'submitsend' => array(
+						'name' => 'submitsend',
+						'id' => 'submitsend',
+						'value' => "Submit & Send Email to User",
+						'class' => array('hidden')
+					),
 					'submit' => array(
 						'name' => 'submit',
 						'id' => 'submit',
@@ -189,7 +201,7 @@ class Userman implements \BMO {
 			}
 		return $buttons;
 	}
-	
+
 	public function myShowPage() {
 		if(!function_exists('core_users_list')) {
 			return _("Module Core is disabled. Please enable it");
@@ -251,7 +263,7 @@ class Userman implements \BMO {
 
 		return $html;
 	}
-	
+
 	public function ajaxRequest($req, $setting){
 		switch($req){
 			case "getuserfields":
@@ -388,6 +400,22 @@ class Userman implements \BMO {
 		$sql = "SELECT * FROM ".$this->userTable." WHERE username = :username";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':username' => $username));
+		$user = $sth->fetch(\PDO::FETCH_ASSOC);
+		return $user;
+	}
+
+	/**
+	* Get User Information by Email
+	*
+	* This gets user information by Email
+	*
+	* @param string $username The User Manager Email Address
+	* @return bool
+	*/
+	public function getUserByEmail($username) {
+		$sql = "SELECT * FROM ".$this->userTable." WHERE email = :email";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':email' => $username));
 		$user = $sth->fetch(\PDO::FETCH_ASSOC);
 		return $user;
 	}
@@ -779,6 +807,11 @@ class Userman implements \BMO {
 		return !empty($result['data']) ? json_decode($result['data'], true) : array();
 	}
 
+	/**
+	 * Pre 12 way to call hooks.
+	 * @param string $action Action type
+	 * @param mixed $data   Data to send
+	 */
 	private function callHooks($action,$data=null) {
 		$display = !empty($request['display']) ? $request['display'] : "";
 		$ret = array();
@@ -792,6 +825,10 @@ class Userman implements \BMO {
 		return $ret;
 	}
 
+	/**
+	 * Migrate/Update Voicemail users to User Manager
+	 * @param string $context The voicemail context to reference
+	 */
 	public function migrateVoicemailUsers($context = "default") {
 		echo "Starting to migrate Voicemail users\\n";
 		$config = $this->FreePBX->LoadConfig();
@@ -809,12 +846,36 @@ class Userman implements \BMO {
 			$email = !empty($vars[2]) ? $vars[2] : '';
 			$z = $this->getUserByDefaultExtension($exten);
 			if(!empty($z)) {
-				echo "Voicemail User '".$z['username']."' already has '".$exten."' as it's default extension. Skipping\\n";
+				echo "Voicemail User '".$z['username']."' already has '".$exten."' as it's default extension.";
+				if(empty($z['email']) && empty($z['displayname'])) {
+					echo "Updating email and displayname from Voicemail.\\n";
+					$this->updateUser($z['username'], $z['username'], $z['default_extension'], $z['description'], array('email' => $email, 'displayname' => $displayname));
+				} elseif(empty($z['displayname'])) {
+					echo "Updating displayname from Voicemail.\\n";
+					$this->updateUser($z['username'], $z['username'], $z['default_extension'], $z['description'], array('displayname' => $displayname));
+				} elseif(empty($z['email'])) {
+					echo "Updating email from Voicemail.\\n";
+					$this->updateUser($z['username'], $z['username'], $z['default_extension'], $z['description'], array('email' => $email));
+				} else {
+					echo "\\n";
+				}
 				continue;
 			}
 			$z = $this->getUserByUsername($exten);
 			if(!empty($z)) {
-				echo "Voicemail User '".$z['username']."' already exists. Skipping\\n";
+				echo "Voicemail User '".$z['username']."' already exists.";
+				if(empty($z['email']) && empty($z['displayname'])) {
+					echo "Updating email and displayname from Voicemail.\\n";
+					$this->updateUser($z['username'], $z['username'], $z['default_extension'], $z['description'], array('email' => $email, 'displayname' => $displayname));
+				} elseif(empty($z['displayname'])) {
+					echo "Updating displayname from Voicemail.\\n";
+					$this->updateUser($z['username'], $z['username'], $z['default_extension'], $z['description'], array('displayname' => $displayname));
+				} elseif(empty($z['email'])) {
+					echo "Updating email from Voicemail.\\n";
+					$this->updateUser($z['username'], $z['username'], $z['default_extension'], $z['description'], array('email' => $email));
+				} else {
+					echo "\\n";
+				}
 				continue;
 			}
 			$user = $this->addUser($exten, $password, $exten, _('Migrated user from voicemail'), array('email' => $email, 'displayname' => $displayname));
@@ -885,11 +946,18 @@ class Userman implements \BMO {
 		$email->send();
 	}
 
+	/**
+	 * Check if a string is JSON
+	 * @param string $string The string to check
+	 */
 	private function isJson($string) {
 		json_decode($string);
 		return (json_last_error() == JSON_ERROR_NONE);
 	}
 
+	/**
+	 * Get all extensions that are in user as the "default extension"
+	 */
 	private function getAllInUseExtensions() {
 		$sql = 'SELECT default_extension FROM '.$this->userTable;
 		$sth = $this->db->prepare($sql);
