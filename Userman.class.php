@@ -778,7 +778,7 @@ class Userman implements \BMO {
 		$final = array();
 		$time = time();
 		foreach($tokens as $token => $data) {
-			if(!empty($data['time']) &&  strtotime($this->tokenExpiration, $data['time']) < $time) {
+			if(!empty($data['time']) &&  $data['valid'] < $time) {
 				continue;
 			}
 			$final[$token] = $data;
@@ -790,24 +790,29 @@ class Userman implements \BMO {
 	/**
 	 * Generate a password reset token for a user
 	 * @param int $id The user ID
+	 * @param string $valid How long the token key is valid for in string format eg: "5 minutes"
+	 * @param bool $force Whether to forcefully generate a token even if one already exists
 	 */
-	public function generatePasswordResetToken($id) {
+	public function generatePasswordResetToken($id, $valid = null, $force = false) {
 		$user = $this->getUserByID($id);
 		$time = time();
+		$valid = !empty($valid) ? $valid : $this->tokenExpiration;
 		if(!empty($user)) {
 			$tokens = $this->getPasswordResetTokens();
 			if(empty($tokens) || !is_array($tokens)) {
 				$tokens = array();
 			}
 			foreach($tokens as $token => $data) {
-				if(($data['id'] == $id) && !empty($token['time']) && strtotime($this->tokenExpiration, $data['time']) > $time) {
-					return false;
+				if(($data['id'] == $id) && !empty($token['time']) && $data['valid'] > $time) {
+					if(!$force) {
+						return false;
+					}
 				}
 			}
 			$token = bin2hex(openssl_random_pseudo_bytes(16));
-			$tokens[$token] = array("id" => $id, "time" => $time);
+			$tokens[$token] = array("id" => $id, "time" => $time, "valid" => strtotime($valid, $time));
 			$this->setGlobalsetting('passresettoken',$tokens);
-			return array("token" => $token, "valid" => strtotime($this->tokenExpiration, $time));
+			return array("token" => $token, "valid" => strtotime($valid, $time));
 		}
 		return false;
 	}
@@ -998,7 +1003,7 @@ class Userman implements \BMO {
 			$user['services'] .= $mod . "\n";
 		}
 
-		$mods = $this->FreePBX->Hooks->processHooks($user['id'], $request['display'], array('id' => $user['id'], 'brand' => $user['brand'], 'host' => $user['host'], 'password' => $user['password']));
+		$mods = $this->FreePBX->Hooks->processHooks($user['id'], $request['display'], array('id' => $user['id'], 'brand' => $user['brand'], 'host' => $user['host'], 'password' => !empty($password)));
 		foreach($mods as $mod) {
 			if(is_array($mod)) {
 				foreach($mod as $el) {
