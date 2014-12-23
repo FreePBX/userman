@@ -3,8 +3,10 @@
 //	License for all code of this FreePBX module can be found in the license file inside the module directory
 //	Copyright 2013 Schmooze Com Inc.
 //
-
 namespace FreePBX\modules;
+// Default setting array passed to ajaxRequest
+$setting = array('authenticate' => true, 'allowremote' => false);
+
 class Userman implements \BMO {
 	private $registeredFunctions = array();
 	private $message = '';
@@ -12,6 +14,7 @@ class Userman implements \BMO {
 	private $userSettingsTable = 'freepbx_users_settings';
 	private $brand = 'FreePBX';
 	private $contacts = array();
+	private $tokenExpiration = "5 minutes";
 
 	public function __construct($freepbx = null) {
 		$this->FreePBX = $freepbx;
@@ -72,35 +75,36 @@ class Userman implements \BMO {
 	}
 
 	public function doConfigPageInit($display) {
-		if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'deluser') {
-			$ret = $this->deleteUserByID($_REQUEST['user']);
+		$request = $_REQUEST;
+		if(isset($request['action']) && $request['action'] == 'deluser') {
+			$ret = $this->deleteUserByID($request['user']);
 			$this->message = array(
 				'message' => $ret['message'],
 				'type' => $ret['type']
 			);
 			return true;
 		}
-		if(isset($_POST['submit']) || isset($_POST['submitsend'])) {
+		if(isset($_POST['submittype']) || isset($_POST['submitsend'])) {
 			switch($_POST['type']) {
 				case 'user':
-					$username = !empty($_POST['username']) ? $_POST['username'] : '';
-					$password = !empty($_POST['password']) ? $_POST['password'] : '';
-					$description = !empty($_POST['description']) ? $_POST['description'] : '';
-					$prevUsername = !empty($_POST['prevUsername']) ? $_POST['prevUsername'] : '';
-					$assigned = !empty($_POST['assigned']) ? $_POST['assigned'] : array();
+					$username = !empty($request['username']) ? $request['username'] : '';
+					$password = !empty($request['password']) ? $request['password'] : '';
+					$description = !empty($request['description']) ? $request['description'] : '';
+					$prevUsername = !empty($request['prevUsername']) ? $request['prevUsername'] : '';
+					$assigned = !empty($request['assigned']) ? $request['assigned'] : array();
 					$extraData = array(
-						'fname' => isset($_POST['fname']) ? $_POST['fname'] : null,
-						'lname' => isset($_POST['lname']) ? $_POST['lname'] : null,
-						'title' => isset($_POST['title']) ? $_POST['title'] : null,
-						'company' => isset($_POST['company']) ? $_POST['company'] : null,
-						'email' => isset($_POST['email']) ? $_POST['email'] : null,
-						'cell' => isset($_POST['cell']) ? $_POST['cell'] : null,
-						'work' => isset($_POST['work']) ? $_POST['work'] : null,
-						'home' => isset($_POST['home']) ? $_POST['home'] : null,
-						'fax' => isset($_POST['fax']) ? $_POST['fax'] : null,
-						'displayname' => isset($_POST['displayname']) ? $_POST['displayname'] : null
+						'fname' => isset($request['fname']) ? $request['fname'] : null,
+						'lname' => isset($request['lname']) ? $request['lname'] : null,
+						'title' => isset($request['title']) ? $request['title'] : null,
+						'company' => isset($request['company']) ? $request['company'] : null,
+						'email' => isset($request['email']) ? $request['email'] : null,
+						'cell' => isset($request['cell']) ? $request['cell'] : null,
+						'work' => isset($request['work']) ? $request['work'] : null,
+						'home' => isset($request['home']) ? $request['home'] : null,
+						'fax' => isset($request['fax']) ? $request['fax'] : null,
+						'displayname' => isset($request['displayname']) ? $request['displayname'] : null
 					);
-					$default = !empty($_POST['defaultextension']) ? $_POST['defaultextension'] : 'none';
+					$default = !empty($request['defaultextension']) ? $request['defaultextension'] : 'none';
 					if(empty($password)) {
 						$this->message = array(
 							'message' => _('The Password Can Not Be blank!'),
@@ -149,8 +153,8 @@ class Userman implements \BMO {
 					}
 				break;
 				case 'general':
-					$this->setGlobalsetting('emailbody',$_POST['emailbody']);
-					$this->setGlobalsetting('emailsubject',$_POST['emailsubject']);
+					$this->setGlobalsetting('emailbody',$request['emailbody']);
+					$this->setGlobalsetting('emailsubject',$request['emailsubject']);
 					$this->message = array(
 						'message' => _('Saved'),
 						'type' => 'success'
@@ -158,6 +162,44 @@ class Userman implements \BMO {
 				break;
 			}
 		}
+	}
+
+	public function getActionBar($request){
+		$buttons = array();
+		switch($request['display']) {
+			case 'userman':
+				$buttons = array(
+					'submitsend' => array(
+						'name' => 'submitsend',
+						'id' => 'submitsend',
+						'value' => "Submit & Send Email to User",
+						'class' => array('hidden')
+					),
+					'submit' => array(
+						'name' => 'submit',
+						'id' => 'submit',
+						'value' => "Submit",
+						'class' => array('hidden')
+					),
+					'delete' => array(
+						'name' => 'delete',
+						'id' => 'delete',
+						'value' => "Delete",
+						'class' => array('hidden')
+					),
+					'reset' => array(
+						'name' => 'reset',
+						'id' => 'reset',
+						'value' => "Reset",
+						'class' => array('hidden')
+					),
+				);
+
+				if($request['action'] != 'showuser'){
+					unset($buttons['delete']);
+				}
+			}
+		return $buttons;
 	}
 
 	public function myShowPage() {
@@ -170,19 +212,18 @@ class Userman implements \BMO {
 		foreach($mods as $mod) {
 			$moduleHtml .= $mod;
 		}
-
-		$action = !empty($_REQUEST['action']) ? $_REQUEST['action'] : '';
+		$request = $_REQUEST;
+		$action = !empty($request['action']) ? $request['action'] : '';
 		$html = '';
 
 		$users = $this->getAllUsers();
 
-		$html .= load_view(dirname(__FILE__).'/views/rnav.php',array("users"=>$users));
 		switch($action) {
 			case 'showuser':
 			case 'adduser':
-				if($action == 'showuser' && !empty($_REQUEST['user'])) {
-					$user = $this->getUserByID($_REQUEST['user']);
-					$assigned = $this->getGlobalSettingByID($_REQUEST['user'],'assigned');
+				if($action == 'showuser' && !empty($request['user'])) {
+					$user = $this->getUserByID($request['user']);
+					$assigned = $this->getGlobalSettingByID($request['user'],'assigned');
 					$assigned = !(empty($assigned)) ? $assigned : array();
 					$default = $user['default_extension'];
 				} else {
@@ -193,7 +234,7 @@ class Userman implements \BMO {
 				$fpbxusers = array();
 				$dfpbxusers = array();
 				$cul = array();
-				foreach(core_users_list() as $list) {
+				foreach($this->FreePBX->Core->listUsers() as $list) {
 					$cul[$list[0]] = array(
 						"name" => $list[1],
 						"vmcontext" => $list[2]
@@ -213,15 +254,54 @@ class Userman implements \BMO {
 				}
 				$html .= load_view(dirname(__FILE__).'/views/users.php',array("dfpbxusers" => $dfpbxusers, "fpbxusers" => $fpbxusers, "moduleHtml" => $moduleHtml, "hookHtml" => $module_hook->hookHtml, "user" => $user, "message" => $this->message));
 			break;
-			case 'general':
-				$html .= load_view(dirname(__FILE__).'/views/general.php',array("subject" => $this->getGlobalsetting('emailsubject'), "email" => $this->getGlobalsetting('emailbody'), "message" => $this->message, "brand" => $this->brand));
-			break;
 			default:
-				$html .= load_view(dirname(__FILE__).'/views/welcome.php',array());
+				$emailbody = $this->getGlobalsetting('emailbody');
+				$emailsubject = $this->getGlobalsetting('emailsubject');
+				$html .= load_view(dirname(__FILE__).'/views/welcome.php',array("moduleHtml" => $moduleHtml, "hookHtml" => $module_hook->hookHtml, "user" => $user, "message" => $this->message, "emailbody" => $emailbody, "emailsubject" => $emailsubject));
 			break;
 		}
 
 		return $html;
+	}
+
+	public function ajaxRequest($req, $setting){
+		switch($req){
+			case "getuserfields":
+			case "delUser":
+			case "updatePassword":
+				return true;
+			break;
+			default:
+				return false;
+			break;
+		}
+	}
+	public function ajaxHandler(){
+		$request = $_REQUEST;
+		switch($request['command']){
+			case "getuserfields":
+				if(empty($request['id'])){
+					print json_encode(_("Error: No id provided"));
+				}else{
+					$user = $this->getUserByID($request['id']);
+					return $user;
+				}
+			break;
+			case "delUser":
+				$uid = $request['id'];
+				return $this->deleteUserByID($uid);
+			break;
+			case "updatePassword":
+				$uid = $request['id'];
+				$newpass = $request['newpass'];
+				$extra = array();
+				$user = $this->getUserByID($uid);
+				return $this->updateUser($user['username'], $user['username'], $user['default_extension'], $user['description'], $extra, $newpass);
+			break;
+			default:
+				echo json_encode(_("Error: You should never see this"));
+			break;
+		}
 	}
 
 	/**
@@ -391,7 +471,8 @@ class Userman implements \BMO {
 	 * @param {int} $id the user id of the deleted user
 	 */
 	private function delUser($id) {
-		$display = !empty($_REQUEST['display']) ? $_REQUEST['display'] : "";
+		$request = $_REQUEST;
+		$display = !empty($request['display']) ? $request['display'] : "";
 		$this->FreePBX->Hooks->processHooks($id, $display, array("id" => $id));
 	}
 
@@ -409,7 +490,8 @@ class Userman implements \BMO {
 	 * @return array
 	 */
 	public function addUser($username, $password, $default='none', $description=null, $extraData=array(), $encrypt = true) {
-		$display = !empty($_REQUEST['display']) ? $_REQUEST['display'] : "";
+		$request = $_REQUEST;
+		$display = !empty($request['display']) ? $request['display'] : "";
 		$description = !empty($description) ? $description : null;
 		if(empty($username) || empty($password)) {
 			return array("status" => false, "type" => "danger", "message" => _("Username/Password Can Not Be Blank!"));
@@ -443,7 +525,7 @@ class Userman implements \BMO {
 	 * @return array
 	 */
 	public function updateUser($prevUsername, $username, $default='none', $description=null, $extraData=array(), $password=null) {
-		$display = !empty($_REQUEST['display']) ? $_REQUEST['display'] : "";
+		$display = !empty($request['display']) ? $request['display'] : "";
 		$description = !empty($description) ? $description : null;
 		$user = $this->getUserByUsername($prevUsername);
 		if(!$user || empty($user)) {
@@ -689,6 +771,85 @@ class Userman implements \BMO {
 	}
 
 	/**
+	 * Get all password reset tokens
+	 */
+	public function getPasswordResetTokens() {
+		$tokens = $this->getGlobalsetting('passresettoken');
+		$final = array();
+		$time = time();
+		foreach($tokens as $token => $data) {
+			if(!empty($data['time']) &&  strtotime($this->tokenExpiration, $data['time']) < $time) {
+				continue;
+			}
+			$final[$token] = $data;
+		}
+		$this->setGlobalsetting('passresettoken',$final);
+		return $final;
+	}
+
+	/**
+	 * Generate a password reset token for a user
+	 * @param int $id The user ID
+	 */
+	public function generatePasswordResetToken($id) {
+		$user = $this->getUserByID($id);
+		$time = time();
+		if(!empty($user)) {
+			$tokens = $this->getPasswordResetTokens();
+			if(empty($tokens) || !is_array($tokens)) {
+				$tokens = array();
+			}
+			foreach($tokens as $token => $data) {
+				if(($data['id'] == $id) && !empty($token['time']) && strtotime($this->tokenExpiration, $data['time']) > $time) {
+					return false;
+				}
+			}
+			$token = bin2hex(openssl_random_pseudo_bytes(16));
+			$tokens[$token] = array("id" => $id, "time" => $time);
+			$this->setGlobalsetting('passresettoken',$tokens);
+			return array("token" => $token, "valid" => strtotime($this->tokenExpiration, $time));
+		}
+		return false;
+	}
+
+	/**
+	 * Validate Password Reset token
+	 * @param string $token The token
+	 */
+	public function validatePasswordResetToken($token) {
+		$tokens = $this->getPasswordResetTokens();
+		if(empty($tokens) || !is_array($tokens)) {
+			return false;
+		}
+		if(isset($tokens[$token])) {
+			$user = $this->getUserByID($tokens[$token]['id']);
+			if(!empty($user)) {
+				return $user;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Reset password for a user base on token
+	 * then invalidates the token
+	 * @param string $token       The token
+	 * @param string $newpassword The password
+	 */
+	public function resetPasswordWithToken($token,$newpassword) {
+		$user = $this->validatePasswordResetToken($token);
+		if(!empty($user)) {
+			$tokens = $this->getGlobalsetting('passresettoken');
+			unset($tokens[$token]);
+			$this->setGlobalsetting('passresettoken',$tokens);
+			$this->updateUser($user['username'], $user['username'], $user['default_extension'], $user['description'], array(), $newpassword);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
 	 * Set a global User Manager Setting
 	 * @param {[type]} $key   [description]
 	 * @param {[type]} $value [description]
@@ -731,7 +892,7 @@ class Userman implements \BMO {
 	 * @param mixed $data   Data to send
 	 */
 	private function callHooks($action,$data=null) {
-		$display = !empty($_REQUEST['display']) ? $_REQUEST['display'] : "";
+		$display = !empty($request['display']) ? $request['display'] : "";
 		$ret = array();
 		if(isset($this->registeredFunctions[$action])) {
 			foreach($this->registeredFunctions[$action] as $function) {
@@ -825,7 +986,11 @@ class Userman implements \BMO {
 		$user['host'] = 'http://'.$_SERVER["SERVER_NAME"];
 		$user['brand'] = $this->brand;
 
-		$user['password'] = !empty($password) ? $password : "<" . _('hidden') . ">";
+		if(!empty($password)) {
+			$user['password'] = $password;
+		} else {
+			$user['password'] = _("Obfuscated. To reset use the reset link in this email");
+		}
 
 		$mods = $this->callHooks('welcome',array('id' => $user['id'], 'brand' => $user['brand'], 'host' => $user['host']));
 		$user['services'] = '';
@@ -833,25 +998,25 @@ class Userman implements \BMO {
 			$user['services'] .= $mod . "\n";
 		}
 
-		$mods = $this->FreePBX->Hooks->processHooks($user['id'], $_REQUEST['display'], array('id' => $user['id'], 'brand' => $user['brand'], 'host' => $user['host']));
+		$mods = $this->FreePBX->Hooks->processHooks($user['id'], $request['display'], array('id' => $user['id'], 'brand' => $user['brand'], 'host' => $user['host'], 'password' => $user['password']));
 		foreach($mods as $mod) {
-			$user['services'] .= $mod . "\n";
+			if(is_array($mod)) {
+				foreach($mod as $el) {
+					$user['services'] .= $el . "\n";
+				}
+			} else {
+				$user['services'] .= $mod . "\n";
+			}
 		}
 
 		$dbemail = $this->getGlobalsetting('emailbody');
 		$template = !empty($dbemail) ? $dbemail : file_get_contents(__DIR__.'/views/emails/welcome_text.tpl');
 		preg_match_all('/%([\w|\d]*)%/',$template,$matches);
-
 		foreach($matches[1] as $match) {
 			$replacement = !empty($user[$match]) ? $user[$match] : '';
 			$template = str_replace('%'.$match.'%',$replacement,$template);
 		}
-		$email_options = array('useragent' => $this->brand, 'protocol' => 'mail');
-		$email = new \CI_Email();
-		$from = !empty($amp_conf['AMPUSERMANEMAILFROM']) ? $amp_conf['AMPUSERMANEMAILFROM'] : 'freepbx@freepbx.org';
 
-		$email->from($from);
-		$email->to($user['email']);
 		$dbsubject = $this->getGlobalsetting('emailsubject');
 		$subject = !empty($dbsubject) ? $dbsubject : _('Your %brand% Account');
 		preg_match_all('/%([\w|\d]*)%/',$subject,$matches);
@@ -859,8 +1024,30 @@ class Userman implements \BMO {
 			$replacement = !empty($user[$match]) ? $user[$match] : '';
 			$subject = str_replace('%'.$match.'%',$replacement,$subject);
 		}
+
+		$this->sendEmail($user['id'],$subject,$template);
+	}
+
+	/**
+	 * Send an email to a user
+	 * @param int $id      The user ID
+	 * @param string $subject The email subject
+	 * @param string $body    The email body
+	 */
+	public function sendEmail($id,$subject,$body) {
+		$user = $this->getUserByID($id);
+		if(empty($user) || empty($user['email'])) {
+			return false;
+		}
+		$email_options = array('useragent' => $this->brand, 'protocol' => 'mail');
+		$email = new \CI_Email();
+		$from = !empty($amp_conf['AMPUSERMANEMAILFROM']) ? $amp_conf['AMPUSERMANEMAILFROM'] : 'freepbx@freepbx.org';
+
+		$email->from($from);
+		$email->to($user['email']);
+
 		$email->subject($subject);
-		$email->message($template);
+		$email->message($body);
 		$email->send();
 	}
 
