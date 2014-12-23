@@ -33,18 +33,18 @@ window.scrollTo(0, 0);
 var params={};window.location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi,function(str,key,value){params[key] = value;});
 //Tab and Button stuff
 $( document ).ready(function() {
-	var hash = window.location.hash;
+	var hash = (window.location.hash != "") ? window.location.hash : "users";
 	if(hash == '#settings'){
 		$('input[name="submit"]').removeClass('hidden');
-		$('input[name="reset"]').removeClass('hidden');	
+		$('input[name="reset"]').removeClass('hidden');
 	}
-	
+
 	if(params['action'] == 'adduser' || params['action'] == 'showuser' ){
 		$('input[name="submit"]').removeClass('hidden');
-		$('input[name="reset"]').removeClass('hidden');	
-		$('input[name="delete"]').removeClass('hidden');	
+		$('input[name="reset"]').removeClass('hidden');
+		$('input[name="delete"]').removeClass('hidden');
 	}
-	
+
 	$(".nav-tabs a[href="+hash+"]").tab('show');
 	//we should be at the user tab by default so we will show add user.
 });
@@ -83,7 +83,7 @@ $('input[id^="actonthis"],#action-toggle-all').change(function(){
 	}
 
 });
-//This does the bulk delete... 
+//This does the bulk delete...
 $("#delchecked").on("click",function(){
 	$('input[id^="actonthis"]').each(function(){
 		if($(this).is(":checked")){
@@ -102,7 +102,7 @@ $("#delchecked").on("click",function(){
 					if(data.status === true){
 						row.fadeOut(2000,function(){
 							$(this).remove();
-						});	
+						});
 					}else{
 						warnInvalid(row,data.message);
 					}
@@ -147,7 +147,7 @@ $('a[id^="del"]').on("click",function(){
 			if(data.status === true){
 				row.fadeOut(2000,function(){
 					$(this).remove();
-				});	
+				});
 			}else{
 				warnInvalid(row,data.message);
 			}
@@ -206,6 +206,3 @@ $( "form" ).submit(function() {
 		return false;
 	};
 });
-			
-
-
