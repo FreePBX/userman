@@ -12,6 +12,7 @@ class Userman implements \BMO {
 	private $userSettingsTable = 'freepbx_users_settings';
 	private $brand = 'FreePBX';
 	private $contacts = array();
+	private $tokenExpiration = "5 minutes";
 
 	public function __construct($freepbx = null) {
 		$this->FreePBX = $freepbx;
@@ -689,6 +690,90 @@ class Userman implements \BMO {
 	}
 
 	/**
+	 * Get all password reset tokens
+	 */
+	public function getPasswordResetTokens() {
+		$tokens = $this->getGlobalsetting('passresettoken');
+		$final = array();
+		$time = time();
+		foreach($tokens as $token => $data) {
+			if(!empty($data['time']) &&  $data['valid'] < $time) {
+				continue;
+			}
+			$final[$token] = $data;
+		}
+		$this->setGlobalsetting('passresettoken',$final);
+		return $final;
+	}
+
+	/**
+	 * Generate a password reset token for a user
+	 * @param int $id The user ID
+	 * @param string $valid How long the token key is valid for in string format eg: "5 minutes"
+	 * @param bool $force Whether to forcefully generate a token even if one already exists
+	 */
+	public function generatePasswordResetToken($id, $valid = null, $force = false) {
+		$user = $this->getUserByID($id);
+		$time = time();
+		$valid = !empty($valid) ? $valid : $this->tokenExpiration;
+		if(!empty($user)) {
+			$tokens = $this->getPasswordResetTokens();
+			if(empty($tokens) || !is_array($tokens)) {
+				$tokens = array();
+			}
+			foreach($tokens as $token => $data) {
+				if(($data['id'] == $id) && !empty($token['time']) && $data['valid'] > $time) {
+					if(!$force) {
+						return false;
+					}
+				}
+			}
+			$token = bin2hex(openssl_random_pseudo_bytes(16));
+			$tokens[$token] = array("id" => $id, "time" => $time, "valid" => strtotime($valid, $time));
+			$this->setGlobalsetting('passresettoken',$tokens);
+			return array("token" => $token, "valid" => strtotime($valid, $time));
+		}
+		return false;
+	}
+
+	/**
+	 * Validate Password Reset token
+	 * @param string $token The token
+	 */
+	public function validatePasswordResetToken($token) {
+		$tokens = $this->getPasswordResetTokens();
+		if(empty($tokens) || !is_array($tokens)) {
+			return false;
+		}
+		if(isset($tokens[$token])) {
+			$user = $this->getUserByID($tokens[$token]['id']);
+			if(!empty($user)) {
+				return $user;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Reset password for a user base on token
+	 * then invalidates the token
+	 * @param string $token       The token
+	 * @param string $newpassword The password
+	 */
+	public function resetPasswordWithToken($token,$newpassword) {
+		$user = $this->validatePasswordResetToken($token);
+		if(!empty($user)) {
+			$tokens = $this->getGlobalsetting('passresettoken');
+			unset($tokens[$token]);
+			$this->setGlobalsetting('passresettoken',$tokens);
+			$this->updateUser($user['username'], $user['username'], $user['default_extension'], $user['description'], array(), $newpassword);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
 	 * Set a global User Manager Setting
 	 * @param {[type]} $key   [description]
 	 * @param {[type]} $value [description]
@@ -825,7 +910,11 @@ class Userman implements \BMO {
 		$user['host'] = 'http://'.$_SERVER["SERVER_NAME"];
 		$user['brand'] = $this->brand;
 
-		$user['password'] = !empty($password) ? $password : "<" . _('hidden') . ">";
+		if(!empty($password)) {
+			$user['password'] = $password;
+		} else {
+			$user['password'] = _("Obfuscated. To reset use the reset link in this email");
+		}
 
 		$mods = $this->callHooks('welcome',array('id' => $user['id'], 'brand' => $user['brand'], 'host' => $user['host']));
 		$user['services'] = '';
@@ -835,23 +924,23 @@ class Userman implements \BMO {
 
 		$mods = $this->FreePBX->Hooks->processHooks($user['id'], $_REQUEST['display'], array('id' => $user['id'], 'brand' => $user['brand'], 'host' => $user['host']));
 		foreach($mods as $mod) {
-			$user['services'] .= $mod . "\n";
+			if(is_array($mod)) {
+				foreach($mod as $el) {
+					$user['services'] .= $el . "\n";
+				}
+			} else {
+				$user['services'] .= $mod . "\n";
+			}
 		}
 
 		$dbemail = $this->getGlobalsetting('emailbody');
 		$template = !empty($dbemail) ? $dbemail : file_get_contents(__DIR__.'/views/emails/welcome_text.tpl');
 		preg_match_all('/%([\w|\d]*)%/',$template,$matches);
-
 		foreach($matches[1] as $match) {
 			$replacement = !empty($user[$match]) ? $user[$match] : '';
 			$template = str_replace('%'.$match.'%',$replacement,$template);
 		}
-		$email_options = array('useragent' => $this->brand, 'protocol' => 'mail');
-		$email = new \CI_Email();
-		$from = !empty($amp_conf['AMPUSERMANEMAILFROM']) ? $amp_conf['AMPUSERMANEMAILFROM'] : 'freepbx@freepbx.org';
 
-		$email->from($from);
-		$email->to($user['email']);
 		$dbsubject = $this->getGlobalsetting('emailsubject');
 		$subject = !empty($dbsubject) ? $dbsubject : _('Your %brand% Account');
 		preg_match_all('/%([\w|\d]*)%/',$subject,$matches);
@@ -859,8 +948,30 @@ class Userman implements \BMO {
 			$replacement = !empty($user[$match]) ? $user[$match] : '';
 			$subject = str_replace('%'.$match.'%',$replacement,$subject);
 		}
+
+		$this->sendEmail($user['id'],$subject,$template);
+	}
+
+	/**
+	 * Send an email to a user
+	 * @param int $id      The user ID
+	 * @param string $subject The email subject
+	 * @param string $body    The email body
+	 */
+	public function sendEmail($id,$subject,$body) {
+		$user = $this->getUserByID($id);
+		if(empty($user) || empty($user['email'])) {
+			return false;
+		}
+		$email_options = array('useragent' => $this->brand, 'protocol' => 'mail');
+		$email = new \CI_Email();
+		$from = !empty($amp_conf['AMPUSERMANEMAILFROM']) ? $amp_conf['AMPUSERMANEMAILFROM'] : 'freepbx@freepbx.org';
+
+		$email->from($from);
+		$email->to($user['email']);
+
 		$email->subject($subject);
-		$email->message($template);
+		$email->message($body);
 		$email->send();
 	}
 
