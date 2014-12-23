@@ -15,6 +15,9 @@ class Userman implements \BMO {
 	private $tokenExpiration = "5 minutes";
 
 	public function __construct($freepbx = null) {
+		if($freepbx == null) {
+			throw new \Exception("NO");
+		}
 		$this->FreePBX = $freepbx;
 		$this->db = $freepbx->Database;
 
@@ -922,7 +925,7 @@ class Userman implements \BMO {
 			$user['services'] .= $mod . "\n";
 		}
 
-		$mods = $this->FreePBX->Hooks->processHooks($user['id'], $request['display'], array('id' => $user['id'], 'brand' => $user['brand'], 'host' => $user['host'], 'password' => !empty($password)));
+		$mods = $this->FreePBX->Hooks->processHooks($user['id'], $_REQUEST['display'], array('id' => $user['id'], 'brand' => $user['brand'], 'host' => $user['host'], 'password' => !empty($password)));
 		foreach($mods as $mod) {
 			if(is_array($mod)) {
 				foreach($mod as $el) {
