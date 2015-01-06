@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>12.0.21</version>
+	<version>12.0.22</version>
 	<publisher>Schmooze Com Inc</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -12,6 +12,7 @@
 		Modules like iSymphony, Rest API and User Control Panel use this module to manage their users.
 	</description>
 	<changelog>
+		*12.0.22* FREEPBX-8429 Send email to all users
 		*12.0.21* Allow resetting of passwords
 		*12.0.20* FREEPBX-8477 Move Send Email option to bottom of Userman Page
 		*12.0.19* FREEPBX-8487 Make amportal a userman m update existing user man accounts

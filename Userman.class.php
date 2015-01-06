@@ -84,7 +84,7 @@ class Userman implements \BMO {
 			);
 			return true;
 		}
-		if(isset($_POST['submit']) || isset($_POST['submitsend'])) {
+		if(isset($_POST['submit']) || isset($_POST['submitsend']) || isset($_POST['sendemailtoall'])) {
 			switch($_POST['type']) {
 				case 'user':
 					$username = !empty($_POST['username']) ? $_POST['username'] : '';
@@ -153,12 +153,18 @@ class Userman implements \BMO {
 					}
 				break;
 				case 'general':
-					$this->setGlobalsetting('emailbody',$_POST['emailbody']);
-					$this->setGlobalsetting('emailsubject',$_POST['emailsubject']);
-					$this->message = array(
-						'message' => _('Saved'),
-						'type' => 'success'
-					);
+					if(isset($_POST['submit'])) {
+						$this->setGlobalsetting('emailbody',$_POST['emailbody']);
+						$this->setGlobalsetting('emailsubject',$_POST['emailsubject']);
+						$this->message = array(
+							'message' => _('Saved'),
+							'type' => 'success'
+						);
+					}
+					if(isset($_POST['sendemailtoall'])) {
+						dbug("yup");
+						$this->sendWelcomeEmailToAll();
+					}
 				break;
 			}
 		}
@@ -896,6 +902,13 @@ class Userman implements \BMO {
 			}
 		}
 		echo "\\nNow run: amportal a ucp enableall\\nTo give all users access to UCP";
+	}
+
+	public function sendWelcomeEmailToAll() {
+		$users = $this->getAllUsers();
+		foreach($users as $user) {
+			$this->sendWelcomeEmail($user['username']);
+		}
 	}
 
 	/**

@@ -24,7 +24,8 @@
 	<?php echo $hookHtml;?>
 	<table>
 		<tr>
-			<td colspan="2"><input type="submit" name="submit" value="<?php echo _('Submit')?>"></td>
+			<td colspan="2"><input type="submit" name="submit" value="<?php echo _('Save')?>"></td>
+			<td colspan="2"><input type="submit" name="sendemailtoall" value="<?php echo _('Save & resend email to all users')?>"></td>
 		</tr>
 	</table>
 </form>
