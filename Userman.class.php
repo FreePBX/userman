@@ -981,7 +981,19 @@ class Userman implements \BMO {
 		}
 		$email_options = array('useragent' => $this->brand, 'protocol' => 'mail');
 		$email = new \CI_Email();
-		$from = !empty($amp_conf['AMPUSERMANEMAILFROM']) ? $amp_conf['AMPUSERMANEMAILFROM'] : 'freepbx@freepbx.org';
+
+		//TODO: Stop gap until sysadmin becomes a full class
+		if(!function_exists('sysadmin_get_storage_email') && $this->FreePBX->Modules->checkStatus('sysadmin') && file_exists($this->FreePBX->Config()->get('AMPWEBROOT').'/admin/modules/sysadmin/functions.inc.php')) {
+			include $this->FreePBX->Config()->get('AMPWEBROOT').'/admin/modules/sysadmin/functions.inc.php';
+		}
+
+		if(function_exists('sysadmin_get_storage_email')) {
+			$emails = sysadmin_get_storage_email();
+			$femail = $emails['fromemail'];
+		} else {
+			$femail = $this->FreePBX->Config()->get('AMPUSERMANEMAILFROM');
+		}
+		$from = !empty($femail) ? $femail : 'freepbx@freepbx.org';
 
 		$email->from($from);
 		$email->to($user['email']);
