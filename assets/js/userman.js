@@ -36,10 +36,12 @@ $( document ).ready(function() {
 	var hash = (window.location.hash != "") ? window.location.hash : "users";
 	if(hash == '#settings'){
 		$('input[name="submit"]').removeClass('hidden');
+		$('input[name="submitsend"]').removeClass('hidden');
 		$('input[name="reset"]').removeClass('hidden');
 	}
 
 	if(params['action'] == 'adduser' || params['action'] == 'showuser' ){
+		$('input[name="submitsend"]').removeClass('hidden');
 		$('input[name="submit"]').removeClass('hidden');
 		$('input[name="reset"]').removeClass('hidden');
 		$('input[name="delete"]').removeClass('hidden');

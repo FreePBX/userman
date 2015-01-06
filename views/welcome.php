@@ -1,6 +1,6 @@
 <?php
 if(!empty($message)){
-	$htmlmessage = '<div class="alert alert-' . $message['type'] . ' fade">' . $message['message'] . '</div>'; 	
+	$htmlmessage = '<div class="alert alert-' . $message['type'] . ' fade">' . $message['message'] . '</div>';
 }
 echo $htmlmessage;
 ?>
@@ -8,7 +8,7 @@ echo $htmlmessage;
 	<div class="row">
 		<div class="col-sm-9">
 			<div class="fpbx-container">
-				 <div class="display full-border">
+				 <div class="display no-border">
 					<h1><?php echo _("User Manager")?></h1>
 					<div class="panel panel-info">
 						<div class="panel-heading">
@@ -27,14 +27,16 @@ echo $htmlmessage;
 							<li role="presentation" class="active"><a href="#users" aria-controls="users" role="tab" data-toggle="tab"><?php echo _("Users"); ?></a></li>
 							<li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab"><?php echo _("Settings"); ?></a></li>
 						</ul>
-						<div class="tab-content">
+						<div class="tab-content display">
 							<div role="tabpanel" id="users" class="tab-pane active">
-								<br/>
-								<?php echo load_view(dirname(__FILE__).'/usergrid.php'); ?>
+								<div class="container-fluid">
+									<?php echo load_view(dirname(__FILE__).'/usergrid.php'); ?>
+								</div>
 							</div>
 							<div role="tabpane" id="settings" class="tab-pane">
-								<br/>
-								<?php echo load_view(dirname(__FILE__).'/general.php'); ?>
+								<div class="container-fluid">
+									<?php echo load_view(dirname(__FILE__).'/general.php'); ?>
+								</div>
 							</div>
 						</div>
 					</div>
