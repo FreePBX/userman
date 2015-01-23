@@ -82,14 +82,9 @@ class Userman implements \BMO {
 				'message' => $ret['message'],
 				'type' => $ret['type']
 			);
-			debug($this->message);
 			return true;
 		}
-<<<<<<< HEAD
 		if(isset($_POST['submittype']) || isset($_POST['submitsend'])) {
-=======
-		if(isset($_POST['submit']) || isset($_POST['submitsend']) || isset($_POST['sendemailtoall'])) {
->>>>>>> release/12.0
 			switch($_POST['type']) {
 				case 'user':
 					$username = !empty($request['username']) ? $request['username'] : '';
@@ -158,27 +153,16 @@ class Userman implements \BMO {
 					}
 				break;
 				case 'general':
-<<<<<<< HEAD
 					$this->setGlobalsetting('emailbody',$request['emailbody']);
 					$this->setGlobalsetting('emailsubject',$request['emailsubject']);
 					$this->message = array(
 						'message' => _('Saved'),
 						'type' => 'success'
 					);
-=======
-					if(isset($_POST['submit'])) {
-						$this->setGlobalsetting('emailbody',$_POST['emailbody']);
-						$this->setGlobalsetting('emailsubject',$_POST['emailsubject']);
-						$this->message = array(
-							'message' => _('Saved'),
-							'type' => 'success'
-						);
-					}
 					if(isset($_POST['sendemailtoall'])) {
 						dbug("yup");
 						$this->sendWelcomeEmailToAll();
 					}
->>>>>>> release/12.0
 				break;
 			}
 		}
