@@ -85,7 +85,11 @@ class Userman implements \BMO {
 			debug($this->message);
 			return true;
 		}
+<<<<<<< HEAD
 		if(isset($_POST['submittype']) || isset($_POST['submitsend'])) {
+=======
+		if(isset($_POST['submit']) || isset($_POST['submitsend']) || isset($_POST['sendemailtoall'])) {
+>>>>>>> release/12.0
 			switch($_POST['type']) {
 				case 'user':
 					$username = !empty($request['username']) ? $request['username'] : '';
@@ -154,12 +158,27 @@ class Userman implements \BMO {
 					}
 				break;
 				case 'general':
+<<<<<<< HEAD
 					$this->setGlobalsetting('emailbody',$request['emailbody']);
 					$this->setGlobalsetting('emailsubject',$request['emailsubject']);
 					$this->message = array(
 						'message' => _('Saved'),
 						'type' => 'success'
 					);
+=======
+					if(isset($_POST['submit'])) {
+						$this->setGlobalsetting('emailbody',$_POST['emailbody']);
+						$this->setGlobalsetting('emailsubject',$_POST['emailsubject']);
+						$this->message = array(
+							'message' => _('Saved'),
+							'type' => 'success'
+						);
+					}
+					if(isset($_POST['sendemailtoall'])) {
+						dbug("yup");
+						$this->sendWelcomeEmailToAll();
+					}
+>>>>>>> release/12.0
 				break;
 			}
 		}
@@ -978,6 +997,13 @@ class Userman implements \BMO {
 		echo "\\nNow run: amportal a ucp enableall\\nTo give all users access to UCP";
 	}
 
+	public function sendWelcomeEmailToAll() {
+		$users = $this->getAllUsers();
+		foreach($users as $user) {
+			$this->sendWelcomeEmail($user['username']);
+		}
+	}
+
 	/**
 	 * Sends a welcome email
 	 * @param {string} $username The username to send to
@@ -1049,7 +1075,19 @@ class Userman implements \BMO {
 		}
 		$email_options = array('useragent' => $this->brand, 'protocol' => 'mail');
 		$email = new \CI_Email();
-		$from = !empty($amp_conf['AMPUSERMANEMAILFROM']) ? $amp_conf['AMPUSERMANEMAILFROM'] : 'freepbx@freepbx.org';
+
+		//TODO: Stop gap until sysadmin becomes a full class
+		if(!function_exists('sysadmin_get_storage_email') && $this->FreePBX->Modules->checkStatus('sysadmin') && file_exists($this->FreePBX->Config()->get('AMPWEBROOT').'/admin/modules/sysadmin/functions.inc.php')) {
+			include $this->FreePBX->Config()->get('AMPWEBROOT').'/admin/modules/sysadmin/functions.inc.php';
+		}
+
+		if(function_exists('sysadmin_get_storage_email')) {
+			$emails = sysadmin_get_storage_email();
+			$femail = $emails['fromemail'];
+		} else {
+			$femail = $this->FreePBX->Config()->get('AMPUSERMANEMAILFROM');
+		}
+		$from = !empty($femail) ? $femail : 'freepbx@freepbx.org';
 
 		$email->from($from);
 		$email->to($user['email']);
