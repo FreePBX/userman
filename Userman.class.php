@@ -1006,7 +1006,6 @@ class Userman implements \BMO {
 		}
 
 		$femail = $this->FreePBX->Config()->get('AMPUSERMANEMAILFROM');
-
 		if(function_exists('sysadmin_get_storage_email')) {
 			$emails = sysadmin_get_storage_email();
 			if(!empty($emails['fromemail']) && filter_var($emails['fromemail'],FILTER_VALIDATE_EMAIL)) {
