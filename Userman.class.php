@@ -506,7 +506,11 @@ class Userman implements \BMO {
 		$sql = "INSERT INTO ".$this->userTable." (`username`,`password`,`description`,`default_extension`) VALUES (:username,:password,:description,:default_extension)";
 		$sth = $this->db->prepare($sql);
 		$password = ($encrypt) ? sha1($password) : $password;
-		$sth->execute(array(':username' => $username, ':password' => $password, ':description' => $description, ':default_extension' => $default));
+		try {
+			$sth->execute(array(':username' => $username, ':password' => $password, ':description' => $description, ':default_extension' => $default));
+		} catch (\Exception $e) {
+			return array("status" => false, "type" => "danger", "message" => $e->getMessage());
+		}
 
 		$id = $this->db->lastInsertId();
 		$this->updateUserExtraData($id,$extraData);
@@ -539,18 +543,28 @@ class Userman implements \BMO {
 		if(isset($password) && (sha1($password) != $user['password'])) {
 			$sql = "UPDATE ".$this->userTable." SET `username` = :username, `password` = :password, `description` = :description, `default_extension` = :default_extension WHERE `username` = :prevusername";
 			$sth = $this->db->prepare($sql);
-			$sth->execute(array(':username' => $username, ':prevusername' => $prevUsername, ':description' => $description, ':password' => sha1($password), ':default_extension' => $default));
+			try {
+				$sth->execute(array(':username' => $username, ':prevusername' => $prevUsername, ':description' => $description, ':password' => sha1($password), ':default_extension' => $default));
+			} catch (\Exception $e) {
+				return array("status" => false, "type" => "danger", "message" => $e->getMessage());
+			}
 		} elseif(($prevUsername != $username) || ($user['description'] != $description) || $user['default_extension'] != $default) {
 			if(($prevUsername != $username) && $this->getUserByUsername($username)) {
 				return array("status" => false, "type" => "danger", "message" => sprintf(_("User '%s' Already Exists"),$username));
 			}
 			$sql = "UPDATE ".$this->userTable." SET `username` = :username, `description` = :description, `default_extension` = :default_extension WHERE `username` = :prevusername";
 			$sth = $this->db->prepare($sql);
-			$sth->execute(array(':username' => $username, ':prevusername' => $prevUsername, ':description' => $description, ':default_extension' => $default));
+			try {
+				$sth->execute(array(':username' => $username, ':prevusername' => $prevUsername, ':description' => $description, ':default_extension' => $default));
+			} catch (\Exception $e) {
+				return array("status" => false, "type" => "danger", "message" => $e->getMessage());
+			}
 		}
 		$message = _("Updated User");
 
-		$this->updateUserExtraData($user['id'],$extraData);
+		if(!$this->updateUserExtraData($user['id'],$extraData)) {
+			return array("status" => false, "type" => "danger", "message" => _("An Unknown error occured while trying to update user data"));
+		}
 
 		$this->callHooks('updateUser',array("id" => $user['id'], "prevUsername" => $prevUsername, "username" => $username, "description" => $description, "password" => $password, "extraData" => $extraData));
 		$this->FreePBX->Hooks->processHooks($user['id'], $display, array("id" => $user['id'], "prevUsername" => $prevUsername, "username" => $username, "description" => $description, "password" => $password, "extraData" => $extraData));
@@ -585,22 +599,26 @@ class Userman implements \BMO {
 		$displayname = !empty($data['displayname']) ? $data['displayname'] : (!isset($data['displayname']) && !empty($defaults['displayname']) ? $defaults['displayname'] : null);
 		$department = !empty($data['department']) ? $data['department'] : (!isset($data['department']) && !empty($defaults['department']) ? $defaults['department'] : null);
 
-		$sth->execute(
-			array(
-				':fname' => $fname,
-				':lname' => $lname,
-				':displayname' => $displayname,
-				':title' => $title,
-				':company' => $company,
-				':email' => $email,
-				':cell' => $cell,
-				':work' => $work,
-				':home' => $home,
-				':fax' => $fax,
-				':department' => $department,
-				':uid' => $id
-			)
-		);
+		try {
+			$sth->execute(
+				array(
+					':fname' => $fname,
+					':lname' => $lname,
+					':displayname' => $displayname,
+					':title' => $title,
+					':company' => $company,
+					':email' => $email,
+					':cell' => $cell,
+					':work' => $work,
+					':home' => $home,
+					':fax' => $fax,
+					':department' => $department,
+					':uid' => $id
+				)
+			);
+		} catch (\Exception $e) {
+			return false;
+		}
 	}
 
 	/**
