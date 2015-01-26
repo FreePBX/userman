@@ -1009,7 +1009,7 @@ class Userman implements \BMO {
 
 		if(function_exists('sysadmin_get_storage_email')) {
 			$emails = sysadmin_get_storage_email();
-			if(!empty($emails['fromemail'])) {
+			if(!empty($emails['fromemail']) && filter_var($emails['fromemail'],FILTER_VALIDATE_EMAIL)) {
 				$femail = $emails['fromemail'];
 			}
 		}
