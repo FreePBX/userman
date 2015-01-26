@@ -1005,13 +1005,16 @@ class Userman implements \BMO {
 			include $this->FreePBX->Config()->get('AMPWEBROOT').'/admin/modules/sysadmin/functions.inc.php';
 		}
 
+		$femail = $this->FreePBX->Config()->get('AMPUSERMANEMAILFROM');
+
 		if(function_exists('sysadmin_get_storage_email')) {
 			$emails = sysadmin_get_storage_email();
-			$femail = $emails['fromemail'];
-		} else {
-			$femail = $this->FreePBX->Config()->get('AMPUSERMANEMAILFROM');
+			if(!empty($emails['fromemail'])) {
+				$femail = $emails['fromemail'];
+			}
 		}
-		$from = !empty($femail) ? $femail : 'freepbx@freepbx.org';
+
+		$from = !empty($femail) ? $femail : get_current_user() . '@' . gethostname();
 
 		$email->from($from);
 		$email->to($user['email']);
