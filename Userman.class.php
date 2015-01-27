@@ -542,6 +542,7 @@ class Userman implements \BMO {
 		} catch (\Exception $e) {
 			return false;
 		}
+		return true;
 	}
 
 	/**
