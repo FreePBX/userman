@@ -65,7 +65,7 @@ function userman_configpageload() {
 			$usersC[] = $user[0];
 		}
 		$section = _("User Manager Settings");
-		$category = "advanced";
+		$category = "general";
 		if($extdisplay != '') {
 			$userM = $userman->getUserByDefaultExtension($extdisplay);
 			if(!empty($userM)) {
