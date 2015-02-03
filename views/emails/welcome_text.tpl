@@ -7,7 +7,7 @@ Congratulations! Your %brand% account has been created! You can now use the cred
 
 To login to the following services:
 
-	%services%
+%services%
 
 Thanks,
 The %brand% Team
