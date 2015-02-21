@@ -21,16 +21,16 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-02-20 20:06-0500\n"
-"PO-Revision-Date: 2014-09-17 14:58+0200\n"
+"PO-Revision-Date: 2015-02-21 11:08+0200\n"
 "Last-Translator: Kevin <kevin@qloog.com>\n"
-"Language-Team: Japanese <http://git.freepbx.org/projects/freepbx/userman/"
-"ja_JP/>\n"
+"Language-Team: Japanese "
+"<http://weblate.freepbx.org/projects/freepbx/userman/ja_JP/>\n"
+"Language: ja_JP\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ja_JP\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 1.10-dev\n"
+"X-Generator: Weblate 2.2-dev\n"
 
 #: views/welcome.php:2
 #, php-format
@@ -394,7 +394,7 @@ msgstr ""
 
 #: userman.i18n.php:3 userman.i18n.php:8
 msgid "User Management"
-msgstr ""
+msgstr "ユーザーの管理"
 
 #: userman.i18n.php:12
 msgid "User Management Module"
@@ -430,7 +430,7 @@ msgstr ""
 
 #: views/welcome.php:1
 msgid "What is User Manager"
-msgstr ""
+msgstr "ユーザーマネージャーとは？"
 
 #: views/users.php:63
 msgid "Work Phone Number"
