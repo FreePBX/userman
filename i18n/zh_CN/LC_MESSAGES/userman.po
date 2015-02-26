@@ -1,36 +1,21 @@
 # This file is part of FreePBX.
 #
-#    FreePBX is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 2 of the License, or
-#    (at your option) any later version.
-#
-#    FreePBX is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with FreePBX.  If not, see <http://www.gnu.org/licenses/>.
+# For licensing information, please see the file named LICENSE located in the module directory
 #
 # FreePBX language template for userman
-# Copyright (C) 2008, 2009, 2010 Bandwith.com
+# Copyright (C) 2008-2015 Sangoma, Inc.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-02-26 18:46-0500\n"
-"PO-Revision-Date: 2014-07-22 16:15+0200\n"
-"Last-Translator: Chavdar <chavdar_75@yahoo.com>\n"
-"Language-Team: Bulgarian <http://git.freepbx.org/projects/freepbx/userman/bg/"
-">\n"
+"PO-Revision-Date: 2015-02-20 20:06-0500\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: bg\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 1.10-dev\n"
 
 #: views/welcome.php:2
 #, php-format
@@ -218,7 +203,7 @@ msgstr ""
 #: functions.inc/guihooks.php:74 functions.inc/guihooks.php:89
 #: functions.inc/guihooks.php:125
 msgid "None"
-msgstr "Няма"
+msgstr ""
 
 #: Userman.class.php:952
 msgid "Obfuscated. To reset use the reset link in this email"
@@ -412,7 +397,7 @@ msgstr ""
 
 #: functions.inc/guihooks.php:68 functions.inc/guihooks.php:121
 msgid "User Manager Settings"
-msgstr "Настройки за Управление на Потребителите"
+msgstr ""
 
 #: views/users.php:20
 msgid "User Settings"

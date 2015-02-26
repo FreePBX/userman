@@ -743,9 +743,10 @@ class Userman implements \BMO {
 	 * @param int $uid The ID of the user from User Manager
 	 * @param string $module The module rawname (this can be anything really, another reference ID)
 	 * @param string $setting The keyword that references said setting
+	 * @param bool $null If true return null if the setting doesn't exist, else return false
 	 * @return mixed false if nothing, else array
 	 */
-	public function getModuleSettingByID($uid,$module,$setting) {
+	public function getModuleSettingByID($uid,$module,$setting,$null=false) {
 		$sql = "SELECT a.val, a.type FROM ".$this->userSettingsTable." a, ".$this->userTable." b WHERE b.id = :id AND b.id = a.uid AND a.module = :module AND a.key = :setting";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':id' => $uid, ':setting' => $setting, ':module' => $module));
@@ -753,7 +754,7 @@ class Userman implements \BMO {
 		if($result) {
 			return ($result['type'] == 'json-arr' && $this->isJson($result['val'])) ? json_decode($result['val'],true) : $result['val'];
 		}
-		return false;
+		return ($null) ? null : false;
 	}
 
 	/**
