@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-02-20 20:06-0500\n"
+"POT-Creation-Date: 2015-02-26 18:46-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -65,7 +65,7 @@ msgstr ""
 msgid "Additional Extensions over which this user will have control."
 msgstr ""
 
-#: userman.i18n.php:4
+#: userman.i18n.php:4 userman.i18n.php:12
 msgid "Admin"
 msgstr ""
 
@@ -113,7 +113,7 @@ msgstr ""
 msgid "Edit User"
 msgstr ""
 
-#: userman.i18n.php:10
+#: userman.i18n.php:18
 msgid "Email "
 msgstr ""
 
@@ -203,7 +203,7 @@ msgstr ""
 msgid "Login Name"
 msgstr ""
 
-#: Userman.class.php:912
+#: Userman.class.php:913
 msgid "Migrated user from voicemail"
 msgstr ""
 
@@ -216,7 +216,7 @@ msgstr ""
 msgid "None"
 msgstr ""
 
-#: Userman.class.php:951
+#: Userman.class.php:952
 msgid "Obfuscated. To reset use the reset link in this email"
 msgstr ""
 
@@ -279,7 +279,7 @@ msgid ""
 "li></ul><br>Empty the box to reset this field"
 msgstr ""
 
-#: userman.i18n.php:14
+#: userman.i18n.php:22
 msgid ""
 "The From: field for emails when using the user management email feature."
 msgstr ""
@@ -326,6 +326,15 @@ msgstr ""
 
 #: views/users.php:63
 msgid "The user's work phone number."
+msgstr ""
+
+#: userman.i18n.php:14
+msgid ""
+"This Module manages all FreePBX users excluding Administrators (at this "
+"time).\t\tIt allows an Administrator to create a User Account that can be "
+"used by other applications for login or API purposes.\t\tModules like "
+"iSymphony, Rest API and User Control Panel use this module to manage their "
+"users."
 msgstr ""
 
 #: userman.i18n.php:5
@@ -388,11 +397,12 @@ msgstr ""
 msgid "User List"
 msgstr ""
 
-#: userman.i18n.php:3 userman.i18n.php:8
+#: userman.i18n.php:3 userman.i18n.php:8 userman.i18n.php:10
+#: userman.i18n.php:16
 msgid "User Management"
 msgstr ""
 
-#: userman.i18n.php:12
+#: userman.i18n.php:20
 msgid "User Management Module"
 msgstr ""
 
@@ -432,6 +442,6 @@ msgstr ""
 msgid "Work Phone Number"
 msgstr ""
 
-#: Userman.class.php:980 views/general.php:14
+#: Userman.class.php:981 views/general.php:14
 msgid "Your %brand% Account"
 msgstr ""
