@@ -1,36 +1,21 @@
 # This file is part of FreePBX.
 #
-#    FreePBX is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 2 of the License, or
-#    (at your option) any later version.
-#
-#    FreePBX is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with FreePBX.  If not, see <http://www.gnu.org/licenses/>.
+# For licensing information, please see the file named LICENSE located in the module directory
 #
 # FreePBX language template for userman
-# Copyright (C) 2008, 2009, 2010 Bandwith.com
+# Copyright (C) 2008-2015 Sangoma, Inc.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-02-20 20:06-0500\n"
-"PO-Revision-Date: 2015-02-21 11:46+0200\n"
-"Last-Translator: Kevin <kevin@qloog.com>\n"
-"Language-Team: Japanese "
-"<http://weblate.freepbx.org/projects/freepbx/userman/ja_JP/>\n"
-"Language: ja_JP\n"
+"PO-Revision-Date: 2015-02-20 20:06-0500\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2.2-dev\n"
 
 #: views/welcome.php:2
 #, php-format
@@ -201,7 +186,7 @@ msgstr ""
 #: functions.inc/guihooks.php:111
 #, php-format
 msgid "Linked to User %s"
-msgstr "ユーザー %s にリンクされています"
+msgstr ""
 
 #: views/users.php:23
 msgid "Login Name"
@@ -394,15 +379,15 @@ msgstr ""
 
 #: userman.i18n.php:3 userman.i18n.php:8
 msgid "User Management"
-msgstr "ユーザー管理"
+msgstr ""
 
 #: userman.i18n.php:12
 msgid "User Management Module"
-msgstr "ユーザー管理モジュール"
+msgstr ""
 
 #: functions.inc/guihooks.php:68 functions.inc/guihooks.php:121
 msgid "User Manager Settings"
-msgstr "ユーザー管理の設定"
+msgstr ""
 
 #: views/users.php:20
 msgid "User Settings"
@@ -430,7 +415,7 @@ msgstr ""
 
 #: views/welcome.php:1
 msgid "What is User Manager"
-msgstr "ユーザー管理とは？"
+msgstr ""
 
 #: views/users.php:63
 msgid "Work Phone Number"
@@ -439,6 +424,3 @@ msgstr ""
 #: Userman.class.php:980 views/general.php:14
 msgid "Your %brand% Account"
 msgstr ""
-
-#~ msgid "Assign to a Different Default User:"
-#~ msgstr "違うデフォルトユーザーにアサインします:"
