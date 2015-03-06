@@ -54,6 +54,12 @@
 		<phpversion>5.3.3</phpversion>
 		<version>12.0.1rc16</version>
 	</depends>
+	<hooks>
+		<core namespace="FreePBX\modules" class="Core">
+			<method namespace="FreePBX\modules" class="Userman" callingMethod="getQuickCreateDisplay">getQuickCreateDisplay</method>
+			<method namespace="FreePBX\modules" class="Userman" callingMethod="processQuickCreate">processQuickCreate</method>
+		</core>
+	</hooks>
 	<supported>
 		<version>13.0</version>
 	</supported>
