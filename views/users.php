@@ -21,14 +21,22 @@ echo $htmlmessage;
 			<div class="fpbx-container">
 				<div class="display no-border">
 					<div class="container-fluid">
+						<div role="tabpanel">
+							<ul class="nav nav-tabs" role="tablist">
+								<li role="presentation" class="active"><a href="#usermanlogin" aria-controls="usermanlogin" role="tab" data-toggle="tab"><?php echo _("Login Details")?></a></li>
+								<li role="presentation"><a href="#usermanuser" aria-controls="usermanuser" role="tab" data-toggle="tab"><?php echo _("User Details")?></a></li>
+								<?php echo $tabhtml?>
+								<li role="presentation"><a href="#usermanother" aria-controls="usermanother" role="tab" data-toggle="tab"><?php echo _("Other Settings")?></a></li>
+							</ul>
+						</div>
 						<form class="fpbx-submit" autocomplete="off" name="editM" id="editM" action="<?php echo $formaction ?>" method="post" data-fpbx-delete="config.php?display=userman&amp;action=deluser&amp;user=<?php echo $user['id']?>"onsubmit="return true;">
 							<input type="hidden" name="type" value="user">
 							<input type="hidden" name="prevUsername" value="<?php echo !empty($user['username']) ? $user['username'] : ''; ?>">
 							<input type="hidden" name="user" value="<?php echo !empty($user['id']) ? $user['id'] : ''; ?>">
 							<input type="hidden" name="submittype" value="gui">
+							<div class="tab-content">
 							<!--Login Details -->
-							<div class="section-title" data-for="logindetails"><h3><i class="fa fa-minus"></i><?php echo _("Login Details") ?></h3></div>
-							<div class="section" data-id="logindetails">
+							<div role="tabpanel" class="tab-pane active" id="usermanlogin">
 							<!-- LOGIN NAME-->
 							<div class="element-container">
 								<div class="row">
@@ -103,10 +111,9 @@ echo $htmlmessage;
 							<!--END Password-->
 							</div>
 							<!-- End Login details -->
-							<br/>
+
 							<!--User Details-->
-							<div class="section-title" data-for="userdetails"><h3><i class="fa fa-minus"></i><?php echo _("User Details")?></h3></div>
-							<div class="section" data-id="userdetails">
+							<div role="tabpanel" class="tab-pane" id="usermanuser">
 							<!--FIRSTNAME-->
 							<div class="element-container">
 								<div class="row">
@@ -406,12 +413,12 @@ echo $htmlmessage;
 							</div>
 							<!--END User Details-->
 							<!--Module Specific -->
-							<div class="section-title" data-for="modulehooks"><h3><i class="fa fa-minus"></i><?php echo _("Module Settings") ?></h3></div>
-							<div class="section" data-id="modulehooks">
-								<?php echo $moduleHtml;?>
+							<?php echo $moduleHtml ?>
+							<div role="tabpanel" class="tab-pane" id="usermanother">
 								<?php echo $hookHtml;?>
 							</div>
 						</form>
+						</div>
 					</div>
 				</div>
 			</div>

@@ -240,8 +240,10 @@ class Userman implements \BMO {
 		$module_hook = \moduleHook::create();
 		$mods = $this->FreePBX->Hooks->processHooks();
 		$moduleHtml = '';
-		foreach($mods as $mod) {
-			$moduleHtml .= $mod;
+		foreach($mods as $mod => $html) {
+			$tabhtml .= '<li role="presentation"><a href="#usermanhook'.$mod.'" aria-controls="usermanhook'.$mod.'" role="tab" data-toggle="tab">'.strtoupper($mod).'</a></li>';
+			$moduleHtml .= '<div role="tabpanel" class="tab-pane active" id="usermanhook'.$mod.'">';
+			$moduleHtml .= $html.'</div>';
 		}
 		$request = $_REQUEST;
 		$action = !empty($request['action']) ? $request['action'] : '';
@@ -283,12 +285,12 @@ class Userman implements \BMO {
 					}
 					$dfpbxusers[] = array("ext" => $e, "name" => $u['name'], "selected" => ($e == $default));
 				}
-				$html .= load_view(dirname(__FILE__).'/views/users.php',array("dfpbxusers" => $dfpbxusers, "fpbxusers" => $fpbxusers, "moduleHtml" => $moduleHtml, "hookHtml" => $module_hook->hookHtml, "user" => $user, "message" => $this->message));
+				$html .= load_view(dirname(__FILE__).'/views/users.php',array("dfpbxusers" => $dfpbxusers, "fpbxusers" => $fpbxusers, "moduleHtml" => $moduleHtml, 'tabhtml'=>$tabhtml, "hookHtml" => $module_hook->hookHtml, "user" => $user, "message" => $this->message));
 			break;
 			default:
 				$emailbody = $this->getGlobalsetting('emailbody');
 				$emailsubject = $this->getGlobalsetting('emailsubject');
-				$html .= load_view(dirname(__FILE__).'/views/welcome.php',array("moduleHtml" => $moduleHtml, "hookHtml" => $module_hook->hookHtml, "user" => $user, "message" => $this->message, "emailbody" => $emailbody, "emailsubject" => $emailsubject));
+				$html .= load_view(dirname(__FILE__).'/views/welcome.php',array("moduleHtml" => $moduleHtml, "hookHtml" => $module_hook->hookHtml, 'tabhtml'=>$tabhtml, "user" => $user, "message" => $this->message, "emailbody" => $emailbody, "emailsubject" => $emailsubject));
 			break;
 		}
 
