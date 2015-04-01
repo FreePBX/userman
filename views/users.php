@@ -26,7 +26,7 @@ echo $htmlmessage;
 								<li role="presentation" class="active"><a href="#usermanlogin" aria-controls="usermanlogin" role="tab" data-toggle="tab"><?php echo _("Login Details")?></a></li>
 								<li role="presentation"><a href="#usermanuser" aria-controls="usermanuser" role="tab" data-toggle="tab"><?php echo _("User Details")?></a></li>
 								<?php echo $tabhtml?>
-								<li role="presentation"><a href="#usermanother" aria-controls="usermanother" role="tab" data-toggle="tab"><?php echo _("Other Settings")?></a></li>
+								<li role="presentation" class="<?php echo empty($hookHtml)?'hidden':''?>"><a href="#usermanother" aria-controls="usermanother" role="tab" data-toggle="tab"><?php echo _("Other Settings")?></a></li>
 							</ul>
 						</div>
 						<form class="fpbx-submit" autocomplete="off" name="editM" id="editM" action="<?php echo $formaction ?>" method="post" data-fpbx-delete="config.php?display=userman&amp;action=deluser&amp;user=<?php echo $user['id']?>"onsubmit="return true;">
