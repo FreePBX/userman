@@ -10,8 +10,10 @@ $setting = array('authenticate' => true, 'allowremote' => false);
 class Userman implements \BMO {
 	private $registeredFunctions = array();
 	private $message = '';
-	private $userTable = 'freepbx_users';
-	private $userSettingsTable = 'freepbx_users_settings';
+	private $userTable = 'userman_users';
+	private $userSettingsTable = 'userman_users_settings';
+	private $groupTable = 'userman_groups';
+	private $groupSettingsTable = 'userman_groups_settings';
 	private $brand = 'FreePBX';
 	private $contacts = array();
 	private $tokenExpiration = "5 minutes";
@@ -242,7 +244,7 @@ class Userman implements \BMO {
 		$moduleHtml = '';
 		foreach($mods as $mod => $html) {
 			$tabhtml .= '<li role="presentation"><a href="#usermanhook'.$mod.'" aria-controls="usermanhook'.$mod.'" role="tab" data-toggle="tab">'.strtoupper($mod).'</a></li>';
-			$moduleHtml .= '<div role="tabpanel" class="tab-pane active" id="usermanhook'.$mod.'">';
+			$moduleHtml .= '<div role="tabpanel" class="tab-pane display" id="usermanhook'.$mod.'">';
 			$moduleHtml .= $html.'</div>';
 		}
 		$request = $_REQUEST;
@@ -496,6 +498,23 @@ class Userman implements \BMO {
 		return array("status" => true, "type" => "success", "message" => _("User Successfully Deleted"));
 	}
 
+	public function deleteGroupByGID($gid) {
+		$user = $this->getUserByID($id);
+		if(!$user) {
+			return array("status" => false, "type" => "danger", "message" => _("Group Does Not Exist"));
+		}
+		$sql = "DELETE FROM ".$this->groupTable." WHERE `gid` = :id";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':id' => $gid));
+
+		$sql = "DELETE FROM ".$this->groupSettingsTable." WHERE `gid` = :gid";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':gid' => $gid));
+		$this->callHooks('delUser',array("id" => $gid));
+		$this->delUser($id);
+		return array("status" => true, "type" => "success", "message" => _("Group Successfully Deleted"));
+	}
+
 	/**
 	 * This is here so that the processhooks callback has the righ function name to hook into
 	 *
@@ -504,6 +523,12 @@ class Userman implements \BMO {
 	 * @param {int} $id the user id of the deleted user
 	 */
 	private function delUser($id) {
+		$request = $_REQUEST;
+		$display = !empty($request['display']) ? $request['display'] : "";
+		$this->FreePBX->Hooks->processHooks($id, $display, array("id" => $id));
+	}
+
+	private function delGroup($id) {
 		$request = $_REQUEST;
 		$display = !empty($request['display']) ? $request['display'] : "";
 		$this->FreePBX->Hooks->processHooks($id, $display, array("id" => $id));
@@ -546,6 +571,10 @@ class Userman implements \BMO {
 		$this->callHooks('addUser',array("id" => $id, "username" => $username, "description" => $description, "password" => $password, "encrypted" => $encrypt, "extraData" => $extraData));
 		$this->FreePBX->Hooks->processHooks($id, $display, array("id" => $id, "username" => $username, "description" => $description, "password" => $password, "encrypted" => $encrypt, "extraData" => $extraData));
 		return array("status" => true, "type" => "success", "message" => _("User Successfully Added"), "id" => $id);
+	}
+
+	public function addGroup($groupname, $description=null) {
+		$this->FreePBX->Hooks->processHooks($id, $display, array("id" => $id, "groupname" => $groupname, "description" => $description));
 	}
 
 	/**
@@ -598,6 +627,11 @@ class Userman implements \BMO {
 		$this->callHooks('updateUser',array("id" => $user['id'], "prevUsername" => $prevUsername, "username" => $username, "description" => $description, "password" => $password, "extraData" => $extraData));
 		$this->FreePBX->Hooks->processHooks($user['id'], $display, array("id" => $user['id'], "prevUsername" => $prevUsername, "username" => $username, "description" => $description, "password" => $password, "extraData" => $extraData));
 		return array("status" => true, "type" => "success", "message" => $message, "id" => $user['id']);
+	}
+
+
+	public function updateGroup($prevGroupname, $groupname, $description=null) {
+		$this->FreePBX->Hooks->processHooks($id, $display, array("id" => $id, "prevGroupname" => $prevGroupname, "groupname" => $groupname, "description" => $description));
 	}
 
 	/**
@@ -700,15 +734,39 @@ class Userman implements \BMO {
 	}
 
 	/**
+	 * Get Globally Defined Sub Settings
+	 *
+	 * Gets all Globally Defined Sub Settings
+	 *
+	 * @param int $gid The ID of the group from User Manager
+	 * @return mixed false if nothing, else array
+	 */
+	public function getAllGlobalSettingsByGID($gid) {
+		$sql = "SELECT a.val, a.type, a.key FROM ".$this->groupSettingsTable." a, ".$this->groupTable." b WHERE b.id = a.gid AND b.id = :id AND a.module = 'global'";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':id' => $gid));
+		$result = $sth->fetch(\PDO::FETCH_ASSOC);
+		if($result) {
+			$fout = array();
+			foreach($result as $res) {
+				$fout[$res['key']] = ($result['type'] == 'json-arr' && $this->isJson($result['type'])) ? json_decode($result['type'],true) : $result;
+			}
+			return $fout;
+		}
+		return false;
+	}
+
+	/**
 	 * Get a single setting from a User
 	 *
 	 * Gets a single Globally Defined Sub Setting
 	 *
 	 * @param int $uid The ID of the user from User Manager
 	 * @param string $setting The keyword that references said setting
-	 * @return mixed false if nothing, else array
+	 * @param bool $null If true return null if the setting doesn't exist, else return false
+	 * @return mixed null if nothing, else mixed
 	 */
-	public function getGlobalSettingByID($uid,$setting) {
+	public function getGlobalSettingByID($uid,$setting,$null=false) {
 		$sql = "SELECT a.val, a.type FROM ".$this->userSettingsTable." a, ".$this->userTable." b WHERE b.id = a.uid AND b.id = :id AND a.key = :setting AND a.module = 'global'";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':id' => $uid, ':setting' => $setting));
@@ -716,7 +774,28 @@ class Userman implements \BMO {
 		if($result) {
 			return ($result['type'] == 'json-arr' && $this->isJson($result['val'])) ? json_decode($result['val'],true) : $result['val'];
 		}
-		return false;
+		return ($null) ? null : false;
+	}
+
+	/**
+	 * Get a single setting from a Group
+	 *
+	 * Gets a single Globally Defined Sub Setting
+	 *
+	 * @param int $gid The ID of the group from User Manager
+	 * @param string $setting The keyword that references said setting
+	 * @param bool $null If true return null if the setting doesn't exist, else return false
+	 * @return mixed null if nothing, else mixed
+	 */
+	public function getGlobalSettingByGID($gid,$setting,$null=false) {
+		$sql = "SELECT a.val, a.type FROM ".$this->groupSettingsTable." a, ".$this->groupTable." b WHERE b.id = a.gid AND b.id = :id AND a.key = :setting AND a.module = 'global'";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':id' => $gid, ':setting' => $setting));
+		$result = $sth->fetch(\PDO::FETCH_ASSOC);
+		if($result) {
+			return ($result['type'] == 'json-arr' && $this->isJson($result['val'])) ? json_decode($result['val'],true) : $result['val'];
+		}
+		return ($null) ? null : false;
 	}
 
 	/**
@@ -741,7 +820,28 @@ class Userman implements \BMO {
 	}
 
 	/**
- 	* Get All Defined Sub Settings by Module Name
+	 * Set Globally Defined Sub Setting
+	 *
+	 * Sets a Globally Defined Sub Setting
+	 *
+	 * @param int $gid The ID of the group from User Manager
+	 * @param string $setting The keyword that references said setting
+	 * @param mixed $value Can be an array, boolean or string or integer
+	 * @return mixed false if nothing, else array
+	 */
+	public function setGlobalSettingByGID($gid,$setting,$value) {
+		if(is_bool($value)) {
+			$value = ($value) ? 1 : 0;
+		}
+		$type = is_array($value) ? 'json-arr' : null;
+		$value = is_array($value) ? json_encode($value) : $value;
+		$sql = "REPLACE INTO ".$this->groupSettingsTable." (`gid`, `module`, `key`, `val`, `type`) VALUES(:gid, :module, :setting, :value, :type)";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':gid' => $gid, ':module' => 'global', ':setting' => $setting, ':value' => $value, ':type' => $type));
+	}
+
+	/**
+	 * Get All Defined Sub Settings by Module Name
 	 *
 	 * Get All Defined Sub Settings by Module Name
 	 *
@@ -753,6 +853,30 @@ class Userman implements \BMO {
 		$sql = "SELECT a.val, a.type, a.key FROM ".$this->userSettingsTable." a, ".$this->userTable." b WHERE b.id = :id AND b.id = a.uid AND a.module = :module";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':id' => $uid, ':module' => $module));
+		$result = $sth->fetch(\PDO::FETCH_ASSOC);
+		if($result) {
+			$fout = array();
+			foreach($result as $res) {
+				$fout[$res['key']] = ($result['type'] == 'json-arr' && $this->isJson($result['val'])) ? json_decode($result['val'],true) : $result['val'];
+			}
+			return $fout;
+		}
+		return false;
+	}
+
+	/**
+	 * Get All Defined Sub Settings by Module Name
+	 *
+	 * Get All Defined Sub Settings by Module Name
+	 *
+	 * @param int $gid The GID of the user from User Manager
+	 * @param string $module The module rawname (this can be anything really, another reference ID)
+	 * @return mixed false if nothing, else array
+	 */
+	public function getAllModuleSettingsByGID($gid,$module) {
+		$sql = "SELECT a.val, a.type, a.key FROM ".$this->groupSettingsTable." a, ".$this->groupTable." b WHERE b.id = :id AND b.id = a.gid AND a.module = :module";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':id' => $gid, ':module' => $module));
 		$result = $sth->fetch(\PDO::FETCH_ASSOC);
 		if($result) {
 			$fout = array();
@@ -787,6 +911,28 @@ class Userman implements \BMO {
 	}
 
 	/**
+	* Get a single setting from a User by Module
+	*
+	* Gets a single Module Defined Sub Setting
+	*
+	* @param int $uid The ID of the user from User Manager
+	* @param string $module The module rawname (this can be anything really, another reference ID)
+	* @param string $setting The keyword that references said setting
+	* @param bool $null If true return null if the setting doesn't exist, else return false
+	* @return mixed false if nothing, else array
+	*/
+	public function getModuleSettingByGID($gid,$module,$setting,$null=false) {
+		$sql = "SELECT a.val, a.type FROM ".$this->groupSettingsTable." a, ".$this->groupTable." b WHERE b.id = :id AND b.id = a.gid AND a.module = :module AND a.key = :setting";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':id' => $gid, ':setting' => $setting, ':module' => $module));
+		$result = $sth->fetch(\PDO::FETCH_ASSOC);
+		if($result) {
+			return ($result['type'] == 'json-arr' && $this->isJson($result['val'])) ? json_decode($result['val'],true) : $result['val'];
+		}
+		return ($null) ? null : false;
+	}
+
+	/**
 	 * Set a Module Sub Setting
 	 *
 	 * Sets a Module Defined Sub Setting
@@ -806,6 +952,28 @@ class Userman implements \BMO {
 		$sql = "REPLACE INTO ".$this->userSettingsTable." (`uid`, `module`, `key`, `val`, `type`) VALUES(:id, :module, :setting, :value, :type)";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':id' => $uid, ':module' => $module, ':setting' => $setting, ':value' => $value, ':type' => $type));
+	}
+
+	/**
+	 * Set a Module Sub Setting
+	 *
+	 * Sets a Module Defined Sub Setting
+	 *
+	 * @param int $uid The ID of the user from User Manager
+	 * @param string $module The module rawname (this can be anything really, another reference ID)
+	 * @param string $setting The keyword that references said setting
+	 * @param mixed $value Can be an array, boolean or string or integer
+	 * @return mixed false if nothing, else array
+	 */
+	public function setModuleSettingByGID($gid,$module,$setting,$value) {
+		if(is_bool($value)) {
+			$value = ($value) ? 1 : 0;
+		}
+		$type = is_array($value) ? 'json-arr' : null;
+		$value = is_array($value) ? json_encode($value) : $value;
+		$sql = "REPLACE INTO ".$this->groupSettingsTable." (`gid`, `module`, `key`, `val`, `type`) VALUES(:id, :module, :setting, :value, :type)";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':id' => $gid, ':module' => $module, ':setting' => $setting, ':value' => $value, ':type' => $type));
 	}
 
 	/**

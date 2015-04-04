@@ -36,7 +36,7 @@ echo $htmlmessage;
 							<input type="hidden" name="submittype" value="gui">
 							<div class="tab-content">
 							<!--Login Details -->
-							<div role="tabpanel" class="tab-pane active" id="usermanlogin">
+							<div role="tabpanel" class="tab-pane active display" id="usermanlogin">
 							<!-- LOGIN NAME-->
 							<div class="element-container">
 								<div class="row">
@@ -109,11 +109,76 @@ echo $htmlmessage;
 								</div>
 							</div>
 							<!--END Password-->
+							<!--Linked Extensions-->
+							<div class="element-container">
+								<div class="row">
+									<div class="col-md-12">
+										<div class="row">
+											<div class="form-group">
+												<div class="col-md-3">
+													<label class="control-label" for="defaultextension"><?php echo _("Primary Linked Extension")?></label>
+													<i class="fa fa-question-circle fpbx-help-icon" data-for="defaultextension"></i>
+												</div>
+												<div class="col-md-9">
+													<select id="defaultextension" name="defaultextension" class="form-control">
+													<?php foreach($dfpbxusers as $dfpbxuser) {?>
+														<option value="<?php echo $dfpbxuser['ext']?>" <?php echo $dfpbxuser['selected'] ? 'selected' : '' ?>><?php echo $dfpbxuser['name']?> &lt;<?php echo $dfpbxuser['ext']?>&gt;</option>
+													<?php } ?>
+													</select>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12">
+										<span id="defaultextension-help" class="help-block fpbx-help-block"><?php echo _("This is the extension this user is linked to from the Extensions page. A single user can only be linked to one extension, and one extension can only be linked to a single user. If using Rest Apps on a phone, this is the extension that will be mapped to the API permissions set below for this user.")?></span>
+									</div>
+								</div>
+							</div>
+							<!--END LINKED EXTENSIONS-->
+							<div class="element-container">
+								<div class="row">
+									<div class="col-md-12">
+										<div class="row">
+											<div class="form-group">
+												<div class="col-md-3">
+													<label class="control-label" for="dlwraper">Device List</label>
+													<i class="fa fa-question-circle fpbx-help-icon" data-for="dlwraper"></i>
+												</div>
+												<div class="col-md-9">
+													<h4>Selected</h4>
+													<fieldset id="selected_dev" class="device_list ui-sortable ui-menu ui-widget ui-widget-content ui-corner-all" style="height: 45px;">
+														<?php foreach($fpbxusers as $fpbxuser) {?>
+															<?php if($fpbxuser['selected']) {?>
+																<span data-ext="<?php echo $fpbxuser['ext']?>"><?php echo $fpbxuser['name']?> &lt;<?php echo $fpbxuser['ext']?>&gt;</span>
+															<?php } ?>
+														<?php } ?>
+													</fieldset>
+													<h4>Not Selected</h4>
+													<fieldset id="notselected_dev" class="device_list ui-sortable ui-menu ui-widget ui-widget-content ui-corner-all" style="height: 45px;">
+														<?php foreach($fpbxusers as $fpbxuser) {?>
+															<?php if(!$fpbxuser['selected']) {?>
+																<span data-ext="<?php echo $fpbxuser['ext']?>"><?php echo $fpbxuser['name']?> &lt;<?php echo $fpbxuser['ext']?>&gt;</span>
+															<?php } ?>
+														<?php } ?>
+													</fieldset>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12">
+										<span id="dlwraper-help" class="help-block fpbx-help-block">Devices to page. Please note, paging calls the actual device (and not the user). Amount of pagable devices is restricted by the advanced setting key PAGINGMAXPARTICIPANTS and is currently set to </span>
+									</div>
+								</div>
+							</div>
 							</div>
 							<!-- End Login details -->
 
 							<!--User Details-->
-							<div role="tabpanel" class="tab-pane" id="usermanuser">
+							<div role="tabpanel" class="tab-pane display" id="usermanuser">
 							<!--FIRSTNAME-->
 							<div class="element-container">
 								<div class="row">
@@ -354,34 +419,6 @@ echo $htmlmessage;
 								</div>
 							</div>
 							<!--END FAX-->
-							<!--Linked Extensions-->
-							<div class="element-container">
-								<div class="row">
-									<div class="col-md-12">
-										<div class="row">
-											<div class="form-group">
-												<div class="col-md-3">
-													<label class="control-label" for="defaultextension"><?php echo _("Linked Extension")?></label>
-													<i class="fa fa-question-circle fpbx-help-icon" data-for="defaultextension"></i>
-												</div>
-												<div class="col-md-9">
-													<select id="defaultextension" name="defaultextension" class="form-control">
-													<?php foreach($dfpbxusers as $dfpbxuser) {?>
-														<option value="<?php echo $dfpbxuser['ext']?>" <?php echo $dfpbxuser['selected'] ? 'selected' : '' ?>><?php echo $dfpbxuser['name']?> &lt;<?php echo $dfpbxuser['ext']?>&gt;</option>
-													<?php } ?>
-													</select>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-md-12">
-										<span id="defaultextension-help" class="help-block fpbx-help-block"><?php echo _("This is the extension this user is linked to from the Extensions page. A single user can only be linked to one extension, and one extension can only be linked to a single user. If using Rest Apps on a phone, this is the extension that will be mapped to the API permissions set below for this user.")?></span>
-									</div>
-								</div>
-							</div>
-							<!--END LINKED EXTENSIONS-->
 							<!--Additional Extensions-->
 							<div class="element-container">
 								<div class="row">
@@ -414,7 +451,7 @@ echo $htmlmessage;
 							<!--END User Details-->
 							<!--Module Specific -->
 							<?php echo $moduleHtml ?>
-							<div role="tabpanel" class="tab-pane" id="usermanother">
+							<div role="tabpanel" class="tab-pane display" id="usermanother">
 								<?php echo $hookHtml;?>
 							</div>
 						</form>

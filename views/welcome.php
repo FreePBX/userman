@@ -25,12 +25,24 @@ echo $htmlmessage;
 					<div role="tabpanel">
 						<ul class="nav nav-tabs" role="tablist">
 							<li role="presentation" class="active"><a href="#users" aria-controls="users" role="tab" data-toggle="tab"><?php echo _("Users"); ?></a></li>
+							<li role="presentation"><a href="#groups" aria-controls="groups" role="tab" data-toggle="tab"><?php echo _("Groups"); ?></a></li>
+							<li role="presentation"><a href="#permissions" aria-controls="groups" role="tab" data-toggle="tab"><?php echo _("Permissions"); ?></a></li>
 							<li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab"><?php echo _("Settings"); ?></a></li>
 						</ul>
 						<div class="tab-content display">
 							<div role="tabpanel" id="users" class="tab-pane active">
 								<div class="container-fluid">
 									<?php echo load_view(dirname(__FILE__).'/usergrid.php'); ?>
+								</div>
+							</div>
+							<div role="tabpanel" id="groups" class="tab-pane">
+								<div class="container-fluid">
+									<?php echo load_view(dirname(__FILE__).'/groupgrid.php'); ?>
+								</div>
+							</div>
+							<div role="tabpanel" id="permissions" class="tab-pane">
+								<div class="container-fluid">
+									<?php echo load_view(dirname(__FILE__).'/permissionsgrid.php'); ?>
 								</div>
 							</div>
 							<div role="tabpane" id="settings" class="tab-pane">
