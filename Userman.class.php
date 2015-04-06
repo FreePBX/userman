@@ -1050,7 +1050,8 @@ class Userman implements \BMO {
 			return false;
 		}
 
-		$user['host'] = 'http://'.$_SERVER["SERVER_NAME"];
+		$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https" : "http";
+		$user['host'] = $protocol.'://'.$_SERVER["SERVER_NAME"];
 		$user['brand'] = $this->brand;
 
 		if(!empty($password)) {
