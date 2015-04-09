@@ -44,7 +44,8 @@ class Userman implements \BMO {
 	}
 
 	public function install() {
-
+		//TODO: we force this upon users. Is that OK?
+		$this->FreePBX->Config->set('AUTHTYPE','usermanager');
 	}
 	public function uninstall() {
 
@@ -177,6 +178,13 @@ class Userman implements \BMO {
 						);
 						return false;
 					}
+					$pbx_login = ($_POST['pbx_login'] == "true") ? true : false;
+					$this->setGlobalSettingByID($ret['id'],'pbx_login',$pbx_login);
+
+					$pbx_admin = ($_POST['pbx_admin'] == "true") ? true : false;
+					$this->setGlobalSettingByID($ret['id'],'pbx_admin',$pbx_admin);
+
+					$this->setGlobalSettingByID($ret['id'],'pbx_modules',$_POST['pbx_modules']);
 					if(isset($_POST['submitsend'])) {
 						$this->sendWelcomeEmail($username, $password);
 					}
@@ -241,9 +249,12 @@ class Userman implements \BMO {
 		}
 		$module_hook = \moduleHook::create();
 		$mods = $this->FreePBX->Hooks->processHooks();
-		$moduleHtml = '';
+		$moduleHtml = $tabhtml = '';
 		foreach($mods as $mod => $html) {
-			$tabhtml .= '<li role="presentation"><a href="#usermanhook'.$mod.'" aria-controls="usermanhook'.$mod.'" role="tab" data-toggle="tab">'.strtoupper($mod).'</a></li>';
+			if(empty($html)) {
+				continue;
+			}
+			$tabhtml .= '<li role="presentation"><a href="#usermanhook'.$mod.'" aria-controls="usermanhook'.$mod.'" role="tab" data-toggle="tab">'.ucfirst(strtolower($mod)).'</a></li>';
 			$moduleHtml .= '<div role="tabpanel" class="tab-pane display" id="usermanhook'.$mod.'">';
 			$moduleHtml .= $html.'</div>';
 		}
@@ -279,6 +290,41 @@ class Userman implements \BMO {
 					$fpbxusers[] = array("ext" => $e, "name" => $u['name'], "selected" => in_array($e,$assigned));
 				}
 
+				$active_modules = $this->FreePBX->Modules->getActiveModules();
+
+				if(is_array($active_modules)){
+					$dis = ($this->FreePBX->Config->get('AMPEXTENSIONS') == 'deviceanduser')?_("Add Device"):_("Add Extension");
+					$active_modules['au']['items'][] = array('name' => _("Apply Changes Bar"), 'display' => '99');
+					$active_modules['au']['items'][] = array('name' => $dis, 'display' => '999');
+
+					foreach($active_modules as $key => $module) {
+						//create an array of module sections to display
+						if (isset($module['items']) && is_array($module['items'])) {
+							foreach($module['items'] as $itemKey => $item) {
+								$listKey = (!empty($item['display']) ? $item['display'] : $itemKey);
+								if(!isset($item['rawname'])) {
+									$item['rawname'] = $module['rawname'];
+									\modgettext::push_textdomain($module['rawname']);
+								}
+								$item['name'] = _($item['name']);
+								$module_list[ $listKey ] = $item;
+								if(!isset($item['rawname'])) {
+									\modgettext::pop_textdomain();
+								}
+							}
+						}
+					}
+				}
+
+				// extensions vs device/users ... module_list setting
+				if (isset($amp_conf["AMPEXTENSIONS"]) && ($amp_conf["AMPEXTENSIONS"] == "deviceanduser")) {
+					unset($module_list["extensions"]);
+				} else {
+					unset($module_list["devices"]);
+					unset($module_list["users"]);
+				}
+				unset($module_list['ampusers']);
+
 				$iuext = $this->getAllInUseExtensions();
 				$dfpbxusers[] = array("ext" => 'none', "name" => 'none', "selected" => false);
 				foreach($cul as $e => $u) {
@@ -287,7 +333,7 @@ class Userman implements \BMO {
 					}
 					$dfpbxusers[] = array("ext" => $e, "name" => $u['name'], "selected" => ($e == $default));
 				}
-				$html .= load_view(dirname(__FILE__).'/views/users.php',array("dfpbxusers" => $dfpbxusers, "fpbxusers" => $fpbxusers, "moduleHtml" => $moduleHtml, 'tabhtml'=>$tabhtml, "hookHtml" => $module_hook->hookHtml, "user" => $user, "message" => $this->message));
+				$html .= load_view(dirname(__FILE__).'/views/users.php',array("pbx_modules" => $this->getGlobalSettingByID($request['user'],'pbx_modules'), "pbx_login" => $this->getGlobalSettingByID($request['user'],'pbx_login'), "pbx_admin" => $this->getGlobalSettingByID($request['user'],'pbx_admin'), "modules" => $module_list,"brand" => $this->brand, "dfpbxusers" => $dfpbxusers, "fpbxusers" => $fpbxusers, "moduleHtml" => $moduleHtml, 'tabhtml'=>$tabhtml, "hookHtml" => $module_hook->hookHtml, "user" => $user, "message" => $this->message));
 			break;
 			default:
 				$emailbody = $this->getGlobalsetting('emailbody');
@@ -591,7 +637,7 @@ class Userman implements \BMO {
 	 * @return array
 	 */
 	public function updateUser($prevUsername, $username, $default='none', $description=null, $extraData=array(), $password=null) {
-        $request = $_REQUEST;
+		$request = $_REQUEST;
 		$display = !empty($request['display']) ? $request['display'] : "";
 		$description = !empty($description) ? $description : null;
 		$user = $this->getUserByUsername($prevUsername);
@@ -986,7 +1032,7 @@ class Userman implements \BMO {
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':username' => $username));
 		$result = $sth->fetch(\PDO::FETCH_ASSOC);
-		if(!empty($result) && ($password_sha1 == $result['password'])) {
+		if(!empty($result) && ($password_sha1 === $result['password'])) {
 			return $result['id'];
 		}
 		return false;
@@ -1119,7 +1165,7 @@ class Userman implements \BMO {
 	 * @param mixed $data   Data to send
 	 */
 	private function callHooks($action,$data=null) {
-		$display = !empty($request['display']) ? $request['display'] : "";
+		$display = !empty($_REQUEST['display']) ? $_REQUEST['display'] : "";
 		$ret = array();
 		if(isset($this->registeredFunctions[$action])) {
 			foreach($this->registeredFunctions[$action] as $function) {

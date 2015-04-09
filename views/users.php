@@ -7,24 +7,26 @@ if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'showuser'){
 	$formaction = 'config.php?display=userman';
 
 }
-if(!empty($message)){
-$htmlmessage = '<div class="alert alert-' . $message['type'] . ' fade">' . $message['message'] . '</div>';
-}
 
 echo $heading;
-echo $htmlmessage;
 ?>
 
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-sm-9">
 			<div class="fpbx-container">
+				<?php if(!empty($message)){ ?>
+					<div class="alert alert-<?php echo $message['type']?>"><?php echo $message['message']?></div>
+				<?php } ?>
 				<div class="display no-border">
 					<div class="container-fluid">
 						<div role="tabpanel">
 							<ul class="nav nav-tabs" role="tablist">
 								<li role="presentation" class="active"><a href="#usermanlogin" aria-controls="usermanlogin" role="tab" data-toggle="tab"><?php echo _("Login Details")?></a></li>
 								<li role="presentation"><a href="#usermanuser" aria-controls="usermanuser" role="tab" data-toggle="tab"><?php echo _("User Details")?></a></li>
+								<?php if(\FreePBX::Config()->get('AUTHTYPE') == "usermanager") { ?>
+									<li role="presentation"><a href="#pbx" aria-controls="pbx" role="tab" data-toggle="tab"><?php echo $brand?></a></li>
+								<?php } ?>
 								<?php echo $tabhtml?>
 								<li role="presentation" class="<?php echo empty($hookHtml)?'hidden':''?>"><a href="#usermanother" aria-controls="usermanother" role="tab" data-toggle="tab"><?php echo _("Other Settings")?></a></li>
 							</ul>
@@ -137,43 +139,6 @@ echo $htmlmessage;
 								</div>
 							</div>
 							<!--END LINKED EXTENSIONS-->
-							<div class="element-container">
-								<div class="row">
-									<div class="col-md-12">
-										<div class="row">
-											<div class="form-group">
-												<div class="col-md-3">
-													<label class="control-label" for="dlwraper">Device List</label>
-													<i class="fa fa-question-circle fpbx-help-icon" data-for="dlwraper"></i>
-												</div>
-												<div class="col-md-9">
-													<h4>Selected</h4>
-													<fieldset id="selected_dev" class="device_list ui-sortable ui-menu ui-widget ui-widget-content ui-corner-all" style="height: 45px;">
-														<?php foreach($fpbxusers as $fpbxuser) {?>
-															<?php if($fpbxuser['selected']) {?>
-																<span data-ext="<?php echo $fpbxuser['ext']?>"><?php echo $fpbxuser['name']?> &lt;<?php echo $fpbxuser['ext']?>&gt;</span>
-															<?php } ?>
-														<?php } ?>
-													</fieldset>
-													<h4>Not Selected</h4>
-													<fieldset id="notselected_dev" class="device_list ui-sortable ui-menu ui-widget ui-widget-content ui-corner-all" style="height: 45px;">
-														<?php foreach($fpbxusers as $fpbxuser) {?>
-															<?php if(!$fpbxuser['selected']) {?>
-																<span data-ext="<?php echo $fpbxuser['ext']?>"><?php echo $fpbxuser['name']?> &lt;<?php echo $fpbxuser['ext']?>&gt;</span>
-															<?php } ?>
-														<?php } ?>
-													</fieldset>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-md-12">
-										<span id="dlwraper-help" class="help-block fpbx-help-block">Devices to page. Please note, paging calls the actual device (and not the user). Amount of pagable devices is restricted by the advanced setting key PAGINGMAXPARTICIPANTS and is currently set to </span>
-									</div>
-								</div>
-							</div>
 							</div>
 							<!-- End Login details -->
 
@@ -419,36 +384,86 @@ echo $htmlmessage;
 								</div>
 							</div>
 							<!--END FAX-->
-							<!--Additional Extensions-->
-							<div class="element-container">
-								<div class="row">
-									<div class="col-md-12">
-										<div class="row">
-											<div class="form-group">
-												<div class="col-md-3">
-													<label class="control-label" for="assigned"><?php echo _("Additional Assigned Extensions")?></label>
-													<i class="fa fa-question-circle fpbx-help-icon" data-for="assigned"></i>
-												</div>
-												<div class="col-md-9">
-													<div class="extensions-list">
-														<?php foreach($fpbxusers as $fpbxuser) {?>
-															<label><input class="extension-checkbox" data-name="<?php echo $fpbxuser['name']?>" data-extension="<?php echo $fpbxuser['ext']?>" type="checkbox" name="assigned[]" value="<?php echo $fpbxuser['ext']?>" <?php echo $fpbxuser['selected'] ? 'checked' : '' ?>> <?php echo $fpbxuser['name']?> &lt;<?php echo $fpbxuser['ext']?>&gt;</label><br />
-														<?php } ?>
+							</div>
+							<!--END User Details-->
+							<div role="tabpanel" class="tab-pane display" id="pbx">
+								<div class="element-container">
+									<div class="row">
+										<div class="col-md-12">
+											<div class="row">
+												<div class="form-group">
+													<div class="col-md-3">
+														<label class="control-label" for="pbx_login"><?php echo sprintf(_('Allow %s Administration Login'),$brand)?></label>
+														<i class="fa fa-question-circle fpbx-help-icon" data-for="pbx_login"></i>
+													</div>
+													<div class="col-md-9 radioset">
+														<input type="radio" id="pbxlogin1" name="pbx_login" value="true" <?php echo ($pbx_login) ? 'checked' : ''?>>
+														<label for="pbxlogin1"><?php echo _("Yes")?></label>
+														<input type="radio" id="pbxlogin2" name="pbx_login" value="false" <?php echo (!$pbx_login) ? 'checked' : ''?>>
+														<label for="pbxlogin2"><?php echo _("No")?></label>
 													</div>
 												</div>
 											</div>
 										</div>
 									</div>
+									<div class="row">
+										<div class="col-md-12">
+											<span id="pbx_login-help" class="help-block fpbx-help-block"><?php echo sprintf(_("May this user log in to the %s Administration Pages?"),$brand)?></span>
+										</div>
+									</div>
 								</div>
-								<div class="row">
-									<div class="col-md-12">
-										<span id="assigned-help" class="help-block fpbx-help-block"><?php echo _("Additional Extensions over which this user will have control.")?></span>
+								<div class="element-container">
+									<div class="row">
+										<div class="col-md-12">
+											<div class="row">
+												<div class="form-group">
+													<div class="col-md-3">
+														<label class="control-label" for="pbx_admin"><?php echo _('Grant Full Administration Rights')?></label>
+														<i class="fa fa-question-circle fpbx-help-icon" data-for="pbx_admin"></i>
+													</div>
+													<div class="col-md-9 radioset">
+														<input type="radio" id="pbxadmin1" name="pbx_admin" value="true" <?php echo ($pbx_admin) ? 'checked' : ''?>>
+														<label for="pbxadmin1"><?php echo _("Yes")?></label>
+														<input type="radio" id="pbxadmin2" name="pbx_admin" value="false" <?php echo (!$pbx_admin) ? 'checked' : ''?>>
+														<label for="pbxadmin2"><?php echo _("No")?></label>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-12">
+											<span id="pbx_admin-help" class="help-block fpbx-help-block"><?php echo _("Grant full administration rights regardless of extension range or module access. This will also grant this user access to module admin and advanced settings.")?></span>
+										</div>
+									</div>
+								</div>
+								<div class="element-container">
+									<div class="row">
+										<div class="col-md-12">
+											<div class="row">
+												<div class="form-group">
+													<div class="col-md-3">
+														<label class="control-label" for="pbx_modules"><?php echo _('Administration Access')?></label>
+														<i class="fa fa-question-circle fpbx-help-icon" data-for="pbx_modules"></i>
+													</div>
+													<div class="col-md-9">
+														<select id="pbx_modules" class="bsmultiselect " name="pbx_modules[]" multiple="multiple">
+															<?php foreach($modules as $key => $val) {?>
+																<option value="<?php echo $key?>" <?php echo in_array($key,$pbx_modules) ? 'selected' : '' ?>><?php echo $val['name']?></option>
+															<?php } ?>
+														</select>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-12">
+											<span id="pbx_modules-help" class="help-block fpbx-help-block"><?php echo _("Select the Admin Sections this user should have access to.")?></span>
+										</div>
 									</div>
 								</div>
 							</div>
-							<!--END ADDITIONAL EXTENSIONS-->
-							</div>
-							<!--END User Details-->
 							<!--Module Specific -->
 							<?php echo $moduleHtml ?>
 							<div role="tabpanel" class="tab-pane display" id="usermanother">
