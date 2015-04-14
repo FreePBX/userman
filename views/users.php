@@ -266,6 +266,30 @@ echo $heading;
 								</div>
 							</div>
 							<!--END COMPANY-->
+							<!--DEPARTMENT-->
+							<div class="element-container">
+								<div class="row">
+									<div class="col-md-12">
+										<div class="row">
+											<div class="form-group">
+												<div class="col-md-3">
+													<label class="control-label" for="department"><?php echo _("Department")?></label>
+													<i class="fa fa-question-circle fpbx-help-icon" data-for="department"></i>
+												</div>
+												<div class="col-md-9">
+													<input type="text" class="form-control" id="department" name="department" value="<?php echo !empty($user['department']) ? $user['department'] : ''; ?>" >
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12">
+										<span id="department-help" class="help-block fpbx-help-block"><?php echo _("The user's department.")?></span>
+									</div>
+								</div>
+							</div>
+							<!--END DEPARTMENT-->
 							<!--EMAIL-->
 							<div class="element-container">
 								<div class="row">
