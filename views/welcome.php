@@ -25,12 +25,74 @@ echo $htmlmessage;
 					<div role="tabpanel">
 						<ul class="nav nav-tabs" role="tablist">
 							<li role="presentation" class="active"><a href="#users" aria-controls="users" role="tab" data-toggle="tab"><?php echo _("Users"); ?></a></li>
+							<li role="presentation"><a href="#groups" aria-controls="groups" role="tab" data-toggle="tab"><?php echo _("Groups"); ?></a></li>
 							<li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab"><?php echo _("Settings"); ?></a></li>
 						</ul>
 						<div class="tab-content display">
 							<div role="tabpanel" id="users" class="tab-pane active">
 								<div class="container-fluid">
-									<?php echo load_view(dirname(__FILE__).'/usergrid.php'); ?>
+									<div class="table-responsive">
+										<table class="table table-striped table-bordered">
+											<thead>
+												<tr>
+													<th><input type="checkbox" class="" id="action-toggle-all"></th>
+													<th><?php echo _("Username") ?></th>
+													<th><?php echo _("Display Name") ?></th>
+													<th><?php echo _("Extension") ?></th>
+													<th><?php echo _("Description") ?></th>
+													<th><?php echo _("Action") ?></th>
+												</tr>
+											</thead>
+											<tbody>
+												<?php foreach($users as $row){ ?>
+													<tr id = "row<?php echo $row['id']?>">
+														<td><input type = "checkbox" class="" id="actonthis$uid" name="actionList[]" value="$uid"></td>
+														<td><?php echo $row['username']?></td>
+														<td><?php echo $row['displayname']?></td>
+														<td><?php echo $row['default_extension']?></td>
+														<td><?php echo $row['description']?></td>
+														<td>
+															<a href="config.php?display=userman&amp;action=showuser&amp;user=<?php echo $row['id']?>">
+															<i class="fa fa-edit"></i></a>&nbsp;&nbsp;
+															<a data-toggle="modal" data-pwuid="<?php echo $row['id']?>" data-target="#setpw" id="pwmlink<?php echo $row['id']?>">
+															<i class="fa fa-key"></i></a>&nbsp;&nbsp;
+															<a href="#" id="del<?php echo $row['id']?>" data-uid="<?php echo $row['id']?>" >
+															<i class="fa fa-trash-o"></i></a>
+														</td>
+													</tr>
+												<?php } ?>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+							<div role="tabpanel" id="groups" class="tab-pane">
+								<div class="container-fluid">
+									<div class="table-responsive">
+										<table class="table table-striped table-bordered">
+											<thead>
+												<tr>
+													<th><input type="checkbox" class="" id="action-toggle-all"></th>
+													<th><?php echo _("Group Name") ?></th>
+													<th><?php echo _("Description") ?></th>
+													<th><?php echo _("Action") ?></th>
+												</tr>
+												</thead>
+												<tbody>
+													<?php foreach($groups as $row){ ?>
+														<tr id = "grow$uid">
+														<td><input type = "checkbox" class="" id="actonthis$uid" name="actionList[]" value="<?php echo $row['id']?>"></td>
+														<td><?php echo $row['groupname']?></td>
+														<td><?php echo $row['description']?></td>
+														<td><a href="config.php?display=userman&amp;action=showgroup&amp;group=<?php echo $row['id']?>">
+															<i class="fa fa-edit"></i></a>&nbsp;&nbsp;
+															<a href="#" id="gdel<?php echo $row['id']?>" data-uid="<?php echo $row['id']?>" >
+															<i class="fa fa-trash-o"></i></a></td>
+														</tr>
+													<?php } ?>
+												</tbody>
+											</table>
+										</div>
 								</div>
 							</div>
 							<div role="tabpane" id="settings" class="tab-pane">

@@ -15,3 +15,10 @@
 	font-size: 85%;
 	min-width: 200px;
 }
+
+.group-override-message {
+	font-size: 89%;
+	font-style: italic;
+	color: grey;
+	margin-top: 3px;
+}
