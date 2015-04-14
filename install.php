@@ -49,6 +49,7 @@ $sqls[] = "CREATE TABLE IF NOT EXISTS `userman_users_settings` (
 )";
 $sqls[] = "CREATE TABLE IF NOT EXISTS `userman_groups` (
   `id` int(11) NOT NULL,
+  `groupname` varchar(250) DEFAULT NULL,
   `description` varchar(250) DEFAULT NULL,
   `users` BLOB,
   `permissions` BLOB,

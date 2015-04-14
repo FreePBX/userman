@@ -69,12 +69,6 @@ $(".extension-checkbox").change(function() {
 });
 
 
-$("#delete").on("click", function(event) {
-	if (!confirm(_("Are you sure you want to delete this user?"))) {
-		event.preventDefault();
-	}
-});
-
 //Some glitch in chrome makes the window go to the middle of the screen
 window.scrollTo(0, 0);
 //from http://stackoverflow.com/a/26744533 loads url params to an array
@@ -134,7 +128,7 @@ $( document ).ready(function() {
 		});
 
 	});
-	
+
 	var hash = (window.location.hash != "") ? window.location.hash : "users";
 	if(hash == '#settings'){
 		$('input[name="submit"]').removeClass('hidden');
@@ -142,8 +136,12 @@ $( document ).ready(function() {
 		$('input[name="reset"]').removeClass('hidden');
 	}
 
-	if(params['action'] == 'adduser' || params['action'] == 'showuser' ){
+	if(params['action'] == 'adduser' || params['action'] == 'showuser'){
 		$('input[name="submitsend"]').removeClass('hidden');
+		$('input[name="submit"]').removeClass('hidden');
+		$('input[name="reset"]').removeClass('hidden');
+		$('input[name="delete"]').removeClass('hidden');
+	}else if(params['action'] == 'addgroup' || params['action'] == 'showgroup') {
 		$('input[name="submit"]').removeClass('hidden');
 		$('input[name="reset"]').removeClass('hidden');
 		$('input[name="delete"]').removeClass('hidden');

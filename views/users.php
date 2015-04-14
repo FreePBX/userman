@@ -25,9 +25,11 @@ echo $heading;
 								<li role="presentation" class="active"><a href="#usermanlogin" aria-controls="usermanlogin" role="tab" data-toggle="tab"><?php echo _("Login Details")?></a></li>
 								<li role="presentation"><a href="#usermanuser" aria-controls="usermanuser" role="tab" data-toggle="tab"><?php echo _("User Details")?></a></li>
 								<?php if(\FreePBX::Config()->get('AUTHTYPE') == "usermanager") { ?>
-									<li role="presentation"><a href="#pbx" aria-controls="pbx" role="tab" data-toggle="tab"><?php echo $brand?></a></li>
+									<li role="presentation"><a href="#pbx" aria-controls="pbx" role="tab" data-toggle="tab"><?php echo sprintf(_("%s Administration GUI"),$brand)?></a></li>
 								<?php } ?>
-								<?php echo $tabhtml?>
+								<?php foreach($sections as $section) { ?>
+									<li role="presentation"><a href="#usermanhook<?php echo $section['rawname']?>" aria-controls="usermanhook<?php echo $section['rawname']?>" role="tab" data-toggle="tab"><?php echo $section['title']?></a></li>
+								<?php } ?>
 								<li role="presentation" class="<?php echo empty($hookHtml)?'hidden':''?>"><a href="#usermanother" aria-controls="usermanother" role="tab" data-toggle="tab"><?php echo _("Other Settings")?></a></li>
 							</ul>
 						</div>
@@ -50,7 +52,7 @@ echo $heading;
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="username"></i>
 												</div>
 												<div class="col-md-9">
-													<input type="text" class="form-control" id="username" name="username" value="<?php echo !empty($user['username']) ? $user['username'] : ''; ?>" tabindex="<?php echo ++$tabindex;?>" required pattern=".{3,255}">
+													<input type="text" class="form-control" id="username" name="username" value="<?php echo !empty($user['username']) ? $user['username'] : ''; ?>" required pattern=".{3,255}">
 												</div>
 											</div>
 										</div>
@@ -74,7 +76,7 @@ echo $heading;
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="description"></i>
 												</div>
 												<div class="col-md-9">
-													<input type="text" class="form-control" id="description" name="description" value="<?php echo !empty($user['description']) ? $user['description'] : ''; ?>" tabindex="<?php echo ++$tabindex;?>">
+													<input type="text" class="form-control" id="description" name="description" value="<?php echo !empty($user['description']) ? $user['description'] : ''; ?>">
 												</div>
 											</div>
 										</div>
@@ -98,7 +100,7 @@ echo $heading;
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="password"></i>
 												</div>
 												<div class="col-md-9">
-													<input type="password" class="form-control password-meter" id="password" name="password" value="<?php echo !empty($user['password']) ? '******' : ''; ?>" tabindex="<?php echo ++$tabindex;?>" required>
+													<input type="password" class="form-control password-meter" id="password" name="password" value="<?php echo !empty($user['password']) ? '******' : ''; ?>" required>
 												</div>
 											</div>
 										</div>
@@ -155,7 +157,7 @@ echo $heading;
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="fname"></i>
 												</div>
 												<div class="col-md-9">
-													<input type="text" class="form-control" id="fname" name="fname" value="<?php echo !empty($user['fname']) ? $user['fname'] : ''; ?>" tabindex="<?php echo ++$tabindex;?>">
+													<input type="text" class="form-control" id="fname" name="fname" value="<?php echo !empty($user['fname']) ? $user['fname'] : ''; ?>">
 												</div>
 											</div>
 										</div>
@@ -179,7 +181,7 @@ echo $heading;
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="lname"></i>
 												</div>
 												<div class="col-md-9">
-													<input type="text" class="form-control" id="lname" name="lname" value="<?php echo !empty($user['lname']) ? $user['lname'] : ''; ?>" tabindex="<?php echo ++$tabindex;?>">
+													<input type="text" class="form-control" id="lname" name="lname" value="<?php echo !empty($user['lname']) ? $user['lname'] : ''; ?>">
 												</div>
 											</div>
 										</div>
@@ -203,7 +205,7 @@ echo $heading;
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="displayname"></i>
 												</div>
 												<div class="col-md-9">
-													<input type="text" class="form-control" id="displayname" name="displayname" value="<?php echo !empty($user['displayname']) ? $user['displayname'] : ''; ?>" tabindex="<?php echo ++$tabindex;?>">
+													<input type="text" class="form-control" id="displayname" name="displayname" value="<?php echo !empty($user['displayname']) ? $user['displayname'] : ''; ?>" >
 												</div>
 											</div>
 										</div>
@@ -227,7 +229,7 @@ echo $heading;
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="title"></i>
 												</div>
 												<div class="col-md-9">
-													<input type="text" class="form-control" id="title" name="title" value="<?php echo !empty($user['title']) ? $user['title'] : ''; ?>" tabindex="<?php echo ++$tabindex;?>">
+													<input type="text" class="form-control" id="title" name="title" value="<?php echo !empty($user['title']) ? $user['title'] : ''; ?>" >
 												</div>
 											</div>
 										</div>
@@ -251,7 +253,7 @@ echo $heading;
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="company"></i>
 												</div>
 												<div class="col-md-9">
-													<input type="text" class="form-control" id="company" name="company" value="<?php echo !empty($user['company']) ? $user['company'] : ''; ?>" tabindex="<?php echo ++$tabindex;?>">
+													<input type="text" class="form-control" id="company" name="company" value="<?php echo !empty($user['company']) ? $user['company'] : ''; ?>" >
 												</div>
 											</div>
 										</div>
@@ -275,7 +277,7 @@ echo $heading;
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="email"></i>
 												</div>
 												<div class="col-md-9">
-													<input type="email" class="form-control" id="email" name="email" value="<?php echo !empty($user['email']) ? $user['email'] : ''; ?>" tabindex="<?php echo ++$tabindex;?>">
+													<input type="email" class="form-control" id="email" name="email" value="<?php echo !empty($user['email']) ? $user['email'] : ''; ?>" >
 												</div>
 											</div>
 										</div>
@@ -299,7 +301,7 @@ echo $heading;
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="cell"></i>
 												</div>
 												<div class="col-md-9">
-													<input type="tel" class="form-control" id="cell" name="cell" value="<?php echo !empty($user['cell']) ? $user['cell'] : ''; ?>" tabindex="<?php echo ++$tabindex;?>">
+													<input type="tel" class="form-control" id="cell" name="cell" value="<?php echo !empty($user['cell']) ? $user['cell'] : ''; ?>" >
 												</div>
 											</div>
 										</div>
@@ -323,7 +325,7 @@ echo $heading;
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="work"></i>
 												</div>
 												<div class="col-md-9">
-													<input type="tel" class="form-control" id="work" name="work" value="<?php echo !empty($user['work']) ? $user['work'] : ''; ?>" tabindex="<?php echo ++$tabindex;?>">
+													<input type="tel" class="form-control" id="work" name="work" value="<?php echo !empty($user['work']) ? $user['work'] : ''; ?>" >
 												</div>
 											</div>
 										</div>
@@ -347,7 +349,7 @@ echo $heading;
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="home"></i>
 												</div>
 												<div class="col-md-9">
-													<input type="tel" class="form-control" id="home" name="home" value="<?php echo !empty($user['home']) ? $user['home'] : ''; ?>" tabindex="<?php echo ++$tabindex;?>">
+													<input type="tel" class="form-control" id="home" name="home" value="<?php echo !empty($user['home']) ? $user['home'] : ''; ?>" >
 												</div>
 											</div>
 										</div>
@@ -371,7 +373,7 @@ echo $heading;
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="fax"></i>
 												</div>
 												<div class="col-md-9">
-													<input type="tel" class="form-control" id="fax" name="fax" value="<?php echo !empty($user['fax']) ? $user['fax'] : ''; ?>" tabindex="<?php echo ++$tabindex;?>">
+													<input type="tel" class="form-control" id="fax" name="fax" value="<?php echo !empty($user['fax']) ? $user['fax'] : ''; ?>" >
 												</div>
 											</div>
 										</div>
@@ -384,6 +386,32 @@ echo $heading;
 								</div>
 							</div>
 							<!--END FAX-->
+							<div class="element-container">
+								<div class="row">
+									<div class="col-md-12">
+										<div class="row">
+											<div class="form-group">
+												<div class="col-md-3">
+													<label class="control-label" for="group_users"><?php echo _('Groups')?></label>
+													<i class="fa fa-question-circle fpbx-help-icon" data-for="group_users"></i>
+												</div>
+												<div class="col-md-9">
+													<select id="group_users" data-placeholder="Groups" class="form-control chosenmultiselect" name="groups[]" multiple="multiple">
+														<?php foreach($groups as $group) {?>
+															<option value="<?php echo $group['id']?>" <?php echo in_array($user['id'], $group['users']) ? 'selected' : '' ?>><?php echo $group['groupname']?></option>
+														<?php } ?>
+													</select>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12">
+										<span id="group_users-help" class="help-block fpbx-help-block"><?php echo _("Which groups this user is in")?></span>
+									</div>
+								</div>
+							</div>
 							</div>
 							<!--END User Details-->
 							<div role="tabpanel" class="tab-pane display" id="pbx">
@@ -401,6 +429,11 @@ echo $heading;
 														<label for="pbxlogin1"><?php echo _("Yes")?></label>
 														<input type="radio" id="pbxlogin2" name="pbx_login" value="false" <?php echo (!$pbx_login) ? 'checked' : ''?>>
 														<label for="pbxlogin2"><?php echo _("No")?></label>
+														<?php if($gpbx_login['group'] >= 0) {?>
+															<div class="group-override-message">
+															<?php echo sprintf(_('Group "%s" is overriding this setting to Yes'),$gpbx_login['groupname']);?>
+															</div>
+														<?php }?>
 													</div>
 												</div>
 											</div>
@@ -426,6 +459,11 @@ echo $heading;
 														<label for="pbxadmin1"><?php echo _("Yes")?></label>
 														<input type="radio" id="pbxadmin2" name="pbx_admin" value="false" <?php echo (!$pbx_admin) ? 'checked' : ''?>>
 														<label for="pbxadmin2"><?php echo _("No")?></label>
+														<?php if($gpbx_admin['group'] >= 0) {?>
+															<div class="group-override-message">
+															<?php echo sprintf(_('Group "%s" is overriding this setting to Yes'),$gpbx_admin['groupname']);?>
+															</div>
+														<?php }?>
 													</div>
 												</div>
 											</div>
@@ -433,7 +471,31 @@ echo $heading;
 									</div>
 									<div class="row">
 										<div class="col-md-12">
-											<span id="pbx_admin-help" class="help-block fpbx-help-block"><?php echo _("Grant full administration rights regardless of extension range or module access. This will also grant this user access to module admin and advanced settings.")?></span>
+											<span id="pbx_admin-help" class="help-block fpbx-help-block"><?php echo _("Grant full administration rights regardless of extension range or module access.")?></span>
+										</div>
+									</div>
+								</div>
+								<div class="element-container">
+									<div class="row">
+										<div class="col-md-12">
+											<div class="row">
+												<div class="form-group">
+													<div class="col-md-3">
+														<label class="control-label" for="pbx_range"><?php echo _('Visible Extension Range')?></label>
+														<i class="fa fa-question-circle fpbx-help-icon" data-for="pbx_range"></i>
+													</div>
+													<div class="col-md-9">
+														<input name="pbx_low" type="number" min="0" class="form-control" style="display: inline;width:48%"> - <input name="pbx_high" type="number" min="1" class="form-control" style="display: inline;width:48%">
+													</div>
+													<?php dbug($gpbx_low)?>
+													<?php dbug($gpbx_high)?>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-12">
+											<span id="pbx_range-help" class="help-block fpbx-help-block"><?php echo _("Restrict this user's view to only Extensions, Ring Groups, and Queues within this range.")?></span>
 										</div>
 									</div>
 								</div>
@@ -452,6 +514,11 @@ echo $heading;
 																<option value="<?php echo $key?>" <?php echo in_array($key,$pbx_modules) ? 'selected' : '' ?>><?php echo $val['name']?></option>
 															<?php } ?>
 														</select>
+														<?php if($gpbx_modules['group'] >= 0) {?>
+															<div class="group-override-message">
+															<?php echo sprintf(_('Group "%s" is currently adding more to this setting, end result: (%s)'),$gpbx_modules['groupname'],implode(",",$gpbx_modules['val']));?>
+															</div>
+														<?php }?>
 													</div>
 												</div>
 											</div>
@@ -465,10 +532,11 @@ echo $heading;
 								</div>
 							</div>
 							<!--Module Specific -->
-							<?php echo $moduleHtml ?>
-							<div role="tabpanel" class="tab-pane display" id="usermanother">
-								<?php echo $hookHtml;?>
-							</div>
+							<?php foreach($sections as $section) { ?>
+								<div role="tabpanel" class="tab-pane display" id="usermanhook<?php echo $section['rawname']?>">
+									<?php echo $section['content']?>
+								</div>
+							<?php } ?>
 						</form>
 						</div>
 					</div>
