@@ -26,7 +26,8 @@ abstract class Auth implements Base {
 			"modifyGroupAttrs" => true,
 			"modifyUserAttrs" => true,
 			"removeGroup" => true,
-			"deleteGroup" => true
+			"removeUser" => true,
+			"changePassword" => true
 		);
 	}
 
@@ -80,6 +81,15 @@ abstract class Auth implements Base {
 		return $user;
 	}
 
+	public function getUserByAuthID($id) {
+		$sql = "SELECT * FROM ".$this->userTable." WHERE authid = :id";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':id' => $id));
+		$user = $sth->fetch(\PDO::FETCH_ASSOC);
+		$user = $this->userman->getExtraContactInfo($user);
+		return $user;
+	}
+
 	/**
 	 * Get All Users
 	 *
@@ -92,6 +102,163 @@ abstract class Auth implements Base {
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(":auth" => $auth));
 		return $sth->fetchAll(\PDO::FETCH_ASSOC);
+	}
+
+	/**
+	* Get All Groups
+	*
+	* Get a List of all User Manager users and their data
+	*
+	* @return array
+	*/
+	public function getAllGroups($auth='freepbx') {
+		$sql = "SELECT * FROM ".$this->groupTable." WHERE auth = :auth ORDER BY groupname";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(":auth" => $auth));
+		$groups = $sth->fetchAll(\PDO::FETCH_ASSOC);
+		foreach($groups as &$group) {
+			$group['users'] = json_decode($group['users'],true);
+		}
+		return $groups;
+	}
+
+	/**
+	* Get User Information by the Default Extension
+	*
+	* This gets user information from the user which has said extension defined as it's default
+	*
+	* @param string $extension The User (from Device/User Mode) or Extension to which this User is attached
+	* @return bool
+	*/
+	public function getUserByDefaultExtension($extension) {
+		$sql = "SELECT * FROM ".$this->userTable." WHERE default_extension = :extension";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':extension' => $extension));
+		$user = $sth->fetch(\PDO::FETCH_ASSOC);
+		return $user;
+	}
+
+	/**
+	* Get User Information by Username
+	*
+	* This gets user information by username
+	*
+	* @param string $username The User Manager Username
+	* @return bool
+	*/
+	public function getGroupByUsername($groupname) {
+		$sql = "SELECT * FROM ".$this->groupTable." WHERE groupname = :groupname";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':groupname' => $groupname));
+		$group = $sth->fetch(\PDO::FETCH_ASSOC);
+		if(!empty($group)) {
+			$group['users'] = json_decode($group['users'],true);
+		}
+		return $group;
+	}
+
+	/**
+	* Get User Information by User ID
+	*
+	* This gets user information by User Manager User ID
+	*
+	* @param string $id The ID of the user from User Manager
+	* @return bool
+	*/
+	public function getGroupByGID($gid) {
+		$sql = "SELECT * FROM ".$this->groupTable." WHERE id = :gid";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':gid' => $gid));
+		$group = $sth->fetch(\PDO::FETCH_ASSOC);
+		if(!empty($group)) {
+			$group['users'] = json_decode($group['users'],true);
+		}
+		return $group;
+	}
+
+	/**
+	* Get all Groups that this user is a part of
+	* @param int $uid The User ID
+	*/
+	public function getGroupsByID($uid) {
+		$groups = $this->getAllGroups();
+		$final = array();
+		foreach($groups as $group) {
+			if(in_array($uid,$group['users'])) {
+				$final[] = $group['id'];
+			}
+		}
+		return $final;
+	}
+
+	/**
+	* Get User Information by Username
+	*
+	* This gets user information by username.
+	* !!This should never be called externally outside of User Manager!!
+	*
+	* @param string $id The ID of the user from User Manager
+	* @return array
+	*/
+	public function deleteUserByID($id) {
+		$user = $this->getUserByID($id);
+		if(!$user) {
+			return array("status" => false, "type" => "danger", "message" => _("User Does Not Exist"));
+		}
+		$sql = "DELETE FROM ".$this->userTable." WHERE `id` = :id";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':id' => $id));
+
+		$sql = "DELETE FROM ".$this->userSettingsTable." WHERE `uid` = :uid";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':uid' => $id));
+		return array("status" => true, "type" => "success", "message" => _("User Successfully Deleted"));
+	}
+
+	/**
+	* Delete a Group by it's ID
+	* @param int $gid The group ID
+	*/
+	public function deleteGroupByGID($gid) {
+		$user = $this->getUserByID($id);
+		if(!$user) {
+			return array("status" => false, "type" => "danger", "message" => _("Group Does Not Exist"));
+		}
+		$sql = "DELETE FROM ".$this->groupTable." WHERE `gid` = :id";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':id' => $gid));
+
+		$sql = "DELETE FROM ".$this->groupSettingsTable." WHERE `gid` = :gid";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':gid' => $gid));
+		return array("status" => true, "type" => "success", "message" => _("User Successfully Deleted"));
+	}
+
+	/**
+	* Get all Users as contacts
+	*
+	* @return array
+	*/
+	public function getAllContactInfo() {
+		if(!empty($this->contacts)) {
+			return $this->contacts;
+		}
+		$sql = "SELECT id, default_extension as internal, username, description, fname, lname, coalesce(displayname, CONCAT_WS(' ', fname, lname)) AS displayname, title, company, department, email, cell, work, home, fax FROM ".$this->userTable;
+		$sth = $this->db->prepare($sql);
+		$sth->execute();
+		$users = $sth->fetchAll(\PDO::FETCH_ASSOC);
+		if(empty($users)) {
+			return array();
+		}
+		foreach($users as &$user) {
+			//dont let displayname escape without a value
+			$user['displayname'] = !empty($user['displayname']) ? $user['displayname'] : $user['username'];
+			$user['internal'] = !empty($user['internal']) && $user['internal'] != "none" ? $user['internal'] : "";
+			$user = $this->userman->getExtraContactInfo($user);
+		}
+
+		$this->contacts = $users;
+		return $this->contacts;
 	}
 
 	/**
@@ -140,26 +307,93 @@ abstract class Auth implements Base {
 		}
 	}
 
-	public function updateUserData($uid, $extraData = array()) {
+	/**
+	* Link user from external auth system into Usermanager
+	* @param string $username    The username of the user
+	* @param string $default     the default extension to assign
+	* @param string $description The description
+	* @param string $auth        The auth type (class)
+	* @param string $authid      The authID
+	*/
+	public function linkGroup($groupname, $auth = 'freepbx', $authid = null) {
+		$request = $_REQUEST;
+		$display = !empty($request['display']) ? $request['display'] : "";
+		$description = !empty($description) ? $description : null;
+		if(empty($groupname)) {
+			return array("status" => false, "type" => "danger", "message" => _("Groupname Can Not Be Blank!"));
+		}
+		$sql = "SELECT * FROM ".$this->groupTable." WHERE auth = :auth AND authid = :authid";
+		$sth = $this->db->prepare($sql);
+		try {
+			$sth->execute(array(':auth' => $auth, ":authid" => $authid));
+			$previous = $sth->fetch(\PDO::FETCH_ASSOC);
+		} catch (\Exception $e) {
+			return array("status" => false, "type" => "danger", "message" => $e->getMessage());
+		}
+		if(!$previous) {
+			$sql = "INSERT INTO ".$this->groupTable." (`groupname`,`auth`,`authid`) VALUES (:groupname,:auth,:authid)";
+			$sth = $this->db->prepare($sql);
+			try {
+				$sth->execute(array(':groupname' => $groupname, ':auth' => $auth, ":authid" => $authid));
+			} catch (\Exception $e) {
+				return array("status" => false, "type" => "danger", "message" => $e->getMessage());
+			}
+
+			$id = $this->db->lastInsertId();
+			return array("status" => true, "type" => "success", "message" => _("group Successfully Added"), "id" => $id);
+		} else {
+			$sql = "UPDATE ".$this->groupTable." SET groupname = :groupname WHERE auth = :auth AND authid = :authid AND id = :id";
+			$sth = $this->db->prepare($sql);
+			try {
+				$sth->execute(array(':groupname' => $groupname, ':auth' => $auth, ":authid" => $authid, ":id" => $previous['id']));
+			} catch (\Exception $e) {
+				return array("status" => false, "type" => "danger", "message" => $e->getMessage());
+			}
+			return array("status" => true, "type" => "success", "message" => _("Group Successfully Updated"), "id" => $previous['id']);
+		}
+	}
+
+	public function updateGroupData($gid, $data = array()) {
+		$sql = "UPDATE ".$this->groupTable." SET `description` = :description, `users` = :users WHERE `id` = :gid";
+
+		$sth = $this->db->prepare($sql);
+		$description = isset($data['description']) ? $data['description'] : (!isset($data['description']) && !empty($defaults['description']) ? $defaults['description'] : null);
+		$users = isset($data['users']) ? $data['users'] : (!isset($data['users']) && !empty($defaults['users']) ? $defaults['users'] : null);
+		try {
+			$sth->execute(
+				array(
+					':description' => $description,
+					':users' => json_encode($users),
+					':gid' => $gid,
+				)
+			);
+		} catch (\Exception $e) {
+			dbug($e->getMessage());
+			return false;
+		}
+		return true;
+	}
+
+	public function updateUserData($uid, $data = array()) {
 		if(empty($data)) {
 			return true;
 		}
 		$sql = "UPDATE ".$this->userTable." SET `fname` = :fname, `lname` = :lname, `displayname` = :displayname, `company` = :company, `title` = :title, `email` = :email, `cell` = :cell, `work` = :work, `home` = :home, `fax` = :fax, `department` = :department, `description` = :description, `primary_group` = :primary_group WHERE `id` = :uid";
-		$defaults = $this->getUserByID($id);
+		$defaults = $this->getUserByID($uid);
 		$sth = $this->db->prepare($sql);
-		$fname = !empty($data['fname']) ? $data['fname'] : (!isset($data['fname']) && !empty($defaults['fname']) ? $defaults['fname'] : null);
-		$lname = !empty($data['lname']) ? $data['lname'] : (!isset($data['lname']) && !empty($defaults['lname']) ? $defaults['lname'] : null);
-		$title = !empty($data['title']) ? $data['title'] : (!isset($data['title']) && !empty($defaults['title']) ? $defaults['title'] : null);
-		$company = !empty($data['company']) ? $data['company'] : (!isset($data['company']) && !empty($defaults['company']) ? $defaults['company'] : null);
-		$email = !empty($data['email']) ? $data['email'] : (!isset($data['email']) && !empty($defaults['email']) ? $defaults['email'] : null);
-		$cell = !empty($data['cell']) ? $data['cell'] : (!isset($data['cell']) && !empty($defaults['cell']) ? $defaults['cell'] : null);
-		$home = !empty($data['home']) ? $data['home'] : (!isset($data['home']) && !empty($defaults['home']) ? $defaults['home'] : null);
-		$work = !empty($data['work']) ? $data['work'] : (!isset($data['work']) && !empty($defaults['work']) ? $defaults['work'] : null);
-		$fax = !empty($data['fax']) ? $data['fax'] : (!isset($data['fax']) && !empty($defaults['fax']) ? $defaults['fax'] : null);
-		$displayname = !empty($data['displayname']) ? $data['displayname'] : (!isset($data['displayname']) && !empty($defaults['displayname']) ? $defaults['displayname'] : null);
-		$department = !empty($data['department']) ? $data['department'] : (!isset($data['department']) && !empty($defaults['department']) ? $defaults['department'] : null);
-		$description = !empty($data['description']) ? $data['description'] : (!isset($data['description']) && !empty($defaults['description']) ? $defaults['description'] : null);
-		$primary_group = !empty($data['primary_group']) ? $data['primary_group'] : (!isset($data['primary_group']) && !empty($defaults['primary_group']) ? $defaults['primary_group'] : null);
+		$fname = isset($data['fname']) ? $data['fname'] : (!isset($data['fname']) && !empty($defaults['fname']) ? $defaults['fname'] : null);
+		$lname = isset($data['lname']) ? $data['lname'] : (!isset($data['lname']) && !empty($defaults['lname']) ? $defaults['lname'] : null);
+		$title = isset($data['title']) ? $data['title'] : (!isset($data['title']) && !empty($defaults['title']) ? $defaults['title'] : null);
+		$company = isset($data['company']) ? $data['company'] : (!isset($data['company']) && !empty($defaults['company']) ? $defaults['company'] : null);
+		$email = isset($data['email']) ? $data['email'] : (!isset($data['email']) && !empty($defaults['email']) ? $defaults['email'] : null);
+		$cell = isset($data['cell']) ? $data['cell'] : (!isset($data['cell']) && !empty($defaults['cell']) ? $defaults['cell'] : null);
+		$home = isset($data['home']) ? $data['home'] : (!isset($data['home']) && !empty($defaults['home']) ? $defaults['home'] : null);
+		$work = isset($data['work']) ? $data['work'] : (!isset($data['work']) && !empty($defaults['work']) ? $defaults['work'] : null);
+		$fax = isset($data['fax']) ? $data['fax'] : (!isset($data['fax']) && !empty($defaults['fax']) ? $defaults['fax'] : null);
+		$displayname = isset($data['displayname']) ? $data['displayname'] : (!isset($data['displayname']) && !empty($defaults['displayname']) ? $defaults['displayname'] : null);
+		$department = isset($data['department']) ? $data['department'] : (!isset($data['department']) && !empty($defaults['department']) ? $defaults['department'] : null);
+		$description = isset($data['description']) ? $data['description'] : (!isset($data['description']) && !empty($defaults['description']) ? $defaults['description'] : null);
+		$primary_group = isset($data['primary_group']) ? $data['primary_group'] : (!isset($data['primary_group']) && !empty($defaults['primary_group']) ? $defaults['primary_group'] : null);
 
 		try {
 			$sth->execute(

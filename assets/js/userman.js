@@ -157,16 +157,20 @@ $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
 		case "Settings":
 			$('input[name="submit"]').removeClass('hidden');
 			$('input[name="reset"]').removeClass('hidden');
-			break;
+		break;
 		case "Users":
 			$('input[name="submit"]').addClass('hidden');
 			$('input[name="reset"]').addClass('hidden');
-			break;
+		break;
+		case "Groups":
+			$('input[name="submit"]').addClass('hidden');
+			$('input[name="reset"]').addClass('hidden');
+		break;
 		default:
-			return
+			return;
 	}
 	//Add hash to url for reloading
-	window.location.hash = e.target.hash.replace()
+	window.location.hash = e.target.hash.replace();
 });
 
 

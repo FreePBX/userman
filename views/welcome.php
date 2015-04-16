@@ -54,10 +54,14 @@ echo $htmlmessage;
 														<td>
 															<a href="config.php?display=userman&amp;action=showuser&amp;user=<?php echo $row['id']?>">
 															<i class="fa fa-edit"></i></a>&nbsp;&nbsp;
-															<a data-toggle="modal" data-pwuid="<?php echo $row['id']?>" data-target="#setpw" id="pwmlink<?php echo $row['id']?>">
-															<i class="fa fa-key"></i></a>&nbsp;&nbsp;
-															<a href="#" id="del<?php echo $row['id']?>" data-uid="<?php echo $row['id']?>" >
-															<i class="fa fa-trash-o"></i></a>
+															<?php if($permissions['changePassword']) { ?>
+																<a data-toggle="modal" data-pwuid="<?php echo $row['id']?>" data-target="#setpw" id="pwmlink<?php echo $row['id']?>">
+																	<i class="fa fa-key"></i></a>&nbsp;&nbsp;
+															<?php } ?>
+															<?php if($permissions['removeUser']) { ?>
+																<a href="#" id="del<?php echo $row['id']?>" data-uid="<?php echo $row['id']?>" >
+																	<i class="fa fa-trash-o"></i></a>
+															<?php } ?>
 														</td>
 													</tr>
 												<?php } ?>
@@ -86,8 +90,10 @@ echo $htmlmessage;
 														<td><?php echo $row['description']?></td>
 														<td><a href="config.php?display=userman&amp;action=showgroup&amp;group=<?php echo $row['id']?>">
 															<i class="fa fa-edit"></i></a>&nbsp;&nbsp;
-															<a href="#" id="gdel<?php echo $row['id']?>" data-uid="<?php echo $row['id']?>" >
-															<i class="fa fa-trash-o"></i></a></td>
+															<?php if($permissions['removeGroup']) { ?>
+																<a href="#" id="gdel<?php echo $row['id']?>" data-uid="<?php echo $row['id']?>" ><i class="fa fa-trash-o"></i></a>
+															<?php } ?>
+															</td>
 														</tr>
 													<?php } ?>
 												</tbody>
@@ -107,7 +113,7 @@ echo $htmlmessage;
 			</div>
 		</div>
 		<div class="col-sm-3 hidden-xs bootnav">
-			<?php echo load_view(dirname(__FILE__).'/rnav.php',array("users"=>$users)); ?>
+			<?php echo load_view(dirname(__FILE__).'/rnav.php',array("users"=>$users,"permissions"=>$permissions)); ?>
 		</div>
 	</div>
 </div>

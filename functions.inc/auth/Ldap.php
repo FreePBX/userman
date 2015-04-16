@@ -11,8 +11,11 @@ class Ldap extends Auth {
 	private $port = '';
 	private $dn = "";
 	private $rdn = "";
+	private $domain = "";
+	private $user = "";
 	private $password = "";
-	private $cache = array(); //cache requests throughout this class
+	private $ucache = array(); //cache requests throughout this class
+	private $gcache = array(); //cache requests throughout this class
 
 	public function __construct($userman, $freepbx) {
 		parent::__construct($userman, $freepbx);
@@ -25,11 +28,28 @@ class Ldap extends Auth {
 		}
 		ldap_set_option($this->ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
 
-		if(!ldap_bind($this->ldap, $this->rdn, $this->password)) {
+		if(!ldap_bind($this->ldap, $this->user."@".$this->domain, $this->password)) {
 			throw new \Exception("Unable to Auth");
 		}
 
-		$this->updateAllUsers();
+		if(isset($_REQUEST['refresh'])) {
+			$this->updateAllUsers();
+			$this->updateAllGroups();
+		}
+	}
+
+	public function getPermissions() {
+		return array(
+			"addGroup" => false,
+			"addUser" => false,
+			"modifyGroup" => false,
+			"modifyUser" => false,
+			"modifyGroupAttrs" => false,
+			"modifyUserAttrs" => false,
+			"removeGroup" => false,
+			"removeUser" => false,
+			"changePassword" => false
+		);
 	}
 
 	/**
@@ -44,122 +64,14 @@ class Ldap extends Auth {
 	}
 
 	/**
-	* Get All Groups
+	* Get All Users
 	*
 	* Get a List of all User Manager users and their data
 	*
 	* @return array
 	*/
 	public function getAllGroups() {
-		$sr = ldap_search($this->ldap, $this->dn, "(objectCategory=Group)");
-		$groups = ldap_get_entries($this->ldap, $sr);
-		$final = array();
-		unset($groups['count']);
-		foreach($groups as $group) {
-			$final[] = array(
-				"id" => $this->binToStrSid($group['objectsid'][0]),
-				"groupname" => $group['cn'][0],
-				"description" => $group['description'][0],
-				"users" => array(),
-				"permissions" => ""
-			);
-		}
-		return $final;
-	}
-
-	/**
-	* Get all Users as contacts
-	*
-	* @return array
-	*/
-	public function getAllContactInfo() {
-		return array();
-	}
-
-	/**
-	* Get User Information by the Default Extension
-	*
-	* This gets user information from the user which has said extension defined as it's default
-	*
-	* @param string $extension The User (from Device/User Mode) or Extension to which this User is attached
-	* @return bool
-	*/
-	public function getUserByDefaultExtension($extension) {
-		return false;
-	}
-
-	/**
-	* Get User Information by Username
-	*
-	* This gets user information by username
-	*
-	* @param string $username The User Manager Username
-	* @return bool
-	*/
-	public function getUserByUsername($username) {
-		$user = parent::getUserByUsername($username);
-		$this->updateSingleUser($user); //Run?
-		return parent::getUserByUsername($username);
-	}
-
-	/**
-	* Get User Information by Username
-	*
-	* This gets user information by username
-	*
-	* @param string $username The User Manager Username
-	* @return bool
-	*/
-	public function getGroupByUsername($groupname) {
-		return false;
-	}
-
-	/**
-	* Get User Information by Email
-	*
-	* This gets user information by Email
-	*
-	* @param string $username The User Manager Email Address
-	* @return bool
-	*/
-	public function getUserByEmail($email) {
-		$user = parent::getUserByEmail($email);
-		$this->updateSingleUser($user); //Run?
-		return parent::getUserByEmail($email);
-	}
-
-	/**
-	* Get User Information by User ID
-	*
-	* This gets user information by User Manager User ID
-	*
-	* @param string $id The ID of the user from User Manager
-	* @return bool
-	*/
-	public function getUserByID($id) {
-		$user = parent::getUserByID($id);
-		$this->updateSingleUser($user); //Run?
-		return parent::getUserByID($id);
-	}
-
-	/**
-	* Get User Information by User ID
-	*
-	* This gets user information by User Manager User ID
-	*
-	* @param string $id The ID of the user from User Manager
-	* @return bool
-	*/
-	public function getGroupByGID($gid) {
-		return false;
-	}
-
-	/**
-	* Get all Groups that this user is a part of
-	* @param int $uid The User ID
-	*/
-	public function getGroupsByID($uid) {
-		return array();
+		return parent::getAllGroups('ldap');
 	}
 
 	/**
@@ -172,7 +84,7 @@ class Ldap extends Auth {
 	* @return array
 	*/
 	public function deleteUserByID($id) {
-		return array("status" => true, "type" => "success", "message" => _("User Successfully Deleted"));
+		return array("status" => false, "type" => "danger", "message" => _("LDAP is in Read Only Mode. Deletion denied"));
 	}
 
 	/**
@@ -180,7 +92,7 @@ class Ldap extends Auth {
 	* @param int $gid The group ID
 	*/
 	public function deleteGroupByGID($gid) {
-		return array("status" => true, "type" => "success", "message" => _("User Successfully Deleted"));
+		return array("status" => false, "type" => "danger", "message" => _("LDAP is in Read Only Mode. Deletion denied"));
 	}
 
 	/**
@@ -197,7 +109,11 @@ class Ldap extends Auth {
 	* @return array
 	*/
 	public function addUser($username, $password, $default='none', $description=null, $extraData=array(), $encrypt = true) {
-		return array("status" => true, "type" => "success", "message" => _("User Successfully Added"), "id" => $id);
+		return array("status" => false, "type" => "danger", "message" => _("LDAP is in Read Only Mode. Addition denied"));
+	}
+
+	public function addGroup($groupname, $description=null, $users=array()) {
+		return array("status" => false, "type" => "danger", "message" => _("LDAP is in Read Only Mode. Addition denied"));
 	}
 
 	/**
@@ -221,7 +137,7 @@ class Ldap extends Auth {
 		} catch (\Exception $e) {
 			return array("status" => false, "type" => "danger", "message" => $e->getMessage());
 		}
-		return array("status" => true, "type" => "success", "message" => $message, "id" => $uid);
+		return array("status" => true, "type" => "success", "message" => _("User updated"), "id" => $uid);
 	}
 
 	/**
@@ -231,8 +147,8 @@ class Ldap extends Auth {
 	* @param string $description   The group description
 	* @param array  $users         Array of users in this Group
 	*/
-	public function updateGroup($prevGroupname, $groupname, $description=null, $users=array()) {
-		return array("status" => true, "type" => "success", "message" => $message, "id" => $group['id']);
+	public function updateGroup($gid, $prevGroupname, $groupname, $description=null, $users=array()) {
+		return array("status" => true, "type" => "success", "message" => _("Group updated"), "id" => $gid);
 	}
 
 	/**
@@ -251,10 +167,80 @@ class Ldap extends Auth {
 	}
 
 	/**
+	* Update All Groups
+	*/
+	private function updateAllGroups() {
+		if(!empty($this->gcache)) {
+			return true;
+		}
+		$sr = ldap_search($this->ldap, $this->dn, "(objectCategory=Group)");
+		$groups = ldap_get_entries($this->ldap, $sr);
+		unset($groups['count']);
+		foreach($groups as $group) {
+			//Now get the users for this group
+			$members = array();
+			$gs = ldap_search($this->ldap, $this->dn, "(&(objectCategory=Person)(sAMAccountName=*)(memberof=".$group['distinguishedname'][0]."))");
+			$users = ldap_get_entries($this->ldap, $gs);
+			unset($users['count']);
+			foreach($users as $user) {
+				$usid = $this->binToStrSid($user['objectsid'][0]);
+				$u = $this->getUserByAuthID($usid);
+				$members[] = $u['id'];
+			}
+			$sid = $this->binToStrSid($group['objectsid'][0]);
+			$this->gcache[$sid] = $group;
+			$um = $this->linkGroup($group['cn'][0], 'ldap', $sid);
+			if($um['status']) {
+				$this->updateGroupData($um['id'], array(
+					"description" => !empty($group['description'][0]) ? $group['description'][0] : '',
+					"users" => $members
+				));
+			}
+		}
+	}
+
+	/**
+	* Update Single User
+	* @param array $user The user data from usermanager
+	*/
+	private function updateSingleGroup($user) {
+		if(!empty($this->ucache[$user['authid']])) {
+			return true;
+		}
+		$sr = ldap_search($this->ldap, $this->dn, "(&(objectCategory=Group)(objectSID=".$user['authid']."))");
+		$group = ldap_get_entries($this->ldap, $sr);
+		if(empty($group[0])) {
+			return false;
+		}
+		$sid = $this->binToStrSid($group[0]['objectsid'][0]);
+		$this->gcache[$sid] = $group[0];
+		//Now get the users for this group
+		$members = array();
+		$gs = ldap_search($this->ldap, $this->dn, "(&(objectCategory=Person)(sAMAccountName=*)(memberof=".$group[0]['distinguishedname'][0]."))");
+		$users = ldap_get_entries($this->ldap, $gs);
+		unset($users['count']);
+		foreach($users as $user) {
+			$usid = $this->binToStrSid($user['objectsid'][0]);
+			$u = $this->getUserByAuthID($usid);
+			$members[] = $u['id'];
+		}
+		$sid = $this->binToStrSid($group[0]['objectsid'][0]);
+		$this->gcache[$sid] = $group[0];
+		$um = $this->linkGroup($group[0]['cn'][0], 'ldap', $sid);
+		if($um['status']) {
+			$this->updateGroupData($um['id'], array(
+				"description" => !empty($group['description'][0]) ? $group['description'][0] : '',
+				"users" => $members
+			));
+		}
+		return true;
+	}
+
+	/**
 	 * Update All Users
 	 */
 	private function updateAllUsers() {
-		if(!empty($this->cache)) {
+		if(!empty($this->ucache)) {
 			return true;
 		}
 		$sr = ldap_search($this->ldap, $this->dn, "(&(objectCategory=Person)(sAMAccountName=*))");
@@ -262,7 +248,7 @@ class Ldap extends Auth {
 		unset($users['count']);
 		foreach($users as $user) {
 			$sid = $this->binToStrSid($user['objectsid'][0]);
-			$this->cache[$sid] = $user;
+			$this->ucache[$sid] = $user;
 			$um = $this->linkUser($user['cn'][0], 'ldap', $sid);
 			if($um['status']) {
 				$this->updateUserData($um['id'], array(
@@ -285,7 +271,7 @@ class Ldap extends Auth {
 	 * @param array $user The user data from usermanager
 	 */
 	private function updateSingleUser($user) {
-		if(!empty($this->cache[$user['authid']])) {
+		if(!empty($this->ucache[$user['authid']])) {
 			return true;
 		}
 		$sr = ldap_search($this->ldap, $this->dn, "(&(objectCategory=Person)(sAMAccountName=*)(objectSID=".$user['authid']."))");
@@ -294,7 +280,7 @@ class Ldap extends Auth {
 			return false;
 		}
 		$sid = $this->binToStrSid($user[0]['objectsid'][0]);
-		$this->cache[$sid] = $user[0];
+		$this->ucache[$sid] = $user[0];
 		$um = $this->linkUser($user[0]['cn'][0], 'ldap', $this->binToStrSid($user[0]['objectsid'][0]));
 		if($um['status']) {
 			$this->updateUserData($um['id'], array(

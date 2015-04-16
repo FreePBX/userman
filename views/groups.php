@@ -34,7 +34,7 @@ echo $heading;
 						<form class="fpbx-submit" autocomplete="off" name="editM" id="editM" action="<?php echo $formaction ?>" method="post" data-fpbx-delete="config.php?display=userman&amp;action=delgroup&amp;user=<?php echo $group['id']?>"onsubmit="return true;">
 							<input type="hidden" name="type" value="group">
 							<input type="hidden" name="prevGroupname" value="<?php echo !empty($group['groupname']) ? $group['groupname'] : ''; ?>">
-							<input type="hidden" name="user" value="<?php echo !empty($group['id']) ? $group['id'] : ''; ?>">
+							<input type="hidden" name="group" value="<?php echo !empty($group['id']) ? $group['id'] : ''; ?>">
 							<input type="hidden" name="submittype" value="gui">
 							<div class="tab-content">
 								<!--Login Details -->
@@ -49,7 +49,7 @@ echo $heading;
 															<i class="fa fa-question-circle fpbx-help-icon" data-for="group_name"></i>
 														</div>
 														<div class="col-md-9">
-															<input name="name" class="form-control" value="<?php echo !empty($group['groupname']) ? $group['groupname'] : ''?>">
+															<input name="name" class="form-control" value="<?php echo !empty($group['groupname']) ? $group['groupname'] : ''?>" <?php echo !$permissions['modifyGroup'] ? 'disabled' : ''?>>
 														</div>
 													</div>
 												</div>
@@ -71,7 +71,7 @@ echo $heading;
 															<i class="fa fa-question-circle fpbx-help-icon" data-for="group_description"></i>
 														</div>
 														<div class="col-md-9">
-															<input name="description" class="form-control" value="<?php echo !empty($group['description']) ? $group['description'] : ''?>">
+															<input name="description" class="form-control" value="<?php echo !empty($group['description']) ? $group['description'] : ''?>" <?php echo !$permissions['modifyGroup'] ? 'disabled' : ''?>>
 														</div>
 													</div>
 												</div>
@@ -93,7 +93,7 @@ echo $heading;
 															<i class="fa fa-question-circle fpbx-help-icon" data-for="group_users"></i>
 														</div>
 														<div class="col-md-9">
-															<select id="group_users" class="form-control chosenmultiselect" name="users[]" multiple="multiple">
+															<select id="group_users" class="form-control chosenmultiselect" name="users[]" multiple="multiple" <?php echo !$permissions['modifyGroup'] ? 'disabled' : ''?>>
 																<?php foreach($users as $user) {?>
 																	<option value="<?php echo $user['id']?>" <?php echo in_array($user['id'], $group['users']) ? 'selected' : '' ?>><?php echo $user['username']?></option>
 																<?php } ?>
@@ -223,7 +223,7 @@ echo $heading;
 			</div>
 		</div>
 		<div class="col-sm-3 hidden-xs bootnav">
-			<?php echo load_view(dirname(__FILE__).'/rnav.php',array("users"=>array())); ?>
+			<?php echo load_view(dirname(__FILE__).'/rnav.php',array("users"=>array(),"permissions"=>$permissions)); ?>
 		</div>
 	</div>
 </div>

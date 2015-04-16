@@ -50,7 +50,7 @@ $sqls[] = "CREATE TABLE IF NOT EXISTS `userman_users_settings` (
   KEY `index6` (`module`,`uid`)
 )";
 $sqls[] = "CREATE TABLE IF NOT EXISTS `userman_groups` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `auth` varchar(255) DEFAULT 'freepbx',
   `authid` varchar(255) DEFAULT NULL,
   `groupname` varchar(250) DEFAULT NULL,

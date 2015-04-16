@@ -130,7 +130,7 @@ class Userman implements \BMO {
 					$description = !empty($request['description']) ? $request['description'] : '';
 					$prevGroupname = !empty($request['prevGroupname']) ? $request['prevGroupname'] : '';
 					$users = !empty($request['users']) ? $request['users'] : array();
-					if(!empty($groupname) && empty($prevGroupname)) {
+					if($request['group'] == "") {
 						$ret = $this->addGroup($groupname, $description, $users);
 						if($ret['status']) {
 							$this->message = array(
@@ -144,8 +144,8 @@ class Userman implements \BMO {
 							);
 							return false;
 						}
-					} elseif(!empty($groupname) && !empty($prevGroupname)) {
-						$ret = $this->updateGroup($prevGroupname, $groupname, $description, $users);
+					} else {
+						$ret = $this->updateGroup($request['group'],$prevGroupname, $groupname, $description, $users);
 						if($ret['status']) {
 							$this->message = array(
 								'message' => $ret['message'],
@@ -158,12 +158,6 @@ class Userman implements \BMO {
 							);
 							return false;
 						}
-					} else {
-						$this->message = array(
-							'message' => _('Username Can Not Be Blank'),
-							'type' => 'danger'
-						);
-						return false;
 					}
 
 					$pbx_login = ($_POST['pbx_login'] == "true") ? true : false;
@@ -197,14 +191,7 @@ class Userman implements \BMO {
 						'displayname' => isset($request['displayname']) ? $request['displayname'] : null
 					);
 					$default = !empty($request['defaultextension']) ? $request['defaultextension'] : 'none';
-					if(empty($password)) {
-						$this->message = array(
-							'message' => _('The Password Can Not Be blank!'),
-							'type' => 'danger'
-						);
-						return false;
-					}
-					if(!empty($username) && empty($prevUsername)) {
+					if($request['user'] == "") {
 						$ret = $this->addUser($username, $password, $default, $description, $extraData);
 						if($ret['status']) {
 							$this->setGlobalSettingByID($ret['id'],'assigned',$assigned);
@@ -218,7 +205,7 @@ class Userman implements \BMO {
 								'type' => $ret['type']
 							);
 						}
-					} elseif(!empty($username) && !empty($prevUsername)) {
+					} else {
 						$password = ($password != '******') ? $password : null;
 						$ret = $this->updateUser($request['user'], $prevUsername, $username, $default, $description, $extraData, $password);
 						if($ret['status']) {
@@ -233,12 +220,6 @@ class Userman implements \BMO {
 								'type' => $ret['type']
 							);
 						}
-					} else {
-						$this->message = array(
-							'message' => _('Username Can Not Be Blank'),
-							'type' => 'danger'
-						);
-						return false;
 					}
 					$pbx_login = ($_POST['pbx_login'] == "true") ? true : false;
 					$this->setGlobalSettingByID($ret['id'],'pbx_login',$pbx_login);
@@ -255,10 +236,10 @@ class Userman implements \BMO {
 						foreach($groups as $group) {
 							if(in_array($group['id'],$_POST['groups']) && !in_array($ret['id'],$group['users'])) {
 								$group['users'][] = $ret['id'];
-								$this->updateGroup($group['groupname'], $group['groupname'], $group['description'], $group['users']);
+								$this->updateGroup($group['id'],$group['groupname'], $group['groupname'], $group['description'], $group['users']);
 							} elseif(!in_array($group['id'],$_POST['groups']) && in_array($ret['id'],$group['users'])) {
 								$group['users'] = array_diff($group['users'], array($ret['id']));
-								$this->updateGroup($group['groupname'], $group['groupname'], $group['description'], $group['users']);
+								$this->updateGroup($group['id'],$group['groupname'], $group['groupname'], $group['description'], $group['users']);
 							}
 						}
 					}
@@ -284,6 +265,7 @@ class Userman implements \BMO {
 
 	public function getActionBar($request){
 		$buttons = array();
+		$permissions = $this->auth->getPermissions();
 		switch($request['display']) {
 			case 'userman':
 				$buttons = array(
@@ -314,6 +296,14 @@ class Userman implements \BMO {
 				);
 
 				if($request['action'] != 'showuser' && $request['action'] != 'showgroup'){
+					unset($buttons['delete']);
+				}
+
+				if($request['action'] == 'showuser' && !$permissions['removeUser']) {
+					unset($buttons['delete']);
+				}
+
+				if($request['action'] == 'showgroup' && !$permissions['removeGroup']) {
 					unset($buttons['delete']);
 				}
 			}
@@ -362,6 +352,7 @@ class Userman implements \BMO {
 
 		$users = $this->getAllUsers();
 		$groups = $this->getAllGroups();
+		$permissions = $this->auth->getPermissions();
 
 		switch($action) {
 			case 'addgroup':
@@ -383,7 +374,9 @@ class Userman implements \BMO {
 						"pbx_admin" => $this->getGlobalSettingByGID($request['group'],'pbx_admin'),
 						"users" => $users,
 						"modules" => $module_list,
-						"sections" => $sections
+						"sections" => $sections,
+						"message" => $this->message,
+						"permissions" => $permissions
 					)
 				);
 			break;
@@ -442,14 +435,15 @@ class Userman implements \BMO {
 						"dfpbxusers" => $dfpbxusers,
 						"fpbxusers" => $fpbxusers,
 						"user" => $user,
-						"message" => $this->message
+						"message" => $this->message,
+						"permissions" => $permissions
 					)
 				);
 			break;
 			default:
 				$emailbody = $this->getGlobalsetting('emailbody');
 				$emailsubject = $this->getGlobalsetting('emailsubject');
-				$html .= load_view(dirname(__FILE__).'/views/welcome.php',array("groups" => $groups, "users" => $users, "sections" => $sections, "user" => $user, "message" => $this->message, "emailbody" => $emailbody, "emailsubject" => $emailsubject));
+				$html .= load_view(dirname(__FILE__).'/views/welcome.php',array("permissions" => $permissions, "groups" => $groups, "users" => $users, "sections" => $sections, "message" => $this->message, "emailbody" => $emailbody, "emailsubject" => $emailsubject));
 			break;
 		}
 
@@ -756,16 +750,13 @@ class Userman implements \BMO {
 	}
 
 	public function addGroup($groupname, $description=null, $users=array()) {
-		$sql = "INSERT INTO ".$this->groupTable." (`groupname`,`description`,`users`) VALUES (:groupname,:description,:users)";
-		$sth = $this->db->prepare($sql);
-		try {
-			$sth->execute(array(':groupname' => $groupname, ':description' => $description, ':users' => json_encode($users)));
-		} catch (\Exception $e) {
-			return array("status" => false, "type" => "danger", "message" => $e->getMessage());
+		$status = $this->auth->addGroup($groupname, $description=null, $users=array());
+		if(!$status['status']) {
+			return $status;
 		}
-
-		$id = $this->db->lastInsertId();
+		$id = $status['id'];
 		$this->FreePBX->Hooks->processHooks($id, $display, array("id" => $id, "groupname" => $groupname, "description" => $description, "users" => $users));
+		return $status;
 	}
 
 	/**
@@ -801,14 +792,14 @@ class Userman implements \BMO {
 	 * @param string $description   The group description
 	 * @param array  $users         Array of users in this Group
 	 */
-	public function updateGroup($prevGroupname, $groupname, $description=null, $users=array()) {
-		$status = $this->auth->updateGroup($prevGroupname, $groupname, $description, $users);
+	public function updateGroup($gid, $prevGroupname, $groupname, $description=null, $users=array()) {
+		$status = $this->auth->updateGroup($gid, $prevGroupname, $groupname, $description, $users);
 		if(!$status['status']) {
 			return $status;
 		}
 		$id = $status['id'];
 		$this->FreePBX->Hooks->processHooks($id, $display, array("id" => $id, "prevGroupname" => $prevGroupname, "groupname" => $groupname, "description" => $description, "users" => $users));
-		return array("status" => true, "type" => "success", "message" => $message, "id" => $id);
+		return $status;
 	}
 
 	/**

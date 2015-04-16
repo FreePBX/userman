@@ -10,7 +10,6 @@ if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'showuser'){
 
 echo $heading;
 ?>
-
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-sm-9">
@@ -52,7 +51,7 @@ echo $heading;
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="username"></i>
 												</div>
 												<div class="col-md-9">
-													<input type="text" class="form-control" id="username" name="username" value="<?php echo !empty($user['username']) ? $user['username'] : ''; ?>" required pattern=".{3,255}">
+													<input type="text" class="form-control" id="username" name="username" value="<?php echo !empty($user['username']) ? $user['username'] : ''; ?>" required pattern=".{3,255}" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
 												</div>
 											</div>
 										</div>
@@ -76,7 +75,7 @@ echo $heading;
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="description"></i>
 												</div>
 												<div class="col-md-9">
-													<input type="text" class="form-control" id="description" name="description" value="<?php echo !empty($user['description']) ? $user['description'] : ''; ?>">
+													<input type="text" class="form-control" id="description" name="description" value="<?php echo !empty($user['description']) ? $user['description'] : ''; ?>" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
 												</div>
 											</div>
 										</div>
@@ -90,28 +89,30 @@ echo $heading;
 							</div>
 							<!--END DESCRIPTION-->
 							<!--PASSWORD-->
-							<div class="element-container">
-								<div class="row">
-									<div class="col-md-12">
-										<div class="row">
-											<div class="form-group">
-												<div class="col-md-3">
-													<label class="control-label" for="password"><?php echo _("Password")?></label>
-													<i class="fa fa-question-circle fpbx-help-icon" data-for="password"></i>
-												</div>
-												<div class="col-md-9">
-													<input type="password" class="form-control password-meter" id="password" name="password" value="<?php echo !empty($user['password']) ? '******' : ''; ?>" required>
+							<?php if($permissions['changePassword']) {?>
+								<div class="element-container">
+									<div class="row">
+										<div class="col-md-12">
+											<div class="row">
+												<div class="form-group">
+													<div class="col-md-3">
+														<label class="control-label" for="password"><?php echo _("Password")?></label>
+														<i class="fa fa-question-circle fpbx-help-icon" data-for="password"></i>
+													</div>
+													<div class="col-md-9">
+														<input type="password" class="form-control password-meter" id="password" name="password" value="<?php echo !empty($user['password']) ? '******' : ''; ?>" required>
+													</div>
 												</div>
 											</div>
 										</div>
 									</div>
-								</div>
-								<div class="row">
-									<div class="col-md-12">
-										<span id="password-help" class="help-block fpbx-help-block"><?php echo _("The user's password.")?></span>
+									<div class="row">
+										<div class="col-md-12">
+											<span id="password-help" class="help-block fpbx-help-block"><?php echo _("The user's password.")?></span>
+										</div>
 									</div>
 								</div>
-							</div>
+							<?php } ?>
 							<!--END Password-->
 							<!--Linked Extensions-->
 							<div class="element-container">
@@ -157,7 +158,7 @@ echo $heading;
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="fname"></i>
 												</div>
 												<div class="col-md-9">
-													<input type="text" class="form-control" id="fname" name="fname" value="<?php echo !empty($user['fname']) ? $user['fname'] : ''; ?>">
+													<input type="text" class="form-control" id="fname" name="fname" value="<?php echo !empty($user['fname']) ? $user['fname'] : ''; ?>" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
 												</div>
 											</div>
 										</div>
@@ -181,7 +182,7 @@ echo $heading;
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="lname"></i>
 												</div>
 												<div class="col-md-9">
-													<input type="text" class="form-control" id="lname" name="lname" value="<?php echo !empty($user['lname']) ? $user['lname'] : ''; ?>">
+													<input type="text" class="form-control" id="lname" name="lname" value="<?php echo !empty($user['lname']) ? $user['lname'] : ''; ?>" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
 												</div>
 											</div>
 										</div>
@@ -205,7 +206,7 @@ echo $heading;
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="displayname"></i>
 												</div>
 												<div class="col-md-9">
-													<input type="text" class="form-control" id="displayname" name="displayname" value="<?php echo !empty($user['displayname']) ? $user['displayname'] : ''; ?>" >
+													<input type="text" class="form-control" id="displayname" name="displayname" value="<?php echo !empty($user['displayname']) ? $user['displayname'] : ''; ?>" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
 												</div>
 											</div>
 										</div>
@@ -229,7 +230,7 @@ echo $heading;
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="title"></i>
 												</div>
 												<div class="col-md-9">
-													<input type="text" class="form-control" id="title" name="title" value="<?php echo !empty($user['title']) ? $user['title'] : ''; ?>" >
+													<input type="text" class="form-control" id="title" name="title" value="<?php echo !empty($user['title']) ? $user['title'] : ''; ?>" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
 												</div>
 											</div>
 										</div>
@@ -253,7 +254,7 @@ echo $heading;
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="company"></i>
 												</div>
 												<div class="col-md-9">
-													<input type="text" class="form-control" id="company" name="company" value="<?php echo !empty($user['company']) ? $user['company'] : ''; ?>" >
+													<input type="text" class="form-control" id="company" name="company" value="<?php echo !empty($user['company']) ? $user['company'] : ''; ?>" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
 												</div>
 											</div>
 										</div>
@@ -277,7 +278,7 @@ echo $heading;
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="department"></i>
 												</div>
 												<div class="col-md-9">
-													<input type="text" class="form-control" id="department" name="department" value="<?php echo !empty($user['department']) ? $user['department'] : ''; ?>" >
+													<input type="text" class="form-control" id="department" name="department" value="<?php echo !empty($user['department']) ? $user['department'] : ''; ?>" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
 												</div>
 											</div>
 										</div>
@@ -301,7 +302,7 @@ echo $heading;
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="email"></i>
 												</div>
 												<div class="col-md-9">
-													<input type="email" class="form-control" id="email" name="email" value="<?php echo !empty($user['email']) ? $user['email'] : ''; ?>" >
+													<input type="email" class="form-control" id="email" name="email" value="<?php echo !empty($user['email']) ? $user['email'] : ''; ?>" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
 												</div>
 											</div>
 										</div>
@@ -325,7 +326,7 @@ echo $heading;
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="cell"></i>
 												</div>
 												<div class="col-md-9">
-													<input type="tel" class="form-control" id="cell" name="cell" value="<?php echo !empty($user['cell']) ? $user['cell'] : ''; ?>" >
+													<input type="tel" class="form-control" id="cell" name="cell" value="<?php echo !empty($user['cell']) ? $user['cell'] : ''; ?>" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
 												</div>
 											</div>
 										</div>
@@ -349,7 +350,7 @@ echo $heading;
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="work"></i>
 												</div>
 												<div class="col-md-9">
-													<input type="tel" class="form-control" id="work" name="work" value="<?php echo !empty($user['work']) ? $user['work'] : ''; ?>" >
+													<input type="tel" class="form-control" id="work" name="work" value="<?php echo !empty($user['work']) ? $user['work'] : ''; ?>" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
 												</div>
 											</div>
 										</div>
@@ -373,7 +374,7 @@ echo $heading;
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="home"></i>
 												</div>
 												<div class="col-md-9">
-													<input type="tel" class="form-control" id="home" name="home" value="<?php echo !empty($user['home']) ? $user['home'] : ''; ?>" >
+													<input type="tel" class="form-control" id="home" name="home" value="<?php echo !empty($user['home']) ? $user['home'] : ''; ?>" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
 												</div>
 											</div>
 										</div>
@@ -397,7 +398,7 @@ echo $heading;
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="fax"></i>
 												</div>
 												<div class="col-md-9">
-													<input type="tel" class="form-control" id="fax" name="fax" value="<?php echo !empty($user['fax']) ? $user['fax'] : ''; ?>" >
+													<input type="tel" class="form-control" id="fax" name="fax" value="<?php echo !empty($user['fax']) ? $user['fax'] : ''; ?>" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
 												</div>
 											</div>
 										</div>
@@ -420,7 +421,7 @@ echo $heading;
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="group_users"></i>
 												</div>
 												<div class="col-md-9">
-													<select id="group_users" data-placeholder="Groups" class="form-control chosenmultiselect" name="groups[]" multiple="multiple">
+													<select id="group_users" data-placeholder="Groups" class="form-control chosenmultiselect" name="groups[]" multiple="multiple" <?php echo !$permissions['modifyGroup'] ? 'disabled' : ''?>>
 														<?php foreach($groups as $group) {?>
 															<option value="<?php echo $group['id']?>" <?php echo in_array($user['id'], $group['users']) ? 'selected' : '' ?>><?php echo $group['groupname']?></option>
 														<?php } ?>
@@ -566,7 +567,7 @@ echo $heading;
 			</div>
 		</div>
 		<div class="col-sm-3 hidden-xs bootnav">
-			<?php echo load_view(dirname(__FILE__).'/rnav.php',array("users"=>$users)); ?>
+			<?php echo load_view(dirname(__FILE__).'/rnav.php',array("users"=>$users,"permissions"=>$permissions)); ?>
 		</div>
 	</div>
 </div>
