@@ -15,10 +15,11 @@ class Userman implements \BMO {
 	private $groupTable = 'userman_groups';
 	private $groupSettingsTable = 'userman_groups_settings';
 	private $brand = 'FreePBX';
-	private $contacts = array();
 	private $tokenExpiration = "5 minutes";
 
 	public function __construct($freepbx = null) {
+		error_reporting(E_ALL);
+		ini_set('display_errors', 1);
 		$this->FreePBX = $freepbx;
 		$this->db = $freepbx->Database;
 
@@ -33,6 +34,13 @@ class Userman implements \BMO {
 		}
 
 		$this->brand = DASHBOARD_FREEPBX_BRAND;
+
+		include(__DIR__."/functions.inc/auth/Base.php");
+		include(__DIR__."/functions.inc/auth/Auth.php");
+		include(__DIR__."/functions.inc/auth/Freepbx.php");
+		include(__DIR__."/functions.inc/auth/Ldap.php");
+		$this->auth = new Userman\Auth\Freepbx($this, $freepbx);
+		//$this->auth = new Userman\Auth\Ldap($this, $freepbx);
 	}
 
 	function &create() {
@@ -212,7 +220,7 @@ class Userman implements \BMO {
 						}
 					} elseif(!empty($username) && !empty($prevUsername)) {
 						$password = ($password != '******') ? $password : null;
-						$ret = $this->updateUser($prevUsername, $username, $default, $description, $extraData, $password);
+						$ret = $this->updateUser($request['user'], $prevUsername, $username, $default, $description, $extraData, $password);
 						if($ret['status']) {
 							$this->setGlobalSettingByID($ret['id'],'assigned',$assigned);
 							$this->message = array(
@@ -518,7 +526,7 @@ class Userman implements \BMO {
 				$newpass = $request['newpass'];
 				$extra = array();
 				$user = $this->getUserByID($uid);
-				return $this->updateUser($user['username'], $user['username'], $user['default_extension'], $user['description'], $extra, $newpass);
+				return $this->updateUser($uid, $user['username'], $user['username'], $user['default_extension'], $user['description'], $extra, $newpass);
 			break;
 			default:
 				echo json_encode(_("Error: You should never see this"));
@@ -547,10 +555,7 @@ class Userman implements \BMO {
 	 * @return array
 	 */
 	public function getAllUsers() {
-		$sql = "SELECT *, coalesce(displayname, username) as dn FROM ".$this->userTable." ORDER BY username";
-		$sth = $this->db->prepare($sql);
-		$sth->execute();
-		return $sth->fetchAll(\PDO::FETCH_ASSOC);
+		return $this->auth->getAllUsers();
 	}
 
 	/**
@@ -561,14 +566,7 @@ class Userman implements \BMO {
 	* @return array
 	*/
 	public function getAllGroups() {
-		$sql = "SELECT * FROM ".$this->groupTable." ORDER BY groupname";
-		$sth = $this->db->prepare($sql);
-		$sth->execute();
-		$groups = $sth->fetchAll(\PDO::FETCH_ASSOC);
-		foreach($groups as &$group) {
-			$group['users'] = json_decode($group['users'],true);
-		}
-		return $groups;
+		return $this->auth->getAllGroups();
 	}
 
 	/**
@@ -577,25 +575,7 @@ class Userman implements \BMO {
 	 * @return array
 	 */
 	public function getAllContactInfo() {
-		if(!empty($this->contacts)) {
-			return $this->contacts;
-		}
-		$sql = "SELECT id, default_extension as internal, username, description, fname, lname, coalesce(displayname, CONCAT_WS(' ', fname, lname)) AS displayname, title, company, department, email, cell, work, home, fax FROM ".$this->userTable;
-		$sth = $this->db->prepare($sql);
-		$sth->execute();
-		$users = $sth->fetchAll(\PDO::FETCH_ASSOC);
-		if(empty($users)) {
-			return array();
-		}
-		foreach($users as &$user) {
-			//dont let displayname escape without a value
-			$user['displayname'] = !empty($user['displayname']) ? $user['displayname'] : $user['username'];
-			$user['internal'] = !empty($user['internal']) && $user['internal'] != "none" ? $user['internal'] : "";
-			$user = $this->getExtraContactInfo($user);
-		}
-
-		$this->contacts = $users;
-		return $this->contacts;
+		return $this->auth->getAllContactInfo();
 	}
 
 	/**
@@ -621,11 +601,7 @@ class Userman implements \BMO {
 	 * @return bool
 	 */
 	public function getUserByDefaultExtension($extension) {
-		$sql = "SELECT * FROM ".$this->userTable." WHERE default_extension = :extension";
-		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':extension' => $extension));
-		$user = $sth->fetch(\PDO::FETCH_ASSOC);
-		return $user;
+		return $this->auth->getUserByDefaultExtension($extension);
 	}
 
 	/**
@@ -637,11 +613,7 @@ class Userman implements \BMO {
 	 * @return bool
 	 */
 	public function getUserByUsername($username) {
-		$sql = "SELECT * FROM ".$this->userTable." WHERE username = :username";
-		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':username' => $username));
-		$user = $sth->fetch(\PDO::FETCH_ASSOC);
-		return $user;
+		return $this->auth->getUserByUsername($username);
 	}
 
 	/**
@@ -653,14 +625,7 @@ class Userman implements \BMO {
 	* @return bool
 	*/
 	public function getGroupByUsername($groupname) {
-		$sql = "SELECT * FROM ".$this->groupTable." WHERE groupname = :groupname";
-		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':groupname' => $groupname));
-		$group = $sth->fetch(\PDO::FETCH_ASSOC);
-		if(!empty($group)) {
-			$group['users'] = json_decode($group['users'],true);
-		}
-		return $group;
+		return $this->auth->getGroupByUsername($groupname);
 	}
 
 	/**
@@ -672,11 +637,7 @@ class Userman implements \BMO {
 	* @return bool
 	*/
 	public function getUserByEmail($username) {
-		$sql = "SELECT * FROM ".$this->userTable." WHERE email = :email";
-		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':email' => $username));
-		$user = $sth->fetch(\PDO::FETCH_ASSOC);
-		return $user;
+		return $this->auth->getUserByEmail($username);
 	}
 
 	/**
@@ -688,12 +649,7 @@ class Userman implements \BMO {
 	 * @return bool
 	 */
 	public function getUserByID($id) {
-		$sql = "SELECT * FROM ".$this->userTable." WHERE id = :id";
-		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':id' => $id));
-		$user = $sth->fetch(\PDO::FETCH_ASSOC);
-		$user = $this->getExtraContactInfo($user);
-		return $user;
+		return $this->auth->getUserByID($id);
 	}
 
 	/**
@@ -704,26 +660,16 @@ class Userman implements \BMO {
 	* @param string $id The ID of the user from User Manager
 	* @return bool
 	*/
-	public function getGroupByGID($id) {
-		$sql = "SELECT * FROM ".$this->groupTable." WHERE id = :id";
-		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':id' => $id));
-		$group = $sth->fetch(\PDO::FETCH_ASSOC);
-		if(!empty($group)) {
-			$group['users'] = json_decode($group['users'],true);
-		}
-		return $group;
+	public function getGroupByGID($gid) {
+		return $this->auth->getGroupByGID($gid);
 	}
 
+	/**
+	 * Get all Groups that this user is a part of
+	 * @param int $uid The User ID
+	 */
 	public function getGroupsByID($uid) {
-		$groups = $this->getAllGroups();
-		$final = array();
-		foreach($groups as $group) {
-			if(in_array($uid,$group['users'])) {
-				$final[] = $group['id'];
-			}
-		}
-		return $final;
+		return $this->auth->getGroupsByID($uid);
 	}
 
 	/**
@@ -736,41 +682,31 @@ class Userman implements \BMO {
 	 * @return array
 	 */
 	public function deleteUserByID($id) {
-		$user = $this->getUserByID($id);
-		if(!$user) {
-			return array("status" => false, "type" => "danger", "message" => _("User Does Not Exist"));
+		$status = $this->auth->deleteUserByID($id);
+		if(!$status['status']) {
+			return $status;
 		}
-		$sql = "DELETE FROM ".$this->userTable." WHERE `id` = :id";
-		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':id' => $id));
-
-		$sql = "DELETE FROM ".$this->userSettingsTable." WHERE `uid` = :uid";
-		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':uid' => $id));
 		$this->callHooks('delUser',array("id" => $id));
 		$this->delUser($id);
-		return array("status" => true, "type" => "success", "message" => _("User Successfully Deleted"));
-	}
-
-	public function deleteGroupByGID($gid) {
-		$user = $this->getUserByID($id);
-		if(!$user) {
-			return array("status" => false, "type" => "danger", "message" => _("Group Does Not Exist"));
-		}
-		$sql = "DELETE FROM ".$this->groupTable." WHERE `gid` = :id";
-		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':id' => $gid));
-
-		$sql = "DELETE FROM ".$this->groupSettingsTable." WHERE `gid` = :gid";
-		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':gid' => $gid));
-		$this->callHooks('delUser',array("id" => $gid));
-		$this->delUser($id);
-		return array("status" => true, "type" => "success", "message" => _("Group Successfully Deleted"));
+		return $status;
 	}
 
 	/**
-	 * This is here so that the processhooks callback has the righ function name to hook into
+	 * Delete a Group by it's ID
+	 * @param int $gid The group ID
+	 */
+	public function deleteGroupByGID($gid) {
+		$status = $this->auth->deleteGroupByGID($gid);
+		if(!$status['status']) {
+			return $status;
+		}
+		$this->callHooks('delGroup',array("id" => $gid));
+		$this->delGroup($id);
+		return $status;
+	}
+
+	/**
+	 * This is here so that the processhooks callback has the right function name to hook into
 	 *
 	 * Note: Should never be called externally, use the above function!!
 	 *
@@ -782,10 +718,17 @@ class Userman implements \BMO {
 		$this->FreePBX->Hooks->processHooks($id, $display, array("id" => $id));
 	}
 
-	private function delGroup($id) {
+	/**
+	 * This is here so that the processhooks callback has the right function name to hook into
+	 *
+	 * Note: Should never be called externally, use the above function!!
+	 *
+	 * @param {int} $gid the group id of the deleted group
+	 */
+	private function delGroup($gid) {
 		$request = $_REQUEST;
 		$display = !empty($request['display']) ? $request['display'] : "";
-		$this->FreePBX->Hooks->processHooks($id, $display, array("id" => $id));
+		$this->FreePBX->Hooks->processHooks($gid, $display, array("id" => $gid));
 	}
 
 	/**
@@ -802,29 +745,14 @@ class Userman implements \BMO {
 	 * @return array
 	 */
 	public function addUser($username, $password, $default='none', $description=null, $extraData=array(), $encrypt = true) {
-		$request = $_REQUEST;
-		$display = !empty($request['display']) ? $request['display'] : "";
-		$description = !empty($description) ? $description : null;
-		if(empty($username) || empty($password)) {
-			return array("status" => false, "type" => "danger", "message" => _("Username/Password Can Not Be Blank!"));
+		$status = $this->auth->addUser($username, $password, $default, $description, $extraData, $encrypt);
+		if(!$status['status']) {
+			return $status;
 		}
-		if($this->getUserByUsername($username)) {
-			return array("status" => false, "type" => "danger", "message" => sprintf(_("User '%s' Already Exists"),$username));
-		}
-		$sql = "INSERT INTO ".$this->userTable." (`username`,`password`,`description`,`default_extension`) VALUES (:username,:password,:description,:default_extension)";
-		$sth = $this->db->prepare($sql);
-		$password = ($encrypt) ? sha1($password) : $password;
-		try {
-			$sth->execute(array(':username' => $username, ':password' => $password, ':description' => $description, ':default_extension' => $default));
-		} catch (\Exception $e) {
-			return array("status" => false, "type" => "danger", "message" => $e->getMessage());
-		}
-
-		$id = $this->db->lastInsertId();
-		$this->updateUserExtraData($id,$extraData);
+		$id = $status['id'];
 		$this->callHooks('addUser',array("id" => $id, "username" => $username, "description" => $description, "password" => $password, "encrypted" => $encrypt, "extraData" => $extraData));
 		$this->FreePBX->Hooks->processHooks($id, $display, array("id" => $id, "username" => $username, "description" => $description, "password" => $password, "encrypted" => $encrypt, "extraData" => $extraData));
-		return array("status" => true, "type" => "success", "message" => _("User Successfully Added"), "id" => $id);
+		return $status;
 	}
 
 	public function addGroup($groupname, $description=null, $users=array()) {
@@ -845,6 +773,7 @@ class Userman implements \BMO {
 	 *
 	 * This Updates a User in User Manager
 	 *
+	 * @param int $uid The User ID
 	 * @param string $username The username
 	 * @param string $password The user Password
 	 * @param string $default The default user extension, there is an integrity constraint here so there can't be duplicates
@@ -853,112 +782,42 @@ class Userman implements \BMO {
 	 * @param string $password The updated password, if null then password isn't updated
 	 * @return array
 	 */
-	public function updateUser($prevUsername, $username, $default='none', $description=null, $extraData=array(), $password=null) {
-		$request = $_REQUEST;
-		$display = !empty($request['display']) ? $request['display'] : "";
-		$description = !empty($description) ? $description : null;
-		$user = $this->getUserByUsername($prevUsername);
-		if(!$user || empty($user)) {
-			return array("status" => false, "type" => "danger", "message" => sprintf(_("User '%s' Does Not Exist"),$user));
+	public function updateUser($uid, $prevUsername, $username, $default='none', $description=null, $extraData=array(), $password=null) {
+		$status = $this->auth->updateUser($uid, $prevUsername, $username, $default, $description, $extraData, $password);
+		if(!$status['status']) {
+			return $status;
 		}
-		if(isset($password) && (sha1($password) != $user['password'])) {
-			$sql = "UPDATE ".$this->userTable." SET `username` = :username, `password` = :password, `description` = :description, `default_extension` = :default_extension WHERE `username` = :prevusername";
-			$sth = $this->db->prepare($sql);
-			try {
-				$sth->execute(array(':username' => $username, ':prevusername' => $prevUsername, ':description' => $description, ':password' => sha1($password), ':default_extension' => $default));
-			} catch (\Exception $e) {
-				return array("status" => false, "type" => "danger", "message" => $e->getMessage());
-			}
-		} elseif(($prevUsername != $username) || ($user['description'] != $description) || $user['default_extension'] != $default) {
-			if(($prevUsername != $username) && $this->getUserByUsername($username)) {
-				return array("status" => false, "type" => "danger", "message" => sprintf(_("User '%s' Already Exists"),$username));
-			}
-			$sql = "UPDATE ".$this->userTable." SET `username` = :username, `description` = :description, `default_extension` = :default_extension WHERE `username` = :prevusername";
-			$sth = $this->db->prepare($sql);
-			try {
-				$sth->execute(array(':username' => $username, ':prevusername' => $prevUsername, ':description' => $description, ':default_extension' => $default));
-			} catch (\Exception $e) {
-				return array("status" => false, "type" => "danger", "message" => $e->getMessage());
-			}
-		}
-		$message = _("Updated User");
+		$id = $status['id'];
 
-		if(!$this->updateUserExtraData($user['id'],$extraData)) {
-			return array("status" => false, "type" => "danger", "message" => _("An Unknown error occured while trying to update user data"));
-		}
-
-		$this->callHooks('updateUser',array("id" => $user['id'], "prevUsername" => $prevUsername, "username" => $username, "description" => $description, "password" => $password, "extraData" => $extraData));
-		$this->FreePBX->Hooks->processHooks($user['id'], $display, array("id" => $user['id'], "prevUsername" => $prevUsername, "username" => $username, "description" => $description, "password" => $password, "extraData" => $extraData));
-		return array("status" => true, "type" => "success", "message" => $message, "id" => $user['id']);
-	}
-
-
-	public function updateGroup($prevGroupname, $groupname, $description=null, $users=array()) {
-		$group = $this->getGroupByUsername($prevGroupname);
-		if(!$group || empty($group)) {
-			return array("status" => false, "type" => "danger", "message" => sprintf(_("Group '%s' Does Not Exist"),$group));
-		}
-		$sql = "UPDATE ".$this->groupTable." SET `groupname` = :groupname, `description` = :description, `users` = :users WHERE `groupname` = :prevgroupname";
-		$sth = $this->db->prepare($sql);
-		try {
-			$sth->execute(array(':groupname' => $groupname, ':prevgroupname' => $prevGroupname, ':description' => $description, ':users' => json_encode($users)));
-		} catch (\Exception $e) {
-			return array("status" => false, "type" => "danger", "message" => $e->getMessage());
-		}
-		$message = _("Updated Group");
-		$this->FreePBX->Hooks->processHooks($group['id'], $display, array("id" => $group['id'], "prevGroupname" => $prevGroupname, "groupname" => $groupname, "description" => $description, "users" => $users));
-		return array("status" => true, "type" => "success", "message" => $message, "id" => $group['id']);
+		$this->callHooks('updateUser',array("id" => $id, "prevUsername" => $prevUsername, "username" => $username, "description" => $description, "password" => $password, "extraData" => $extraData));
+		$this->FreePBX->Hooks->processHooks($id, $display, array("id" => $id, "prevUsername" => $prevUsername, "username" => $username, "description" => $description, "password" => $password, "extraData" => $extraData));
+		return $status;
 	}
 
 	/**
-	 * Update User Extra Data
-	 *
-	 * This updates Extra Data about the user
-	 * (fname,lname,title,email,cell,work,home,department)
-	 *
-	 * @param int $id The User Manager User ID
-	 * @param array $data A hash of data to update (see above)
+	 * Update Group
+	 * @param string $prevGroupname The group's previous name
+	 * @param string $groupname     The Groupname
+	 * @param string $description   The group description
+	 * @param array  $users         Array of users in this Group
 	 */
-	public function updateUserExtraData($id,$data=array()) {
-		if(empty($data)) {
-			return true;
+	public function updateGroup($prevGroupname, $groupname, $description=null, $users=array()) {
+		$status = $this->auth->updateGroup($prevGroupname, $groupname, $description, $users);
+		if(!$status['status']) {
+			return $status;
 		}
-		$sql = "UPDATE ".$this->userTable." SET `fname` = :fname, `lname` = :lname, `displayname` = :displayname, `company` = :company, `title` = :title, `email` = :email, `cell` = :cell, `work` = :work, `home` = :home, `fax` = :fax, `department` = :department WHERE `id` = :uid";
-		$defaults = $this->getUserByID($id);
-		$sth = $this->db->prepare($sql);
-		$fname = !empty($data['fname']) ? $data['fname'] : (!isset($data['fname']) && !empty($defaults['fname']) ? $defaults['fname'] : null);
-		$lname = !empty($data['lname']) ? $data['lname'] : (!isset($data['lname']) && !empty($defaults['lname']) ? $defaults['lname'] : null);
-		$title = !empty($data['title']) ? $data['title'] : (!isset($data['title']) && !empty($defaults['title']) ? $defaults['title'] : null);
-		$company = !empty($data['company']) ? $data['company'] : (!isset($data['company']) && !empty($defaults['company']) ? $defaults['company'] : null);
-		$email = !empty($data['email']) ? $data['email'] : (!isset($data['email']) && !empty($defaults['email']) ? $defaults['email'] : null);
-		$cell = !empty($data['cell']) ? $data['cell'] : (!isset($data['cell']) && !empty($defaults['cell']) ? $defaults['cell'] : null);
-		$home = !empty($data['home']) ? $data['home'] : (!isset($data['home']) && !empty($defaults['home']) ? $defaults['home'] : null);
-		$work = !empty($data['work']) ? $data['work'] : (!isset($data['work']) && !empty($defaults['work']) ? $defaults['work'] : null);
-		$fax = !empty($data['fax']) ? $data['fax'] : (!isset($data['fax']) && !empty($defaults['fax']) ? $defaults['fax'] : null);
-		$displayname = !empty($data['displayname']) ? $data['displayname'] : (!isset($data['displayname']) && !empty($defaults['displayname']) ? $defaults['displayname'] : null);
-		$department = !empty($data['department']) ? $data['department'] : (!isset($data['department']) && !empty($defaults['department']) ? $defaults['department'] : null);
+		$id = $status['id'];
+		$this->FreePBX->Hooks->processHooks($id, $display, array("id" => $id, "prevGroupname" => $prevGroupname, "groupname" => $groupname, "description" => $description, "users" => $users));
+		return array("status" => true, "type" => "success", "message" => $message, "id" => $id);
+	}
 
-		try {
-			$sth->execute(
-				array(
-					':fname' => $fname,
-					':lname' => $lname,
-					':displayname' => $displayname,
-					':title' => $title,
-					':company' => $company,
-					':email' => $email,
-					':cell' => $cell,
-					':work' => $work,
-					':home' => $home,
-					':fax' => $fax,
-					':department' => $department,
-					':uid' => $id
-				)
-			);
-		} catch (\Exception $e) {
-			return false;
-		}
-		return true;
+	/**
+	 * Check Credentials against username with a password
+	 * @param {string} $username      The username
+	 * @param {string} $password The sha
+	 */
+	public function checkCredentials($username, $password) {
+		return $this->auth->checkCredentials($username, $password);
 	}
 
 	/**
@@ -1339,22 +1198,6 @@ class Userman implements \BMO {
 	}
 
 	/**
-	 * Check Credentials against username with a passworded sha
-	 * @param {string} $username      The username
-	 * @param {string} $password_sha1 The sha
-	 */
-	public function checkCredentials($username, $password_sha1) {
-		$sql = "SELECT id, password FROM ".$this->userTable." WHERE username = :username";
-		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':username' => $username));
-		$result = $sth->fetch(\PDO::FETCH_ASSOC);
-		if(!empty($result) && ($password_sha1 === $result['password'])) {
-			return $result['id'];
-		}
-		return false;
-	}
-
-	/**
 	 * Get all password reset tokens
 	 */
 	public function getPasswordResetTokens() {
@@ -1431,7 +1274,7 @@ class Userman implements \BMO {
 			$tokens = $this->getGlobalsetting('passresettoken');
 			unset($tokens[$token]);
 			$this->setGlobalsetting('passresettoken',$tokens);
-			$this->updateUser($user['username'], $user['username'], $user['default_extension'], $user['description'], array(), $newpassword);
+			$this->updateUser($user['id'], $user['username'], $user['username'], $user['default_extension'], $user['description'], array(), $newpassword);
 			return true;
 		} else {
 			return false;
@@ -1517,13 +1360,13 @@ class Userman implements \BMO {
 				echo "Voicemail User '".$z['username']."' already has '".$exten."' as it's default extension.";
 				if(empty($z['email']) && empty($z['displayname'])) {
 					echo "Updating email and displayname from Voicemail.\\n";
-					$this->updateUser($z['username'], $z['username'], $z['default_extension'], $z['description'], array('email' => $email, 'displayname' => $displayname));
+					$this->updateUser($z['id'], $z['username'], $z['username'], $z['default_extension'], $z['description'], array('email' => $email, 'displayname' => $displayname));
 				} elseif(empty($z['displayname'])) {
 					echo "Updating displayname from Voicemail.\\n";
-					$this->updateUser($z['username'], $z['username'], $z['default_extension'], $z['description'], array('displayname' => $displayname));
+					$this->updateUser($z['id'], $z['username'], $z['username'], $z['default_extension'], $z['description'], array('displayname' => $displayname));
 				} elseif(empty($z['email'])) {
 					echo "Updating email from Voicemail.\\n";
-					$this->updateUser($z['username'], $z['username'], $z['default_extension'], $z['description'], array('email' => $email));
+					$this->updateUser($z['id'], $z['username'], $z['username'], $z['default_extension'], $z['description'], array('email' => $email));
 				} else {
 					echo "\\n";
 				}
@@ -1534,13 +1377,13 @@ class Userman implements \BMO {
 				echo "Voicemail User '".$z['username']."' already exists.";
 				if(empty($z['email']) && empty($z['displayname'])) {
 					echo "Updating email and displayname from Voicemail.\\n";
-					$this->updateUser($z['username'], $z['username'], $z['default_extension'], $z['description'], array('email' => $email, 'displayname' => $displayname));
+					$this->updateUser($z['id'], $z['username'], $z['username'], $z['default_extension'], $z['description'], array('email' => $email, 'displayname' => $displayname));
 				} elseif(empty($z['displayname'])) {
 					echo "Updating displayname from Voicemail.\\n";
-					$this->updateUser($z['username'], $z['username'], $z['default_extension'], $z['description'], array('displayname' => $displayname));
+					$this->updateUser($z['id'], $z['username'], $z['username'], $z['default_extension'], $z['description'], array('displayname' => $displayname));
 				} elseif(empty($z['email'])) {
 					echo "Updating email from Voicemail.\\n";
-					$this->updateUser($z['username'], $z['username'], $z['default_extension'], $z['description'], array('email' => $email));
+					$this->updateUser($z['id'], $z['username'], $z['username'], $z['default_extension'], $z['description'], array('email' => $email));
 				} else {
 					echo "\\n";
 				}

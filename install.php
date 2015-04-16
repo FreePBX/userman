@@ -17,6 +17,8 @@ foreach($sqls as $sql) {
 $sqls = array();
 $sqls[] = "CREATE TABLE IF NOT EXISTS `userman_users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `auth` varchar(255) DEFAULT 'freepbx',
+  `authid` varchar(255) DEFAULT NULL,
   `username` varchar(255) DEFAULT NULL,
   `description` varchar(250) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
@@ -49,6 +51,8 @@ $sqls[] = "CREATE TABLE IF NOT EXISTS `userman_users_settings` (
 )";
 $sqls[] = "CREATE TABLE IF NOT EXISTS `userman_groups` (
   `id` int(11) NOT NULL,
+  `auth` varchar(255) DEFAULT 'freepbx',
+  `authid` varchar(255) DEFAULT NULL,
   `groupname` varchar(250) DEFAULT NULL,
   `description` varchar(250) DEFAULT NULL,
   `users` BLOB,
@@ -70,6 +74,22 @@ foreach($sqls as $sql) {
 	if (DB::IsError($result)) {
 		die_freepbx($result->getDebugInfo());
 	}
+}
+
+if (!$db->getAll('SHOW COLUMNS FROM `userman_users` WHERE FIELD = "auth"')) {
+	out("Adding default extension column");
+    $sql = "ALTER TABLE `userman_users` ADD COLUMN `auth` varchar(255) DEFAULT 'freepbx' AFTER `id`";
+    $result = $db->query($sql);
+    $sql = "ALTER TABLE `userman_users` ADD COLUMN `authid` varchar(255) DEFAULT NULL AFTER `auth`";
+    $result = $db->query($sql);
+}
+
+if (!$db->getAll('SHOW COLUMNS FROM `userman_groups` WHERE FIELD = "auth"')) {
+	out("Adding default extension column");
+    $sql = "ALTER TABLE `userman_groups` ADD COLUMN `auth` varchar(255) DEFAULT 'freepbx' AFTER `id`";
+    $result = $db->query($sql);
+    $sql = "ALTER TABLE `userman_groups` ADD COLUMN `authid` varchar(255) DEFAULT NULL AFTER `auth`";
+    $result = $db->query($sql);
 }
 
 if (!$db->getAll('SHOW COLUMNS FROM `userman_users` WHERE FIELD = "default_extension"')) {

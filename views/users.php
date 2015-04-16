@@ -511,8 +511,6 @@ echo $heading;
 													<div class="col-md-9">
 														<input name="pbx_low" type="number" min="0" class="form-control" style="display: inline;width:48%"> - <input name="pbx_high" type="number" min="1" class="form-control" style="display: inline;width:48%">
 													</div>
-													<?php dbug($gpbx_low)?>
-													<?php dbug($gpbx_high)?>
 												</div>
 											</div>
 										</div>
@@ -535,7 +533,7 @@ echo $heading;
 													<div class="col-md-9">
 														<select id="pbx_modules" class="bsmultiselect " name="pbx_modules[]" multiple="multiple">
 															<?php foreach($modules as $key => $val) {?>
-																<option value="<?php echo $key?>" <?php echo in_array($key,$pbx_modules) ? 'selected' : '' ?>><?php echo $val['name']?></option>
+																<option value="<?php echo $key?>" <?php echo is_array($pbx_modules) && in_array($key,$pbx_modules) ? 'selected' : '' ?>><?php echo $val['name']?></option>
 															<?php } ?>
 														</select>
 														<?php if($gpbx_modules['group'] >= 0) {?>
