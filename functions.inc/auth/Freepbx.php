@@ -6,8 +6,6 @@
 namespace FreePBX\modules\Userman\Auth;
 
 class Freepbx extends Auth {
-	private $contacts = array();
-
 	/**
 	* Get All Users
 	*

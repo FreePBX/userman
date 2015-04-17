@@ -10,6 +10,7 @@ abstract class Auth implements Base {
 	protected $userSettingsTable = 'userman_users_settings';
 	protected $groupTable = 'userman_groups';
 	protected $groupSettingsTable = 'userman_groups_settings';
+	protected $contacts = array();
 
 	public function __construct($userman, $freepbx) {
 		$this->FreePBX = $freepbx;

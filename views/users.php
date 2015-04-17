@@ -450,15 +450,12 @@ echo $heading;
 														<i class="fa fa-question-circle fpbx-help-icon" data-for="pbx_login"></i>
 													</div>
 													<div class="col-md-9 radioset">
-														<input type="radio" id="pbxlogin1" name="pbx_login" value="true" <?php echo ($pbx_login) ? 'checked' : ''?>>
+														<input type="radio" id="pbxlogin1" name="pbx_login" value="true" <?php echo !is_null($pbx_login) && ($pbx_login) ? 'checked' : ''?>>
 														<label for="pbxlogin1"><?php echo _("Yes")?></label>
-														<input type="radio" id="pbxlogin2" name="pbx_login" value="false" <?php echo (!$pbx_login) ? 'checked' : ''?>>
+														<input type="radio" id="pbxlogin2" name="pbx_login" value="false" <?php echo !is_null($pbx_login) && (!$pbx_login) ? 'checked' : ''?>>
 														<label for="pbxlogin2"><?php echo _("No")?></label>
-														<?php if($gpbx_login['group'] >= 0) {?>
-															<div class="group-override-message">
-															<?php echo sprintf(_('Group "%s" is overriding this setting to Yes'),$gpbx_login['groupname']);?>
-															</div>
-														<?php }?>
+														<input type="radio" id="pbxlogin3" name="pbx_login" value="inherit" <?php echo is_null($pbx_login) ? 'checked' : ''?>>
+														<label for="pbxlogin3"><?php echo _("Inherit")?></label>
 													</div>
 												</div>
 											</div>
@@ -480,15 +477,12 @@ echo $heading;
 														<i class="fa fa-question-circle fpbx-help-icon" data-for="pbx_admin"></i>
 													</div>
 													<div class="col-md-9 radioset">
-														<input type="radio" id="pbxadmin1" name="pbx_admin" value="true" <?php echo ($pbx_admin) ? 'checked' : ''?>>
+														<input type="radio" id="pbxadmin1" name="pbx_admin" value="true" <?php echo !is_null($pbx_admin) && ($pbx_admin) ? 'checked' : ''?>>
 														<label for="pbxadmin1"><?php echo _("Yes")?></label>
-														<input type="radio" id="pbxadmin2" name="pbx_admin" value="false" <?php echo (!$pbx_admin) ? 'checked' : ''?>>
+														<input type="radio" id="pbxadmin2" name="pbx_admin" value="false" <?php echo !is_null($pbx_admin) && (!$pbx_admin) ? 'checked' : ''?>>
 														<label for="pbxadmin2"><?php echo _("No")?></label>
-														<?php if($gpbx_admin['group'] >= 0) {?>
-															<div class="group-override-message">
-															<?php echo sprintf(_('Group "%s" is overriding this setting to Yes'),$gpbx_admin['groupname']);?>
-															</div>
-														<?php }?>
+														<input type="radio" id="pbxadmin3" name="pbx_admin" value="inherit" <?php echo is_null($pbx_admin) ? 'checked' : ''?>>
+														<label for="pbxadmin3"><?php echo _("Inherit")?></label>
 													</div>
 												</div>
 											</div>
@@ -510,7 +504,7 @@ echo $heading;
 														<i class="fa fa-question-circle fpbx-help-icon" data-for="pbx_range"></i>
 													</div>
 													<div class="col-md-9">
-														<input name="pbx_low" type="number" min="0" class="form-control" style="display: inline;width:48%"> - <input name="pbx_high" type="number" min="1" class="form-control" style="display: inline;width:48%">
+														<input name="pbx_low" type="number" min="0" class="form-control" style="display: inline;width:48%" placeholder="<?php echo $gpbx_low['val']?>"> - <input name="pbx_high" type="number" min="1" class="form-control" style="display: inline;width:48%" placeholder="<?php echo $gpbx_high['val']?>">
 													</div>
 												</div>
 											</div>
@@ -539,7 +533,7 @@ echo $heading;
 														</select>
 														<?php if($gpbx_modules['group'] >= 0) {?>
 															<div class="group-override-message">
-															<?php echo sprintf(_('Group "%s" is currently adding more to this setting, end result: (%s)'),$gpbx_modules['groupname'],implode(",",$gpbx_modules['val']));?>
+															<?php echo sprintf(_('Group "%s" is currently overriding this setting, end result: (%s)'),$gpbx_modules['groupname'],implode(", ",$gpbx_modules['val']));?>
 															</div>
 														<?php }?>
 													</div>

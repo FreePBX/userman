@@ -221,11 +221,19 @@ class Userman implements \BMO {
 							);
 						}
 					}
-					$pbx_login = ($_POST['pbx_login'] == "true") ? true : false;
-					$this->setGlobalSettingByID($ret['id'],'pbx_login',$pbx_login);
+					if($_POST['pbx_login'] != "inherit") {
+						$pbx_login = ($_POST['pbx_login'] == "true") ? true : false;
+						$this->setGlobalSettingByID($ret['id'],'pbx_login',$pbx_login);
+					} else {
+						$this->setGlobalSettingByID($ret['id'],'pbx_login',null);
+					}
 
-					$pbx_admin = ($_POST['pbx_admin'] == "true") ? true : false;
-					$this->setGlobalSettingByID($ret['id'],'pbx_admin',$pbx_admin);
+					if($_POST['pbx_admin'] != "inherit") {
+						$pbx_admin = ($_POST['pbx_admin'] == "true") ? true : false;
+						$this->setGlobalSettingByID($ret['id'],'pbx_admin',$pbx_admin);
+					} else {
+						$this->setGlobalSettingByID($ret['id'],'pbx_admin',null);
+					}
 
 					$this->setGlobalSettingByID($ret['id'],'pbx_low',$_POST['pbx_low']);
 					$this->setGlobalSettingByID($ret['id'],'pbx_high',$_POST['pbx_high']);
@@ -427,10 +435,8 @@ class Userman implements \BMO {
 						"pbx_low" => $this->getGlobalSettingByID($request['user'],'pbx_low'),
 						"gpbx_high" => $this->getCombinedGlobalSettingByID($request['user'],'pbx_high',true),
 						"pbx_high" => $this->getGlobalSettingByID($request['user'],'pbx_high'),
-						"gpbx_login" => $this->getCombinedGlobalSettingByID($request['user'],'pbx_login',true),
-						"pbx_login" => $this->getGlobalSettingByID($request['user'],'pbx_login'),
-						"gpbx_admin" => $this->getCombinedGlobalSettingByID($request['user'],'pbx_admin',true),
-						"pbx_admin" => $this->getGlobalSettingByID($request['user'],'pbx_admin'),
+						"pbx_login" => $this->getGlobalSettingByID($request['user'],'pbx_login',true),
+						"pbx_admin" => $this->getGlobalSettingByID($request['user'],'pbx_admin',true),
 						"modules" => $module_list,"brand" => $this->brand,
 						"dfpbxusers" => $dfpbxusers,
 						"fpbxusers" => $fpbxusers,
@@ -739,6 +745,7 @@ class Userman implements \BMO {
 	 * @return array
 	 */
 	public function addUser($username, $password, $default='none', $description=null, $extraData=array(), $encrypt = true) {
+		$display = !empty($_REQUEST['display']) ? $_REQUEST['display'] : "";
 		$status = $this->auth->addUser($username, $password, $default, $description, $extraData, $encrypt);
 		if(!$status['status']) {
 			return $status;
@@ -750,6 +757,7 @@ class Userman implements \BMO {
 	}
 
 	public function addGroup($groupname, $description=null, $users=array()) {
+		$display = !empty($_REQUEST['display']) ? $_REQUEST['display'] : "";
 		$status = $this->auth->addGroup($groupname, $description=null, $users=array());
 		if(!$status['status']) {
 			return $status;
@@ -774,6 +782,7 @@ class Userman implements \BMO {
 	 * @return array
 	 */
 	public function updateUser($uid, $prevUsername, $username, $default='none', $description=null, $extraData=array(), $password=null) {
+		$display = !empty($_REQUEST['display']) ? $_REQUEST['display'] : "";
 		$status = $this->auth->updateUser($uid, $prevUsername, $username, $default, $description, $extraData, $password);
 		if(!$status['status']) {
 			return $status;
@@ -793,6 +802,7 @@ class Userman implements \BMO {
 	 * @param array  $users         Array of users in this Group
 	 */
 	public function updateGroup($gid, $prevGroupname, $groupname, $description=null, $users=array()) {
+		$display = !empty($_REQUEST['display']) ? $_REQUEST['display'] : "";
 		$status = $this->auth->updateGroup($gid, $prevGroupname, $groupname, $description, $users);
 		if(!$status['status']) {
 			return $status;
@@ -942,19 +952,21 @@ class Userman implements \BMO {
 		$groupid = -1;
 		$groupname = "user";
 		foreach($groups as $group) {
-			$gs = $this->getGlobalSettingByGID($group['id'],$setting,true);
+			$gs = $this->getGlobalSettingByGID($group,$setting,true);
 			if(!is_null($gs)) {
 				switch(true) {
 					case is_array($gs):
 						if(is_array($output) && !empty($gs)) {
-							$output = array_merge($output,$gs);
-							$groupid = $group;
+							//TODO: Remove this
+							//User and group both have settings
+							//$output = array_merge($output,$gs);
+							//$groupid = $group;
 						} elseif(!empty($gs)) {
 							$output = $gs;
 							$groupid = $group;
 						}
 					break;
-					case in_array(trim($gs),array("1","0")) && $gs == "1" && $output != "1":
+					case in_array(trim($gs),array("1","0")) && is_null($output):
 						$output = $gs;
 						$groupid = $group;
 					break;
@@ -1065,11 +1077,11 @@ class Userman implements \BMO {
 		$sql = "SELECT a.val, a.type, a.key FROM ".$this->userSettingsTable." a, ".$this->userTable." b WHERE b.id = :id AND b.id = a.uid AND a.module = :module";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':id' => $uid, ':module' => $module));
-		$result = $sth->fetch(\PDO::FETCH_ASSOC);
+		$result = $sth->fetchAll(\PDO::FETCH_ASSOC);
 		if($result) {
 			$fout = array();
 			foreach($result as $res) {
-				$fout[$res['key']] = ($result['type'] == 'json-arr' && $this->isJson($result['val'])) ? json_decode($result['val'],true) : $result['val'];
+				$fout[$res['key']] = ($res['type'] == 'json-arr' && $this->isJson($res['val'])) ? json_decode($re['val'],true) : $res['val'];
 			}
 			return $fout;
 		}
@@ -1089,11 +1101,11 @@ class Userman implements \BMO {
 		$sql = "SELECT a.val, a.type, a.key FROM ".$this->groupSettingsTable." a, ".$this->groupTable." b WHERE b.id = :id AND b.id = a.gid AND a.module = :module";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':id' => $gid, ':module' => $module));
-		$result = $sth->fetch(\PDO::FETCH_ASSOC);
+		$result = $sth->fetchAll(\PDO::FETCH_ASSOC);
 		if($result) {
 			$fout = array();
 			foreach($result as $res) {
-				$fout[$res['key']] = ($result['type'] == 'json-arr' && $this->isJson($result['val'])) ? json_decode($result['val'],true) : $result['val'];
+				$fout[$res['key']] = ($res['type'] == 'json-arr' && $this->isJson($res['val'])) ? json_decode($res['val'],true) : $res['val'];
 			}
 			return $fout;
 		}
