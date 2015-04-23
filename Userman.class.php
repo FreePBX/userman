@@ -1168,6 +1168,12 @@ class Userman implements \BMO {
 	 * @return mixed false if nothing, else array
 	 */
 	public function setModuleSettingByID($uid,$module,$setting,$value) {
+		if(is_null($value)) {
+			$sql = "DELETE FROM ".$this->userSettingsTable." WHERE uid = :id AND module = :module AND `key` = :setting";
+			$sth = $this->db->prepare($sql);
+			$sth->execute(array(':id' => $uid, ':module' => $module, ':setting' => $setting));
+			return true;
+		}
 		if(is_bool($value)) {
 			$value = ($value) ? 1 : 0;
 		}
@@ -1190,6 +1196,12 @@ class Userman implements \BMO {
 	 * @return mixed false if nothing, else array
 	 */
 	public function setModuleSettingByGID($gid,$module,$setting,$value) {
+		if(is_null($value)) {
+			$sql = "DELETE FROM ".$this->groupSettingsTable." WHERE gid = :id AND module = :module AND `key` = :setting";
+			$sth = $this->db->prepare($sql);
+			$sth->execute(array(':id' => $gid, ':module' => $module, ':setting' => $setting));
+			return true;
+		}
 		if(is_bool($value)) {
 			$value = ($value) ? 1 : 0;
 		}
