@@ -32,21 +32,35 @@ echo $htmlmessage;
 							<div role="tabpanel" id="users" class="tab-pane active">
 								<div class="container-fluid">
 									<div class="table-responsive">
-										<table class="table table-striped table-bordered">
+										<div id="toolbar-users">
+											<?php if($permissions['addUser']) {?>
+											<a href="config.php?display=userman&amp;action=adduser" id="add-users" class="btn btn-danger btn-add" data-type="users" data-section="users">
+												<i class="fa fa-user-plus"></i> <span><?php echo _('Add')?></span>
+											</a>
+											<?php } ?>
+											<?php if($permissions['removeUser']) {?>
+											<button id="remove-users" class="btn btn-danger btn-remove" data-type="users" disabled data-section="users">
+												<i class="fa fa-user-times"></i> <span><?php echo _('Delete')?></span>
+											</button>
+											<?php } ?>
+										</div>
+										<table data-toolbar="#toolbar-users" data-toggle="table" data-pagination="true" data-search="true" class="table table-striped" id="table-users">
 											<thead>
 												<tr>
-													<th><input type="checkbox" class="" id="action-toggle-all"></th>
-													<th><?php echo _("Username") ?></th>
-													<th><?php echo _("Display Name") ?></th>
-													<th><?php echo _("Extension") ?></th>
-													<th><?php echo _("Description") ?></th>
+													<th data-checkbox="true"></th>
+													<th data-sortable="true" data-field="id"><?php echo _("ID") ?></th>
+													<th data-sortable="true"><?php echo _("Username") ?></th>
+													<th data-sortable="true"><?php echo _("Display Name") ?></th>
+													<th data-sortable="true"><?php echo _("Extension") ?></th>
+													<th data-sortable="true"><?php echo _("Description") ?></th>
 													<th><?php echo _("Action") ?></th>
 												</tr>
 											</thead>
 											<tbody>
 												<?php foreach($users as $row){ ?>
 													<tr id = "row<?php echo $row['id']?>">
-														<td><input type = "checkbox" class="" id="actonthis$uid" name="actionList[]" value="$uid"></td>
+														<td></td>
+														<td><?php echo $row['id']?></td>
 														<td><?php echo $row['username']?></td>
 														<td><?php echo $row['displayname']?></td>
 														<td><?php echo $row['default_extension']?></td>
@@ -60,7 +74,8 @@ echo $htmlmessage;
 															<?php } ?>
 															<?php if($permissions['removeUser']) { ?>
 																<a href="#" id="del<?php echo $row['id']?>" data-uid="<?php echo $row['id']?>" >
-																	<i class="fa fa-trash-o"></i></a>
+																	<i class="fa fa-trash-o"></i>
+																</a>
 															<?php } ?>
 														</td>
 													</tr>
@@ -73,22 +88,38 @@ echo $htmlmessage;
 							<div role="tabpanel" id="groups" class="tab-pane">
 								<div class="container-fluid">
 									<div class="table-responsive">
-										<table class="table table-striped table-bordered">
+										<div id="toolbar-groups">
+											<?php if($permissions['addGroup']) {?>
+											<a href="config.php?display=userman&amp;action=addgroup" id="add-groups" class="btn btn-danger btn-add" data-type="groupss" data-section="groups">
+												<i class="fa fa-user-plus"></i> <span><?php echo _('Add')?></span>
+											</a>
+											<?php } ?>
+											<?php if($permissions['removeGroup']) {?>
+											<button id="remove-groups" class="btn btn-danger btn-remove" data-type="groups" disabled data-section="groups">
+												<i class="fa fa-user-times"></i> <span><?php echo _('Delete')?></span>
+											</button>
+											<?php } ?>
+										</div>
+										<table data-toolbar="#toolbar-groups" data-toggle="table" data-pagination="true" data-search="true" class="table table-striped" id="table-groups">
 											<thead>
 												<tr>
-													<th><input type="checkbox" class="" id="action-toggle-all"></th>
-													<th><?php echo _("Group Name") ?></th>
-													<th><?php echo _("Description") ?></th>
-													<th><?php echo _("Action") ?></th>
+													<th data-checkbox="true"></th>
+													<th data-sortable="true" data-field="id"><?php echo _("ID") ?></th>
+													<th data-sortable="true"><?php echo _("Group Name") ?></th>
+													<th data-sortable="true"><?php echo _("Description") ?></th>
+													<th data-sortable="true"><?php echo _("Priority") ?></th>
+													<th data-sortable="true"><?php echo _("Action") ?></th>
 												</tr>
 												</thead>
 												<tbody>
 													<?php foreach($groups as $row){ ?>
 														<tr id = "grow$uid">
-														<td><input type = "checkbox" class="" id="actonthis$uid" name="actionList[]" value="<?php echo $row['id']?>"></td>
+														<td></td>
+														<td><?php echo $row['id']?></td>
 														<td><?php echo $row['groupname']?></td>
 														<td><?php echo $row['description']?></td>
-														<td><a href="config.php?display=userman&amp;action=showgroup&amp;group=<?php echo $row['id']?>">
+														<td><?php echo $row['priority']?></td>
+														<td class="actions"><a href="config.php?display=userman&amp;action=showgroup&amp;group=<?php echo $row['id']?>">
 															<i class="fa fa-edit"></i></a>&nbsp;&nbsp;
 															<?php if($permissions['removeGroup']) { ?>
 																<a href="#" id="gdel<?php echo $row['id']?>" data-uid="<?php echo $row['id']?>" ><i class="fa fa-trash-o"></i></a>
