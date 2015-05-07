@@ -55,6 +55,7 @@ $sqls[] = "CREATE TABLE IF NOT EXISTS `userman_groups` (
   `authid` varchar(255) DEFAULT NULL,
   `groupname` varchar(250) DEFAULT NULL,
   `description` varchar(250) DEFAULT NULL,
+  `priority` int(11) NOT NULL DEFAULT 5,
   `users` BLOB,
   `permissions` BLOB,
   PRIMARY KEY (`id`)
@@ -89,6 +90,12 @@ if (!$db->getAll('SHOW COLUMNS FROM `userman_groups` WHERE FIELD = "auth"')) {
     $sql = "ALTER TABLE `userman_groups` ADD COLUMN `auth` varchar(255) DEFAULT 'freepbx' AFTER `id`";
     $result = $db->query($sql);
     $sql = "ALTER TABLE `userman_groups` ADD COLUMN `authid` varchar(255) DEFAULT NULL AFTER `auth`";
+    $result = $db->query($sql);
+}
+
+if (!$db->getAll('SHOW COLUMNS FROM `userman_groups` WHERE FIELD = "priority"')) {
+	out("Adding default extension column");
+    $sql = "ALTER TABLE `userman_groups` ADD COLUMN `priority` int(11) NOT NULL DEFAULT 5 AFTER `description`";
     $result = $db->query($sql);
 }
 

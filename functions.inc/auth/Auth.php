@@ -113,7 +113,7 @@ abstract class Auth implements Base {
 	* @return array
 	*/
 	public function getAllGroups($auth='freepbx') {
-		$sql = "SELECT * FROM ".$this->groupTable." WHERE auth = :auth ORDER BY groupname";
+		$sql = "SELECT * FROM ".$this->groupTable." WHERE auth = :auth ORDER BY priority";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(":auth" => $auth));
 		$groups = $sth->fetchAll(\PDO::FETCH_ASSOC);

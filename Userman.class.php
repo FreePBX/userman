@@ -225,7 +225,7 @@ class Userman implements \BMO {
 					$this->setGlobalSettingByID($ret['id'],'pbx_low',$_POST['pbx_low']);
 					$this->setGlobalSettingByID($ret['id'],'pbx_high',$_POST['pbx_high']);
 
-					$this->setGlobalSettingByID($ret['id'],'pbx_modules',$_POST['pbx_modules']);
+					$this->setGlobalSettingByID($ret['id'],'pbx_modules',!empty($_POST['pbx_modules']) ? $_POST['pbx_modules'] : null);
 					if(!empty($_POST['groups'])) {
 						$groups = $this->getAllGroups();
 						foreach($groups as $group) {
@@ -261,6 +261,8 @@ class Userman implements \BMO {
 	public function getActionBar($request){
 		$buttons = array();
 		$permissions = $this->auth->getPermissions();
+		$request['action'] = !empty($request['action']) ? $request['action'] : '';
+		$request['display'] = !empty($request['display']) ? $request['display'] : '';
 		switch($request['display']) {
 			case 'userman':
 				$buttons = array(
@@ -438,7 +440,7 @@ class Userman implements \BMO {
 			default:
 				$emailbody = $this->getGlobalsetting('emailbody');
 				$emailsubject = $this->getGlobalsetting('emailsubject');
-				$html .= load_view(dirname(__FILE__).'/views/welcome.php',array("permissions" => $permissions, "groups" => $groups, "users" => $users, "sections" => $sections, "message" => $this->message, "emailbody" => $emailbody, "emailsubject" => $emailsubject));
+				$html .= load_view(dirname(__FILE__).'/views/welcome.php',array("brand" => $this->brand, "permissions" => $permissions, "groups" => $groups, "users" => $users, "sections" => $sections, "message" => $this->message, "emailbody" => $emailbody, "emailsubject" => $emailsubject));
 			break;
 		}
 
@@ -932,38 +934,20 @@ class Userman implements \BMO {
 	 * -Arrays are merged
 	 * -Blank/Empty Values will always take the group that has a setting
 	 *
-	 * @param int $uig     The user ID to lookup
+	 * @param int $uid     The user ID to lookup
 	 * @param string $setting The setting to get
 	 */
-	public function getCombinedGlobalSettingByID($uid,$setting, $detailed = false) {
-		$output = $this->getGlobalSettingByID($uid,$setting,true);
-		$groups = $this->getGroupsByID($uid);
+	public function getCombinedGlobalSettingByID($id,$setting, $detailed = false) {
 		$groupid = -1;
 		$groupname = "user";
-		foreach($groups as $group) {
-			$gs = $this->getGlobalSettingByGID($group,$setting,true);
-			if(!is_null($gs)) {
-				switch(true) {
-					case is_array($gs):
-						if(is_array($output) && !empty($gs)) {
-							//TODO: Remove this
-							//User and group both have settings
-							//$output = array_merge($output,$gs);
-							//$groupid = $group;
-						} elseif(!empty($gs)) {
-							$output = $gs;
-							$groupid = $group;
-						}
-					break;
-					case in_array(trim($gs),array("1","0")) && is_null($output):
-						$output = $gs;
-						$groupid = $group;
-					break;
-					case is_string($gs) && trim($gs) != "":
-						if(is_string($output) && trim($output) == "") {
-							$output = $gs;
-							$groupid = $group;
-						}
+		$output = $this->getGlobalSettingByID($id,$setting,true);
+		if(is_null($output)) {
+			$groups = $this->getGroupsByID($id);
+			foreach($groups as $group) {
+				$gs = $this->getGlobalSettingByGID($group,$setting,true);
+				if(!is_null($gs)) {
+					$output = $gs;
+					$groupid = $group;
 					break;
 				}
 			}
@@ -974,6 +958,35 @@ class Userman implements \BMO {
 				"val" => $output,
 				"group" => $groupid,
 				"setting" => $setting,
+				"groupname" => $grp['groupname']
+			);
+		} else {
+			return $output;
+		}
+	}
+
+	public function getCombinedModuleSettingByID($id, $module, $setting, $detailed = false) {
+		$groupid = -1;
+		$groupname = "user";
+		$output = $this->getModuleSettingByID($id,$module,$setting,true);
+		if(is_null($output)) {
+			$groups = $this->getGroupsByID($id);
+			foreach($groups as $group) {
+				$gs = $this->getModuleSettingByGID($group,$module,$setting,true);
+				if(!is_null($gs)) {
+					$output = $gs;
+					$groupid = $group;
+					break;
+				}
+			}
+		}
+		if($detailed) {
+			$grp = ($groupid >= 0) ? $this->getGroupByGID($groupid) : array('groupname' => 'user');
+			return array(
+				"val" => $output,
+				"group" => $groupid,
+				"setting" => $setting,
+				"module" => $module,
 				"groupname" => $grp['groupname']
 			);
 		} else {

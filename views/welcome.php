@@ -1,8 +1,8 @@
 <?php
 if(!empty($message)){
 	$htmlmessage = '<div class="alert alert-' . $message['type'] . ' fade">' . $message['message'] . '</div>';
+	echo $htmlmessage;
 }
-echo $htmlmessage;
 ?>
 <div class="container-fluid">
 	<div class="row">
@@ -18,8 +18,8 @@ echo $htmlmessage;
 						</div>
 						<!--At some point we can probably kill this... Maybe make is a 1 time panel that may be dismissed-->
 						<div class="panel-body collapse" id="moreinfo">
-							<p><?php echo sprintf(_('%s User Manager is taking the place of several modules which have attempted to create and manage users separate from Extensions. Modules such as iSymphony and RestAPI are examples of these type of modules. In %s 12, the new User Control Panel also uses User Manager.'),DASHBOARD_FREEPBX_BRAND,DASHBOARD_FREEPBX_BRAND)?></p>
-							<p><?php echo sprintf(_('In %s User Manager you can create users that have access to Extensions or Device/User Mode Users and the settings associated with those Devices. For example, a new user can be created that can log into User Control Panel and access the voicemail of 3 other accounts.'),DASHBOARD_FREEPBX_BRAND)?></p>
+							<p><?php echo sprintf(_('%s User Manager is taking the place of several modules which have attempted to create and manage users separate from Extensions. Modules such as iSymphony and RestAPI are examples of these type of modules. In %s 12, the new User Control Panel also uses User Manager.'),$brand,$brand)?></p>
+							<p><?php echo sprintf(_('In %s User Manager you can create users that have access to Extensions or Device/User Mode Users and the settings associated with those Devices. For example, a new user can be created that can log into User Control Panel and access the voicemail of 3 other accounts.'),$brand)?></p>
 						</div>
 					</div>
 					<div role="tabpanel">
@@ -118,7 +118,7 @@ echo $htmlmessage;
 														<td><?php echo $row['id']?></td>
 														<td><?php echo $row['groupname']?></td>
 														<td><?php echo $row['description']?></td>
-														<td><?php echo $row['priority']?></td>
+														<td><?php echo 5?></td>
 														<td class="actions"><a href="config.php?display=userman&amp;action=showgroup&amp;group=<?php echo $row['id']?>">
 															<i class="fa fa-edit"></i></a>&nbsp;&nbsp;
 															<?php if($permissions['removeGroup']) { ?>
@@ -134,7 +134,7 @@ echo $htmlmessage;
 							</div>
 							<div role="tabpane" id="settings" class="tab-pane">
 								<div class="container-fluid">
-									<?php echo load_view(dirname(__FILE__).'/general.php'); ?>
+									<?php echo load_view(dirname(__FILE__).'/general.php', array("brand" => $brand)); ?>
 								</div>
 							</div>
 						</div>

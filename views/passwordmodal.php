@@ -17,14 +17,14 @@
 										<label class="control-label" for="password"><?php echo _("Password")?></label>
 									</div>
 									<div class="col-md-9">
-										<input type="password" class="form-control" id="password" name="password" value="<?php echo !empty($user['password']) ? '******' : ''; ?>" tabindex="<?php echo ++$tabindex;?>" required>
+										<input type="password" class="form-control" id="password" name="password" value="<?php echo !empty($user['password']) ? '******' : ''; ?>" required>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>					
+			</div>
 		<div class="modal-footer">
 			<button type="button" class="btn btn-default" data-dismiss="modal"><?php echo _("Close")?></button>
 			<button type="button" class="btn btn-primary" id="pwsub"><?php echo _("Update Password")?></button>
