@@ -946,6 +946,14 @@ class Userman implements \BMO {
 			foreach($groups as $group) {
 				$gs = $this->getGlobalSettingByGID($group,$setting,true);
 				if(!is_null($gs)) {
+					//Find and replace the word "self" with this users extension
+					if(is_array($gs) && in_array("self",$gs)) {
+						$i = array_search ("self", $gs);
+						$user = $this->getUserByID($id);
+						if($user['default_extension'] !== "none") {
+							$gs[$i] = $user['default_extension'];
+						}
+					}
 					$output = $gs;
 					$groupid = $group;
 					break;
@@ -974,6 +982,14 @@ class Userman implements \BMO {
 			foreach($groups as $group) {
 				$gs = $this->getModuleSettingByGID($group,$module,$setting,true);
 				if(!is_null($gs)) {
+					//Find and replace the word "self" with this users extension
+					if(is_array($gs) && in_array("self",$gs)) {
+						$i = array_search ("self", $gs);
+						$user = $this->getUserByID($id);
+						if($user['default_extension'] !== "none") {
+							$gs[$i] = $user['default_extension'];
+						}
+					}
 					$output = $gs;
 					$groupid = $group;
 					break;
