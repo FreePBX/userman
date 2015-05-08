@@ -31,7 +31,7 @@ echo $heading;
 								<?php } ?>
 							</ul>
 						</div>
-						<form class="fpbx-submit" autocomplete="off" name="editM" id="editM" action="<?php echo $formaction ?>" method="post" data-fpbx-delete="config.php?display=userman&amp;action=delgroup&amp;user=<?php echo $group['id']?>"onsubmit="return true;">
+						<form class="fpbx-submit" autocomplete="off" name="editM" id="editM" action="<?php echo $formaction ?>" method="post" <?php if(!empty($group['id'])) {?>data-fpbx-delete="config.php?display=userman&amp;action=delgroup&amp;user=<?php echo $group['id']?>"<?php }?> onsubmit="return true;">
 							<input type="hidden" name="type" value="group">
 							<input type="hidden" name="prevGroupname" value="<?php echo !empty($group['groupname']) ? $group['groupname'] : ''; ?>">
 							<input type="hidden" name="group" value="<?php echo !empty($group['id']) ? $group['id'] : ''; ?>">
@@ -95,7 +95,7 @@ echo $heading;
 														<div class="col-md-9">
 															<select id="group_users" class="form-control chosenmultiselect" name="users[]" multiple="multiple" <?php echo !$permissions['modifyGroup'] ? 'disabled' : ''?>>
 																<?php foreach($users as $user) {?>
-																	<option value="<?php echo $user['id']?>" <?php echo in_array($user['id'], $group['users']) ? 'selected' : '' ?>><?php echo $user['username']?></option>
+																	<option value="<?php echo $user['id']?>" <?php echo !empty($group['users']) && in_array($user['id'], $group['users']) ? 'selected' : '' ?>><?php echo $user['username']?></option>
 																<?php } ?>
 															</select>
 														</div>

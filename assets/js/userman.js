@@ -42,8 +42,9 @@ $("table").on("page-change.bs.table", function () {
 	deleteExts = [];
 });
 $("table").on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
-	var toolbar = $(this).data("toolbar"), button = $(toolbar).find(".btn-remove"), id = $(this).prop("id");
+	var toolbar = $(this).data("toolbar"), button = $(toolbar).find(".btn-remove"), buttone = $(toolbar).find(".btn-send"), id = $(this).prop("id");
 	button.prop('disabled', !$("#"+id).bootstrapTable('getSelections').length);
+	buttone.prop('disabled', !$("#"+id).bootstrapTable('getSelections').length);
 	deleteExts = $.map($("#"+id).bootstrapTable('getSelections'), function (row) {
 		return row.extension;
   });

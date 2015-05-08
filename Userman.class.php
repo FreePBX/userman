@@ -156,7 +156,7 @@ class Userman implements \BMO {
 					$this->setGlobalSettingByGID($ret['id'],'pbx_low',$_POST['pbx_low']);
 					$this->setGlobalSettingByGID($ret['id'],'pbx_high',$_POST['pbx_high']);
 
-					$this->setGlobalSettingByGID($ret['id'],'pbx_modules',$_POST['pbx_modules']);
+					$this->setGlobalSettingByGID($ret['id'],'pbx_modules',(!empty($_POST['pbx_modules']) ? $_POST['pbx_modules'] : array()));
 				break;
 				case 'user':
 					$username = !empty($request['username']) ? $request['username'] : '';
@@ -364,11 +364,11 @@ class Userman implements \BMO {
 					dirname(__FILE__).'/views/groups.php',
 					array(
 						"group" => $group,
-						"pbx_modules" => $this->getGlobalSettingByGID($request['group'],'pbx_modules'),
-						"pbx_low" => $this->getGlobalSettingByGID($request['group'],'pbx_low'),
-						"pbx_high" => $this->getGlobalSettingByGID($request['group'],'pbx_high'),
-						"pbx_login" => $this->getGlobalSettingByGID($request['group'],'pbx_login'),
-						"pbx_admin" => $this->getGlobalSettingByGID($request['group'],'pbx_admin'),
+						"pbx_modules" => empty($group) ? array() : $this->getGlobalSettingByGID($request['group'],'pbx_modules'),
+						"pbx_low" => empty($group) ? '' : $this->getGlobalSettingByGID($request['group'],'pbx_low'),
+						"pbx_high" => empty($group) ? '' : $this->getGlobalSettingByGID($request['group'],'pbx_high'),
+						"pbx_login" => empty($group) ? false : $this->getGlobalSettingByGID($request['group'],'pbx_login'),
+						"pbx_admin" => empty($group) ? false : $this->getGlobalSettingByGID($request['group'],'pbx_admin'),
 						"brand" => $this->brand,
 						"users" => $users,
 						"modules" => $module_list,
@@ -419,14 +419,11 @@ class Userman implements \BMO {
 						"users" => $users,
 						"groups" => $groups,
 						"sections" => $sections,
-						"gpbx_modules" => $this->getCombinedGlobalSettingByID($request['user'],'pbx_modules',true),
-						"pbx_modules" => $this->getGlobalSettingByID($request['user'],'pbx_modules'),
-						"gpbx_low" => $this->getCombinedGlobalSettingByID($request['user'],'pbx_low',true),
-						"pbx_low" => $this->getGlobalSettingByID($request['user'],'pbx_low'),
-						"gpbx_high" => $this->getCombinedGlobalSettingByID($request['user'],'pbx_high',true),
-						"pbx_high" => $this->getGlobalSettingByID($request['user'],'pbx_high'),
-						"pbx_login" => $this->getGlobalSettingByID($request['user'],'pbx_login',true),
-						"pbx_admin" => $this->getGlobalSettingByID($request['user'],'pbx_admin',true),
+						"pbx_modules" => empty($request['user']) ? array() : $this->getGlobalSettingByID($request['user'],'pbx_modules'),
+						"pbx_low" => empty($request['user']) ? '' : $this->getGlobalSettingByID($request['user'],'pbx_low'),
+						"pbx_high" => empty($request['user']) ? '' : $this->getGlobalSettingByID($request['user'],'pbx_high'),
+						"pbx_login" => empty($request['user']) ? false : $this->getGlobalSettingByID($request['user'],'pbx_login',true),
+						"pbx_admin" => empty($request['user']) ? false : $this->getGlobalSettingByID($request['user'],'pbx_admin',true),
 						"modules" => $module_list,
 						"brand" => $this->brand,
 						"dfpbxusers" => $dfpbxusers,

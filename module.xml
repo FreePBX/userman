@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>13.0.1alpha7</version>
+	<version>13.0.1alpha8</version>
 	<publisher>Schmooze Com Inc</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -12,6 +12,7 @@
 		Modules like iSymphony, Rest API and User Control Panel use this module to manage their users.
 	</description>
 	<changelog>
+		*13.0.1alpha8* Initial groups support
 		*13.0.1alpha2* Visual Changes
 		*12.0.10* Invisible display names...
 		*12.0.9* Provide a method to get contact details (hookable)

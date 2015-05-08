@@ -43,6 +43,9 @@ if(!empty($message)){
 												<i class="fa fa-user-times"></i> <span><?php echo _('Delete')?></span>
 											</button>
 											<?php } ?>
+											<button id="email-users" class="btn btn-info btn-send" data-type="users" disabled data-section="users">
+												<i class="fa fa-envelope-o"></i> <span><?php echo _('Send Email')?></span>
+											</button>
 										</div>
 										<table data-toolbar="#toolbar-users" data-toggle="table" data-pagination="true" data-search="true" class="table table-striped" id="table-users">
 											<thead>

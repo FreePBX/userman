@@ -32,7 +32,7 @@ echo $heading;
 								<li role="presentation" class="<?php echo empty($hookHtml)?'hidden':''?>"><a href="#usermanother" aria-controls="usermanother" role="tab" data-toggle="tab"><?php echo _("Other Settings")?></a></li>
 							</ul>
 						</div>
-						<form class="fpbx-submit" autocomplete="off" name="editM" id="editM" action="<?php echo $formaction ?>" method="post" data-fpbx-delete="config.php?display=userman&amp;action=deluser&amp;user=<?php echo $user['id']?>"onsubmit="return true;">
+						<form class="fpbx-submit" autocomplete="off" name="editM" id="editM" action="<?php echo $formaction ?>" method="post" <?php if(!empty($user['id'])) {?>data-fpbx-delete="config.php?display=userman&amp;action=deluser&amp;user=<?php echo $user['id']?>"<?php } ?> onsubmit="return true;">
 							<input type="hidden" name="type" value="user">
 							<input type="hidden" name="prevUsername" value="<?php echo !empty($user['username']) ? $user['username'] : ''; ?>">
 							<input type="hidden" name="user" value="<?php echo !empty($user['id']) ? $user['id'] : ''; ?>">
@@ -423,7 +423,7 @@ echo $heading;
 												<div class="col-md-9">
 													<select id="group_users" data-placeholder="Groups" class="form-control chosenmultiselect" name="groups[]" multiple="multiple" <?php echo !$permissions['modifyGroup'] ? 'disabled' : ''?>>
 														<?php foreach($groups as $group) {?>
-															<option value="<?php echo $group['id']?>" <?php echo in_array($user['id'], $group['users']) ? 'selected' : '' ?>><?php echo $group['groupname']?></option>
+															<option value="<?php echo $group['id']?>" <?php echo !empty($user['id']) && in_array($user['id'], $group['users']) ? 'selected' : '' ?>><?php echo $group['groupname']?></option>
 														<?php } ?>
 													</select>
 												</div>
@@ -504,7 +504,7 @@ echo $heading;
 														<i class="fa fa-question-circle fpbx-help-icon" data-for="pbx_range"></i>
 													</div>
 													<div class="col-md-9">
-														<input name="pbx_low" type="number" min="0" class="form-control" style="display: inline;width:48%" placeholder="<?php echo $gpbx_low['val']?>"> - <input name="pbx_high" type="number" min="1" class="form-control" style="display: inline;width:48%" placeholder="<?php echo $gpbx_high['val']?>">
+														<input name="pbx_low" type="number" min="0" class="form-control" style="display: inline;width:48%"> - <input name="pbx_high" type="number" min="1" class="form-control" style="display: inline;width:48%">
 													</div>
 												</div>
 											</div>
@@ -531,11 +531,6 @@ echo $heading;
 																<option value="<?php echo $key?>" <?php echo is_array($pbx_modules) && in_array($key,$pbx_modules) ? 'selected' : '' ?>><?php echo $val['name']?></option>
 															<?php } ?>
 														</select>
-														<?php if($gpbx_modules['group'] >= 0) {?>
-															<div class="group-override-message">
-															<?php echo sprintf(_('Group "%s" is currently overriding this setting, end result: (%s)'),$gpbx_modules['groupname'],implode(", ",$gpbx_modules['val']));?>
-															</div>
-														<?php }?>
 													</div>
 												</div>
 											</div>
