@@ -61,6 +61,7 @@ function userman_configpageload() {
 	}
 
 	if ($action != 'del') {
+		$usersC = array();  // Initialize the array.
 		foreach(core_users_list() as $user) {
 			$usersC[] = $user[0];
 		}
