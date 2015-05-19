@@ -16,6 +16,7 @@ class Userman implements \BMO {
 	private $groupSettingsTable = 'userman_groups_settings';
 	private $brand = 'FreePBX';
 	private $tokenExpiration = "5 minutes";
+	private $auth = null;
 
 	public function __construct($freepbx = null) {
 		$this->FreePBX = $freepbx;
@@ -39,6 +40,7 @@ class Userman implements \BMO {
 	}
 
 	public function install() {
+		//Change login type to usermanager is installed.
 		if($this->FreePBX->Config->set('AUTHTYPE') == "database") {
 			$this->FreePBX->Config->set('AUTHTYPE','usermanager');
 		}
@@ -100,6 +102,10 @@ class Userman implements \BMO {
 		return true;
 	}
 
+	/**
+	 * Config Page Init
+	 * @param string $display The display name of the page
+	 */
 	public function doConfigPageInit($display) {
 		$request = $_REQUEST;
 		if(isset($request['action']) && $request['action'] == 'deluser') {
@@ -258,6 +264,26 @@ class Userman implements \BMO {
 		}
 	}
 
+	/**
+	 * Get All Permissions that the Auth Type allows
+	 */
+	public function getAuthAllPermissions() {
+		return $this->auth->getPermissions();
+	}
+
+	/**
+	 * Get a Single Permisison that the Auth Type allows
+	 * @param [type] $permission [description]
+	 */
+	public function getAuthPermission($permission) {
+		$settings = $this->auth->getPermissions();
+		return isset($settings[$permission]) ? $settings[$permission] : null;
+	}
+
+	/**
+	 * Get the Action Bar (13)
+	 * @param string $request The action bar
+	 */
 	public function getActionBar($request){
 		$buttons = array();
 		$permissions = $this->auth->getPermissions();
@@ -307,6 +333,9 @@ class Userman implements \BMO {
 		return $buttons;
 	}
 
+	/**
+	 * Page Display
+	 */
 	public function myShowPage() {
 		if(!function_exists('core_users_list')) {
 			return _("Module Core is disabled. Please enable it");
@@ -444,6 +473,9 @@ class Userman implements \BMO {
 		return $html;
 	}
 
+	/**
+	 * Get List of Menu items from said Modules
+	 */
 	private function getModuleList() {
 		$active_modules = $this->FreePBX->Modules->getActiveModules();
 		$module_list = array();
@@ -482,6 +514,11 @@ class Userman implements \BMO {
 		return $module_list;
 	}
 
+	/**
+	 * Ajax Request
+	 * @param string $req     The request type
+	 * @param string $setting Settings to return back
+	 */
 	public function ajaxRequest($req, $setting){
 		switch($req){
 			case "getuserfields":
@@ -494,6 +531,10 @@ class Userman implements \BMO {
 			break;
 		}
 	}
+
+	/**
+	 * Handle AJAX
+	 */
 	public function ajaxHandler(){
 		$request = $_REQUEST;
 		switch($request['command']){
