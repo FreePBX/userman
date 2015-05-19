@@ -23,10 +23,18 @@ class Userman implements \BMO {
 		$this->db = $freepbx->Database;
 		$this->brand = \FreePBX::Config()->get("DASHBOARD_FREEPBX_BRAND");
 
-		include(__DIR__."/functions.inc/auth/Base.php");
-		include(__DIR__."/functions.inc/auth/Auth.php");
-		include(__DIR__."/functions.inc/auth/Freepbx.php");
-		include(__DIR__."/functions.inc/auth/Ldap.php");
+		if(!interface_exists('FreePBX\modules\Userman\Auth\Base')) {
+			include(__DIR__."/functions.inc/auth/Base.php");
+		}
+		if(!class_exists('FreePBX\modules\Userman\Auth\Auth')) {
+			include(__DIR__."/functions.inc/auth/Auth.php");
+		}
+		if(!class_exists('FreePBX\modules\Userman\Auth\Freepbx')) {
+			include(__DIR__."/functions.inc/auth/Freepbx.php");
+		}
+		if(!class_exists('FreePBX\modules\Userman\Auth\Ldap')) {
+			include(__DIR__."/functions.inc/auth/Ldap.php");
+		}
 		$this->auth = new Userman\Auth\Freepbx($this, $freepbx);
 		//$this->auth = new Userman\Auth\Ldap($this, $freepbx);
 	}
