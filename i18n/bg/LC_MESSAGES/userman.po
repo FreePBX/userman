@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-19 13:40-0400\n"
+"POT-Creation-Date: 2015-06-09 15:23-0400\n"
 "PO-Revision-Date: 2014-07-22 16:15+0200\n"
 "Last-Translator: Chavdar <chavdar_75@yahoo.com>\n"
 "Language-Team: Bulgarian <http://git.freepbx.org/projects/freepbx/userman/bg/"
@@ -173,11 +173,11 @@ msgstr ""
 msgid "Email Subject"
 msgstr ""
 
-#: views/quickCreate.php:9
+#: views/quickCreate.php:24
 msgid "Enable User Manager for this extension"
 msgstr ""
 
-#: views/quickCreate.php:2
+#: views/quickCreate.php:7
 msgid "Enable Usermanager"
 msgstr ""
 
@@ -352,7 +352,7 @@ msgstr ""
 msgid "Module Core is disabled. Please enable it"
 msgstr ""
 
-#: views/groups.php:127 views/groups.php:152 views/quickCreate.php:7
+#: views/groups.php:127 views/groups.php:152 views/quickCreate.php:15
 #: views/users.php:456 views/users.php:483
 msgid "No"
 msgstr ""
@@ -612,7 +612,7 @@ msgstr ""
 msgid "Work Phone Number"
 msgstr ""
 
-#: views/groups.php:125 views/groups.php:150 views/quickCreate.php:5
+#: views/groups.php:125 views/groups.php:150 views/quickCreate.php:13
 #: views/users.php:454 views/users.php:481
 msgid "Yes"
 msgstr ""
