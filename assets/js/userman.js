@@ -19,6 +19,10 @@ $(".actions .fa-times").click(function() {
 });
 $(".btn-remove").click(function() {
 	var type = $(this).data("type"), btn = $(this), section = $(this).data("section");
+	var chosen = $("#table-"+section).bootstrapTable("getSelections");
+	$(chosen).each(function(){
+		deleteExts.push(this['id']);
+	});
 	if(confirm(sprintf(_("Are you sure you wish to delete this %s?"),type))) {
 		btn.find("span").text(_("Deleting..."));
 		btn.prop("disabled", true);
@@ -143,7 +147,7 @@ $("#delchecked").on("click",function(){
 });
 
 //Trashcan Action
-$('a[id^="del"]').on("click",function(){
+$(document).on("click", 'a[id^="del"]',function(){
 	var cmessage = _("Are you sure you want to delete this user?");
 	if(!confirm(cmessage)){
 		return false;
@@ -211,6 +215,7 @@ $("#pwsub").on("click", function(){
 		}
 	});
 });
+
 
 $( "form" ).submit(function() {
 	if(!this.checkValidity()){

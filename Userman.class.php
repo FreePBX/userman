@@ -264,7 +264,6 @@ class Userman implements \BMO {
 						'type' => 'success'
 					);
 					if(isset($_POST['sendemailtoall'])) {
-						dbug("yup");
 						$this->sendWelcomeEmailToAll();
 					}
 				break;
@@ -532,6 +531,7 @@ class Userman implements \BMO {
 			case "getuserfields":
 			case "delUser":
 			case "updatePassword":
+			case "delete":
 				return true;
 			break;
 			default:
@@ -564,6 +564,17 @@ class Userman implements \BMO {
 				$extra = array();
 				$user = $this->getUserByID($uid);
 				return $this->updateUser($uid, $user['username'], $user['username'], $user['default_extension'], $user['description'], $extra, $newpass);
+			break;
+			case 'delete':
+				switch ($_REQUEST['type']) {
+					case 'users':
+						$ret = array();
+						foreach($_REQUEST['extensions'] as $ext){
+							$ret[$ext] = $this->deleteUserByID($ext);
+						}
+						return array('status' => true, 'message' => $ret);
+					break;
+				}
 			break;
 			default:
 				echo json_encode(_("Error: You should never see this"));
