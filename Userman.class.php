@@ -39,6 +39,20 @@ class Userman implements \BMO {
 		//$this->auth = new Userman\Auth\Ldap($this, $freepbx);
 	}
 
+	public function search($query, &$results) {
+		if(!ctype_digit($query)) {
+			$sql = "SELECT * FROM ".$this->userTable." WHERE username LIKE :query or description LIKE :query or fname LIKE :query or lname LIKE :query or displayname LIKE :query or title LIKE :query or company LIKE :query or department LIKE :query or email LIKE :query";
+			$sth = $this->db->prepare($sql);
+			$sth->execute(array("query" => "%".$query."%"));
+			$rows = $sth->fetchAll(\PDO::FETCH_ASSOC);
+			foreach($rows as $entry) {
+				$entry['displayname'] = !empty($entry['displayname']) ? $entry['displayname'] : trim($entry['fname'] . " " . $entry['lname']);
+				$entry['displayname'] = !empty($entry['displayname']) ? $entry['displayname'] : $entry['username'];
+				$results[] = array("text" => $entry['displayname'], "type" => "get", "dest" => "?display=userman&action=showuser&user=".$entry['id']);
+			}
+		}
+	}
+
 	function &create() {
 		static $obj;
 		if (!isset($obj) || !is_object($obj)) {

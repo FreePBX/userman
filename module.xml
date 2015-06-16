@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>13.0.1alpha12</version>
+	<version>13.0.1alpha13</version>
 	<publisher>Schmooze Com Inc</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -12,6 +12,7 @@
 		Modules like iSymphony, Rest API and User Control Panel use this module to manage their users.
 	</description>
 	<changelog>
+		*13.0.1alpha13* FREEPBX-9467 add search hooks
 		*13.0.1alpha12* Tab scrolls
 		*13.0.1alpha11* Better quick create visuals
 		*13.0.1alpha8* Initial groups support
