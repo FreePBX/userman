@@ -179,10 +179,10 @@ $(document).on("click", 'a[id^="del"]',function(){
 		}
 	});
 });
-
 //Making Password Modal work
-$('a[id^="pwmlink"]').on("click", function(){
+$(document).on("click", 'a[id^="pwmlink"]', function(){
 	var pwuid = $(this).data('pwuid');
+	console.log(pwuid);
 	$("#pwuid").val(pwuid);
 	$("#pwsub").attr("disabled", false);
 	$("#pwsub").html(_("Update Password"));
