@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>13.0.1alpha14</version>
+	<version>13.0.2</version>
 	<publisher>Schmooze Com Inc</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -12,6 +12,7 @@
 		Modules like iSymphony, Rest API and User Control Panel use this module to manage their users.
 	</description>
 	<changelog>
+		*13.0.2* Version bump Beta
 		*13.0.1alpha14* FREEPBX-9500 Can't change user's password in User Management with "Key" action button
 		*13.0.1alpha13* FREEPBX-9467 add search hooks
 		*13.0.1alpha12* Tab scrolls
@@ -51,7 +52,7 @@
 		*2.11.0alpha2* Add more fields
 		*2.11.0alpha1* Initial Module
 	</changelog>
-	<info></info>
+	<info />
 	<category>Admin</category>
 	<menuitems>
 		<userman>User Management</userman>
@@ -61,9 +62,9 @@
 		<version>12.0.1rc16</version>
 	</depends>
 	<hooks>
-		<core namespace="FreePBX\modules" class="Core">
-			<method namespace="FreePBX\modules" class="Userman" callingMethod="getQuickCreateDisplay">getQuickCreateDisplay</method>
-			<method namespace="FreePBX\modules" class="Userman" callingMethod="processQuickCreate">processQuickCreate</method>
+		<core class="Core" namespace="FreePBX\modules">
+			<method callingMethod="getQuickCreateDisplay" class="Userman" namespace="FreePBX\modules">getQuickCreateDisplay</method>
+			<method callingMethod="processQuickCreate" class="Userman" namespace="FreePBX\modules">processQuickCreate</method>
 		</core>
 	</hooks>
 	<supported>
