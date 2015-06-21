@@ -53,18 +53,18 @@ class Userman implements \BMO {
 		}
 	}
 
-	function &create() {
+	function create() {
 		static $obj;
 		if (!isset($obj) || !is_object($obj)) {
-			$obj = new \Userman();
+			$obj = new \FreePBX\modules\Userman();
 		}
 		return $obj;
 	}
 
 	public function install() {
 		//Change login type to usermanager is installed.
-		if($this->FreePBX->Config->set('AUTHTYPE') == "database") {
-			$this->FreePBX->Config->set('AUTHTYPE','usermanager');
+		if(\FreePBX::Config()->get('AUTHTYPE') == "database") {
+			\FreePBX::Config()->update('AUTHTYPE','usermanager');
 		}
 	}
 	public function uninstall() {
