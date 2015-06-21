@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-19 12:17-0400\n"
+"POT-Creation-Date: 2015-06-22 08:50+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -60,6 +60,11 @@ msgstr ""
 
 #: views/users.php:6
 msgid "Add User"
+msgstr ""
+
+#: userman.i18n.php:6
+#: userman.i18n.php:12
+msgid "Admin"
 msgstr ""
 
 #: views/groups.php:192
@@ -155,6 +160,10 @@ msgstr ""
 
 #: views/users.php:3
 msgid "Edit User"
+msgstr ""
+
+#: userman.i18n.php:14
+msgid "Email "
 msgstr ""
 
 #: views/users.php:306
@@ -477,6 +486,11 @@ msgid ""
 "li></ul>"
 msgstr ""
 
+#: userman.i18n.php:18
+msgid ""
+"The From: field for emails when using the user management email feature."
+msgstr ""
+
 #: views/users.php:318
 msgid "The email address to associate with this user."
 msgstr ""
@@ -519,6 +533,15 @@ msgstr ""
 
 #: views/users.php:366
 msgid "The user's work phone number."
+msgstr ""
+
+#: userman.i18n.php:8
+msgid ""
+"This Module manages all FreePBX users excluding Administrators (at this "
+"time).\t\tIt allows an Administrator to create a User Account that can be "
+"used by other applications for login or API purposes.\t\tModules like "
+"iSymphony, Rest API and User Control Panel use this module to manage their "
+"users."
 msgstr ""
 
 #: views/users.php:145
@@ -576,6 +599,15 @@ msgstr ""
 
 #: views/rnav.php:2
 msgid "User List"
+msgstr ""
+
+#: userman.i18n.php:4
+#: userman.i18n.php:10
+msgid "User Management"
+msgstr ""
+
+#: userman.i18n.php:16
+msgid "User Management Module"
 msgstr ""
 
 #: views/welcome.php:12
