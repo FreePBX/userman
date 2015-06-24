@@ -6,5 +6,5 @@ function setup_userman() {
 	return FreePBX::create()->Userman;
 }
 
-include('functions.inc/guihooks.php');
-include('functions.inc/functions.php');
+include(__DIR__.'/functions.inc/guihooks.php');
+include(__DIR__.'/functions.inc/functions.php');
