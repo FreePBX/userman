@@ -110,106 +110,108 @@ echo $heading;
 										</div>
 									</div>
 								</div>
-								<div role="tabpanel" class="tab-pane display" id="pbx">
-									<div class="element-container">
-										<div class="row">
-											<div class="col-md-12">
-												<div class="row">
-													<div class="form-group">
-														<div class="col-md-3">
-															<label class="control-label" for="pbx_login"><?php echo sprintf(_('Allow %s Administration Login'),$brand)?></label>
-															<i class="fa fa-question-circle fpbx-help-icon" data-for="pbx_login"></i>
-														</div>
-														<div class="col-md-9 radioset">
-															<input type="radio" id="pbxlogin1" name="pbx_login" value="true" <?php echo ($pbx_login) ? 'checked' : ''?>>
-															<label for="pbxlogin1"><?php echo _("Yes")?></label>
-															<input type="radio" id="pbxlogin2" name="pbx_login" value="false" <?php echo (!$pbx_login) ? 'checked' : ''?>>
-															<label for="pbxlogin2"><?php echo _("No")?></label>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="row">
-											<div class="col-md-12">
-												<span id="pbx_login-help" class="help-block fpbx-help-block"><?php echo sprintf(_("May this group log in to the %s Administration Pages?"),$brand)?></span>
-											</div>
-										</div>
-									</div>
-									<div class="element-container">
-										<div class="row">
-											<div class="col-md-12">
-												<div class="row">
-													<div class="form-group">
-														<div class="col-md-3">
-															<label class="control-label" for="pbx_admin"><?php echo _('Grant Full Administration Rights')?></label>
-															<i class="fa fa-question-circle fpbx-help-icon" data-for="pbx_admin"></i>
-														</div>
-														<div class="col-md-9 radioset">
-															<input type="radio" id="pbxadmin1" name="pbx_admin" value="true" <?php echo ($pbx_admin) ? 'checked' : ''?>>
-															<label for="pbxadmin1"><?php echo _("Yes")?></label>
-															<input type="radio" id="pbxadmin2" name="pbx_admin" value="false" <?php echo (!$pbx_admin) ? 'checked' : ''?>>
-															<label for="pbxadmin2"><?php echo _("No")?></label>
+								<?php if(\FreePBX::Config()->get('AUTHTYPE') == "usermanager") {?>
+									<div role="tabpanel" class="tab-pane display" id="pbx">
+										<div class="element-container">
+											<div class="row">
+												<div class="col-md-12">
+													<div class="row">
+														<div class="form-group">
+															<div class="col-md-3">
+																<label class="control-label" for="pbx_login"><?php echo sprintf(_('Allow %s Administration Login'),$brand)?></label>
+																<i class="fa fa-question-circle fpbx-help-icon" data-for="pbx_login"></i>
+															</div>
+															<div class="col-md-9 radioset">
+																<input type="radio" id="pbxlogin1" name="pbx_login" value="true" <?php echo ($pbx_login) ? 'checked' : ''?>>
+																<label for="pbxlogin1"><?php echo _("Yes")?></label>
+																<input type="radio" id="pbxlogin2" name="pbx_login" value="false" <?php echo (!$pbx_login) ? 'checked' : ''?>>
+																<label for="pbxlogin2"><?php echo _("No")?></label>
+															</div>
 														</div>
 													</div>
 												</div>
 											</div>
-										</div>
-										<div class="row">
-											<div class="col-md-12">
-												<span id="pbx_admin-help" class="help-block fpbx-help-block"><?php echo _("Grant full administration rights regardless of extension range or module access.")?></span>
+											<div class="row">
+												<div class="col-md-12">
+													<span id="pbx_login-help" class="help-block fpbx-help-block"><?php echo sprintf(_("May this group log in to the %s Administration Pages?"),$brand)?></span>
+												</div>
 											</div>
 										</div>
-									</div>
-									<div class="element-container">
-										<div class="row">
-											<div class="col-md-12">
-												<div class="row">
-													<div class="form-group">
-														<div class="col-md-3">
-															<label class="control-label" for="pbx_range"><?php echo _('Visible Extension Range')?></label>
-															<i class="fa fa-question-circle fpbx-help-icon" data-for="pbx_range"></i>
-														</div>
-														<div class="col-md-9">
-															<input name="pbx_low" type="number" min="0" class="form-control" style="display: inline;width:48%" value="<?php echo $pbx_low?>"> - <input name="pbx_high" type="number" min="1" class="form-control" style="display: inline;width:48%" value="<?php echo $pbx_high?>">
+										<div class="element-container">
+											<div class="row">
+												<div class="col-md-12">
+													<div class="row">
+														<div class="form-group">
+															<div class="col-md-3">
+																<label class="control-label" for="pbx_admin"><?php echo _('Grant Full Administration Rights')?></label>
+																<i class="fa fa-question-circle fpbx-help-icon" data-for="pbx_admin"></i>
+															</div>
+															<div class="col-md-9 radioset">
+																<input type="radio" id="pbxadmin1" name="pbx_admin" value="true" <?php echo ($pbx_admin) ? 'checked' : ''?>>
+																<label for="pbxadmin1"><?php echo _("Yes")?></label>
+																<input type="radio" id="pbxadmin2" name="pbx_admin" value="false" <?php echo (!$pbx_admin) ? 'checked' : ''?>>
+																<label for="pbxadmin2"><?php echo _("No")?></label>
+															</div>
 														</div>
 													</div>
 												</div>
 											</div>
-										</div>
-										<div class="row">
-											<div class="col-md-12">
-												<span id="pbx_range-help" class="help-block fpbx-help-block"><?php echo _("Restrict this groups's view to only Extensions, Ring Groups, and Queues within this range.")?></span>
+											<div class="row">
+												<div class="col-md-12">
+													<span id="pbx_admin-help" class="help-block fpbx-help-block"><?php echo _("Grant full administration rights regardless of extension range or module access.")?></span>
+												</div>
 											</div>
 										</div>
-									</div>
-									<div class="element-container">
-										<div class="row">
-											<div class="col-md-12">
-												<div class="row">
-													<div class="form-group">
-														<div class="col-md-3">
-															<label class="control-label" for="pbx_modules"><?php echo _('Administration Access')?></label>
-															<i class="fa fa-question-circle fpbx-help-icon" data-for="pbx_modules"></i>
-														</div>
-														<div class="col-md-9">
-															<select id="pbx_modules" class="bsmultiselect " name="pbx_modules[]" multiple="multiple">
-																<?php foreach($modules as $key => $val) {?>
-																	<option value="<?php echo $key?>" <?php echo in_array($key,$pbx_modules) ? 'selected' : '' ?>><?php echo $val['name']?></option>
-																<?php } ?>
-															</select>
+										<div class="element-container">
+											<div class="row">
+												<div class="col-md-12">
+													<div class="row">
+														<div class="form-group">
+															<div class="col-md-3">
+																<label class="control-label" for="pbx_range"><?php echo _('Visible Extension Range')?></label>
+																<i class="fa fa-question-circle fpbx-help-icon" data-for="pbx_range"></i>
+															</div>
+															<div class="col-md-9">
+																<input name="pbx_low" type="number" min="0" class="form-control" style="display: inline;width:48%" value="<?php echo $pbx_low?>"> - <input name="pbx_high" type="number" min="1" class="form-control" style="display: inline;width:48%" value="<?php echo $pbx_high?>">
+															</div>
 														</div>
 													</div>
 												</div>
 											</div>
+											<div class="row">
+												<div class="col-md-12">
+													<span id="pbx_range-help" class="help-block fpbx-help-block"><?php echo _("Restrict this groups's view to only Extensions, Ring Groups, and Queues within this range.")?></span>
+												</div>
+											</div>
 										</div>
-										<div class="row">
-											<div class="col-md-12">
-												<span id="pbx_modules-help" class="help-block fpbx-help-block"><?php echo _("Select the Admin Sections this group should have access to.")?></span>
+										<div class="element-container">
+											<div class="row">
+												<div class="col-md-12">
+													<div class="row">
+														<div class="form-group">
+															<div class="col-md-3">
+																<label class="control-label" for="pbx_modules"><?php echo _('Administration Access')?></label>
+																<i class="fa fa-question-circle fpbx-help-icon" data-for="pbx_modules"></i>
+															</div>
+															<div class="col-md-9">
+																<select id="pbx_modules" class="bsmultiselect " name="pbx_modules[]" multiple="multiple">
+																	<?php foreach($modules as $key => $val) {?>
+																		<option value="<?php echo $key?>" <?php echo in_array($key,$pbx_modules) ? 'selected' : '' ?>><?php echo $val['name']?></option>
+																	<?php } ?>
+																</select>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-md-12">
+													<span id="pbx_modules-help" class="help-block fpbx-help-block"><?php echo _("Select the Admin Sections this group should have access to.")?></span>
+												</div>
 											</div>
 										</div>
 									</div>
-								</div>
+								<?php } ?>
 								<!--Module Specific -->
 								<?php foreach($sections as $section) { ?>
 									<div role="tabpanel" class="tab-pane display" id="usermanhook<?php echo $section['rawname']?>">

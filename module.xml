@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>13.0.2.1</version>
+	<version>13.0.3</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -12,6 +12,7 @@
 		Modules like iSymphony, Rest API and User Control Panel use this module to manage their users.
 	</description>
 	<changelog>
+		*13.0.3* Add hooks for bulkhandler module
 		*13.0.2.1* Typo fix
 		*13.0.2* Version bump Beta
 		*13.0.1alpha14* FREEPBX-9500 Can't change user's password in User Management with "Key" action button
@@ -67,6 +68,12 @@
 			<method callingMethod="getQuickCreateDisplay" class="Userman" namespace="FreePBX\modules">getQuickCreateDisplay</method>
 			<method callingMethod="processQuickCreate" class="Userman" namespace="FreePBX\modules">processQuickCreate</method>
 		</core>
+		<bulkhandler namespace="FreePBX\modules" class="Bulkhandler">
+			<method namespace="FreePBX\modules" class="Userman" callingMethod="getHeaders">bulkhandlerGetHeaders</method>
+			<method namespace="FreePBX\modules" class="Userman" callingMethod="getTypes">bulkhandlerGetTypes</method>
+			<method namespace="FreePBX\modules" class="Userman" callingMethod="import">bulkhandlerImport</method>
+			<method namespace="FreePBX\modules" class="Userman" callingMethod="export">bulkhandlerExport</method>
+		</bulkhandler>
 	</hooks>
 	<supported>
 		<version>13.0</version>

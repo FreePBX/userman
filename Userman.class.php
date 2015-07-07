@@ -1636,4 +1636,310 @@ class Userman implements \BMO {
 		}
 		return $used;
 	}
+
+	public function bulkhandlerGetTypes() {
+		return array(
+			'usermanusers' => array(
+				'name' => _('User Manager Users'),
+				'description' => _('User Manager Users')
+			),
+			'usermangroups' => array(
+				'name' => _('User Manager Groups'),
+				'description' => _('User Manager Groups')
+			),
+		);
+	}
+
+	public function bulkhandlerGetHeaders($type) {
+		switch ($type) {
+		case 'usermanusers':
+			$headers = array(
+				'username' => array(
+                                        'required' => true,
+                                        'identifier' => _('Login Name'),
+                                        'description' => _('Login Name'),
+				),
+				'password' => array(
+                                        'required' => true,
+                                        'identifier' => _('Password'),
+                                        'description' => _('Password - plaintext'),
+				),
+				'default_extension' => array(
+                                        'required' => true,
+                                        'identifier' => _('Primary Extension'),
+                                        'description' => _('Primary Linked Extension'),
+				),
+				'description' => array(
+                                        'identifier' => _('Description'),
+                                        'description' => _('Description'),
+				),
+				'fname' => array(
+                                        'identifier' => _('First Name'),
+                                        'description' => _('First Name'),
+				),
+				'lname' => array(
+                                        'identifier' => _('Last Name'),
+                                        'description' => _('Last Name'),
+				),
+				'displayname' => array(
+                                        'identifier' => _('Display Name'),
+                                        'description' => _('Display Name'),
+				),
+				'title' => array(
+                                        'identifier' => _('Title'),
+                                        'description' => _('Title'),
+				),
+				'company' => array(
+                                        'identifier' => _('Company'),
+                                        'description' => _('Company'),
+				),
+				'department' => array(
+                                        'identifier' => _('Department'),
+                                        'description' => _('Department'),
+				),
+				'email' => array(
+                                        'identifier' => _('Email Address'),
+                                        'description' => _('Email Address'),
+				),
+				'cell' => array(
+                                        'identifier' => _('Cell Phone Number'),
+                                        'description' => _('Cell Phone Number'),
+				),
+				'work' => array(
+                                        'identifier' => _('Work Phone Number'),
+                                        'description' => _('Work Phone Number'),
+				),
+				'home' => array(
+                                        'identifier' => _('Home Phone Number'),
+                                        'description' => _('Home Phone Number'),
+				),
+				'fax' => array(
+                                        'identifier' => _('Fax Phone Number'),
+                                        'description' => _('Fax Phone Number'),
+				),
+			);
+
+			return $headers;
+		case 'usermangroups':
+			$headers = array(
+				'groupname' => array(
+                                        'required' => true,
+                                        'identifier' => _('Group Name'),
+                                        'description' => _('Group Name'),
+				),
+				'description' => array(
+                                        'identifier' => _('Description'),
+                                        'description' => _('Description'),
+				),
+				'users' => array(
+                                        'identifier' => _('User List'),
+                                        'description' => _('Comma delimited list of users'),
+				),
+			);
+
+			return $headers;
+		}
+	}
+
+	public function bulkhandlerValidate($type, $rawData) {
+		$ret = NULL;
+
+		switch ($type) {
+		case 'usermanusers':
+		case 'usermangroups':
+			if (true) {
+				$ret = array(
+					'status' => true,
+				);
+			} else {
+				$ret = array(
+					'status' => false,
+					'message' => sprintf(_('%s records failed validation'), count($rawData))
+				);
+			}
+			break;
+		}
+
+		return $ret;
+	}
+
+	public function bulkhandlerImport($type, $rawData) {
+		$ret = NULL;
+
+		switch ($type) {
+		case 'usermanusers':
+			foreach ($rawData as $data) {
+				if (empty($data['username'])) {
+					return array("status" => false, "message" => _("username is required."));
+				}
+				if (empty($data['password'])) {
+					return array("status" => false, "message" => _("password is required."));
+				}
+				if (empty($data['default_extension'])) {
+					return array("status" => false, "message" => _("default_extension is required."));
+				}
+
+				$username = $data['username'];
+				$password = $data['password'];
+				$default_extension = $data['default_extension'];
+				$description = !empty($data['description']) ? $data['description'] : null;
+
+				$extraData = array(
+					'fname' => isset($data['fname']) ? $data['fname'] : null,
+					'lname' => isset($data['lname']) ? $data['lname'] : null,
+					'displayname' => isset($data['displayname']) ? $data['displayname'] : null,
+					'title' => isset($data['title']) ? $data['title'] : null,
+					'company' => isset($data['company']) ? $data['company'] : null,
+					'department' => isset($data['department']) ? $data['department'] : null,
+					'email' => isset($data['email']) ? $data['email'] : null,
+					'cell' => isset($data['cell']) ? $data['cell'] : null,
+					'work' => isset($data['work']) ? $data['work'] : null,
+					'home' => isset($data['home']) ? $data['home'] : null,
+					'fax' => isset($data['fax']) ? $data['fax'] : null,
+				);
+
+				$existing = $this->getUserByUsername($username);
+				if ($existing) {
+					try {
+						$status = $this->updateUser($existing['id'], $username, $username, $default_extension, $description, $extraData, $password);
+					} catch (\Exception $e) {
+						return array("status" => false, "message" => $e->getMessage());
+					}
+					if (!$status['status']) {
+						$ret = array(
+							'status' => false,
+							'message' => $status['message'],
+						);
+						return $ret;
+					}
+				} else {
+					try {
+						$status = $this->addUser($username, $password, $default_extension, $description, $extraData, true);
+					} catch (\Exception $e) {
+						return array("status" => false, "message" => $e->getMessage());
+					}
+					if (!$status['status']) {
+						$ret = array(
+							'status' => false,
+							'message' => $status['message'],
+						);
+						return $ret;
+					}
+				}
+
+				break;
+			}
+
+			needreload();
+			$ret = array(
+				'status' => true,
+			);
+
+			break;
+		case 'usermangroups':
+			foreach ($rawData as $data) {
+				if (empty($data['groupname'])) {
+					return array("status" => false, "message" => _("groupname is required."));
+				}
+
+				$groupname = $data['groupname'];
+				$description = !empty($data['description']) ? $data['description'] : null;
+
+				$users = array();
+				if (!empty($data['users'])) {
+					$usernames = explode(',', $data['users']);
+					foreach ($usernames as $username) {
+						$user = $this->getUserByUsername($username);
+						if ($user) {
+							$users[] = $user['id'];
+						}
+					}
+				}
+
+				$existing = $this->getGroupByUsername($groupname);
+				if ($existing) {
+					try {
+						$status = $this->updateGroup($existing['id'], $groupname, $groupname, $description, $users);
+					} catch (\Exception $e) {
+						return array("status" => false, "message" => $e->getMessage());
+					}
+					if (!$status['status']) {
+						$ret = array(
+							'status' => false,
+							'message' => $status['message'],
+						);
+						return $ret;
+					}
+				} else {
+					try {
+						$status = $this->addGroup($groupname, $description, $users);
+					} catch (\Exception $e) {
+						return array("status" => false, "message" => $e->getMessage());
+					}
+					if (!$status['status']) {
+						$ret = array(
+							'status' => false,
+							'message' => $status['message'],
+						);
+						return $ret;
+					}
+				}
+
+				break;
+			}
+		}
+
+		return $ret;
+	}
+
+	public function bulkhandlerExport($type) {
+		$data = NULL;
+
+		switch ($type) {
+		case 'usermanusers':
+			$users = $this->getAllUsers();
+			foreach ($users as $user) {
+				$data[$user['id']] = array(
+					'username' => $user['username'],
+					'description' => $user['description'],
+					'default_extension' => $user['default_extension'],
+					'fname' => $user['fname'],
+					'lname' => $user['lname'],
+					'displayname' => $user['displayname'],
+					'title' => $user['title'],
+					'company' => $user['company'],
+					'department' => $user['department'],
+					'email' => $user['email'],
+					'cell' => $user['cell'],
+					'work' => $user['work'],
+					'home' => $user['home'],
+					'fax' => $user['fax'],
+				);
+			}
+
+			break;
+		case 'usermangroups':
+			$users = $this->getAllUsers();
+
+			$groups = $this->getAllGroups();
+			foreach ($groups as $group) {
+				$gu = array();
+				foreach ($group['users'] as $key => $val) {
+					if (isset($users[$key])) {
+						$gu[] = $users[$key]['username'];
+					}
+				}
+
+				$data[$group['id']] = array(
+					'groupname' => $group['groupname'],
+					'description' => $group['description'],
+					'users' => implode(',', $gu),
+				);
+			}
+
+			break;
+		}
+
+		return $data;
+	}
 }
