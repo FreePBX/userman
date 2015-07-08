@@ -6,6 +6,19 @@
 namespace FreePBX\modules\Userman\Auth;
 
 interface Base {
+	/*
+	 * Actions to run during Userman Install/Upgrade
+	 */
+	public function install();
+
+	/*
+	 * Actions to run during Userman Uninstall
+	 */
+	public function uninstall();
+
+	public static function getInfo();
+	public static function getConfig($userman);
+	public static function saveConfig($userman);
 	/**
 	 * Return an array of permissions for this adaptor
 	 */

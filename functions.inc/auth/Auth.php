@@ -18,6 +18,14 @@ abstract class Auth implements Base {
 		$this->userman = $userman;
 	}
 
+	public function install() {
+
+	}
+
+	public function uninstall() {
+		
+	}
+
 	public function getPermissions() {
 		return array(
 			"addGroup" => true,

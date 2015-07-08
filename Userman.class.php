@@ -7,7 +7,7 @@ namespace FreePBX\modules;
 // Default setting array passed to ajaxRequest
 $setting = array('authenticate' => true, 'allowremote' => false);
 
-class Userman implements \BMO {
+class Userman extends \FreePBX_Helpers implements \BMO {
 	private $registeredFunctions = array();
 	private $message = '';
 	private $userTable = 'userman_users';
@@ -17,6 +17,7 @@ class Userman implements \BMO {
 	private $brand = 'FreePBX';
 	private $tokenExpiration = "5 minutes";
 	private $auth = null;
+	private $auths = array();
 
 	public function __construct($freepbx = null) {
 		$this->FreePBX = $freepbx;
@@ -29,14 +30,40 @@ class Userman implements \BMO {
 		if(!class_exists('FreePBX\modules\Userman\Auth\Auth')) {
 			include(__DIR__."/functions.inc/auth/Auth.php");
 		}
-		if(!class_exists('FreePBX\modules\Userman\Auth\Freepbx')) {
-			include(__DIR__."/functions.inc/auth/Freepbx.php");
+
+		$this->switchAuth($this->getConfig('auth'));
+	}
+
+	private function switchAuth($auth = 'freepbx') {
+		$this->getAuths();
+		if(!empty($auth)) {
+			$class = 'FreePBX\modules\Userman\Auth\\'.$auth;
+			try {
+				$this->auth = new $class($this, $this->FreePBX);
+			} catch (\Exception $e) {
+				//there was an error. Report it but set everything back
+				dbug($e->getMessage());
+				$this->setConfig('auth', 'freepbx');
+				$this->auth = new Userman\Auth\Freepbx($this, $this->FreePBX);
+			}
+		} else {
+			$this->setConfig('auth', 'freepbx');
+			$this->auth = new Userman\Auth\Freepbx($this, $this->FreePBX);
 		}
-		if(!class_exists('FreePBX\modules\Userman\Auth\Ldap')) {
-			include(__DIR__."/functions.inc/auth/Ldap.php");
+	}
+
+	private function getAuths() {
+		if(!empty($this->auths)) {
+			return $this->auths;
 		}
-		$this->auth = new Userman\Auth\Freepbx($this, $freepbx);
-		//$this->auth = new Userman\Auth\Ldap($this, $freepbx);
+		foreach(glob(__DIR__."/functions.inc/auth/modules/*.php") as $auth) {
+			$name = basename($auth, ".php");
+			if(!class_exists('FreePBX\modules\Userman\Auth\\'.$name)) {
+				include(__DIR__."/functions.inc/auth/modules/".$name.".php");
+				$this->auths[] = $name;
+			}
+		}
+		return $this->auths;
 	}
 
 	public function search($query, &$results) {
@@ -280,6 +307,16 @@ class Userman implements \BMO {
 					if(isset($_POST['sendemailtoall'])) {
 						$this->sendWelcomeEmailToAll();
 					}
+					$auths = array();
+					foreach($this->getAuths() as $auth) {
+						$class = 'FreePBX\modules\Userman\Auth\\'.$auth;
+						$ret = $class::saveConfig($this);
+						if($ret !== true) {
+							//error
+						}
+					}
+					$this->setConfig('auth', $_POST['authtype']);
+					$this->switchAuth($_POST['authtype']);
 				break;
 			}
 		}
@@ -485,9 +522,16 @@ class Userman implements \BMO {
 				);
 			break;
 			default:
+				$auths = array();
+				foreach($this->getAuths() as $auth) {
+					$class = 'FreePBX\modules\Userman\Auth\\'.$auth;
+					$auths[$auth] = $class::getInfo();
+					$auths[$auth]['html'] = $class::getConfig($this);
+				}
+
 				$emailbody = $this->getGlobalsetting('emailbody');
 				$emailsubject = $this->getGlobalsetting('emailsubject');
-				$html .= load_view(dirname(__FILE__).'/views/welcome.php',array("brand" => $this->brand, "permissions" => $permissions, "groups" => $groups, "users" => $users, "sections" => $sections, "message" => $this->message, "emailbody" => $emailbody, "emailsubject" => $emailsubject));
+				$html .= load_view(dirname(__FILE__).'/views/welcome.php',array("authtype" => $this->getConfig("auth"), "auths" => $auths, "brand" => $this->brand, "permissions" => $permissions, "groups" => $groups, "users" => $users, "sections" => $sections, "message" => $this->message, "emailbody" => $emailbody, "emailsubject" => $emailsubject));
 			break;
 		}
 
