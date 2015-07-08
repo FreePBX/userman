@@ -6,19 +6,30 @@
 namespace FreePBX\modules\Userman\Auth;
 
 interface Base {
-	/*
-	 * Actions to run during Userman Install/Upgrade
+	/**
+	 * Get information about this authentication driver
+	 * @param  object $userman The userman object
+	 * @param  object $freepbx The FreePBX BMO object
+	 * @return array          Array of information about this driver
 	 */
-	public function install();
+	public static function getInfo($userman, $freepbx);
 
-	/*
-	 * Actions to run during Userman Uninstall
+	/**
+	 * Get the configuration display of the authentication driver
+	 * @param  object $userman The userman object
+	 * @param  object $freepbx The FreePBX BMO object
+	 * @return string          html display data
 	 */
-	public function uninstall();
+	public static function getConfig($userman, $freepbx);
 
-	public static function getInfo();
-	public static function getConfig($userman);
-	public static function saveConfig($userman);
+	/**
+	 * Save the configuration about the authentication driver
+	 * @param  object $userman The userman object
+	 * @param  object $freepbx The FreePBX BMO object
+	 * @return mixed          Return true if valid. Otherwise return error string
+	 */
+	public static function saveConfig($userman, $freepbx);
+
 	/**
 	 * Return an array of permissions for this adaptor
 	 */

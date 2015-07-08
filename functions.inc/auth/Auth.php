@@ -18,14 +18,39 @@ abstract class Auth implements Base {
 		$this->userman = $userman;
 	}
 
-	public function install() {
+	/**
+	 * Get information about this authentication driver
+	 * @param  object $userman The userman object
+	 * @param  object $freepbx The FreePBX BMO object
+	 * @return array          Array of information about this driver
+	 */
+	public static function getInfo($userman, $freepbx) {
+		return array();
+	}
+
+	/**
+	 * Get the configuration display of the authentication driver
+	 * @param  object $userman The userman object
+	 * @param  object $freepbx The FreePBX BMO object
+	 * @return string          html display data
+	 */
+	public static function getConfig($userman, $freepbx) {
+		return '';
+	}
+
+	/**
+	 * Save the configuration about the authentication driver
+	 * @param  object $userman The userman object
+	 * @param  object $freepbx The FreePBX BMO object
+	 * @return mixed          Return true if valid. Otherwise return error string
+	 */
+	public static function saveConfig($userman, $freepbx) {
 
 	}
 
-	public function uninstall() {
-		
-	}
-
+	/**
+	 * Return an array of permissions for this adaptor
+	 */
 	public function getPermissions() {
 		return array(
 			"addGroup" => true,

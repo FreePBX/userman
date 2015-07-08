@@ -34,43 +34,25 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$this->switchAuth($this->getConfig('auth'));
 	}
 
-	private function switchAuth($auth = 'freepbx') {
-		$this->getAuths();
-		if(!empty($auth)) {
-			$class = 'FreePBX\modules\Userman\Auth\\'.$auth;
-			try {
-				$this->auth = new $class($this, $this->FreePBX);
-			} catch (\Exception $e) {
-				//there was an error. Report it but set everything back
-				dbug($e->getMessage());
-				$this->setConfig('auth', 'freepbx');
-				$this->auth = new Userman\Auth\Freepbx($this, $this->FreePBX);
-			}
-		} else {
-			$this->setConfig('auth', 'freepbx');
-			$this->auth = new Userman\Auth\Freepbx($this, $this->FreePBX);
-		}
+	/**
+	 * Return the active authentication object
+	 * @return object The authentication object
+	 */
+	public function getAuthObject() {
+		return $this->auth;
 	}
 
-	private function getAuths() {
-		if(!empty($this->auths)) {
-			return $this->auths;
-		}
-		foreach(glob(__DIR__."/functions.inc/auth/modules/*.php") as $auth) {
-			$name = basename($auth, ".php");
-			if(!class_exists('FreePBX\modules\Userman\Auth\\'.$name)) {
-				include(__DIR__."/functions.inc/auth/modules/".$name.".php");
-				$this->auths[] = $name;
-			}
-		}
-		return $this->auths;
-	}
-
+	/**
+	 * Search for users
+	 * @param  string $query   The query string
+	 * @param  array $results Array of results (note that this is pass-by-ref)
+	 */
 	public function search($query, &$results) {
 		if(!ctype_digit($query)) {
-			$sql = "SELECT * FROM ".$this->userTable." WHERE username LIKE :query or description LIKE :query or fname LIKE :query or lname LIKE :query or displayname LIKE :query or title LIKE :query or company LIKE :query or department LIKE :query or email LIKE :query";
+			$auth = $this->getConfig('auth');
+			$sql = "SELECT * FROM ".$this->userTable." WHERE auth = :auth AND (username LIKE :query or description LIKE :query or fname LIKE :query or lname LIKE :query or displayname LIKE :query or title LIKE :query or company LIKE :query or department LIKE :query or email LIKE :query)";
 			$sth = $this->db->prepare($sql);
-			$sth->execute(array("query" => "%".$query."%"));
+			$sth->execute(array("auth" => $auth, "query" => "%".$query."%"));
 			$rows = $sth->fetchAll(\PDO::FETCH_ASSOC);
 			foreach($rows as $entry) {
 				$entry['displayname'] = !empty($entry['displayname']) ? $entry['displayname'] : trim($entry['fname'] . " " . $entry['lname']);
@@ -80,7 +62,13 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		}
 	}
 
-	function create() {
+	/**
+	 * Old create object
+	 * Dont use this unless you know what you are doing
+	 * Accessibility of Userman should be done through BMO
+	 * @return object Userman Object
+	 */
+	public function create() {
 		static $obj;
 		if (!isset($obj) || !is_object($obj)) {
 			$obj = new \FreePBX\modules\Userman();
@@ -89,7 +77,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	}
 
 	public function install() {
-		//Change login type to usermanager is installed.
+		//Change login type to usermanager if installed.
 		if(\FreePBX::Config()->get('AUTHTYPE') == "database") {
 			\FreePBX::Config()->update('AUTHTYPE','usermanager');
 		}
@@ -110,6 +98,10 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	public function writeConfig($conf){
 	}
 
+	/**
+	 * Quick create display
+	 * @return array The array of the display
+	 */
 	public function getQuickCreateDisplay() {
 		return array(
 			1 => array(
@@ -121,11 +113,11 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	}
 
 	/**
-	* Quick Create hook
-	* @param string $tech      The device tech
-	* @param int $extension The extension number
-	* @param array $data      The associated data
-	*/
+	 * Quick Create hook
+	 * @param string $tech      The device tech
+	 * @param int $extension The extension number
+	 * @param array $data      The associated data
+	 */
 	public function processQuickCreate($tech, $extension, $data) {
 		if($data['um'] == "yes") {
 			$pass = md5(uniqid());
@@ -310,7 +302,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 					$auths = array();
 					foreach($this->getAuths() as $auth) {
 						$class = 'FreePBX\modules\Userman\Auth\\'.$auth;
-						$ret = $class::saveConfig($this);
+						$ret = $class::saveConfig($this, $this->FreePBX);
 						if($ret !== true) {
 							//error
 						}
@@ -525,8 +517,8 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 				$auths = array();
 				foreach($this->getAuths() as $auth) {
 					$class = 'FreePBX\modules\Userman\Auth\\'.$auth;
-					$auths[$auth] = $class::getInfo();
-					$auths[$auth]['html'] = $class::getConfig($this);
+					$auths[$auth] = $class::getInfo($this, $this->FreePBX);
+					$auths[$auth]['html'] = $class::getConfig($this, $this->FreePBX);
 				}
 
 				$emailbody = $this->getGlobalsetting('emailbody');
@@ -809,6 +801,46 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$this->callHooks('delGroup',array("id" => $gid));
 		$this->delGroup($id);
 		return $status;
+	}
+
+	/**
+	 * Switch the authentication engine
+	 * @param  string $auth The authentication engine name, will default to freepbx
+	 */
+	private function switchAuth($auth = 'freepbx') {
+		$this->getAuths();
+		if(!empty($auth)) {
+			$class = 'FreePBX\modules\Userman\Auth\\'.$auth;
+			try {
+				$this->auth = new $class($this, $this->FreePBX);
+			} catch (\Exception $e) {
+				//there was an error. Report it but set everything back
+				dbug($e->getMessage());
+				$this->setConfig('auth', 'freepbx');
+				$this->auth = new Userman\Auth\Freepbx($this, $this->FreePBX);
+			}
+		} else {
+			$this->setConfig('auth', 'freepbx');
+			$this->auth = new Userman\Auth\Freepbx($this, $this->FreePBX);
+		}
+	}
+
+	/**
+	 * Get all Authenication engines
+	 * @return array Array of valid authentication engines
+	 */
+	private function getAuths() {
+		if(!empty($this->auths)) {
+			return $this->auths;
+		}
+		foreach(glob(__DIR__."/functions.inc/auth/modules/*.php") as $auth) {
+			$name = basename($auth, ".php");
+			if(!class_exists('FreePBX\modules\Userman\Auth\\'.$name)) {
+				include(__DIR__."/functions.inc/auth/modules/".$name.".php");
+				$this->auths[] = $name;
+			}
+		}
+		return $this->auths;
 	}
 
 	/**
@@ -1682,109 +1714,123 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	}
 
 	public function bulkhandlerGetTypes() {
-		return array(
-			'usermanusers' => array(
+		$final = array();
+		if($this->getAuthPermission['addGroup']) {
+			$final['usermanusers'] = array(
 				'name' => _('User Manager Users'),
 				'description' => _('User Manager Users')
-			),
-			'usermangroups' => array(
+			);
+		}
+		if($this->getAuthPermission['addUser']) {
+			$final['usermangroups'] = array(
 				'name' => _('User Manager Groups'),
 				'description' => _('User Manager Groups')
-			),
-		);
-	}
-
-	public function bulkhandlerGetHeaders($type) {
-		switch ($type) {
-		case 'usermanusers':
-			$headers = array(
-				'username' => array(
-                                        'required' => true,
-                                        'identifier' => _('Login Name'),
-                                        'description' => _('Login Name'),
-				),
-				'password' => array(
-                                        'required' => true,
-                                        'identifier' => _('Password'),
-                                        'description' => _('Password - plaintext'),
-				),
-				'default_extension' => array(
-                                        'required' => true,
-                                        'identifier' => _('Primary Extension'),
-                                        'description' => _('Primary Linked Extension'),
-				),
-				'description' => array(
-                                        'identifier' => _('Description'),
-                                        'description' => _('Description'),
-				),
-				'fname' => array(
-                                        'identifier' => _('First Name'),
-                                        'description' => _('First Name'),
-				),
-				'lname' => array(
-                                        'identifier' => _('Last Name'),
-                                        'description' => _('Last Name'),
-				),
-				'displayname' => array(
-                                        'identifier' => _('Display Name'),
-                                        'description' => _('Display Name'),
-				),
-				'title' => array(
-                                        'identifier' => _('Title'),
-                                        'description' => _('Title'),
-				),
-				'company' => array(
-                                        'identifier' => _('Company'),
-                                        'description' => _('Company'),
-				),
-				'department' => array(
-                                        'identifier' => _('Department'),
-                                        'description' => _('Department'),
-				),
-				'email' => array(
-                                        'identifier' => _('Email Address'),
-                                        'description' => _('Email Address'),
-				),
-				'cell' => array(
-                                        'identifier' => _('Cell Phone Number'),
-                                        'description' => _('Cell Phone Number'),
-				),
-				'work' => array(
-                                        'identifier' => _('Work Phone Number'),
-                                        'description' => _('Work Phone Number'),
-				),
-				'home' => array(
-                                        'identifier' => _('Home Phone Number'),
-                                        'description' => _('Home Phone Number'),
-				),
-				'fax' => array(
-                                        'identifier' => _('Fax Phone Number'),
-                                        'description' => _('Fax Phone Number'),
-				),
 			);
-
-			return $headers;
-		case 'usermangroups':
-			$headers = array(
-				'groupname' => array(
-                                        'required' => true,
-                                        'identifier' => _('Group Name'),
-                                        'description' => _('Group Name'),
-				),
-				'description' => array(
-                                        'identifier' => _('Description'),
-                                        'description' => _('Description'),
-				),
-				'users' => array(
-                                        'identifier' => _('User List'),
-                                        'description' => _('Comma delimited list of users'),
-				),
-			);
-
-			return $headers;
 		}
 	}
 
+	/**
+	 * Get headers for the bulk handler
+	 * @param  string $type The type of bulk handler
+	 * @return array       Array of headers
+	 */
+	public function bulkhandlerGetHeaders($type) {
+		switch ($type) {
+			case 'usermanusers':
+				$headers = array(
+					'username' => array(
+						'required' => true,
+						'identifier' => _('Login Name'),
+						'description' => _('Login Name'),
+					),
+					'password' => array(
+						'required' => true,
+						'identifier' => _('Password'),
+						'description' => _('Password - plaintext'),
+					),
+					'default_extension' => array(
+						'required' => true,
+						'identifier' => _('Primary Extension'),
+						'description' => _('Primary Linked Extension'),
+					),
+					'description' => array(
+						'identifier' => _('Description'),
+						'description' => _('Description'),
+					),
+					'fname' => array(
+						'identifier' => _('First Name'),
+						'description' => _('First Name'),
+					),
+					'lname' => array(
+						'identifier' => _('Last Name'),
+						'description' => _('Last Name'),
+					),
+					'displayname' => array(
+						'identifier' => _('Display Name'),
+						'description' => _('Display Name'),
+					),
+					'title' => array(
+						'identifier' => _('Title'),
+						'description' => _('Title'),
+					),
+					'company' => array(
+						'identifier' => _('Company'),
+						'description' => _('Company'),
+					),
+					'department' => array(
+						'identifier' => _('Department'),
+						'description' => _('Department'),
+					),
+					'email' => array(
+						'identifier' => _('Email Address'),
+						'description' => _('Email Address'),
+					),
+					'cell' => array(
+						'identifier' => _('Cell Phone Number'),
+						'description' => _('Cell Phone Number'),
+					),
+					'work' => array(
+						'identifier' => _('Work Phone Number'),
+						'description' => _('Work Phone Number'),
+					),
+					'home' => array(
+						'identifier' => _('Home Phone Number'),
+						'description' => _('Home Phone Number'),
+					),
+					'fax' => array(
+						'identifier' => _('Fax Phone Number'),
+						'description' => _('Fax Phone Number'),
+					),
+				);
+
+				return $headers;
+			case 'usermangroups':
+				$headers = array(
+					'groupname' => array(
+						'required' => true,
+						'identifier' => _('Group Name'),
+						'description' => _('Group Name'),
+					),
+					'description' => array(
+						'identifier' => _('Description'),
+						'description' => _('Description'),
+					),
+					'users' => array(
+						'identifier' => _('User List'),
+						'description' => _('Comma delimited list of users'),
+					),
+				);
+
+				return $headers;
+		}
+	}
+
+	/**
+	 * Validate Bulk Handler
+	 * @param  string $type    The type of bulk handling
+	 * @param  array $rawData Raw data of array
+	 * @return array          Full blown status
+	 */
 	public function bulkhandlerValidate($type, $rawData) {
 		$ret = NULL;
 
@@ -1807,135 +1853,158 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		return $ret;
 	}
 
+	/**
+	 * Actually import the users
+	 * @param  string $type    The type of import
+	 * @param  array $rawData The raw data as an array
+	 * @return array          Full blown status
+	 */
 	public function bulkhandlerImport($type, $rawData) {
 		$ret = NULL;
 
 		switch ($type) {
 		case 'usermanusers':
-			foreach ($rawData as $data) {
-				if (empty($data['username'])) {
-					return array("status" => false, "message" => _("username is required."));
-				}
-				if (empty($data['password'])) {
-					return array("status" => false, "message" => _("password is required."));
-				}
-				if (empty($data['default_extension'])) {
-					return array("status" => false, "message" => _("default_extension is required."));
+			if($this->getAuthPermission['addUser']) {
+				foreach ($rawData as $data) {
+					if (empty($data['username'])) {
+						return array("status" => false, "message" => _("username is required."));
+					}
+					if (empty($data['password'])) {
+						return array("status" => false, "message" => _("password is required."));
+					}
+					if (empty($data['default_extension'])) {
+						return array("status" => false, "message" => _("default_extension is required."));
+					}
+
+					$username = $data['username'];
+					$password = $data['password'];
+					$default_extension = $data['default_extension'];
+					$description = !empty($data['description']) ? $data['description'] : null;
+
+					$extraData = array(
+						'fname' => isset($data['fname']) ? $data['fname'] : null,
+						'lname' => isset($data['lname']) ? $data['lname'] : null,
+						'displayname' => isset($data['displayname']) ? $data['displayname'] : null,
+						'title' => isset($data['title']) ? $data['title'] : null,
+						'company' => isset($data['company']) ? $data['company'] : null,
+						'department' => isset($data['department']) ? $data['department'] : null,
+						'email' => isset($data['email']) ? $data['email'] : null,
+						'cell' => isset($data['cell']) ? $data['cell'] : null,
+						'work' => isset($data['work']) ? $data['work'] : null,
+						'home' => isset($data['home']) ? $data['home'] : null,
+						'fax' => isset($data['fax']) ? $data['fax'] : null,
+					);
+
+					$existing = $this->getUserByUsername($username);
+					if ($existing) {
+						try {
+							$status = $this->updateUser($existing['id'], $username, $username, $default_extension, $description, $extraData, $password);
+						} catch (\Exception $e) {
+							return array("status" => false, "message" => $e->getMessage());
+						}
+						if (!$status['status']) {
+							$ret = array(
+								'status' => false,
+								'message' => $status['message'],
+							);
+							return $ret;
+						}
+					} else {
+						try {
+							$status = $this->addUser($username, $password, $default_extension, $description, $extraData, true);
+						} catch (\Exception $e) {
+							return array("status" => false, "message" => $e->getMessage());
+						}
+						if (!$status['status']) {
+							$ret = array(
+								'status' => false,
+								'message' => $status['message'],
+							);
+							return $ret;
+						}
+					}
+
+					break;
 				}
 
-				$username = $data['username'];
-				$password = $data['password'];
-				$default_extension = $data['default_extension'];
-				$description = !empty($data['description']) ? $data['description'] : null;
-
-				$extraData = array(
-					'fname' => isset($data['fname']) ? $data['fname'] : null,
-					'lname' => isset($data['lname']) ? $data['lname'] : null,
-					'displayname' => isset($data['displayname']) ? $data['displayname'] : null,
-					'title' => isset($data['title']) ? $data['title'] : null,
-					'company' => isset($data['company']) ? $data['company'] : null,
-					'department' => isset($data['department']) ? $data['department'] : null,
-					'email' => isset($data['email']) ? $data['email'] : null,
-					'cell' => isset($data['cell']) ? $data['cell'] : null,
-					'work' => isset($data['work']) ? $data['work'] : null,
-					'home' => isset($data['home']) ? $data['home'] : null,
-					'fax' => isset($data['fax']) ? $data['fax'] : null,
+				needreload();
+				$ret = array(
+					'status' => true,
 				);
-
-				$existing = $this->getUserByUsername($username);
-				if ($existing) {
-					try {
-						$status = $this->updateUser($existing['id'], $username, $username, $default_extension, $description, $extraData, $password);
-					} catch (\Exception $e) {
-						return array("status" => false, "message" => $e->getMessage());
-					}
-					if (!$status['status']) {
-						$ret = array(
-							'status' => false,
-							'message' => $status['message'],
-						);
-						return $ret;
-					}
-				} else {
-					try {
-						$status = $this->addUser($username, $password, $default_extension, $description, $extraData, true);
-					} catch (\Exception $e) {
-						return array("status" => false, "message" => $e->getMessage());
-					}
-					if (!$status['status']) {
-						$ret = array(
-							'status' => false,
-							'message' => $status['message'],
-						);
-						return $ret;
-					}
-				}
-
-				break;
+			} else {
+				$ret = array(
+					'status' => false,
+					'message' => _("This authentication driver does not allow importing"),
+				);
 			}
-
-			needreload();
-			$ret = array(
-				'status' => true,
-			);
-
-			break;
+		break;
 		case 'usermangroups':
-			foreach ($rawData as $data) {
-				if (empty($data['groupname'])) {
-					return array("status" => false, "message" => _("groupname is required."));
-				}
+			if($this->getAuthPermission['addGroup']) {
+				foreach ($rawData as $data) {
+					if (empty($data['groupname'])) {
+						return array("status" => false, "message" => _("groupname is required."));
+					}
 
-				$groupname = $data['groupname'];
-				$description = !empty($data['description']) ? $data['description'] : null;
+					$groupname = $data['groupname'];
+					$description = !empty($data['description']) ? $data['description'] : null;
 
-				$users = array();
-				if (!empty($data['users'])) {
-					$usernames = explode(',', $data['users']);
-					foreach ($usernames as $username) {
-						$user = $this->getUserByUsername($username);
-						if ($user) {
-							$users[] = $user['id'];
+					$users = array();
+					if (!empty($data['users'])) {
+						$usernames = explode(',', $data['users']);
+						foreach ($usernames as $username) {
+							$user = $this->getUserByUsername($username);
+							if ($user) {
+								$users[] = $user['id'];
+							}
+						}
+					}
+
+					$existing = $this->getGroupByUsername($groupname);
+					if ($existing) {
+						try {
+							$status = $this->updateGroup($existing['id'], $groupname, $groupname, $description, $users);
+						} catch (\Exception $e) {
+							return array("status" => false, "message" => $e->getMessage());
+						}
+						if (!$status['status']) {
+							$ret = array(
+								'status' => false,
+								'message' => $status['message'],
+							);
+							return $ret;
+						}
+					} else {
+						try {
+							$status = $this->addGroup($groupname, $description, $users);
+						} catch (\Exception $e) {
+							return array("status" => false, "message" => $e->getMessage());
+						}
+						if (!$status['status']) {
+							$ret = array(
+								'status' => false,
+								'message' => $status['message'],
+							);
+							return $ret;
 						}
 					}
 				}
-
-				$existing = $this->getGroupByUsername($groupname);
-				if ($existing) {
-					try {
-						$status = $this->updateGroup($existing['id'], $groupname, $groupname, $description, $users);
-					} catch (\Exception $e) {
-						return array("status" => false, "message" => $e->getMessage());
-					}
-					if (!$status['status']) {
-						$ret = array(
-							'status' => false,
-							'message' => $status['message'],
-						);
-						return $ret;
-					}
-				} else {
-					try {
-						$status = $this->addGroup($groupname, $description, $users);
-					} catch (\Exception $e) {
-						return array("status" => false, "message" => $e->getMessage());
-					}
-					if (!$status['status']) {
-						$ret = array(
-							'status' => false,
-							'message' => $status['message'],
-						);
-						return $ret;
-					}
-				}
-
-				break;
+			} else {
+				$ret = array(
+					'status' => false,
+					'message' => _("This authentication driver does not allow importing"),
+				);
 			}
+		break;
 		}
 
 		return $ret;
 	}
 
+	/**
+	 * Bulk handler export
+	 * @param  string $type The type of bulk handler
+	 * @return array       Array of data to be exporting
+	 */
 	public function bulkhandlerExport($type) {
 		$data = NULL;
 
