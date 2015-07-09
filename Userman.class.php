@@ -1715,13 +1715,13 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 
 	public function bulkhandlerGetTypes() {
 		$final = array();
-		if($this->getAuthPermission['addGroup']) {
+		if($this->getAuthPermission('addGroup')) {
 			$final['usermanusers'] = array(
 				'name' => _('User Manager Users'),
 				'description' => _('User Manager Users')
 			);
 		}
-		if($this->getAuthPermission['addUser']) {
+		if($this->getAuthPermission('addUser')) {
 			$final['usermangroups'] = array(
 				'name' => _('User Manager Groups'),
 				'description' => _('User Manager Groups')
@@ -1864,7 +1864,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 
 		switch ($type) {
 		case 'usermanusers':
-			if($this->getAuthPermission['addUser']) {
+			if($this->getAuthPermission('addUser')) {
 				foreach ($rawData as $data) {
 					if (empty($data['username'])) {
 						return array("status" => false, "message" => _("username is required."));
@@ -1939,7 +1939,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 			}
 		break;
 		case 'usermangroups':
-			if($this->getAuthPermission['addGroup']) {
+			if($this->getAuthPermission('addGroup')) {
 				foreach ($rawData as $data) {
 					if (empty($data['groupname'])) {
 						return array("status" => false, "message" => _("groupname is required."));

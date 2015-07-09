@@ -12,6 +12,7 @@
 		Modules like iSymphony, Rest API and User Control Panel use this module to manage their users.
 	</description>
 	<changelog>
+		*13.0.6* FREEPBX-9653 Bulk handler errors
 		*13.0.5* Finalize authentication engines. Now supporting Microsoft Active Directory
 		*13.0.4* Set priority of bulkhandler hooks
 		*13.0.3* Add hooks for bulkhandler module
