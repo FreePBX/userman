@@ -1,6 +1,6 @@
 <?php
 out('Remove all User Management tables');
-$tables = array('freepbx_users', 'freepbx_users_settings');
+$tables = array('userman_users', 'userman_users_settings', 'userman_groups', 'userman_groups_settings');
 foreach ($tables as $table) {
 	$sql = "DROP TABLE IF EXISTS {$table}";
 	$result = $db->query($sql);
