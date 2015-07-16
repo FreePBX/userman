@@ -6,7 +6,7 @@ if(!empty($message)){
 ?>
 <div class="container-fluid">
 	<div class="row">
-		<div class="col-sm-9">
+		<div class="col-sm-12">
 			<div class="fpbx-container">
 				 <div class="display no-border">
 					<h1><?php echo _("User Manager")?></h1>
@@ -142,8 +142,10 @@ if(!empty($message)){
 				</div>
 			</div>
 		</div>
-		<div class="col-sm-3 hidden-xs bootnav">
-			<?php echo load_view(dirname(__FILE__).'/rnav.php',array("users"=>$users,"permissions"=>$permissions)); ?>
-		</div>
 	</div>
 </div>
+<script type="text/javascript">
+	if ( window.location.hash.length > 1) {
+		$(window.location.hash).tab('show');
+	}
+</script>
