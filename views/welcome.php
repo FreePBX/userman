@@ -146,8 +146,3 @@
 		</div>
 	</div>
 </div>
-<script type="text/javascript">
-	if ( window.location.hash.length > 1) {
-		$(window.location.hash).tab('show');
-	}
-</script>

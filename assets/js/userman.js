@@ -155,15 +155,3 @@ $("#pwsub").on("click", function(){
 		}
 	});
 });
-
-
-$( "form" ).submit(function() {
-	if(!this.checkValidity()){
-		for(i = 0; i < this.elements.length; i++){
-			if(!this.elements[i].validity.valid){
-				warnInvalid($(this.elements[i]));
-			}
-		}
-		return false;
-	};
-});
