@@ -579,7 +579,6 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	public function ajaxRequest($req, $setting){
 		switch($req){
 			case "getuserfields":
-			case "delUser":
 			case "updatePassword":
 			case "delete":
 				return true;
@@ -604,10 +603,6 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 					return $user;
 				}
 			break;
-			case "delUser":
-				$uid = $request['id'];
-				return $this->deleteUserByID($uid);
-			break;
 			case "updatePassword":
 				$uid = $request['id'];
 				$newpass = $request['newpass'];
@@ -617,6 +612,13 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 			break;
 			case 'delete':
 				switch ($_REQUEST['type']) {
+					case 'groups':
+						$ret = array();
+						foreach($_REQUEST['extensions'] as $ext){
+							$ret[$ext] = $this->deleteGroupByGID($ext);
+						}
+						return array('status' => true, 'message' => $ret);
+					break;
 					case 'users':
 						$ret = array();
 						foreach($_REQUEST['extensions'] as $ext){
@@ -799,7 +801,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 			return $status;
 		}
 		$this->callHooks('delGroup',array("id" => $gid));
-		$this->delGroup($id);
+		$this->delGroup($gid);
 		return $status;
 	}
 

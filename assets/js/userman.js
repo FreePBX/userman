@@ -1,37 +1,28 @@
-var deleteExts = [];
-$(".actions .fa-times").click(function() {
-	var id = $(this).data("id"), section = $(this).data("section"), type = $(this).data("type");
-	if(confirm(sprtinf(_("Are you sure you wish to delete this %s?"),type))) {
-		$.post( "ajax.php", {command: "delete", module: "userman", extensions: [id], type: "extensions"}, function(data) {
-			if(data.status) {
-				btn.find("span").text(_("Delete"));
-				$("#table-"+section).bootstrapTable('remove', {
-					field: "id",
-					values: deleteExts
-				});
-			} else {
-				btn.find("span").text(_("Delete"));
-				btn.prop("disabled", true);
-				alert(data.message);
-			}
-		});
-	}
-});
+var deleteExts = {
+	'users': [],
+	'groups': []
+},
+translations = {
+	'user': _('user'),
+	'users': _('users'),
+	'group': _('group'),
+	'groups': _('groups')
+};
 $(".btn-remove").click(function() {
 	var type = $(this).data("type"), btn = $(this), section = $(this).data("section");
 	var chosen = $("#table-"+section).bootstrapTable("getSelections");
 	$(chosen).each(function(){
-		deleteExts.push(this['id']);
+		deleteExts[type].push(this['id']);
 	});
-	if(confirm(sprintf(_("Are you sure you wish to delete this %s?"),type))) {
+	if(confirm(sprintf(_("Are you sure you wish to delete these %s?"),translations[type]))) {
 		btn.find("span").text(_("Deleting..."));
 		btn.prop("disabled", true);
-		$.post( "ajax.php", {command: "delete", module: "userman", extensions: deleteExts, type: type}, function(data) {
+		$.post( "ajax.php", {command: "delete", module: "userman", extensions: deleteExts[type], type: type}, function(data) {
 			if(data.status) {
 				btn.find("span").text(_("Delete"));
 				$("#table-"+section).bootstrapTable('remove', {
 					field: "id",
-					values: deleteExts
+					values: deleteExts[type]
 				});
 			} else {
 				btn.find("span").text(_("Delete"));
@@ -41,16 +32,41 @@ $(".btn-remove").click(function() {
 		});
 	}
 });
+$("table").on("post-body.bs.table", function () {
+	$(".actions .fa-trash-o").off("click");
+	$(".actions .fa-trash-o").click(function() {
+		var id = $(this).data("id"), section = $(this).data("section"), type = $(this).parents("table").data("type");
+		if(confirm(sprintf(_("Are you sure you wish to delete this %s?"),translations[type]))) {
+			$.post( "ajax.php", {command: "delete", module: "userman", extensions: [id], type: type}, function(data) {
+				if(data.status) {
+					$("#table-"+section).bootstrapTable('remove', {
+						field: "id",
+						values: [id.toString()]
+					});
+				} else {
+					btn.find("span").text(_("Delete"));
+					btn.prop("disabled", true);
+					alert(data.message);
+				}
+			});
+		}
+	});
+});
 $("table").on("page-change.bs.table", function () {
 	$(".btn-remove").prop("disabled", true);
-	deleteExts = [];
+	deleteExts['users'] = [];
+	deleteExts['groups'] = [];
 });
 $("table").on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
-	var toolbar = $(this).data("toolbar"), button = $(toolbar).find(".btn-remove"), buttone = $(toolbar).find(".btn-send"), id = $(this).prop("id");
+	var toolbar = $(this).data("toolbar"),
+			button = $(toolbar).find(".btn-remove"),
+			buttone = $(toolbar).find(".btn-send"),
+			id = $(this).prop("id"),
+			type = $(this).data("type");
 	button.prop('disabled', !$("#"+id).bootstrapTable('getSelections').length);
 	buttone.prop('disabled', !$("#"+id).bootstrapTable('getSelections').length);
-	deleteExts = $.map($("#"+id).bootstrapTable('getSelections'), function (row) {
-		return row.extension;
+	deleteExts[type] = $.map($("#"+id).bootstrapTable('getSelections'), function (row) {
+		return row.id;
   });
 });
 
@@ -103,82 +119,6 @@ $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
 	window.location.hash = e.target.hash.replace();
 });
 
-//This does the bulk delete...
-$("#delchecked").on("click",function(){
-	$('input[id^="actonthis"]').each(function(){
-		if($(this).is(":checked")){
-			var rowid = $(this).val();
-			var row = $('#row'+ rowid);
-			$.ajax({
-				url: "/admin/ajax.php",
-				data: {
-					module:'userman',
-					command:'delUser',
-					id:rowid
-				},
-				type: "GET",
-				dataType: "json",
-				success: function(data){
-					if(data.status === true){
-						row.fadeOut(2000,function(){
-							$(this).remove();
-						});
-					}else{
-						warnInvalid(row,data.message);
-					}
-				},
-				error: function(xhr, status, e){
-					console.dir(xhr);
-					console.log(status);
-					console.log(e);
-				}
-			});
-		}
-	});
-	//Reset ui elements
-	//hide the action element in botnav
-	$("#delchecked").addClass("hidden");
-	//no boxes should be checked but if they are uncheck em.
-	$('input[id^="actonthis"]').each(function(){
-		$(this).prop('checked', false);
-	});
-	//Uncheck the "check all" box
-	$('#action-toggle-all').prop('checked', false);
-});
-
-//Trashcan Action
-$(document).on("click", 'a[id^="del"]',function(){
-	var cmessage = _("Are you sure you want to delete this user?");
-	if(!confirm(cmessage)){
-		return false;
-	}
-	var uid = $(this).data('uid');
-	var row = $('#row'+uid);
-	$.ajax({
-		url: "/admin/ajax.php",
-		data: {
-			module:'userman',
-			command:'delUser',
-			id:uid
-		},
-		type: "GET",
-		dataType: "json",
-		success: function(data){
-			if(data.status === true){
-				row.fadeOut(2000,function(){
-					$(this).remove();
-				});
-			}else{
-				warnInvalid(row,data.message);
-			}
-		},
-		error: function(xhr, status, e){
-			console.dir(xhr);
-			console.log(status);
-			console.log(e);
-		}
-	});
-});
 //Making Password Modal work
 $(document).on("click", 'a[id^="pwmlink"]', function(){
 	var pwuid = $(this).data('pwuid');
@@ -189,7 +129,7 @@ $(document).on("click", 'a[id^="pwmlink"]', function(){
 });
 $("#pwsub").on("click", function(){
 	var button = $(this);
-	button.html('Updating');
+	button.html(_('Updating'));
 	button.attr("disabled", true);
 	var uid = $("#pwuid").val();
 	var pass = $("#password").val();

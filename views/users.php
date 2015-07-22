@@ -1,12 +1,10 @@
 <?php
 if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'showuser'){
 	$heading = '<h1>' . _("Edit User") . '</h1>';
-	$formaction = 'config.php?display=userman&action=showuser&user=' . $user['id'];
 }else{
 	$heading = '<h1>' . _("Add User") . '</h1>';
-	$formaction = 'config.php?display=userman';
-
 }
+$formaction = 'config.php?display=userman#users';
 
 echo $heading;
 ?>

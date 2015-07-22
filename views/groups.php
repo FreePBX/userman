@@ -1,12 +1,10 @@
 <?php
 if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'showgroup'){
 	$heading = '<h1>' . _("Edit Group") . '</h1>';
-	$formaction = 'config.php?display=userman&action=showgroup&group=' . $group['id'];
 }else{
 	$heading = '<h1>' . _("Add Group") . '</h1>';
-	$formaction = 'config.php?display=userman';
-
 }
+$formaction = 'config.php?display=userman#groups';
 
 echo $heading;
 ?>
@@ -19,17 +17,22 @@ echo $heading;
 					<div class="alert alert-<?php echo $message['type']?>"><?php echo $message['message']?></div>
 				<?php } ?>
 				<div class="display no-border">
-					<div class="container-fluid">
 						<div role="tabpanel">
-							<ul class="nav nav-tabs" role="tablist">
-								<li role="presentation" class="active"><a href="#usermanlogin" aria-controls="usermanlogin" role="tab" data-toggle="tab"><?php echo _("Group Details")?></a></li>
-								<?php if(\FreePBX::Config()->get('AUTHTYPE') == "usermanager") { ?>
-									<li role="presentation"><a href="#pbx" aria-controls="pbx" role="tab" data-toggle="tab"><?php echo sprintf(_("%s Administration GUI"),$brand)?></a></li>
-								<?php } ?>
-								<?php foreach($sections as $section) { ?>
-									<li role="presentation"><a href="#usermanhook<?php echo $section['rawname']?>" aria-controls="usermanhook<?php echo $section['rawname']?>" role="tab" data-toggle="tab"><?php echo $section['title']?></a></li>
-								<?php } ?>
-							</ul>
+							<div class="nav-container">
+								<div class="scroller scroller-left"><i class="glyphicon glyphicon-chevron-left"></i></div>
+								<div class="scroller scroller-right"><i class="glyphicon glyphicon-chevron-right"></i></div>
+								<div class="wrapper">
+									<ul class="nav nav-tabs list" role="tablist">
+										<li role="presentation" class="active"><a href="#usermanlogin" aria-controls="usermanlogin" role="tab" data-toggle="tab"><?php echo _("Group Details")?></a></li>
+										<?php if(\FreePBX::Config()->get('AUTHTYPE') == "usermanager") { ?>
+											<li role="presentation"><a href="#pbx" aria-controls="pbx" role="tab" data-toggle="tab"><?php echo sprintf(_("%s Administration GUI"),$brand)?></a></li>
+										<?php } ?>
+										<?php foreach($sections as $section) { ?>
+											<li role="presentation"><a href="#usermanhook<?php echo $section['rawname']?>" aria-controls="usermanhook<?php echo $section['rawname']?>" role="tab" data-toggle="tab"><?php echo $section['title']?></a></li>
+										<?php } ?>
+									</ul>
+								</div>
+							</div>
 						</div>
 						<form class="fpbx-submit" autocomplete="off" name="editM" id="editM" action="<?php echo $formaction ?>" method="post" <?php if(!empty($group['id'])) {?>data-fpbx-delete="config.php?display=userman&amp;action=delgroup&amp;user=<?php echo $group['id']?>"<?php }?> onsubmit="return true;">
 							<input type="hidden" name="type" value="group">
@@ -220,7 +223,6 @@ echo $heading;
 								<?php } ?>
 							</div>
 						</form>
-					</div>
 				</div>
 			</div>
 		</div>

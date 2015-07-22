@@ -254,11 +254,11 @@ abstract class Auth implements Base {
 	* @param int $gid The group ID
 	*/
 	public function deleteGroupByGID($gid) {
-		$user = $this->getUserByID($id);
+		$user = $this->getUserByID($gid);
 		if(!$user) {
 			return array("status" => false, "type" => "danger", "message" => _("Group Does Not Exist"));
 		}
-		$sql = "DELETE FROM ".$this->groupTable." WHERE `gid` = :id";
+		$sql = "DELETE FROM ".$this->groupTable." WHERE `id` = :id";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':id' => $gid));
 

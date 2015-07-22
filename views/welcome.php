@@ -1,9 +1,3 @@
-<?php
-if(!empty($message)){
-	$htmlmessage = '<div class="alert alert-' . $message['type'] . ' fade">' . $message['message'] . '</div>';
-	echo $htmlmessage;
-}
-?>
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-sm-12">
@@ -22,6 +16,9 @@ if(!empty($message)){
 							<p><?php echo sprintf(_('In %s User Manager you can create users that have access to Extensions or Device/User Mode Users and the settings associated with those Devices. For example, a new user can be created that can log into User Control Panel and access the voicemail of 3 other accounts.'),$brand)?></p>
 						</div>
 					</div>
+					<?php if(!empty($message)){ ?>
+						<div class="alert alert-<?php echo $message['type']?>"><?php echo $message['message']?></div>
+					<?php } ?>
 					<div role="tabpanel">
 						<ul class="nav nav-tabs" role="tablist">
 							<li role="presentation" class="active"><a href="#users" aria-controls="users" role="tab" data-toggle="tab"><?php echo _("Users"); ?></a></li>
@@ -46,7 +43,7 @@ if(!empty($message)){
 											<i class="fa fa-envelope-o"></i> <span><?php echo _('Send Email')?></span>
 										</button>
 									</div>
-									<table data-toolbar="#toolbar-users" data-toggle="table" data-pagination="true" data-search="true" class="table table-striped" id="table-users">
+									<table data-toolbar="#toolbar-users" data-toggle="table" data-pagination="true" data-search="true" class="table table-striped" id="table-users" data-type="users">
 										<thead>
 											<tr>
 												<th data-checkbox="true"></th>
@@ -67,16 +64,17 @@ if(!empty($message)){
 													<td><?php echo $row['displayname']?></td>
 													<td><?php echo $row['default_extension']?></td>
 													<td><?php echo $row['description']?></td>
-													<td>
+													<td class="actions">
 														<a href="config.php?display=userman&amp;action=showuser&amp;user=<?php echo $row['id']?>">
 														<i class="fa fa-edit"></i></a>&nbsp;&nbsp;
 														<?php if($permissions['changePassword']) { ?>
 															<a data-toggle="modal" data-pwuid="<?php echo $row['id']?>" data-target="#setpw" id="pwmlink<?php echo $row['id']?>">
-																<i class="fa fa-key"></i></a>&nbsp;&nbsp;
+																<i class="fa fa-key"></i>
+															</a>
 														<?php } ?>
 														<?php if($permissions['removeUser']) { ?>
-															<a href="#" id="del<?php echo $row['id']?>" data-uid="<?php echo $row['id']?>" >
-																<i class="fa fa-trash-o"></i>
+															<a class="clickable">
+																<i class="fa fa-trash-o" data-section="users" data-id="<?php echo $row['id']?>"></i>
 															</a>
 														<?php } ?>
 													</td>
@@ -100,7 +98,7 @@ if(!empty($message)){
 										</button>
 										<?php } ?>
 									</div>
-									<table data-toolbar="#toolbar-groups" data-toggle="table" data-pagination="true" data-search="true" class="table table-striped" id="table-groups">
+									<table data-toolbar="#toolbar-groups" data-toggle="table" data-pagination="true" data-search="true" class="table table-striped" id="table-groups" data-type="groups">
 										<thead>
 											<tr>
 												<th data-checkbox="true"></th>
@@ -119,10 +117,14 @@ if(!empty($message)){
 												<td><?php echo $row['groupname']?></td>
 												<td><?php echo $row['description']?></td>
 												<td><?php echo 5?></td>
-												<td class="actions"><a href="config.php?display=userman&amp;action=showgroup&amp;group=<?php echo $row['id']?>">
-													<i class="fa fa-edit"></i></a>&nbsp;&nbsp;
+												<td class="actions">
+													<a href="config.php?display=userman&amp;action=showgroup&amp;group=<?php echo $row['id']?>">
+														<i class="fa fa-edit"></i>
+													</a>
 													<?php if($permissions['removeGroup']) { ?>
-														<a href="#" id="gdel<?php echo $row['id']?>" data-uid="<?php echo $row['id']?>" ><i class="fa fa-trash-o"></i></a>
+														<a class="clickable">
+															<i class="fa fa-trash-o" data-section="groups" data-id="<?php echo $row['id']?>"></i>
+														</a>
 													<?php } ?>
 													</td>
 												</tr>
