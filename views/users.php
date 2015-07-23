@@ -117,6 +117,32 @@ echo $heading;
 							</div>
 						<?php } ?>
 						<!--END Password-->
+						<div class="element-container">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="row">
+										<div class="form-group">
+											<div class="col-md-3">
+												<label class="control-label" for="group_users"><?php echo _('Groups')?></label>
+												<i class="fa fa-question-circle fpbx-help-icon" data-for="group_users"></i>
+											</div>
+											<div class="col-md-9">
+												<select id="group_users" data-placeholder="Groups" class="form-control chosenmultiselect" name="groups[]" multiple="multiple" <?php echo !$permissions['modifyGroup'] ? 'disabled' : ''?>>
+													<?php foreach($groups as $group) {?>
+														<option value="<?php echo $group['id']?>" <?php echo !empty($user['id']) && in_array($user['id'], $group['users']) ? 'selected' : '' ?>><?php echo $group['groupname']?></option>
+													<?php } ?>
+												</select>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-12">
+									<span id="group_users-help" class="help-block fpbx-help-block"><?php echo _("Which groups this user is in")?></span>
+								</div>
+							</div>
+						</div>
 						<!--Linked Extensions-->
 						<div class="element-container">
 							<div class="row">
@@ -414,32 +440,6 @@ echo $heading;
 							</div>
 						</div>
 						<!--END FAX-->
-						<div class="element-container">
-							<div class="row">
-								<div class="col-md-12">
-									<div class="row">
-										<div class="form-group">
-											<div class="col-md-3">
-												<label class="control-label" for="group_users"><?php echo _('Groups')?></label>
-												<i class="fa fa-question-circle fpbx-help-icon" data-for="group_users"></i>
-											</div>
-											<div class="col-md-9">
-												<select id="group_users" data-placeholder="Groups" class="form-control chosenmultiselect" name="groups[]" multiple="multiple" <?php echo !$permissions['modifyGroup'] ? 'disabled' : ''?>>
-													<?php foreach($groups as $group) {?>
-														<option value="<?php echo $group['id']?>" <?php echo !empty($user['id']) && in_array($user['id'], $group['users']) ? 'selected' : '' ?>><?php echo $group['groupname']?></option>
-													<?php } ?>
-												</select>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-md-12">
-									<span id="group_users-help" class="help-block fpbx-help-block"><?php echo _("Which groups this user is in")?></span>
-								</div>
-							</div>
-						</div>
 						</div>
 						<!--END User Details-->
 						<div role="tabpanel" class="tab-pane display" id="pbx">
