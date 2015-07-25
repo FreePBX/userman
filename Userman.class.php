@@ -4,9 +4,6 @@
 //	Copyright 2013 Schmooze Com Inc.
 //
 namespace FreePBX\modules;
-// Default setting array passed to ajaxRequest
-$setting = array('authenticate' => true, 'allowremote' => false);
-
 class Userman extends \FreePBX_Helpers implements \BMO {
 	private $registeredFunctions = array();
 	private $message = '';
@@ -255,38 +252,40 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 							);
 						}
 					}
-					if($_POST['pbx_login'] != "inherit") {
-						$pbx_login = ($_POST['pbx_login'] == "true") ? true : false;
-						$this->setGlobalSettingByID($ret['id'],'pbx_login',$pbx_login);
-					} else {
-						$this->setGlobalSettingByID($ret['id'],'pbx_login',null);
-					}
+					if(!empty($ret['status'])) {
+						if($_POST['pbx_login'] != "inherit") {
+							$pbx_login = ($_POST['pbx_login'] == "true") ? true : false;
+							$this->setGlobalSettingByID($ret['id'],'pbx_login',$pbx_login);
+						} else {
+							$this->setGlobalSettingByID($ret['id'],'pbx_login',null);
+						}
 
-					if($_POST['pbx_admin'] != "inherit") {
-						$pbx_admin = ($_POST['pbx_admin'] == "true") ? true : false;
-						$this->setGlobalSettingByID($ret['id'],'pbx_admin',$pbx_admin);
-					} else {
-						$this->setGlobalSettingByID($ret['id'],'pbx_admin',null);
-					}
+						if($_POST['pbx_admin'] != "inherit") {
+							$pbx_admin = ($_POST['pbx_admin'] == "true") ? true : false;
+							$this->setGlobalSettingByID($ret['id'],'pbx_admin',$pbx_admin);
+						} else {
+							$this->setGlobalSettingByID($ret['id'],'pbx_admin',null);
+						}
 
-					$this->setGlobalSettingByID($ret['id'],'pbx_low',$_POST['pbx_low']);
-					$this->setGlobalSettingByID($ret['id'],'pbx_high',$_POST['pbx_high']);
+						$this->setGlobalSettingByID($ret['id'],'pbx_low',$_POST['pbx_low']);
+						$this->setGlobalSettingByID($ret['id'],'pbx_high',$_POST['pbx_high']);
 
-					$this->setGlobalSettingByID($ret['id'],'pbx_modules',!empty($_POST['pbx_modules']) ? $_POST['pbx_modules'] : null);
-					if(!empty($_POST['groups'])) {
-						$groups = $this->getAllGroups();
-						foreach($groups as $group) {
-							if(in_array($group['id'],$_POST['groups']) && !in_array($ret['id'],$group['users'])) {
-								$group['users'][] = $ret['id'];
-								$this->updateGroup($group['id'],$group['groupname'], $group['groupname'], $group['description'], $group['users']);
-							} elseif(!in_array($group['id'],$_POST['groups']) && in_array($ret['id'],$group['users'])) {
-								$group['users'] = array_diff($group['users'], array($ret['id']));
-								$this->updateGroup($group['id'],$group['groupname'], $group['groupname'], $group['description'], $group['users']);
+						$this->setGlobalSettingByID($ret['id'],'pbx_modules',!empty($_POST['pbx_modules']) ? $_POST['pbx_modules'] : null);
+						if(!empty($_POST['groups'])) {
+							$groups = $this->getAllGroups();
+							foreach($groups as $group) {
+								if(in_array($group['id'],$_POST['groups']) && !in_array($ret['id'],$group['users'])) {
+									$group['users'][] = $ret['id'];
+									$this->updateGroup($group['id'],$group['groupname'], $group['groupname'], $group['description'], $group['users']);
+								} elseif(!in_array($group['id'],$_POST['groups']) && in_array($ret['id'],$group['users'])) {
+									$group['users'] = array_diff($group['users'], array($ret['id']));
+									$this->updateGroup($group['id'],$group['groupname'], $group['groupname'], $group['description'], $group['users']);
+								}
 							}
 						}
-					}
-					if(isset($_POST['submitsend'])) {
-						$this->sendWelcomeEmail($username, $password);
+						if(isset($_POST['submitsend'])) {
+							$this->sendWelcomeEmail($username, $password);
+						}
 					}
 				break;
 				case 'general':
@@ -581,6 +580,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 			case "getuserfields":
 			case "updatePassword":
 			case "delete":
+			case "email":
 				return true;
 			break;
 			default:
@@ -595,6 +595,16 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	public function ajaxHandler(){
 		$request = $_REQUEST;
 		switch($request['command']){
+			case "email":
+				foreach($_REQUEST['extensions'] as $ext){
+					$user = $this->getUserbyID($ext);
+					if(!empty($user)) {
+						$this->sendWelcomeEmail($user['username']);
+						return array('status' => true);
+					}
+					return array('status' => false, "message" => _("Invalid User"));
+				}
+			break;
 			case "getuserfields":
 				if(empty($request['id'])){
 					print json_encode(_("Error: No id provided"));
@@ -1386,14 +1396,23 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$tokens = $this->getGlobalsetting('passresettoken');
 		$final = array();
 		$time = time();
-		foreach($tokens as $token => $data) {
-			if(!empty($data['time']) &&  $data['valid'] < $time) {
-				continue;
+		if(!empty($tokens)) {
+			foreach($tokens as $token => $data) {
+				if(!empty($data['time']) &&  $data['valid'] < $time) {
+					continue;
+				}
+				$final[$token] = $data;
 			}
-			$final[$token] = $data;
 		}
 		$this->setGlobalsetting('passresettoken',$final);
 		return $final;
+	}
+
+	/**
+	 * Reset all password tokens
+	 */
+	public function resetAllPasswordTokens() {
+		$this->setGlobalsetting('passresettoken',array());
 	}
 
 	/**
@@ -1599,7 +1618,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 */
 	public function sendWelcomeEmail($username, $password =  null) {
 		global $amp_conf;
-        $request = $_REQUEST;
+		$request = $_REQUEST;
 		$user = $this->getUserByUsername($username);
 		if(empty($user) || empty($user['email'])) {
 			return false;
@@ -1621,9 +1640,12 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 			$user['services'] .= $mod . "\n";
 		}
 
+		$request['display'] = !empty($request['display']) ? $request['display'] : "";
 		$mods = $this->FreePBX->Hooks->processHooks($user['id'], $request['display'], array('id' => $user['id'], 'brand' => $user['brand'], 'host' => $user['host'], 'password' => !empty($password)));
-		foreach($mods as $mod) {
-			$user['services'] .= $mod . "\n";
+		foreach($mods as $mod => $items) {
+			foreach($items as $item) {
+				$user['services'] .= $item . "\n";
+			}
 		}
 
 		$dbemail = $this->getGlobalsetting('emailbody');

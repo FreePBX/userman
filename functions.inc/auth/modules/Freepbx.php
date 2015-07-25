@@ -112,7 +112,7 @@ class Freepbx extends Auth {
 		$description = !empty($description) ? $description : null;
 		$user = $this->getUserByUsername($prevUsername);
 		if(!$user || empty($user)) {
-			return array("status" => false, "type" => "danger", "message" => sprintf(_("User '%s' Does Not Exist"),$user));
+			return array("status" => false, "type" => "danger", "message" => sprintf(_("User '%s' Does Not Exist"),$prevUsername));
 		}
 		if(isset($password) && (sha1($password) != $user['password'])) {
 			$sql = "UPDATE ".$this->userTable." SET `username` = :username, `password` = :password, `description` = :description, `default_extension` = :default_extension WHERE `id` = :uid";

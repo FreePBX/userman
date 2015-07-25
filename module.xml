@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>13.0.9</version>
+	<version>13.0.10</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -12,6 +12,7 @@
 		Modules like iSymphony, Rest API and User Control Panel use this module to manage their users.
 	</description>
 	<changelog>
+		*13.0.10* FREEPBX-9832 Dont let userman changes be submitted twice
 		*13.0.9* FREEPBX-9799 bug in JS prevented JS updates
 		*13.0.8* FREEPBX-9732 Fixes broken group and user delete and rnav
 		*13.0.7* Proper uninstall commands

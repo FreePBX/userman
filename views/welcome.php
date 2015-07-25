@@ -66,9 +66,9 @@
 													<td><?php echo $row['description']?></td>
 													<td class="actions">
 														<a href="config.php?display=userman&amp;action=showuser&amp;user=<?php echo $row['id']?>">
-														<i class="fa fa-edit"></i></a>&nbsp;&nbsp;
+														<i class="fa fa-edit"></i></a>
 														<?php if($permissions['changePassword']) { ?>
-															<a data-toggle="modal" data-pwuid="<?php echo $row['id']?>" data-target="#setpw" id="pwmlink<?php echo $row['id']?>">
+															<a data-toggle="modal" data-pwuid="<?php echo $row['id']?>" data-target="#setpw" id="pwmlink<?php echo $row['id']?>" class="clickable">
 																<i class="fa fa-key"></i>
 															</a>
 														<?php } ?>

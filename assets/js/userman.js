@@ -8,6 +8,10 @@ translations = {
 	'group': _('group'),
 	'groups': _('groups')
 };
+$("#email-users").click(function() {
+	$.post( "ajax.php", {command: "email", module: "userman", extensions: deleteExts.users}, function(data) {
+	});
+});
 $(".btn-remove").click(function() {
 	var type = $(this).data("type"), btn = $(this), section = $(this).data("section");
 	var chosen = $("#table-"+section).bootstrapTable("getSelections");
