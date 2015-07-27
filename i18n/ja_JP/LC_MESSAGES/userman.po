@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-02-26 18:46-0500\n"
-"PO-Revision-Date: 2015-07-27 08:56+0200\n"
+"PO-Revision-Date: 2015-07-27 08:57+0200\n"
 "Last-Translator: Kevin <kevin@qloog.com>\n"
 "Language-Team: Japanese "
 "<http://weblate.freepbx.org/projects/freepbx/userman/ja_JP/>\n"
@@ -179,8 +179,8 @@ msgid ""
 "example, a new user can be created that can log into User Control Panel and "
 "access the voicemail of 3 other accounts."
 msgstr ""
-"%s ユーザーの管理では、ユーザーを作成して、そのユーザーに制御できる内線／デバイスを設定できます。例えば、新しいユーザーを作成して、そのユーザーがユーザ"
-"ーコントロールパネルにログインすると3つの違うアカウントのボイスメールをアクセスできる仕組みを作ることが可能です。"
+"%s ユーザー管理では、ユーザーを作成して、そのユーザーに制御できる内線／デバイスを設定できます。例えば、新しいユーザーを作成して、そのユーザーがユーザー"
+"コントロールパネルにログインすると3つの違うアカウントのボイスメールをアクセスできる仕組みを作ることが可能です。"
 
 #: views/users.php:39
 msgid "Last Name"
@@ -257,13 +257,13 @@ msgid ""
 "Select a user that this extension should be linked to in User Manager, else "
 "select Create New User to have User Manager autogenerate a new user that "
 "will be linked to this extension"
-msgstr "「ユーザーの管理」で連動する既存のユーザーを選択するか、新規ユーザーを作成でこの内線と連動する新しいユーザーを作成します"
+msgstr "「ユーザー管理」で連動する既存のユーザーを選択するか、新規ユーザーを作成でこの内線と連動する新しいユーザーを作成します"
 
 #: functions.inc/guihooks.php:145
 msgid ""
 "Select a user that this extension should be linked to in User Manager, else "
 "select None to have no association to a user"
-msgstr "「ユーザーの管理」でこの内線と連動するユーザーを選択します。連動しない場合は「なし」を選択してください"
+msgstr "「ユーザー管理」でこの内線と連動するユーザーを選択します。連動しない場合は「なし」を選択してください"
 
 #: views/rnav.php:3
 msgid "Settings"
@@ -291,12 +291,12 @@ msgid ""
 msgstr ""
 "案内のメールで使用する件名のテキスト。次の変数が使えます: <ul><li>fname: 名</li><li>lname: "
 "性</li><li>brand: %s</li><li>title: タイトル</li><li>username: "
-"ユーザー名</li><li>password: パスワード</li></ul><br> この枠をリセットするには空にしてください。"
+"ユーザー名</li><li>password: パスワード</li></ul><br> この枠をリセットするには空にしてください"
 
 #: userman.i18n.php:22
 msgid ""
 "The From: field for emails when using the user management email feature."
-msgstr "「ユーザーの管理」のメール機能で使用する From: (送信者) の情報を設定します。"
+msgstr "「ユーザー管理」のメール機能で使用する From: (送信者) の情報を設定します。"
 
 #: Userman.class.php:110
 msgid "The Password Can Not Be blank!"
