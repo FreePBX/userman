@@ -103,7 +103,7 @@ echo $heading;
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="password"></i>
 												</div>
 												<div class="col-md-9">
-													<input type="password" class="form-control password-meter" id="password" name="password" value="<?php echo !empty($user['password']) ? '******' : ''; ?>" required>
+													<input type="password" autocomplete="new-password" class="form-control password-meter" id="password" name="password" value="<?php echo !empty($user['password']) ? '******' : ''; ?>" required>
 												</div>
 											</div>
 										</div>

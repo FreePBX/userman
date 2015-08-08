@@ -792,6 +792,9 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * @return array
 	 */
 	public function deleteUserByID($id) {
+		if(!is_numeric($id)) {
+			throw new \Exception(_("ID was not numeric"));
+		}
 		$status = $this->auth->deleteUserByID($id);
 		if(!$status['status']) {
 			return $status;
@@ -806,6 +809,9 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * @param int $gid The group ID
 	 */
 	public function deleteGroupByGID($gid) {
+		if(!is_numeric($gid)) {
+			throw new \Exception(_("GID was not numeric"));
+		}
 		$status = $this->auth->deleteGroupByGID($gid);
 		if(!$status['status']) {
 			return $status;
@@ -895,6 +901,12 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * @return array
 	 */
 	public function addUser($username, $password, $default='none', $description=null, $extraData=array(), $encrypt = true) {
+		if(empty($username)) {
+			throw new \Exception(_("Userman can not be blank"));
+		}
+		if(empty($password)) {
+			throw new \Exception(_("Password can not be blank"));
+		}
 		$display = !empty($_REQUEST['display']) ? $_REQUEST['display'] : "";
 		$status = $this->auth->addUser($username, $password, $default, $description, $extraData, $encrypt);
 		if(!$status['status']) {
@@ -907,6 +919,9 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	}
 
 	public function addGroup($groupname, $description=null, $users=array()) {
+		if(empty($groupname)) {
+			throw new \Exception(_("Groupname can not be blank"));
+		}
 		$display = !empty($_REQUEST['display']) ? $_REQUEST['display'] : "";
 		$status = $this->auth->addGroup($groupname, $description=null, $users=array());
 		if(!$status['status']) {
@@ -932,6 +947,15 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * @return array
 	 */
 	public function updateUser($uid, $prevUsername, $username, $default='none', $description=null, $extraData=array(), $password=null) {
+		if(!is_numeric($uid)) {
+			throw new \Exception(_("UID was not numeric"));
+		}
+		if(empty($username)) {
+			throw new \Exception(_("Userman can not be blank"));
+		}
+		if(empty($prevUsername)) {
+			throw new \Exception(_("Previous Username can not be blank"));
+		}
 		$display = !empty($_REQUEST['display']) ? $_REQUEST['display'] : "";
 		$status = $this->auth->updateUser($uid, $prevUsername, $username, $default, $description, $extraData, $password);
 		if(!$status['status']) {
@@ -952,6 +976,15 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * @param array  $users         Array of users in this Group
 	 */
 	public function updateGroup($gid, $prevGroupname, $groupname, $description=null, $users=array()) {
+		if(!is_numeric($gid)) {
+			throw new \Exception(_("GID was not numeric"));
+		}
+		if(empty($groupname)) {
+			throw new \Exception(_("Groupname can not be blank"));
+		}
+		if(empty($prevGroupname)) {
+			throw new \Exception(_("Previous Groupname can not be blank"));
+		}
 		$display = !empty($_REQUEST['display']) ? $_REQUEST['display'] : "";
 		$status = $this->auth->updateGroup($gid, $prevGroupname, $groupname, $description, $users);
 		if(!$status['status']) {
