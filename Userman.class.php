@@ -438,11 +438,12 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 				} else {
 					$group = array();
 				}
+				$mods = $this->getGlobalSettingByGID($request['group'],'pbx_modules');
 				$html .= load_view(
 					dirname(__FILE__).'/views/groups.php',
 					array(
 						"group" => $group,
-						"pbx_modules" => empty($group) ? array() : $this->getGlobalSettingByGID($request['group'],'pbx_modules'),
+						"pbx_modules" => empty($group) ? array() : (!empty($mods) ? $mods : array()),
 						"pbx_low" => empty($group) ? '' : $this->getGlobalSettingByGID($request['group'],'pbx_low'),
 						"pbx_high" => empty($group) ? '' : $this->getGlobalSettingByGID($request['group'],'pbx_high'),
 						"pbx_login" => empty($group) ? false : $this->getGlobalSettingByGID($request['group'],'pbx_login'),
