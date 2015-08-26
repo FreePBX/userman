@@ -951,11 +951,14 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		if(!is_numeric($uid)) {
 			throw new \Exception(_("UID was not numeric"));
 		}
-		if(empty($username)) {
-			throw new \Exception(_("Userman can not be blank"));
-		}
 		if(empty($prevUsername)) {
 			throw new \Exception(_("Previous Username can not be blank"));
+		}
+		/**
+		 * Coming from an adaptor that doesnt support username changes
+		 */
+		if(empty($username)) {
+			$username = $prevUsername;
 		}
 		$display = !empty($_REQUEST['display']) ? $_REQUEST['display'] : "";
 		$status = $this->auth->updateUser($uid, $prevUsername, $username, $default, $description, $extraData, $password);
@@ -980,11 +983,14 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		if(!is_numeric($gid)) {
 			throw new \Exception(_("GID was not numeric"));
 		}
-		if(empty($groupname)) {
-			throw new \Exception(_("Groupname can not be blank"));
-		}
 		if(empty($prevGroupname)) {
 			throw new \Exception(_("Previous Groupname can not be blank"));
+		}
+		/**
+		 * Coming from an adaptor that doesnt support groupname changes
+		 */
+		if(empty($groupname)) {
+			$groupname = $prevGroupname;
 		}
 		$display = !empty($_REQUEST['display']) ? $_REQUEST['display'] : "";
 		$status = $this->auth->updateGroup($gid, $prevGroupname, $groupname, $description, $users);

@@ -11,11 +11,14 @@ abstract class Auth implements Base {
 	protected $groupTable = 'userman_groups';
 	protected $groupSettingsTable = 'userman_groups_settings';
 	protected $contacts = array();
+	protected $auth;
 
 	public function __construct($userman, $freepbx) {
 		$this->FreePBX = $freepbx;
 		$this->db = $freepbx->Database;
 		$this->userman = $userman;
+		$f = new \ReflectionClass($this);
+		$this->auth = strtolower($f->getShortName());
 	}
 
 	/**
@@ -74,9 +77,9 @@ abstract class Auth implements Base {
 	 * @return bool
 	 */
 	public function getUserByUsername($username) {
-		$sql = "SELECT * FROM ".$this->userTable." WHERE username = :username";
+		$sql = "SELECT * FROM ".$this->userTable." WHERE username = :username AND auth = :auth";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':username' => $username));
+		$sth->execute(array(':username' => $username, ':auth' => $this->auth));
 		$user = $sth->fetch(\PDO::FETCH_ASSOC);
 		return $user;
 	}
@@ -90,9 +93,9 @@ abstract class Auth implements Base {
 	 * @return bool
 	 */
 	public function getUserByEmail($username) {
-		$sql = "SELECT * FROM ".$this->userTable." WHERE email = :email";
+		$sql = "SELECT * FROM ".$this->userTable." WHERE email = :email AND auth = :auth";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':email' => $username));
+		$sth->execute(array(':email' => $username, ':auth' => $this->auth));
 		$user = $sth->fetch(\PDO::FETCH_ASSOC);
 		$user = $this->userman->getExtraContactInfo($user);
 		return $user;
@@ -107,18 +110,18 @@ abstract class Auth implements Base {
 	 * @return bool
 	 */
 	public function getUserByID($id) {
-		$sql = "SELECT * FROM ".$this->userTable." WHERE id = :id";
+		$sql = "SELECT * FROM ".$this->userTable." WHERE id = :id AND auth = :auth";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':id' => $id));
+		$sth->execute(array(':id' => $id, ':auth' => $this->auth));
 		$user = $sth->fetch(\PDO::FETCH_ASSOC);
 		$user = $this->userman->getExtraContactInfo($user);
 		return $user;
 	}
 
 	public function getUserByAuthID($id) {
-		$sql = "SELECT * FROM ".$this->userTable." WHERE authid = :id";
+		$sql = "SELECT * FROM ".$this->userTable." WHERE authid = :id AND auth = :auth";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':id' => $id));
+		$sth->execute(array(':id' => $id, ':auth' => $this->auth));
 		$user = $sth->fetch(\PDO::FETCH_ASSOC);
 		$user = $this->userman->getExtraContactInfo($user);
 		return $user;
@@ -165,9 +168,9 @@ abstract class Auth implements Base {
 	* @return bool
 	*/
 	public function getUserByDefaultExtension($extension) {
-		$sql = "SELECT * FROM ".$this->userTable." WHERE default_extension = :extension";
+		$sql = "SELECT * FROM ".$this->userTable." WHERE default_extension = :extension AND auth = :auth";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':extension' => $extension));
+		$sth->execute(array(':extension' => $extension, ':auth' => $this->auth));
 		$user = $sth->fetch(\PDO::FETCH_ASSOC);
 		return $user;
 	}
@@ -181,9 +184,9 @@ abstract class Auth implements Base {
 	* @return bool
 	*/
 	public function getGroupByUsername($groupname) {
-		$sql = "SELECT * FROM ".$this->groupTable." WHERE groupname = :groupname";
+		$sql = "SELECT * FROM ".$this->groupTable." WHERE groupname = :groupname AND auth = :auth";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':groupname' => $groupname));
+		$sth->execute(array(':groupname' => $groupname, ':auth' => $this->auth));
 		$group = $sth->fetch(\PDO::FETCH_ASSOC);
 		if(!empty($group)) {
 			$group['users'] = json_decode($group['users'],true);
@@ -200,9 +203,9 @@ abstract class Auth implements Base {
 	* @return bool
 	*/
 	public function getGroupByGID($gid) {
-		$sql = "SELECT * FROM ".$this->groupTable." WHERE id = :gid";
+		$sql = "SELECT * FROM ".$this->groupTable." WHERE id = :gid AND auth = :auth";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':gid' => $gid));
+		$sth->execute(array(':gid' => $gid, ':auth' => $this->auth));
 		$group = $sth->fetch(\PDO::FETCH_ASSOC);
 		if(!empty($group)) {
 			$group['users'] = json_decode($group['users'],true);
@@ -239,13 +242,13 @@ abstract class Auth implements Base {
 		if(!$user) {
 			return array("status" => false, "type" => "danger", "message" => _("User Does Not Exist"));
 		}
-		$sql = "DELETE FROM ".$this->userTable." WHERE `id` = :id";
+		$sql = "DELETE FROM ".$this->userTable." WHERE `id` = :id AND auth = :auth";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':id' => $id));
+		$sth->execute(array(':id' => $id, ':auth' => $this->auth));
 
 		$sql = "DELETE FROM ".$this->userSettingsTable." WHERE `uid` = :uid";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':uid' => $id));
+		$sth->execute(array(':uid' => $id, ':auth' => $this->auth));
 		return array("status" => true, "type" => "success", "message" => _("User Successfully Deleted"));
 	}
 
@@ -258,13 +261,13 @@ abstract class Auth implements Base {
 		if(!$user) {
 			return array("status" => false, "type" => "danger", "message" => _("Group Does Not Exist"));
 		}
-		$sql = "DELETE FROM ".$this->groupTable." WHERE `id` = :id";
+		$sql = "DELETE FROM ".$this->groupTable." WHERE `id` = :id AND auth = :auth";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':id' => $gid));
+		$sth->execute(array(':id' => $gidm, ':auth' => $this->auth));
 
-		$sql = "DELETE FROM ".$this->groupSettingsTable." WHERE `gid` = :gid";
+		$sql = "DELETE FROM ".$this->groupSettingsTable." WHERE `gid` = :gid AND auth = :auth";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':gid' => $gid));
+		$sth->execute(array(':gid' => $gid, ':auth' => $this->auth));
 		return array("status" => true, "type" => "success", "message" => _("User Successfully Deleted"));
 	}
 
@@ -277,9 +280,9 @@ abstract class Auth implements Base {
 		if(!empty($this->contacts)) {
 			return $this->contacts;
 		}
-		$sql = "SELECT id, default_extension as internal, username, description, fname, lname, coalesce(displayname, CONCAT_WS(' ', fname, lname)) AS displayname, title, company, department, email, cell, work, home, fax FROM ".$this->userTable;
+		$sql = "SELECT id, default_extension as internal, username, description, fname, lname, coalesce(displayname, CONCAT_WS(' ', fname, lname)) AS displayname, title, company, department, email, cell, work, home, fax FROM ".$this->userTable." WHERE auth = :auth";
 		$sth = $this->db->prepare($sql);
-		$sth->execute();
+		$sth->execute(array(":auth" => $this->auth));
 		$users = $sth->fetchAll(\PDO::FETCH_ASSOC);
 		if(empty($users)) {
 			return array();
@@ -388,7 +391,7 @@ abstract class Auth implements Base {
 	}
 
 	public function updateGroupData($gid, $data = array()) {
-		$sql = "UPDATE ".$this->groupTable." SET `description` = :description, `users` = :users WHERE `id` = :gid";
+		$sql = "UPDATE ".$this->groupTable." SET `description` = :description, `users` = :users WHERE `id` = :gid AND auth = :auth";
 
 		$sth = $this->db->prepare($sql);
 		$description = isset($data['description']) ? $data['description'] : (!isset($data['description']) && !empty($defaults['description']) ? $defaults['description'] : null);
@@ -399,6 +402,7 @@ abstract class Auth implements Base {
 					':description' => $description,
 					':users' => json_encode($users),
 					':gid' => $gid,
+					':auth' => $this->auth
 				)
 			);
 		} catch (\Exception $e) {
@@ -412,7 +416,7 @@ abstract class Auth implements Base {
 		if(empty($data)) {
 			return true;
 		}
-		$sql = "UPDATE ".$this->userTable." SET `fname` = :fname, `lname` = :lname, `displayname` = :displayname, `company` = :company, `title` = :title, `email` = :email, `cell` = :cell, `work` = :work, `home` = :home, `fax` = :fax, `department` = :department, `description` = :description, `primary_group` = :primary_group WHERE `id` = :uid";
+		$sql = "UPDATE ".$this->userTable." SET `fname` = :fname, `lname` = :lname, `displayname` = :displayname, `company` = :company, `title` = :title, `email` = :email, `cell` = :cell, `work` = :work, `home` = :home, `fax` = :fax, `department` = :department, `description` = :description, `primary_group` = :primary_group WHERE `id` = :uid AND auth = :auth";
 		$defaults = $this->getUserByID($uid);
 		$sth = $this->db->prepare($sql);
 		$fname = isset($data['fname']) ? $data['fname'] : (!isset($data['fname']) && !empty($defaults['fname']) ? $defaults['fname'] : null);
@@ -446,11 +450,16 @@ abstract class Auth implements Base {
 					':description' => $description,
 					':primary_group' => $primary_group,
 					':uid' => $uid,
+					':auth' => $this->auth
 				)
 			);
 		} catch (\Exception $e) {
 			return false;
 		}
 		return true;
+	}
+
+	public function checkCredentials($username, $password) {
+		return false;
 	}
 }

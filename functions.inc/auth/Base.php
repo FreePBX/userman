@@ -186,6 +186,7 @@ interface Base {
 	 * Check Credentials against username with a passworded sha
 	 * @param {string} $username      The username
 	 * @param {string} $password_sha1 The sha
+	 * @return {mixed} Boolean false if not allowed, Otherwise the UID of the user
 	 */
 	public function checkCredentials($username, $password);
 

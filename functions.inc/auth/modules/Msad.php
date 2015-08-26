@@ -320,7 +320,15 @@ class Msad extends Auth {
 		}
 		ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
 
-		return ldap_bind($ldap, $username, $password);
+		if(strpos($username,"@") === false) {
+			$res = @ldap_bind($ldap, $username."@".$this->domain, $password);
+		} else {
+			$res = @ldap_bind($ldap, $username, $password);
+		}
+		if($res) {
+			$user = $this->getUserByUsername($username);
+		}
+		return !empty($user['id']) ? $user['id'] : false;
 	}
 
 	/**
