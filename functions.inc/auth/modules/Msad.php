@@ -56,6 +56,7 @@ class Msad extends Auth {
 
 	public function __construct($userman, $freepbx) {
 		parent::__construct($userman, $freepbx);
+		$this->FreePBX = $freepbx;
 		$config = $userman->getConfig("authMSADSettings");
 		$this->host = $config['host'];
 		$this->port = !empty($config['port']) ? $config['port'] : 389;
@@ -63,6 +64,7 @@ class Msad extends Auth {
 		$this->domain = $config['domain'];
 		$this->user = $config['username'];
 		$this->password = $config['password'];
+		$this->linkAttr = isset($config['la']) ? $config['la'] : '';
 	}
 
 	/**
@@ -132,8 +134,10 @@ class Msad extends Auth {
 			"username" => $_REQUEST['msad-username'],
 			"password" => $_REQUEST['msad-password'],
 			"domain" => $_REQUEST['msad-domain'],
-			"dn" => $_REQUEST['msad-dn']
+			"dn" => $_REQUEST['msad-dn'],
+			"la" => $_REQUEST['msad-la']
 		);
+		$userman->setConfig("authMSADSettings", $config);
 		if(!empty($config['host']) && !empty($config['username']) && !empty($config['password']) && !empty($config['domain'])) {
 			$msad = new static($userman, $freepbx);
 			try {
@@ -141,7 +145,6 @@ class Msad extends Auth {
 				$msad->sync();
 			} catch(\Exception $e) {}
 		}
-		$userman->setConfig("authMSADSettings", $config);
 		return true;
 	}
 
@@ -420,7 +423,7 @@ class Msad extends Auth {
 			$this->ucache[$sid] = $user;
 			$um = $this->linkUser($user['cn'][0], 'msad', $sid);
 			if($um['status']) {
-				$this->updateUserData($um['id'], array(
+				$data = array(
 					"description" => !empty($user['description'][0]) ? $user['description'][0] : '',
 					"primary_group" => !empty($user['primarygroupid'][0]) ? $user['primarygroupid'][0] : '',
 					"fname" => !empty($user['givenname'][0]) ? $user['givenname'][0] : '',
@@ -430,7 +433,17 @@ class Msad extends Auth {
 					"email" => !empty($user['mail'][0]) ? $user['mail'][0] : '',
 					"cell" => !empty($user['mobile'][0]) ? $user['mobile'][0] : '',
 					"work" => !empty($user['telephonenumber'][0]) ? $user['telephonenumber'][0] : '',
-				));
+				);
+				if(!empty($this->linkAttr) && !empty($user[$this->linkAttr][0])) {
+					$d = $this->FreePBX->Core->getDevice((string)$user[$this->linkAttr][0]);
+					if(!empty($d)) {
+						$data["default_extension"] = !empty($user[$this->linkAttr][0]) ? $user[$this->linkAttr][0] : '';
+					} else {
+						//TODO: Technically we could create an extension here..
+						dbug("Extension ".$user[$this->linkAttr][0] . " does not exist, skipping link");
+					}
+				}
+				$this->updateUserData($um['id'], $data);
 			}
 		}
 	}

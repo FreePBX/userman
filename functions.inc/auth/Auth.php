@@ -416,11 +416,12 @@ abstract class Auth implements Base {
 		if(empty($data)) {
 			return true;
 		}
-		$sql = "UPDATE ".$this->userTable." SET `fname` = :fname, `lname` = :lname, `displayname` = :displayname, `company` = :company, `title` = :title, `email` = :email, `cell` = :cell, `work` = :work, `home` = :home, `fax` = :fax, `department` = :department, `description` = :description, `primary_group` = :primary_group WHERE `id` = :uid AND auth = :auth";
+		$sql = "UPDATE ".$this->userTable." SET `fname` = :fname, `lname` = :lname, `default_extension` = :default_extension, `displayname` = :displayname, `company` = :company, `title` = :title, `email` = :email, `cell` = :cell, `work` = :work, `home` = :home, `fax` = :fax, `department` = :department, `description` = :description, `primary_group` = :primary_group WHERE `id` = :uid AND auth = :auth";
 		$defaults = $this->getUserByID($uid);
 		$sth = $this->db->prepare($sql);
 		$fname = isset($data['fname']) ? $data['fname'] : (!isset($data['fname']) && !empty($defaults['fname']) ? $defaults['fname'] : null);
 		$lname = isset($data['lname']) ? $data['lname'] : (!isset($data['lname']) && !empty($defaults['lname']) ? $defaults['lname'] : null);
+		$default_extension = isset($data['default_extension']) ? $data['default_extension'] : (!isset($data['default_extension']) && !empty($defaults['default_extension']) ? $defaults['default_extension'] : 'none');
 		$title = isset($data['title']) ? $data['title'] : (!isset($data['title']) && !empty($defaults['title']) ? $defaults['title'] : null);
 		$company = isset($data['company']) ? $data['company'] : (!isset($data['company']) && !empty($defaults['company']) ? $defaults['company'] : null);
 		$email = isset($data['email']) ? $data['email'] : (!isset($data['email']) && !empty($defaults['email']) ? $defaults['email'] : null);
@@ -438,6 +439,7 @@ abstract class Auth implements Base {
 				array(
 					':fname' => $fname,
 					':lname' => $lname,
+					':default_extension' => $default_extension,
 					':displayname' => $displayname,
 					':title' => $title,
 					':company' => $company,
