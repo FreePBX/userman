@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-26 14:28-0700\n"
+"POT-Creation-Date: 2015-08-28 11:01-0700\n"
 "PO-Revision-Date: 2015-02-21 11:46+0200\n"
 "Last-Translator: Kevin <kevin@qloog.com>\n"
 "Language-Team: Japanese <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -147,7 +147,7 @@ msgstr ""
 msgid "Company"
 msgstr "会社"
 
-#: functions.inc/auth/modules/Msad.php:103
+#: functions.inc/auth/modules/Msad.php:105
 msgid "Connected"
 msgstr ""
 
@@ -236,6 +236,10 @@ msgstr ""
 msgid "Extension"
 msgstr ""
 
+#: views/msad.php:139
+msgid "Extension Link Attribute"
+msgstr ""
+
 #: Userman.class.php:1865 Userman.class.php:1866 views/users.php:426
 msgid "Fax Phone Number"
 msgstr ""
@@ -300,7 +304,7 @@ msgstr ""
 msgid "Group Successfully Updated"
 msgstr ""
 
-#: functions.inc/auth/modules/Msad.php:307
+#: functions.inc/auth/modules/Msad.php:310
 msgid "Group updated"
 msgstr ""
 
@@ -348,6 +352,14 @@ msgstr ""
 "「新規ユーザーを作成」が選択されている場合は、これがユーザー名になります。空"
 "にするとこのデバイスと同じ番号を使用します"
 
+#: views/msad.php:151
+msgid ""
+"If this is set then User Manager will use the defined attribute of the user "
+"from the Active Directory server as the extension link. NOTE: If this field "
+"is set it will overwrite any manually linked extensions where this attribute "
+"extists!!"
+msgstr ""
+
 #: views/welcome.php:16
 #, php-format
 msgid ""
@@ -369,13 +381,13 @@ msgstr ""
 msgid "Invalid User"
 msgstr ""
 
-#: functions.inc/auth/modules/Msad.php:259
-#: functions.inc/auth/modules/Msad.php:272
+#: functions.inc/auth/modules/Msad.php:262
+#: functions.inc/auth/modules/Msad.php:275
 msgid "LDAP is in Read Only Mode. Addition denied"
 msgstr ""
 
-#: functions.inc/auth/modules/Msad.php:234
-#: functions.inc/auth/modules/Msad.php:242
+#: functions.inc/auth/modules/Msad.php:237
+#: functions.inc/auth/modules/Msad.php:245
 msgid "LDAP is in Read Only Mode. Deletion denied"
 msgstr ""
 
@@ -418,7 +430,7 @@ msgstr ""
 msgid "May this user log in to the %s Administration Pages?"
 msgstr ""
 
-#: functions.inc/auth/modules/Msad.php:79
+#: functions.inc/auth/modules/Msad.php:81
 msgid "Microsoft Active Directory"
 msgstr ""
 
@@ -440,11 +452,11 @@ msgstr ""
 msgid "None"
 msgstr "なし"
 
-#: functions.inc/auth/modules/Msad.php:94
+#: functions.inc/auth/modules/Msad.php:96
 msgid "Not Connected"
 msgstr ""
 
-#: functions.inc/auth/modules/Msad.php:116
+#: functions.inc/auth/modules/Msad.php:118
 msgid "Not all of the connection parameters have been filled out"
 msgstr ""
 
@@ -556,7 +568,7 @@ msgstr ""
 msgid "Settings"
 msgstr "設定"
 
-#: views/msad.php:139
+#: views/msad.php:161
 msgid "Status"
 msgstr ""
 
@@ -607,7 +619,7 @@ msgstr ""
 msgid "The base DN"
 msgstr ""
 
-#: views/msad.php:151
+#: views/msad.php:173
 msgid "The connection status of the Active Directory Server"
 msgstr ""
 
@@ -749,7 +761,7 @@ msgstr "ユーザーを削除しました"
 msgid "User Successfully Updated"
 msgstr ""
 
-#: functions.inc/auth/modules/Msad.php:296
+#: functions.inc/auth/modules/Msad.php:299
 msgid "User updated"
 msgstr ""
 
