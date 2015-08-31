@@ -6,6 +6,20 @@
 namespace FreePBX\modules\Userman\Auth;
 
 class Freepbx extends Auth {
+	private $groups = array();
+
+	public function __construct($userman, $freepbx) {
+		parent::__construct($userman, $freepbx);
+		$config = $userman->getConfig("authFREEPBXSettings");
+		$this->groups = !empty($config['default-groups']) ? $config['default-groups'] : array();
+	}
+
+	/**
+	 * Get information about this driver
+	 * @param  Object $userman The userman Object
+	 * @param  Object $freepbx The freepbx Object
+	 * @return array          array of information
+	 */
 	public static function getInfo($userman, $freepbx) {
 		$brand = \FreePBX::Config()->get("DASHBOARD_FREEPBX_BRAND");
 		return array(
@@ -13,13 +27,43 @@ class Freepbx extends Auth {
 		);
 	}
 
+	public function getDefaultGroups() {
+		$config = $this->userman->getConfig("authFREEPBXSettings");
+		$sgroups = !empty($config['default-groups']) ? $config['default-groups'] : array();
+		return $sgroups;
+	}
+
+	/**
+	 * Get configuration for this driver
+	 * @param  Object $userman The userman Object
+	 * @param  Object $freepbx The freepbx Object
+	 * @return string          html to show to the page
+	 */
 	public static function getConfig($userman, $freepbx) {
-		return '';
+		$config = $userman->getConfig("authFREEPBXSettings");
+		$sgroups = !empty($config['default-groups']) ? $config['default-groups'] : array();
+		$sql = "SELECT * FROM userman_groups WHERE auth = 'freepbx' ORDER BY priority";
+		$sth = $freepbx->Database->prepare($sql);
+		$sth->execute();
+		$groups = $sth->fetchAll(\PDO::FETCH_ASSOC);
+		foreach($groups as &$group) {
+			$group['users'] = json_decode($group['users'],true);
+		}
+		return load_view(dirname(dirname(dirname(__DIR__)))."/views/freepbx.php", array("groups" => $groups, "defaultgroups" => $sgroups));
 	}
 
+	/**
+	 * Save Configuration from auth config page
+	 * @param  Object $userman The userman Object
+	 * @param  Object $freepbx The freepbx Object
+	 */
 	public static function saveConfig($userman, $freepbx) {
-
+		$config = array(
+			"default-groups" => $_POST['freepbx-default-groups']
+		);
+		$userman->setConfig("authFREEPBXSettings", $config);
 	}
+
 	/**
 	* Get All Users
 	*
@@ -76,6 +120,20 @@ class Freepbx extends Auth {
 
 		$id = $this->db->lastInsertId();
 		$this->updateUserData($id,$extraData);
+
+		if(!empty($this->groups)) {
+			foreach($this->groups as $group) {
+				$info = $this->getGroupByGID($group);
+				if(empty($info)) {
+					continue;
+				}
+				$info['users'] = !empty($info['users']) ? $info['users'] : array();
+				if(!in_array($id, $info['users'])) {
+					$info['users'][] = $id;
+				}
+				$this->updateGroup($info['id'], $info['groupname'], $info['groupname'], $info['description'], $info['users']);
+			}
+		}
 		return array("status" => true, "type" => "success", "message" => _("User Successfully Added"), "id" => $id);
 	}
 

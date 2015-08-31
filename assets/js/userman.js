@@ -9,7 +9,14 @@ translations = {
 	'groups': _('groups')
 };
 $("#email-users").click(function() {
+	$(this).prop("disabled",true);
 	$.post( "ajax.php", {command: "email", module: "userman", extensions: deleteExts.users}, function(data) {
+		if(data.status) {
+			alert(_("Email Sent"));
+		} else {
+			alert(data.message);
+		}
+		$(this).prop("disabled",false);
 	});
 });
 $(".btn-remove").click(function() {
@@ -74,6 +81,12 @@ $("table").on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs
   });
 });
 
+$("#submitsend").click(function(e) {
+	e.stopPropagation();
+	e.preventDefault();
+	$("input[name=submittype]").val("guisend");
+	$(".fpbx-submit").submit();
+});
 
 //from http://stackoverflow.com/a/26744533 loads url params to an array
 var params={};window.location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi,function(str,key,value){params[key] = value;});

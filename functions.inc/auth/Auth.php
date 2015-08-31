@@ -21,6 +21,10 @@ abstract class Auth implements Base {
 		$this->auth = strtolower($f->getShortName());
 	}
 
+	public function getDefaultGroups() {
+		return array();
+	}
+
 	/**
 	 * Get information about this authentication driver
 	 * @param  object $userman The userman object
@@ -248,7 +252,7 @@ abstract class Auth implements Base {
 
 		$sql = "DELETE FROM ".$this->userSettingsTable." WHERE `uid` = :uid";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':uid' => $id, ':auth' => $this->auth));
+		$sth->execute(array(':uid' => $id));
 		return array("status" => true, "type" => "success", "message" => _("User Successfully Deleted"));
 	}
 
@@ -265,9 +269,9 @@ abstract class Auth implements Base {
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':id' => $gidm, ':auth' => $this->auth));
 
-		$sql = "DELETE FROM ".$this->groupSettingsTable." WHERE `gid` = :gid AND auth = :auth";
+		$sql = "DELETE FROM ".$this->groupSettingsTable." WHERE `gid` = :gid";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':gid' => $gid, ':auth' => $this->auth));
+		$sth->execute(array(':gid' => $gid));
 		return array("status" => true, "type" => "success", "message" => _("User Successfully Deleted"));
 	}
 

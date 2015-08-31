@@ -30,7 +30,7 @@
 								<div class="table-responsive">
 									<div id="toolbar-users">
 										<?php if($permissions['addUser']) {?>
-										<a href="config.php?display=userman&amp;action=adduser" id="add-users" class="btn btn-danger btn-add" data-type="users" data-section="users">
+										<a href="config.php?display=userman&amp;action=adduser" id="add-users" class="btn btn-add" data-type="users" data-section="users">
 											<i class="fa fa-user-plus"></i> <span><?php echo _('Add')?></span>
 										</a>
 										<?php } ?>
@@ -88,7 +88,7 @@
 								<div class="table-responsive">
 									<div id="toolbar-groups">
 										<?php if($permissions['addGroup']) {?>
-										<a href="config.php?display=userman&amp;action=addgroup" id="add-groups" class="btn btn-danger btn-add" data-type="groupss" data-section="groups">
+										<a href="config.php?display=userman&amp;action=addgroup" id="add-groups" class="btn btn-add" data-type="groupss" data-section="groups">
 											<i class="fa fa-user-plus"></i> <span><?php echo _('Add')?></span>
 										</a>
 										<?php } ?>
@@ -135,7 +135,7 @@
 							</div>
 							<div role="tabpane" id="settings" class="tab-pane display">
 								<div class="container-fluid">
-									<?php echo load_view(dirname(__FILE__).'/general.php', array("brand" => $brand, "auths" => $auths, "authtype" => $authtype)); ?>
+									<?php echo load_view(dirname(__FILE__).'/general.php', array("brand" => $brand, "auths" => $auths, "authtype" => $authtype, "autoEmail" => $autoEmail)); ?>
 								</div>
 							</div>
 						</div>

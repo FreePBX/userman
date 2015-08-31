@@ -21,6 +21,35 @@
 						<div class="row">
 							<div class="form-group">
 								<div class="col-md-3">
+									<label class="control-label" for="auto-email"><?php echo _("Send Email on External New User Creation")?></label>
+									<i class="fa fa-question-circle fpbx-help-icon" data-for="auto-email"></i>
+								</div>
+								<div class="col-md-9">
+									<span class="radioset">
+										<input type="radio" id="auto-email-yes" name="auto-email" value="yes" <?php echo ($autoEmail) ? "checked" : ""?>>
+										<label for="auto-email-yes"><?php echo _("Yes")?></label>
+										<input type="radio" id="auto-email-no" name="auto-email" value="no" <?php echo !($autoEmail) ? "checked" : ""?>>
+										<label for="auto-email-no"><?php echo _("No")?></label>
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<span id="auto-email-help" class="help-block fpbx-help-block"><?php echo _("Whether to send an email (using the template below) to new users when they are created externally (not directly through User Manager)")?></span>
+					</div>
+				</div>
+			</div>
+			<!--END Email Subject-->
+			<!--Email Subject-->
+			<div class="element-container">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="row">
+							<div class="form-group">
+								<div class="col-md-3">
 									<label class="control-label" for="emailsubject"><?php echo _("Email Body")?></label>
 									<i class="fa fa-question-circle fpbx-help-icon" data-for="emailsubject"></i>
 								</div>

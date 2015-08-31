@@ -129,7 +129,7 @@ echo $heading;
 											<div class="col-md-9">
 												<select id="group_users" data-placeholder="Groups" class="form-control chosenmultiselect" name="groups[]" multiple="multiple" <?php echo !$permissions['modifyGroup'] ? 'disabled' : ''?>>
 													<?php foreach($groups as $group) {?>
-														<option value="<?php echo $group['id']?>" <?php echo !empty($user['id']) && in_array($user['id'], $group['users']) ? 'selected' : '' ?>><?php echo $group['groupname']?></option>
+														<option value="<?php echo $group['id']?>" <?php echo (!empty($user['id']) && in_array($user['id'], $group['users'])) || (empty($user['id']) && in_array($group['id'], $dgroups)) ? 'selected' : '' ?>><?php echo $group['groupname']?></option>
 													<?php } ?>
 												</select>
 											</div>

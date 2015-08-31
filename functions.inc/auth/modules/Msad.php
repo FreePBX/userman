@@ -3,6 +3,8 @@
 //	License for all code of this FreePBX module can be found in the license file inside the module directory
 //	Copyright 2013 Schmooze Com Inc.
 //
+//	https://msdn.microsoft.com/en-us/library/windows/desktop/ms677605(v=vs.85).aspx
+//
 namespace FreePBX\modules\Userman\Auth;
 
 class Msad extends Auth {
@@ -421,7 +423,7 @@ class Msad extends Auth {
 		foreach($users as $user) {
 			$sid = $this->binToStrSid($user['objectsid'][0]);
 			$this->ucache[$sid] = $user;
-			$um = $this->linkUser($user['cn'][0], 'msad', $sid);
+			$um = $this->linkUser($user['samaccountname'][0], 'msad', $sid);
 			if($um['status']) {
 				$data = array(
 					"description" => !empty($user['description'][0]) ? $user['description'][0] : '',
@@ -464,7 +466,7 @@ class Msad extends Auth {
 		}
 		$sid = $this->binToStrSid($user[0]['objectsid'][0]);
 		$this->ucache[$sid] = $user[0];
-		$um = $this->linkUser($user[0]['cn'][0], 'msad', $this->binToStrSid($user[0]['objectsid'][0]));
+		$um = $this->linkUser($user[0]['samaccountname'][0], 'msad', $this->binToStrSid($user[0]['objectsid'][0]));
 		if($um['status']) {
 			$this->updateUserData($um['id'], array(
 				"description" => !empty($user[0]['description'][0]) ? $user[0]['description'][0] : '',

@@ -14,6 +14,13 @@ foreach($sqls as $sql) {
 	}
 }
 
+//Quick check to see if we are previously installed
+//this lets us know if we need to create a default group
+$defaultGroup = false;
+if (!$db->getAll('SHOW TABLES LIKE "userman_groups"')) {
+  $defaultGroup = true;
+}
+
 $sqls = array();
 $sqls[] = "CREATE TABLE IF NOT EXISTS `userman_users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -136,7 +143,18 @@ if (!$db->getAll('SHOW COLUMNS FROM `userman_users` WHERE FIELD = "fax"')) {
   $result = $db->query($sql);
 }
 
-
+if($defaultGroup) {
+  $sql = "INSERT INTO userman_groups (`groupname`, `description`) VALUES (?, ?)";
+  $sth = FreePBX::Database()->prepare($sql);
+  $sth->execute(array(_("All Users"),_("This group was created on install and is automatically assigned to new users. This can be disabled in User Manager Settings")));
+  $id = FreePBX::Database()->lastInsertId();
+  $config = array(
+    "default-groups" => array($id)
+  );
+  FreePBX::Userman()->setConfig("authFREEPBXSettings", $config);
+  //UCP
+  FreePBX::Userman()->setModuleSettingByGID($id,'ucp|Global','allowLogin',true);
+}
 
 $freepbx_conf =& freepbx_conf::create();
 
