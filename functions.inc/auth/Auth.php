@@ -122,6 +122,11 @@ abstract class Auth implements Base {
 		return $user;
 	}
 
+	/**
+	 * Get user by external auth id
+	 * @param  string $id The external auth ID
+	 * @return array     Array of user data
+	 */
 	public function getUserByAuthID($id) {
 		$sql = "SELECT * FROM ".$this->userTable." WHERE authid = :id AND auth = :auth";
 		$sth = $this->db->prepare($sql);
@@ -210,6 +215,22 @@ abstract class Auth implements Base {
 		$sql = "SELECT * FROM ".$this->groupTable." WHERE id = :gid AND auth = :auth";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':gid' => $gid, ':auth' => $this->auth));
+		$group = $sth->fetch(\PDO::FETCH_ASSOC);
+		if(!empty($group)) {
+			$group['users'] = json_decode($group['users'],true);
+		}
+		return $group;
+	}
+
+	/**
+	 * Get group by the external auth ID
+	 * @param  string $aid The external auth id
+	 * @return array      Array of user information
+	 */
+	public function getGroupByAuthID($aid) {
+		$sql = "SELECT * FROM ".$this->groupTable." WHERE authid = :aid AND auth = :auth";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':aid' => $aid, ':auth' => $this->auth));
 		$group = $sth->fetch(\PDO::FETCH_ASSOC);
 		if(!empty($group)) {
 			$group['users'] = json_decode($group['users'],true);
@@ -394,6 +415,12 @@ abstract class Auth implements Base {
 		}
 	}
 
+	/**
+	 * Update information about a linked group
+	 * @param  int $gid  The Group ID
+	 * @param  array  $data Group data
+	 * @return Boolean       True is success
+	 */
 	public function updateGroupData($gid, $data = array()) {
 		$sql = "UPDATE ".$this->groupTable." SET `description` = :description, `users` = :users WHERE `id` = :gid AND auth = :auth";
 
@@ -416,6 +443,12 @@ abstract class Auth implements Base {
 		return true;
 	}
 
+	/**
+	 * Update linked user data
+	 * @param  int $uid  The User ID
+	 * @param  array  $data The user Data to update
+	 * @return Boolean       True if success
+	 */
 	public function updateUserData($uid, $data = array()) {
 		if(empty($data)) {
 			return true;

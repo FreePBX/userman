@@ -185,6 +185,7 @@ class Msad extends Auth {
 		$this->connect();
 		$this->updateAllUsers();
 		$this->updateAllGroups();
+		$this->updatePrimaryGroups();
 	}
 
 	/**
@@ -337,6 +338,41 @@ class Msad extends Auth {
 	}
 
 	/**
+	 * Lookup and find all primary group memberships
+	 * This should be run after updating groups and users
+	 */
+	private function updatePrimaryGroups() {
+		if(empty($this->ucache)) {
+			$this->updateAllUsers();
+			$this->updateAllGroups();
+		}
+		foreach($this->ucache as $usid => $user) {
+			$results2 = ldap_search($this->ldap, $this->dn,"(objectcategory=group)",array("distinguishedname","primarygrouptoken","objectsid"));
+			$entries2 = ldap_get_entries($this->ldap, $results2);
+
+			// Remove extraneous first entry
+			array_shift($entries2);
+
+			// Loop through and find group with a matching primary group token
+			foreach($entries2 as $e) {
+				$gsid = $this->binToStrSid($e['objectsid'][0]);
+				$g = $this->getGroupByAuthID($gsid);
+				$u = $this->getUserByAuthID($usid);
+				if(!empty($g) && !empty($u) && ($e['primarygrouptoken'][0] == $user['primarygroupid'][0])) {
+					if(!in_array($u['id'], $g['users'])) {
+						$g['users'][] = $u['id'];
+						$this->updateGroupData($g['id'], array(
+							"description" => $g['description'],
+							"users" => $g['users']
+						));
+					}
+					break;
+				}
+			}
+		}
+	}
+
+	/**
 	 * Update All Groups
 	 * Runs through the directory to update all settings (users and naming)
 	 */
@@ -369,44 +405,6 @@ class Msad extends Auth {
 				));
 			}
 		}
-	}
-
-	/**
-	 * Update Single User
-	 * @param array $user The user data from usermanager
-	 */
-	private function updateSingleGroup($user) {
-		if(!empty($this->ucache[$user['authid']])) {
-			return true;
-		}
-		$this->connect();
-		$sr = ldap_search($this->ldap, $this->dn, "(&(objectCategory=Group)(objectSID=".$user['authid']."))");
-		$group = ldap_get_entries($this->ldap, $sr);
-		if(empty($group[0])) {
-			return false;
-		}
-		$sid = $this->binToStrSid($group[0]['objectsid'][0]);
-		$this->gcache[$sid] = $group[0];
-		//Now get the users for this group
-		$members = array();
-		$gs = ldap_search($this->ldap, $this->dn, "(&(objectCategory=Person)(sAMAccountName=*)(memberof=".$group[0]['distinguishedname'][0]."))");
-		$users = ldap_get_entries($this->ldap, $gs);
-		unset($users['count']);
-		foreach($users as $user) {
-			$usid = $this->binToStrSid($user['objectsid'][0]);
-			$u = $this->getUserByAuthID($usid);
-			$members[] = $u['id'];
-		}
-		$sid = $this->binToStrSid($group[0]['objectsid'][0]);
-		$this->gcache[$sid] = $group[0];
-		$um = $this->linkGroup($group[0]['cn'][0], 'msad', $sid);
-		if($um['status']) {
-			$this->updateGroupData($um['id'], array(
-				"description" => !empty($group['description'][0]) ? $group['description'][0] : '',
-				"users" => $members
-			));
-		}
-		return true;
 	}
 
 	/**
@@ -448,39 +446,6 @@ class Msad extends Auth {
 				$this->updateUserData($um['id'], $data);
 			}
 		}
-	}
-
-	/**
-	 * Update Single User
-	 * @param array $user The user data from usermanager
-	 */
-	private function updateSingleUser($user) {
-		if(!empty($this->ucache[$user['authid']])) {
-			return true;
-		}
-		$this->connect();
-		$sr = ldap_search($this->ldap, $this->dn, "(&(objectCategory=Person)(sAMAccountName=*)(objectSID=".$user['authid']."))");
-		$user = ldap_get_entries($this->ldap, $sr);
-		if(empty($user[0])) {
-			return false;
-		}
-		$sid = $this->binToStrSid($user[0]['objectsid'][0]);
-		$this->ucache[$sid] = $user[0];
-		$um = $this->linkUser($user[0]['samaccountname'][0], 'msad', $this->binToStrSid($user[0]['objectsid'][0]));
-		if($um['status']) {
-			$this->updateUserData($um['id'], array(
-				"description" => !empty($user[0]['description'][0]) ? $user[0]['description'][0] : '',
-				"primary_group" => $user[0]['primarygroupid'][0],
-				"fname" => $user[0]['givenname'][0],
-				"lname" => $user[0]['sn'][0],
-				"displayname" => $user[0]['displayname'][0],
-				"department" => !empty($user[0]['department'][0]) ? $user[0]['department'][0] : '',
-				"email" => !empty($user[0]['mail'][0]) ? $user[0]['mail'][0] : '',
-				"cell" => !empty($user[0]['mobile'][0]) ? $user[0]['mobile'][0] : '',
-				"work" => !empty($user[0]['telephonenumber'][0]) ? $user[0]['telephonenumber'][0] : '',
-			));
-		}
-		return true;
 	}
 
 	/**

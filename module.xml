@@ -1,17 +1,18 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>13.0.15</version>
+	<version>13.0.16</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
 	<repo>standard</repo>
 	<description>
-		This Module manages all FreePBX users excluding Administrators (at this time).
+		This Module manages all FreePBX users
 		It allows an Administrator to create a User Account that can be used by other applications for login or API purposes.
-		Modules like iSymphony, Rest API and User Control Panel use this module to manage their users.
+		Modules like iSymphony, Rest API and User Control Panel and FreePBX itself use this module to manage their users.
 	</description>
 	<changelog>
+		*13.0.16* Add Active Directory users to their primary groups
 		*13.0.15* Group settings added to extensions page, proper active directory username represenation, default groups, dont send emails
 		*13.0.14* Add ability to link users to extensions through active directory attributes
 		*13.0.13* FREEPBX-10034 Actually fix Active Directory functionality so that it works
