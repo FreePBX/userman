@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-31 16:58-0700\n"
+"POT-Creation-Date: 2015-09-01 10:47-0700\n"
 "PO-Revision-Date: 2015-02-21 11:46+0200\n"
 "Last-Translator: Kevin <kevin@qloog.com>\n"
 "Language-Team: Japanese <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -294,7 +294,7 @@ msgstr ""
 msgid "Group Details"
 msgstr ""
 
-#: functions.inc/auth/Auth.php:266
+#: functions.inc/auth/Auth.php:287
 msgid "Group Does Not Exist"
 msgstr ""
 
@@ -311,15 +311,15 @@ msgstr ""
 msgid "Group Successfully Added"
 msgstr ""
 
-#: functions.inc/auth/Auth.php:393
+#: functions.inc/auth/Auth.php:414
 msgid "Group Successfully Updated"
 msgstr ""
 
-#: functions.inc/auth/modules/Msad.php:312
+#: functions.inc/auth/modules/Msad.php:313
 msgid "Group updated"
 msgstr ""
 
-#: functions.inc/auth/Auth.php:364
+#: functions.inc/auth/Auth.php:385
 msgid "Groupname Can Not Be Blank!"
 msgstr ""
 
@@ -399,13 +399,13 @@ msgstr ""
 msgid "Invalid User"
 msgstr ""
 
-#: functions.inc/auth/modules/Msad.php:264
-#: functions.inc/auth/modules/Msad.php:277
+#: functions.inc/auth/modules/Msad.php:265
+#: functions.inc/auth/modules/Msad.php:278
 msgid "LDAP is in Read Only Mode. Addition denied"
 msgstr ""
 
-#: functions.inc/auth/modules/Msad.php:239
-#: functions.inc/auth/modules/Msad.php:247
+#: functions.inc/auth/modules/Msad.php:240
+#: functions.inc/auth/modules/Msad.php:248
 msgid "LDAP is in Read Only Mode. Deletion denied"
 msgstr ""
 
@@ -760,7 +760,7 @@ msgstr "ユーザー '%s' は存在しません"
 msgid "User Details"
 msgstr ""
 
-#: functions.inc/auth/Auth.php:247
+#: functions.inc/auth/Auth.php:268
 msgid "User Does Not Exist"
 msgstr "ユーザーは存在しません"
 
@@ -784,19 +784,19 @@ msgstr "ユーザー管理の設定"
 msgid "User Manager Users"
 msgstr ""
 
-#: functions.inc/auth/Auth.php:338 functions.inc/auth/modules/Freepbx.php:137
+#: functions.inc/auth/Auth.php:359 functions.inc/auth/modules/Freepbx.php:137
 msgid "User Successfully Added"
 msgstr "ユーザーを追加しました"
 
-#: functions.inc/auth/Auth.php:256 functions.inc/auth/Auth.php:275
+#: functions.inc/auth/Auth.php:277 functions.inc/auth/Auth.php:296
 msgid "User Successfully Deleted"
 msgstr "ユーザーを削除しました"
 
-#: functions.inc/auth/Auth.php:347
+#: functions.inc/auth/Auth.php:368
 msgid "User Successfully Updated"
 msgstr ""
 
-#: functions.inc/auth/modules/Msad.php:301
+#: functions.inc/auth/modules/Msad.php:302
 msgid "User updated"
 msgstr ""
 
@@ -809,7 +809,7 @@ msgstr ""
 msgid "Username"
 msgstr "ユーザー名"
 
-#: functions.inc/auth/Auth.php:318
+#: functions.inc/auth/Auth.php:339
 msgid "Username Can Not Be Blank!"
 msgstr ""
 
@@ -864,7 +864,7 @@ msgstr ""
 msgid "group"
 msgstr ""
 
-#: functions.inc/auth/Auth.php:384
+#: functions.inc/auth/Auth.php:405
 msgid "group Successfully Added"
 msgstr ""
 
