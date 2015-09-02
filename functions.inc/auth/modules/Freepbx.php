@@ -6,12 +6,10 @@
 namespace FreePBX\modules\Userman\Auth;
 
 class Freepbx extends Auth {
-	private $groups = array();
 
 	public function __construct($userman, $freepbx) {
 		parent::__construct($userman, $freepbx);
 		$config = $userman->getConfig("authFREEPBXSettings");
-		$this->groups = !empty($config['default-groups']) ? $config['default-groups'] : array();
 	}
 
 	/**
@@ -120,20 +118,6 @@ class Freepbx extends Auth {
 
 		$id = $this->db->lastInsertId();
 		$this->updateUserData($id,$extraData);
-
-		if(!empty($this->groups)) {
-			foreach($this->groups as $group) {
-				$info = $this->getGroupByGID($group);
-				if(empty($info)) {
-					continue;
-				}
-				$info['users'] = !empty($info['users']) ? $info['users'] : array();
-				if(!in_array($id, $info['users'])) {
-					$info['users'][] = $id;
-				}
-				$this->updateGroup($info['id'], $info['groupname'], $info['groupname'], $info['description'], $info['users']);
-			}
-		}
 		return array("status" => true, "type" => "success", "message" => _("User Successfully Added"), "id" => $id);
 	}
 
