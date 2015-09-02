@@ -17,7 +17,8 @@ foreach($sqls as $sql) {
 //Quick check to see if we are previously installed
 //this lets us know if we need to create a default group
 $defaultGroup = false;
-if (!$db->getAll('SHOW TABLES LIKE "userman_groups"')) {
+$grps = sql('SELECT * FROM userman_groups','getAll',DB_FETCHMODE_ASSOC);
+if (empty($grps)) {
   $defaultGroup = true;
 }
 
