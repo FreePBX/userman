@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-02 15:07-0700\n"
+"POT-Creation-Date: 2015-09-02 18:18-0700\n"
 "PO-Revision-Date: 2015-04-12 05:58+0200\n"
 "Last-Translator: Ernesto <ecasas@sangoma.com>\n"
 "Language-Team: Spanish <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -286,7 +286,7 @@ msgstr ""
 msgid "Group Details"
 msgstr ""
 
-#: functions.inc/auth/Auth.php:287
+#: functions.inc/auth/Auth.php:291
 msgid "Group Does Not Exist"
 msgstr ""
 
@@ -303,7 +303,7 @@ msgstr ""
 msgid "Group Successfully Added"
 msgstr ""
 
-#: functions.inc/auth/Auth.php:414
+#: functions.inc/auth/Auth.php:418
 msgid "Group Successfully Updated"
 msgstr ""
 
@@ -311,7 +311,7 @@ msgstr ""
 msgid "Group updated"
 msgstr ""
 
-#: functions.inc/auth/Auth.php:385
+#: functions.inc/auth/Auth.php:389
 msgid "Groupname Can Not Be Blank!"
 msgstr ""
 
@@ -758,7 +758,7 @@ msgstr "Usuario '%s' No Existe"
 msgid "User Details"
 msgstr ""
 
-#: functions.inc/auth/Auth.php:268
+#: functions.inc/auth/Auth.php:272
 msgid "User Does Not Exist"
 msgstr "Usuario No Existe"
 
@@ -782,15 +782,15 @@ msgstr "Configuración de Gestión de Usuario"
 msgid "User Manager Users"
 msgstr ""
 
-#: functions.inc/auth/Auth.php:359 functions.inc/auth/modules/Freepbx.php:121
+#: functions.inc/auth/Auth.php:363 functions.inc/auth/modules/Freepbx.php:121
 msgid "User Successfully Added"
 msgstr "Usuario añadido Satisfactoriamente"
 
-#: functions.inc/auth/Auth.php:277 functions.inc/auth/Auth.php:296
+#: functions.inc/auth/Auth.php:281 functions.inc/auth/Auth.php:300
 msgid "User Successfully Deleted"
 msgstr "Usuario Eliminado Satisfactoriamente"
 
-#: functions.inc/auth/Auth.php:368
+#: functions.inc/auth/Auth.php:372
 msgid "User Successfully Updated"
 msgstr ""
 
@@ -807,7 +807,7 @@ msgstr ""
 msgid "Username"
 msgstr "Nombre Usuario"
 
-#: functions.inc/auth/Auth.php:339
+#: functions.inc/auth/Auth.php:343
 msgid "Username Can Not Be Blank!"
 msgstr ""
 
@@ -866,7 +866,7 @@ msgstr ""
 msgid "group"
 msgstr ""
 
-#: functions.inc/auth/Auth.php:405
+#: functions.inc/auth/Auth.php:409
 msgid "group Successfully Added"
 msgstr ""
 
