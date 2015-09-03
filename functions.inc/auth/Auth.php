@@ -164,6 +164,7 @@ abstract class Auth implements Base {
 		$groups = $sth->fetchAll(\PDO::FETCH_ASSOC);
 		foreach($groups as &$group) {
 			$group['users'] = json_decode($group['users'],true);
+			$group['users'] = is_array($group['users']) ? $group['users'] : array();
 		}
 		return $groups;
 	}
@@ -199,6 +200,7 @@ abstract class Auth implements Base {
 		$group = $sth->fetch(\PDO::FETCH_ASSOC);
 		if(!empty($group)) {
 			$group['users'] = json_decode($group['users'],true);
+			$group['users'] = is_array($group['users']) ? $group['users'] : array();
 		}
 		return $group;
 	}
@@ -218,6 +220,7 @@ abstract class Auth implements Base {
 		$group = $sth->fetch(\PDO::FETCH_ASSOC);
 		if(!empty($group)) {
 			$group['users'] = json_decode($group['users'],true);
+			$group['users'] = is_array($group['users']) ? $group['users'] : array();
 		}
 		return $group;
 	}
@@ -234,6 +237,7 @@ abstract class Auth implements Base {
 		$group = $sth->fetch(\PDO::FETCH_ASSOC);
 		if(!empty($group)) {
 			$group['users'] = json_decode($group['users'],true);
+			$group['users'] = is_array($group['users']) ? $group['users'] : array();
 		}
 		return $group;
 	}

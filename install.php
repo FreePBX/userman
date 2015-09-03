@@ -145,9 +145,9 @@ if (!$db->getAll('SHOW COLUMNS FROM `userman_users` WHERE FIELD = "fax"')) {
 }
 
 if($defaultGroup) {
-  $sql = "INSERT INTO userman_groups (`groupname`, `description`) VALUES (?, ?)";
+  $sql = "INSERT INTO userman_groups (`groupname`, `description`, `users`) VALUES (?, ?, ?)";
   $sth = FreePBX::Database()->prepare($sql);
-  $sth->execute(array(_("All Users"),_("This group was created on install and is automatically assigned to new users. This can be disabled in User Manager Settings")));
+  $sth->execute(array(_("All Users"),_("This group was created on install and is automatically assigned to new users. This can be disabled in User Manager Settings"),"[]"));
   $id = FreePBX::Database()->lastInsertId();
   $config = array(
     "default-groups" => array($id)
