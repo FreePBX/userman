@@ -17,7 +17,15 @@ foreach($sqls as $sql) {
 //Quick check to see if we are previously installed
 //this lets us know if we need to create a default group
 $defaultGroup = false;
-$grps = sql('SELECT * FROM userman_groups','getAll',DB_FETCHMODE_ASSOC);
+$sql = "SELECT * FROM userman_groups";
+$sth = FreePBX::Database()->prepare($sql);
+try {
+  $sth->execute();
+  $grps = $sth->fetchAll();
+} catch(\Exception $e) {
+  $grps = array();
+}
+
 if (empty($grps)) {
   $defaultGroup = true;
 }
