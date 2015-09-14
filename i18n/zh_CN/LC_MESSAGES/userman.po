@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-02 18:18-0700\n"
+"POT-Creation-Date: 2015-09-14 00:17-0700\n"
 "PO-Revision-Date: 2015-02-20 20:06-0500\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -73,7 +73,7 @@ msgstr ""
 msgid "Administration Access"
 msgstr ""
 
-#: install.php:150
+#: install.php:158
 msgid "All Users"
 msgstr ""
 
@@ -671,7 +671,7 @@ msgstr ""
 msgid "This authentication driver does not allow importing"
 msgstr ""
 
-#: install.php:150
+#: install.php:158
 msgid ""
 "This group was created on install and is automatically assigned to new "
 "users. This can be disabled in User Manager Settings"
