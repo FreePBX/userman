@@ -135,7 +135,7 @@
 							</div>
 							<div role="tabpane" id="settings" class="tab-pane display">
 								<div class="container-fluid">
-									<?php echo load_view(dirname(__FILE__).'/general.php', array("brand" => $brand, "auths" => $auths, "authtype" => $authtype, "autoEmail" => $autoEmail)); ?>
+									<?php echo load_view(dirname(__FILE__).'/general.php', array("brand" => $brand, "auths" => $auths, "authtype" => $authtype, "autoEmail" => $autoEmail,"emailbody" => $emailbody, "emailsubject" => $emailsubject)); ?>
 								</div>
 							</div>
 						</div>

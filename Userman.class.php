@@ -396,25 +396,25 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 					'submitsend' => array(
 						'name' => 'submitsend',
 						'id' => 'submitsend',
-						'value' => "Submit & Send Email to User",
+						'value' => _("Submit & Send Email to User"),
 						'class' => array('hidden')
 					),
 					'submit' => array(
 						'name' => 'submit',
 						'id' => 'submit',
-						'value' => "Submit",
+						'value' => _("Submit"),
 						'class' => array('hidden')
 					),
 					'delete' => array(
 						'name' => 'delete',
 						'id' => 'delete',
-						'value' => "Delete",
+						'value' => _("Delete"),
 						'class' => array('hidden')
 					),
 					'reset' => array(
 						'name' => 'reset',
 						'id' => 'reset',
-						'value' => "Reset",
+						'value' => _("Reset"),
 						'class' => array('hidden')
 					),
 				);
@@ -429,6 +429,9 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 
 				if($request['action'] == 'showgroup' && !$permissions['removeGroup']) {
 					unset($buttons['delete']);
+				}
+				if(empty($request['action'])){
+					unset($buttons['submitsend']);
 				}
 			}
 		return $buttons;
@@ -579,7 +582,8 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 				$emailsubject = $this->getGlobalsetting('emailsubject');
 				$autoEmail = $this->getGlobalsetting('autoEmail');
 				$autoEmail = is_null($autoEmail) ? true : $autoEmail;
-				$html .= load_view(dirname(__FILE__).'/views/welcome.php',array("autoEmail" => $autoEmail, "authtype" => $this->getConfig("auth"), "auths" => $auths, "brand" => $this->brand, "permissions" => $permissions, "groups" => $groups, "users" => $users, "sections" => $sections, "message" => $this->message, "emailbody" => $emailbody, "emailsubject" => $emailsubject));
+				$html .= load_view(dirname(__FILE__).'/views/welcome.php',array("autoEmail" => $autoEmail, "authtype" => $this->getConfig("auth"), "auths" => $auths, "brand" => $this->brand, "permissions" => $permissions, "groups" => $groups, "users" => $users, "sections" => $sections,
+				 																																"message" => $this->message, "emailbody" => $emailbody, "emailsubject" => $emailsubject));
 			break;
 		}
 

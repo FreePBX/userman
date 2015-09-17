@@ -50,7 +50,7 @@
 						<div class="row">
 							<div class="form-group">
 								<div class="col-md-3">
-									<label class="control-label" for="emailsubject"><?php echo _("Email Body")?></label>
+									<label class="control-label" for="emailsubject"><?php echo _("Email Subject")?></label>
 									<i class="fa fa-question-circle fpbx-help-icon" data-for="emailsubject"></i>
 								</div>
 								<div class="col-md-9">
@@ -74,7 +74,7 @@
 						<div class="row">
 							<div class="form-group">
 								<div class="col-md-3">
-									<label class="control-label" for="emailbody"><?php echo _("Email Subject")?></label>
+									<label class="control-label" for="emailbody"><?php echo _("Email Body")?></label>
 									<i class="fa fa-question-circle fpbx-help-icon" data-for="emailbody"></i>
 								</div>
 								<div class="col-md-9">
