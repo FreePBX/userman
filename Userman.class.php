@@ -5,7 +5,7 @@
 //
 
 namespace FreePBX\modules;
-class Userman implements \BMO {
+class Userman extends \FreePBX_Helpers implements \BMO {
 	private $registeredFunctions = array();
 	private $message = '';
 	private $userTable = 'freepbx_users';
