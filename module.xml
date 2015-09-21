@@ -2,7 +2,7 @@
 	<rawname>userman</rawname>
 	<name>User Management</name>
 	<version>12.0.27</version>
-	<publisher>Schmooze Com Inc</publisher>
+	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
 	<repo>standard</repo>
@@ -62,7 +62,7 @@
 		*2.11.0alpha2* Add more fields
 		*2.11.0alpha1* Initial Module
 	</changelog>
-	<info></info>
+	<info/>
 	<category>Admin</category>
 	<menuitems>
 		<userman>User Management</userman>
