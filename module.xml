@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>13.0.20</version>
+	<version>13.0.21</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -12,6 +12,7 @@
 		Modules like iSymphony, Rest API and User Control Panel and FreePBX itself use this module to manage their users.
 	</description>
 	<changelog>
+		*13.0.21* Console functionality
 		*13.0.20* FREEPBX-10246 Fix labels, buttons and save on main page.
 		*13.0.19* FREEPBX-10204 No default Userman Group is created at install or upgrade time
 		*13.0.18* Need to insert a blank array into the DB
