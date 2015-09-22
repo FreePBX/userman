@@ -321,7 +321,17 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 			$this->setModuleSettingByGID($id,'ucp|Presencestate','enabled',true);
 			$this->setModuleSettingByGID($id,'ucp|Voicemail','enable', true);
 			$this->setModuleSettingByGID($id,'ucp|Voicemail','assigned', array("self"));
+
+			$this->setConfig("autoGroup", $id);
 		}
+	}
+
+	/**
+	 * Get the ID of the automatically created group
+	 * @return int The group ID
+	 */
+	public function getAutoGroup() {
+		return $this->getConfig("autoGroup");
 	}
 	public function uninstall() {
 
