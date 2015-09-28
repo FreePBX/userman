@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-22 12:50-0700\n"
+"POT-Creation-Date: 2015-09-28 11:45-0700\n"
 "PO-Revision-Date: 2015-02-21 11:46+0200\n"
 "Last-Translator: Kevin <kevin@qloog.com>\n"
 "Language-Team: Japanese <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -118,6 +118,10 @@ msgstr ""
 msgid "Are you sure you wish to delete this %s?"
 msgstr ""
 
+#: functions.inc/auth/modules/Voicemail.php:25
+msgid "Asterisk Voicemail"
+msgstr ""
+
 #: views/general.php:10
 msgid "Authentication Settings"
 msgstr ""
@@ -153,6 +157,10 @@ msgstr "会社"
 
 #: functions.inc/auth/modules/Msad.php:107
 msgid "Connected"
+msgstr ""
+
+#: views/voicemail.php:7
+msgid "Context"
 msgstr ""
 
 #: functions.inc/guihooks.php:84 functions.inc/guihooks.php:140
@@ -286,6 +294,7 @@ msgid ""
 msgstr ""
 
 #: functions.inc/auth/modules/Freepbx.php:197
+#: functions.inc/auth/modules/Voicemail.php:211
 #, php-format
 msgid "Group '%s' Does Not Exist"
 msgstr ""
@@ -312,7 +321,12 @@ msgid "Group Name"
 msgstr ""
 
 #: functions.inc/auth/modules/Freepbx.php:134
+#: functions.inc/auth/modules/Voicemail.php:181
 msgid "Group Successfully Added"
+msgstr ""
+
+#: functions.inc/auth/modules/Voicemail.php:142
+msgid "Group Successfully Deleted"
 msgstr ""
 
 #: functions.inc/auth/Auth.php:418
@@ -717,6 +731,10 @@ msgstr "ユーザーの肩書。"
 msgid "The user's work phone number."
 msgstr "ユーザーの仕事電話番号。"
 
+#: views/voicemail.php:19
+msgid "The voicemail context to get users from"
+msgstr ""
+
 #: Userman.class.php:2318 Userman.class.php:2375
 msgid "This authentication driver does not allow importing"
 msgstr ""
@@ -751,6 +769,7 @@ msgid "Update Password"
 msgstr ""
 
 #: functions.inc/auth/modules/Freepbx.php:206
+#: functions.inc/auth/modules/Voicemail.php:220
 msgid "Updated Group"
 msgstr ""
 
@@ -818,6 +837,7 @@ msgid "User Successfully Updated"
 msgstr ""
 
 #: functions.inc/auth/modules/Msad.php:302
+#: functions.inc/auth/modules/Voicemail.php:198
 msgid "User updated"
 msgstr ""
 
@@ -844,6 +864,14 @@ msgstr ""
 
 #: views/groups.php:174 views/users.php:506
 msgid "Visible Extension Range"
+msgstr ""
+
+#: functions.inc/auth/modules/Voicemail.php:159
+msgid "Voicemail is in Read Only Mode. Addition denied"
+msgstr ""
+
+#: functions.inc/auth/modules/Voicemail.php:127
+msgid "Voicemail is in Read Only Mode. Deletion denied"
 msgstr ""
 
 #: views/welcome.php:10
