@@ -382,12 +382,20 @@ class Msad extends Auth {
 		}
 		$this->connect();
 		$sr = ldap_search($this->ldap, $this->dn, "(objectCategory=Group)");
+		if($sr === false) {
+			return false;
+		}
 		$groups = ldap_get_entries($this->ldap, $sr);
 		unset($groups['count']);
 		foreach($groups as $group) {
 			//Now get the users for this group
 			$members = array();
+			//http://www.rlmueller.net/CharactersEscaped.htm
+			$group['distinguishedname'][0] = stripslashes($group['distinguishedname'][0]);
 			$gs = ldap_search($this->ldap, $this->dn, "(&(objectCategory=Person)(sAMAccountName=*)(memberof=".$group['distinguishedname'][0]."))");
+			if($gs === false) {
+				continue;
+			}
 			$users = ldap_get_entries($this->ldap, $gs);
 			unset($users['count']);
 			foreach($users as $user) {
