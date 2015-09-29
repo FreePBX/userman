@@ -1110,12 +1110,13 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		if(!is_numeric($id)) {
 			throw new \Exception(_("ID was not numeric"));
 		}
+		$data = $this->auth->deleteUserByID($id);
 		$status = $this->auth->deleteUserByID($id);
 		if(!$status['status']) {
 			return $status;
 		}
-		$this->callHooks('delUser',array("id" => $id));
-		$this->delUser($id);
+		$this->callHooks('delUser',$data);
+		$this->delUser($id,$data);
 		return $status;
 	}
 
@@ -1127,12 +1128,13 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		if(!is_numeric($gid)) {
 			throw new \Exception(_("GID was not numeric"));
 		}
+		$data = $this->getGroupByGID($gid);
 		$status = $this->auth->deleteGroupByGID($gid);
 		if(!$status['status']) {
 			return $status;
 		}
-		$this->callHooks('delGroup',array("id" => $gid));
-		$this->delGroup($gid);
+		$this->callHooks('delGroup',$data);
+		$this->delGroup($gid,$data);
 		return $status;
 	}
 
@@ -1183,10 +1185,10 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 *
 	 * @param {int} $id the user id of the deleted user
 	 */
-	private function delUser($id) {
+	private function delUser($id,$data) {
 		$request = $_REQUEST;
 		$display = !empty($request['display']) ? $request['display'] : "";
-		$this->FreePBX->Hooks->processHooks($id, $display, array("id" => $id));
+		$this->FreePBX->Hooks->processHooks($id, $display, $data);
 	}
 
 	/**
@@ -1196,10 +1198,10 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 *
 	 * @param {int} $gid the group id of the deleted group
 	 */
-	private function delGroup($gid) {
+	private function delGroup($gid,$data) {
 		$request = $_REQUEST;
 		$display = !empty($request['display']) ? $request['display'] : "";
-		$this->FreePBX->Hooks->processHooks($gid, $display, array("id" => $gid));
+		$this->FreePBX->Hooks->processHooks($gid, $display, $data);
 	}
 
 	/**

@@ -43,14 +43,16 @@
 											<i class="fa fa-envelope-o"></i> <span><?php echo _('Send Email')?></span>
 										</button>
 									</div>
-									<table data-toolbar="#toolbar-users" data-toggle="table" data-pagination="true" data-search="true" class="table table-striped" id="table-users" data-type="users">
+									<table data-toolbar="#toolbar-users" data-state-save="true" data-state-save-id-table="userman-users" data-toggle="table" data-maintain-selected="true" data-show-columns="true" data-pagination="true" data-search="true" class="table table-striped" id="table-users" data-type="users">
 										<thead>
 											<tr>
 												<th data-checkbox="true"></th>
 												<th data-sortable="true" data-field="id"><?php echo _("ID") ?></th>
 												<th data-sortable="true"><?php echo _("Username") ?></th>
 												<th data-sortable="true"><?php echo _("Display Name") ?></th>
-												<th data-sortable="true"><?php echo _("Extension") ?></th>
+												<th data-sortable="true"><?php echo _("First Name") ?></th>
+												<th data-sortable="true"><?php echo _("Last Name") ?></th>
+												<th data-sortable="true"><?php echo _("Linked Extension") ?></th>
 												<th data-sortable="true"><?php echo _("Description") ?></th>
 												<th><?php echo _("Action") ?></th>
 											</tr>
@@ -62,6 +64,8 @@
 													<td><?php echo $row['id']?></td>
 													<td><?php echo $row['username']?></td>
 													<td><?php echo $row['displayname']?></td>
+													<td><?php echo $row['fname']?></td>
+													<td><?php echo $row['lname']?></td>
 													<td><?php echo $row['default_extension']?></td>
 													<td><?php echo $row['description']?></td>
 													<td class="actions">
