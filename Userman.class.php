@@ -828,8 +828,11 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 				$auths = array();
 				foreach($this->getAuths() as $auth) {
 					$class = 'FreePBX\modules\Userman\Auth\\'.$auth;
-					$auths[$auth] = $class::getInfo($this, $this->FreePBX);
-					$auths[$auth]['html'] = $class::getConfig($this, $this->FreePBX);
+					$a = $class::getInfo($this, $this->FreePBX);
+					if(!empty($a)) {
+						$auths[$auth] = $a;
+						$auths[$auth]['html'] = $class::getConfig($this, $this->FreePBX);
+					}
 				}
 
 				$emailbody = $this->getGlobalsetting('emailbody');
@@ -1219,7 +1222,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 */
 	public function addUser($username, $password, $default='none', $description=null, $extraData=array(), $encrypt = true) {
 		if(empty($username)) {
-			throw new \Exception(_("Userman can not be blank"));
+			throw new \Exception(_("Username can not be blank"));
 		}
 		if(empty($password)) {
 			throw new \Exception(_("Password can not be blank"));
