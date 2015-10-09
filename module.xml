@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>13.0.31</version>
+	<version>13.0.32</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -12,6 +12,7 @@
 		Modules like iSymphony, Rest API and User Control Panel and FreePBX itself use this module to manage their users.
 	</description>
 	<changelog>
+		*13.0.32* Fix array diff error when it is not an array
 		*13.0.31* Move everything back into install.php
 		*13.0.30* FREEPBX-10421 Dont show drivers that arent supported
 		*13.0.29* FREEPBX-9118 Selectable columns

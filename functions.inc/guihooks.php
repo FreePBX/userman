@@ -169,6 +169,7 @@ function userman_configpageload() {
 		//unassign all extensions for this user
 		foreach($userman->getAllUsers() as $user) {
 			$assigned = $userman->getGlobalSettingByID($user['id'],'assigned');
+			$assigned = is_array($assigned) ? $assigned : array();
 			$assigned = array_diff($assigned, array($extdisplay));
 			$userman->setGlobalSettingByID($user['id'],'assigned',$assigned);
 		}
