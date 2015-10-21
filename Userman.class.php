@@ -59,6 +59,15 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		}
 	}
 
+	public function getRightNav($request) {
+		$dir = basename($request['display']);
+		if(isset($request['action'])) {
+			return load_view(__DIR__."/views/rnav.php",array("action" => $request['action']));
+		} else {
+			return '';
+		}
+	}
+
 	/**
 	 * Old create object
 	 * Dont use this unless you know what you are doing
@@ -646,6 +655,8 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 */
 	public function ajaxRequest($req, $setting){
 		switch($req){
+			case "getUsers":
+			case "getGroups":
 			case "getuserfields":
 			case "updatePassword":
 			case "delete":
@@ -664,6 +675,10 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	public function ajaxHandler(){
 		$request = $_REQUEST;
 		switch($request['command']){
+			case "getUsers":
+				return $this->getAllUsers();
+			case "getGroups":
+				return $this->getAllGroups();
 			case "email":
 				foreach($_REQUEST['extensions'] as $ext){
 					$user = $this->getUserbyID($ext);
@@ -1084,26 +1099,28 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	/**
 	 * Get the assigned devices (Extensions or ﻿(device/user mode) Users) for this User
 	 *
-	 * Get the assigned devices (Extensions or ﻿(device/user mode) Users) for this User as a Hashed Array
+	 * This funciton is depreciated. it only returns data for default_extension
 	 *
 	 * @param int $id The ID of the user from User Manager
 	 * @return array
 	 */
 	public function getAssignedDevices($id) {
-		return $this->getGlobalSettingByID($id,'assigned');
+		$user = $this->getUserbyID($id);
+		return !empty($user['default_extension']) ? array($user['default_extension']) : array();
 	}
 
 	/**
 	 * Set the assigned devices (Extensions or ﻿(device/user mode) Users) for this User
 	 *
-	 * Set the assigned devices (Extensions or ﻿(device/user mode) Users) for this User as a Hashed Array
+	 * This function is depreciated and will do nothing
 	 *
 	 * @param int $id The ID of the user from User Manager
 	 * @param array $devices The devices to add to this user as an array
 	 * @return array
 	 */
 	public function setAssignedDevices($id,$devices=array()) {
-		return $this->setGlobalSettingByID($id,'assigned',$devices);
+		return true;
+		//return $this->setGlobalSettingByID($id,'assigned',$devices);
 	}
 
 	/**
@@ -1703,7 +1720,6 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 			$user = $this->addUser($exten, $password, $exten, _('Migrated user from voicemail'), array('email' => $email, 'displayname' => $displayname));
 			if(!empty($user['id'])) {
 				echo "Added ".$exten." with password of ".$password."\\n";
-				$this->setAssignedDevices($user['id'], array($exten));
 				if(!empty($email)) {
 					$this->sendWelcomeEmail($exten, $password);
 				}

@@ -44,8 +44,8 @@ $(".btn-remove").click(function() {
 	}
 });
 $("table").on("post-body.bs.table", function () {
-	$(".actions .fa-trash-o").off("click");
-	$(".actions .fa-trash-o").click(function() {
+	$("table .fa-trash-o").off("click");
+	$("table .fa-trash-o").click(function() {
 		var id = $(this).data("id"), section = $(this).data("section"), type = $(this).parents("table").data("type");
 		if(confirm(sprintf(_("Are you sure you wish to delete this %s?"),translations[type]))) {
 			$.post( "ajax.php", {command: "delete", module: "userman", extensions: [id], type: type}, function(data) {
@@ -97,9 +97,8 @@ $( document ).ready(function() {
 		$('input[name="submit"]').removeClass('hidden');
 		$('input[name="submitsend"]').removeClass('hidden');
 		$('input[name="reset"]').removeClass('hidden');
-	}
-
-	if(params['action'] == 'adduser' || params['action'] == 'showuser'){
+		$("#action-bar").removeClass("hidden");
+	} else if(params['action'] == 'adduser' || params['action'] == 'showuser'){
 		$('input[name="submitsend"]').removeClass('hidden');
 		$('input[name="submit"]').removeClass('hidden');
 		$('input[name="reset"]').removeClass('hidden');
@@ -108,6 +107,8 @@ $( document ).ready(function() {
 		$('input[name="submit"]').removeClass('hidden');
 		$('input[name="reset"]').removeClass('hidden');
 		$('input[name="delete"]').removeClass('hidden');
+	} else {
+		$("#action-bar").addClass("hidden");
 	}
 
 	$(".nav-tabs a[href="+hash+"]").tab('show');
@@ -118,14 +119,17 @@ $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
 	//Button Related
 	switch(e.target.text){
 		case "Settings":
+			$("#action-bar").removeClass("hidden");
 			$('input[name="submit"]').removeClass('hidden');
 			$('input[name="reset"]').removeClass('hidden');
 		break;
 		case "Users":
+			$("#action-bar").addClass("hidden");
 			$('input[name="submit"]').addClass('hidden');
 			$('input[name="reset"]').addClass('hidden');
 		break;
 		case "Groups":
+			$("#action-bar").addClass("hidden");
 			$('input[name="submit"]').addClass('hidden');
 			$('input[name="reset"]').addClass('hidden');
 		break;
@@ -171,4 +175,34 @@ $("#pwsub").on("click", function(){
 			console.log(e);
 		}
 	});
+});
+
+function userActions(value, row, index) {
+	var html = '<a href="?display=userman&amp;action=showuser&amp;user='+row.id+'"><i class="fa fa-edit"></i></a>';
+
+	if(permissions.changePassword) {
+		html += '<a data-toggle="modal" data-pwuid="'+row.id+'" data-target="#setpw" id="pwmlink'+row.id+'" class="clickable"><i class="fa fa-key"></i></a>';
+	}
+
+	if(permissions.removeUser) {
+		html += '<a class="clickable"><i class="fa fa-trash-o" data-section="users" data-id="'+row.id+'"></i></a>';
+	}
+	return html;
+}
+
+function groupActions(value, row, index) {
+	var html = '<a href="?display=userman&amp;action=showgroup&amp;group='+row.id+'"><i class="fa fa-edit"></i></a>';
+
+	if(permissions.removeGroup) {
+		html += '<a class="clickable"><i class="fa fa-trash-o" data-section="groups" data-id="'+row.id+'"></i></a>';
+	}
+	return html;
+}
+
+$("#user-side").on("click-row.bs.table", function(row, $element) {
+	window.location = "?display=userman&action=showuser&user="+$element.id;
+});
+
+$("#group-side").on("click-row.bs.table", function(row, $element) {
+	window.location = "?display=userman&action=showgroup&group="+$element.id;
 });

@@ -22,3 +22,8 @@
 	color: grey;
 	margin-top: 3px;
 }
+
+
+#user-side tr, #group-side tr {
+		cursor: pointer;
+}
