@@ -246,6 +246,9 @@ if (empty($grps)) {
 	FreePBX::Userman()->setModuleSettingByGID($id,'ucp|Presencestate','enabled',true);
 	FreePBX::Userman()->setModuleSettingByGID($id,'ucp|Voicemail','enable', true);
 	FreePBX::Userman()->setModuleSettingByGID($id,'ucp|Voicemail','assigned', array("self"));
-
+	FreePBX::Userman()->setModuleSettingByGID($id,'ucp|Voicemail','download', true);
+	FreePBX::Userman()->setModuleSettingByGID($id,'ucp|Voicemail','playback', true);
+	FreePBX::Userman()->setModuleSettingByGID($id,'ucp|Voicemail','settings', true);
+	FreePBX::Userman()->setModuleSettingByGID($id,'ucp|Voicemail','greetings', true);
 	FreePBX::Userman()->setConfig("autoGroup", $id);
 }
