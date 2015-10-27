@@ -10,14 +10,14 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-21 09:31-0700\n"
-"PO-Revision-Date: 2015-04-12 05:58+0200\n"
+"PO-Revision-Date: 2015-10-22 01:10+0200\n"
 "Last-Translator: Ernesto <ecasas@sangoma.com>\n"
-"Language-Team: Spanish <http://weblate.freepbx.org/projects/freepbx/userman/"
-"es_ES/>\n"
+"Language-Team: Spanish "
+"<http://weblate.freepbx.org/projects/freepbx/userman/es_ES/>\n"
+"Language: es_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: es_ES\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 2.2-dev\n"
 
@@ -29,7 +29,7 @@ msgstr ""
 #: functions.inc/auth/modules/Freepbx.php:24
 #, php-format
 msgid "%s Internal Directory"
-msgstr ""
+msgstr "%s Directorio Interno"
 
 #: views/welcome.php:15
 #, php-format
@@ -48,7 +48,7 @@ msgstr ""
 #: Userman.class.php:2000
 #, php-format
 msgid "%s records failed validation"
-msgstr ""
+msgstr "%s registros fallaron la validacion"
 
 #: views/users.php:89
 msgid "A brief description for this user."
