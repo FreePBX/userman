@@ -1019,6 +1019,24 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	}
 
 	/**
+	 * Update User Extra Data
+	 *
+	 * This updates Extra Data about the user
+	 * (fname,lname,title,email,cell,work,home,department)
+	 *
+	 * @param int $id The User Manager User ID
+	 * @param array $data A hash of data to update (see above)
+	 */
+	public function updateUserExtraData($id,$data=array()) {
+		$user = $this->getUserByID($id);
+		if(empty($user)) {
+			return false;
+		}
+		$o = $this->updateUser($id, $user['username'], $user['username'], $user['default_extension'], $user['description'], $data);
+		return $o['status'];
+	}
+
+	/**
 	 * Update a User in User Manager
 	 *
 	 * This Updates a User in User Manager
