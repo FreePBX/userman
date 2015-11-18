@@ -182,6 +182,7 @@ class Msad extends Auth {
 	 * Sync users and groups to the local database
 	 */
 	public function sync() {
+		set_time_limit(0);
 		$this->connect();
 		$this->updateAllUsers();
 		$this->updateAllGroups();
