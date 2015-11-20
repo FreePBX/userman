@@ -165,7 +165,7 @@ $sth = FreePBX::Database()->prepare($sql);
 $sth->execute();
 $res = $sth->fetch(\PDO::FETCH_ASSOC);
 if($res['Type'] != "varchar(150)") {
-	$sql = "ALTER TABLE `asterisk`.`userman_users`
+	$sql = "ALTER TABLE userman_users
 	CHANGE COLUMN `auth` `auth` VARCHAR(150) NULL DEFAULT 'freepbx' ,
 	CHANGE COLUMN `username` `username` VARCHAR(150) NULL DEFAULT NULL ,
 	DROP INDEX `username_UNIQUE` ,
@@ -179,7 +179,7 @@ $sth = FreePBX::Database()->prepare($sql);
 $sth->execute();
 $res = $sth->fetch(\PDO::FETCH_ASSOC);
 if($res['Type'] != "varchar(150)") {
-	$sql = "ALTER TABLE `asterisk`.`userman_groups`
+	$sql = "ALTER TABLE `userman_groups`
 	CHANGE COLUMN `auth` `auth` VARCHAR(150) NULL DEFAULT 'freepbx' ,
 	CHANGE COLUMN `groupname` `groupname` VARCHAR(150) NULL DEFAULT NULL ,
 	ADD UNIQUE INDEX `groupname_UNIQUE` (`auth` ASC, `groupname` ASC);";
