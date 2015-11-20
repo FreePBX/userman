@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-13 13:37-0800\n"
+"POT-Creation-Date: 2015-11-20 08:55-0800\n"
 "PO-Revision-Date: 2015-10-30 07:56+0200\n"
 "Last-Translator: Kevin <kevin@qloog.com>\n"
 "Language-Team: Japanese <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -330,7 +330,7 @@ msgstr "グループを削除しました"
 msgid "Group Successfully Updated"
 msgstr "グループを更新しました"
 
-#: functions.inc/auth/modules/Msad.php:313
+#: functions.inc/auth/modules/Msad.php:314
 msgid "Group updated"
 msgstr "グループを更新しました"
 
@@ -412,13 +412,13 @@ msgstr "引き継ぐ"
 msgid "Invalid User"
 msgstr "無効なユーザ"
 
-#: functions.inc/auth/modules/Msad.php:265
-#: functions.inc/auth/modules/Msad.php:278
+#: functions.inc/auth/modules/Msad.php:266
+#: functions.inc/auth/modules/Msad.php:279
 msgid "LDAP is in Read Only Mode. Addition denied"
 msgstr "LDAPは読み取り専用モードのため追加できません。"
 
-#: functions.inc/auth/modules/Msad.php:240
-#: functions.inc/auth/modules/Msad.php:248
+#: functions.inc/auth/modules/Msad.php:241
+#: functions.inc/auth/modules/Msad.php:249
 msgid "LDAP is in Read Only Mode. Deletion denied"
 msgstr "LDAPは読み取り専用モードのため削除できません。"
 
@@ -863,7 +863,7 @@ msgstr "ユーザーを削除しました"
 msgid "User Successfully Updated"
 msgstr "ユーザ情報を更新しました"
 
-#: functions.inc/auth/modules/Msad.php:302
+#: functions.inc/auth/modules/Msad.php:303
 #: functions.inc/auth/modules/Voicemail.php:198
 msgid "User updated"
 msgstr "ユーザを更新しました"

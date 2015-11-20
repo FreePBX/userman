@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-13 13:37-0800\n"
+"POT-Creation-Date: 2015-11-20 08:55-0800\n"
 "PO-Revision-Date: 2015-10-14 14:59+0200\n"
 "Last-Translator: james <zhulizhong@gmail.com>\n"
 "Language-Team: Simplified Chinese <http://weblate.freepbx.org/projects/"
@@ -314,7 +314,7 @@ msgstr "成功删除组"
 msgid "Group Successfully Updated"
 msgstr "成功更新组"
 
-#: functions.inc/auth/modules/Msad.php:313
+#: functions.inc/auth/modules/Msad.php:314
 msgid "Group updated"
 msgstr "组更新"
 
@@ -386,13 +386,13 @@ msgstr ""
 msgid "Invalid User"
 msgstr ""
 
-#: functions.inc/auth/modules/Msad.php:265
-#: functions.inc/auth/modules/Msad.php:278
+#: functions.inc/auth/modules/Msad.php:266
+#: functions.inc/auth/modules/Msad.php:279
 msgid "LDAP is in Read Only Mode. Addition denied"
 msgstr ""
 
-#: functions.inc/auth/modules/Msad.php:240
-#: functions.inc/auth/modules/Msad.php:248
+#: functions.inc/auth/modules/Msad.php:241
+#: functions.inc/auth/modules/Msad.php:249
 msgid "LDAP is in Read Only Mode. Deletion denied"
 msgstr ""
 
@@ -820,7 +820,7 @@ msgstr ""
 msgid "User Successfully Updated"
 msgstr ""
 
-#: functions.inc/auth/modules/Msad.php:302
+#: functions.inc/auth/modules/Msad.php:303
 #: functions.inc/auth/modules/Voicemail.php:198
 msgid "User updated"
 msgstr ""
