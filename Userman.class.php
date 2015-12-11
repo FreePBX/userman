@@ -1797,11 +1797,18 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 
 		$dbemail = $this->getGlobalsetting('emailbody');
 		$template = !empty($dbemail) ? $dbemail : file_get_contents(__DIR__.'/views/emails/welcome_text.tpl');
-		preg_match_all('/%([\w|\d]*)%/',$template,$matches);
-
-		foreach($matches[1] as $match) {
-			$replacement = !empty($user[$match]) ? $user[$match] : '';
-			$template = str_replace('%'.$match.'%',$replacement,$template);
+		if(preg_match('/\${([\w|\d]*)}/',$template)) {
+			preg_match_all('/\${([\w|\d]*)}/',$template,$matches);
+			foreach($matches[1] as $match) {
+				$replacement = !empty($user[$match]) ? $user[$match] : '';
+				$template = str_replace('${'.$match.'}',$replacement,$template);
+			}
+		} else {
+			preg_match_all('/%([\w|\d]*)%/',$template,$matches);
+			foreach($matches[1] as $match) {
+				$replacement = !empty($user[$match]) ? $user[$match] : '';
+				$template = str_replace('%'.$match.'%',$replacement,$template);
+			}
 		}
 		$email_options = array('useragent' => $this->brand, 'protocol' => 'mail');
 		$email = new \CI_Email();

@@ -1,13 +1,13 @@
-Hi %fname%,
+Hi ${fname},
 
-Congratulations! Your %brand% account has been created! You can now use the credentials below:
+Congratulations! Your ${brand} account has been created! You can now use the credentials below:
 
-	Username: %username%
-	Password: %password%
+	Username: ${username}
+	Password: ${password}
 
 To login to the following services:
 
-%services%
+${services}
 
 Thanks,
-The %brand% Team
+The ${brand} Team
