@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-20 08:55-0800\n"
+"POT-Creation-Date: 2015-12-10 17:44-0800\n"
 "PO-Revision-Date: 2014-07-22 16:15+0200\n"
 "Last-Translator: Chavdar <chavdar_75@yahoo.com>\n"
 "Language-Team: Bulgarian <http://git.freepbx.org/projects/freepbx/userman/bg/"
@@ -51,7 +51,7 @@ msgid ""
 "new User Control Panel also uses User Manager."
 msgstr ""
 
-#: Userman.class.php:2018
+#: Userman.class.php:2025
 #, php-format
 msgid "%s records failed validation"
 msgstr ""
@@ -140,7 +140,7 @@ msgstr ""
 msgid "Base DN"
 msgstr ""
 
-#: Userman.class.php:1960 Userman.class.php:1961 views/users.php:354
+#: Userman.class.php:1967 Userman.class.php:1968 views/users.php:354
 msgid "Cell Phone Number"
 msgstr ""
 
@@ -148,11 +148,11 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: Userman.class.php:1991
+#: Userman.class.php:1998
 msgid "Comma delimited list of users"
 msgstr ""
 
-#: Userman.class.php:1948 Userman.class.php:1949 views/users.php:282
+#: Userman.class.php:1955 Userman.class.php:1956 views/users.php:282
 msgid "Company"
 msgstr ""
 
@@ -189,17 +189,17 @@ msgstr ""
 msgid "Deleting..."
 msgstr ""
 
-#: Userman.class.php:1952 Userman.class.php:1953 views/users.php:306
+#: Userman.class.php:1959 Userman.class.php:1960 views/users.php:306
 msgid "Department"
 msgstr ""
 
-#: Userman.class.php:1928 Userman.class.php:1929 Userman.class.php:1986
-#: Userman.class.php:1987 views/rnav.php:12 views/rnav.php:27
+#: Userman.class.php:1935 Userman.class.php:1936 Userman.class.php:1993
+#: Userman.class.php:1994 views/rnav.php:12 views/rnav.php:27
 #: views/users.php:77 views/welcome.php:55 views/welcome.php:81
 msgid "Description"
 msgstr ""
 
-#: Userman.class.php:1940 Userman.class.php:1941 views/users.php:234
+#: Userman.class.php:1947 Userman.class.php:1948 views/users.php:234
 #: views/welcome.php:51
 msgid "Display Name"
 msgstr ""
@@ -222,7 +222,7 @@ msgstr ""
 msgid "Edit User"
 msgstr ""
 
-#: Userman.class.php:1956 Userman.class.php:1957 views/users.php:330
+#: Userman.class.php:1963 Userman.class.php:1964 views/users.php:330
 msgid "Email Address"
 msgstr ""
 
@@ -258,11 +258,11 @@ msgstr ""
 msgid "Extension Link Attribute"
 msgstr ""
 
-#: Userman.class.php:1972 Userman.class.php:1973 views/users.php:426
+#: Userman.class.php:1979 Userman.class.php:1980 views/users.php:426
 msgid "Fax Phone Number"
 msgstr ""
 
-#: Userman.class.php:1932 Userman.class.php:1933 views/users.php:186
+#: Userman.class.php:1939 Userman.class.php:1940 views/users.php:186
 #: views/welcome.php:52
 msgid "First Name"
 msgstr ""
@@ -307,7 +307,7 @@ msgstr ""
 msgid "Group Does Not Exist"
 msgstr ""
 
-#: Userman.class.php:1982 Userman.class.php:1983 views/groups.php:51
+#: Userman.class.php:1989 Userman.class.php:1990 views/groups.php:51
 #: views/rnav.php:26 views/welcome.php:80
 msgid "Group Name"
 msgstr ""
@@ -348,7 +348,7 @@ msgid ""
 "groups in this view as well"
 msgstr ""
 
-#: Userman.class.php:1968 Userman.class.php:1969 views/users.php:402
+#: Userman.class.php:1975 Userman.class.php:1976 views/users.php:402
 msgid "Home Phone Number"
 msgstr ""
 
@@ -407,7 +407,7 @@ msgstr ""
 msgid "LDAP is in Read Only Mode. Deletion denied"
 msgstr ""
 
-#: Userman.class.php:1936 Userman.class.php:1937 views/users.php:210
+#: Userman.class.php:1943 Userman.class.php:1944 views/users.php:210
 #: views/welcome.php:53
 msgid "Last Name"
 msgstr ""
@@ -449,7 +449,7 @@ msgstr ""
 msgid "Login Details"
 msgstr ""
 
-#: Userman.class.php:1914 Userman.class.php:1915 views/users.php:53
+#: Userman.class.php:1921 Userman.class.php:1922 views/users.php:53
 msgid "Login Name"
 msgstr ""
 
@@ -501,12 +501,12 @@ msgstr ""
 msgid "Other Settings"
 msgstr ""
 
-#: Userman.class.php:1919 views/msad.php:73 views/passwordmodal.php:16
+#: Userman.class.php:1926 views/msad.php:73 views/passwordmodal.php:16
 #: views/users.php:102
 msgid "Password"
 msgstr ""
 
-#: Userman.class.php:1920
+#: Userman.class.php:1927
 msgid "Password - plaintext"
 msgstr ""
 
@@ -534,11 +534,11 @@ msgstr ""
 msgid "Previous Username can not be blank"
 msgstr ""
 
-#: Userman.class.php:1924
+#: Userman.class.php:1931
 msgid "Primary Extension"
 msgstr ""
 
-#: Userman.class.php:1925 views/users.php:153
+#: Userman.class.php:1932 views/users.php:153
 msgid "Primary Linked Extension"
 msgstr ""
 
@@ -726,7 +726,7 @@ msgid ""
 "FreePBX itself use this module to manage their users."
 msgstr ""
 
-#: Userman.class.php:2108 Userman.class.php:2165
+#: Userman.class.php:2115 Userman.class.php:2172
 msgid "This authentication driver does not allow importing"
 msgstr ""
 
@@ -747,7 +747,7 @@ msgstr ""
 msgid "This is the name that the user will use when logging in."
 msgstr ""
 
-#: Userman.class.php:1944 Userman.class.php:1945 views/users.php:258
+#: Userman.class.php:1951 Userman.class.php:1952 views/users.php:258
 msgid "Title"
 msgstr ""
 
@@ -795,7 +795,7 @@ msgstr ""
 msgid "User Does Not Exist"
 msgstr ""
 
-#: Userman.class.php:1990
+#: Userman.class.php:1997
 msgid "User List"
 msgstr ""
 
@@ -807,7 +807,7 @@ msgstr ""
 msgid "User Manager"
 msgstr ""
 
-#: Userman.class.php:1897 Userman.class.php:1898 views/quickCreate.php:36
+#: Userman.class.php:1904 Userman.class.php:1905 views/quickCreate.php:36
 msgid "User Manager Groups"
 msgstr ""
 
@@ -815,7 +815,7 @@ msgstr ""
 msgid "User Manager Settings"
 msgstr "Настройки за Управление на Потребителите"
 
-#: Userman.class.php:1891 Userman.class.php:1892
+#: Userman.class.php:1898 Userman.class.php:1899
 msgid "User Manager Users"
 msgstr ""
 
@@ -891,7 +891,7 @@ msgstr ""
 msgid "Which users are in this group"
 msgstr ""
 
-#: Userman.class.php:1964 Userman.class.php:1965 views/users.php:378
+#: Userman.class.php:1971 Userman.class.php:1972 views/users.php:378
 msgid "Work Phone Number"
 msgstr ""
 
@@ -900,11 +900,11 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-#: Userman.class.php:1813 views/general.php:57
+#: Userman.class.php:1820 views/general.php:57
 msgid "Your %brand% Account"
 msgstr ""
 
-#: Userman.class.php:2047
+#: Userman.class.php:2054
 msgid "default_extension is required."
 msgstr ""
 
@@ -916,7 +916,7 @@ msgstr ""
 msgid "group Successfully Added"
 msgstr ""
 
-#: Userman.class.php:2116
+#: Userman.class.php:2123
 msgid "groupname is required."
 msgstr ""
 
@@ -924,7 +924,7 @@ msgstr ""
 msgid "groups"
 msgstr ""
 
-#: Userman.class.php:2044
+#: Userman.class.php:2051
 msgid "password is required."
 msgstr ""
 
@@ -932,7 +932,7 @@ msgstr ""
 msgid "user"
 msgstr ""
 
-#: Userman.class.php:2041
+#: Userman.class.php:2048
 msgid "username is required."
 msgstr ""
 
