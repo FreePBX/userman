@@ -879,6 +879,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		if(!is_numeric($id)) {
 			throw new \Exception(_("ID was not numeric"));
 		}
+		set_time_limit(0);
 		$data = $this->auth->deleteUserByID($id);
 		$status = $this->auth->deleteUserByID($id);
 		if(!$status['status']) {
@@ -897,6 +898,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		if(!is_numeric($gid)) {
 			throw new \Exception(_("GID was not numeric"));
 		}
+		set_time_limit(0);
 		$data = $this->getGroupByGID($gid);
 		$status = $this->auth->deleteGroupByGID($gid);
 		if(!$status['status']) {
@@ -993,6 +995,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		if(empty($password)) {
 			throw new \Exception(_("Password can not be blank"));
 		}
+		set_time_limit(0);
 		$display = !empty($_REQUEST['display']) ? $_REQUEST['display'] : "";
 		$status = $this->auth->addUser($username, $password, $default, $description, $extraData, $encrypt);
 		if(!$status['status']) {
@@ -1008,6 +1011,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		if(empty($groupname)) {
 			throw new \Exception(_("Groupname can not be blank"));
 		}
+		set_time_limit(0);
 		$display = !empty($_REQUEST['display']) ? $_REQUEST['display'] : "";
 		$status = $this->auth->addGroup($groupname, $description=null, $users=array());
 		if(!$status['status']) {
@@ -1057,6 +1061,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		if(empty($prevUsername)) {
 			throw new \Exception(_("Previous Username can not be blank"));
 		}
+		set_time_limit(0);
 		/**
 		 * Coming from an adaptor that doesnt support username changes
 		 */
@@ -1089,6 +1094,8 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		if(empty($prevGroupname)) {
 			throw new \Exception(_("Previous Groupname can not be blank"));
 		}
+		set_time_limit(0);
+
 		/**
 		 * Coming from an adaptor that doesnt support groupname changes
 		 */
