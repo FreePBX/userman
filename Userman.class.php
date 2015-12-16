@@ -658,6 +658,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 			case "getUsers":
 			case "getGroups":
 			case "getuserfields":
+			case "updateSort":
 			case "updatePassword":
 			case "delete":
 			case "email":
@@ -675,6 +676,14 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	public function ajaxHandler(){
 		$request = $_REQUEST;
 		switch($request['command']){
+			case "updateSort":
+				$sort = json_decode($_POST['sort'],true);
+				foreach($sort as $order => $gid) {
+					$sql = "UPDATE ".$this->groupTable." SET priority = ? where id = ?";
+					$sth = $this->db->prepare($sql);
+					$sth->execute(array($order,$gid));
+				}
+				return $_REQUEST;
 			case "getUsers":
 				return $this->getAllUsers();
 			case "getGroups":

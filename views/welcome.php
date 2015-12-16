@@ -73,12 +73,13 @@
 										</button>
 										<?php } ?>
 									</div>
-									<table data-toolbar="#toolbar-groups" data-url="ajax.php?module=userman&amp;command=getGroups" data-cache="false" data-toggle="table" data-pagination="true" data-search="true" class="table table-striped" id="table-groups" data-type="groups">
+									<table data-reorderable-rows="true" data-use-row-attr-func="true" data-toolbar="#toolbar-groups" data-url="ajax.php?module=userman&amp;command=getGroups" data-sort-name="priority" data-cache="false" data-toggle="table" data-pagination="true" data-search="true" class="table table-striped" id="table-groups" data-type="groups">
 										<thead>
 											<tr>
 												<th data-checkbox="true"></th>
-												<th data-sortable="true" data-field="groupname"><?php echo _("Group Name") ?></th>
-												<th data-sortable="true" data-field="description"><?php echo _("Description") ?></th>
+												<th data-field="groupname"><?php echo _("Group Name") ?></th>
+												<th data-field="description"><?php echo _("Description") ?></th>
+												<th data-field="priority"><?php echo _("Priority") ?></th>
 												<th data-formatter="groupActions"><?php echo _("Action") ?></th>
 											</tr>
 										</thead>

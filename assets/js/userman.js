@@ -43,6 +43,15 @@ $(".btn-remove").click(function() {
 		});
 	}
 });
+$("#table-groups").on("reorder-row.bs.table", function (table,rows) {
+	var order = {};
+	$.each(rows, function(k, v) {
+		order[k] = v.id;
+	});
+	$.post( "ajax.php", {command: "updateSort", module: "userman", sort: JSON.stringify(order)}, function(data) {
+		$("#table-groups").bootstrapTable('refresh');
+	});
+});
 $("table").on("post-body.bs.table", function () {
 	$("table .fa-trash-o").off("click");
 	$("table .fa-trash-o").click(function() {
