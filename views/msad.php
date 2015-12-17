@@ -126,7 +126,7 @@
 	</div>
 	<div class="row">
 		<div class="col-md-12">
-			<span id="msad-dn-help" class="help-block fpbx-help-block"><?php echo _("The base DN")?></span>
+			<span id="msad-dn-help" class="help-block fpbx-help-block"><?php echo _("The base DN. Usually in the format of CN=Users,DC=domain,DC=local")?></span>
 		</div>
 	</div>
 </div>

@@ -137,7 +137,8 @@ class Msad extends Auth {
 			"password" => $_REQUEST['msad-password'],
 			"domain" => $_REQUEST['msad-domain'],
 			"dn" => $_REQUEST['msad-dn'],
-			"la" => $_REQUEST['msad-la']
+			"la" => $_REQUEST['msad-la'],
+			"sync" => $_REQUEST['sync']
 		);
 		$userman->setConfig("authMSADSettings", $config);
 		if(!empty($config['host']) && !empty($config['username']) && !empty($config['password']) && !empty($config['domain'])) {
@@ -145,7 +146,9 @@ class Msad extends Auth {
 			try {
 				$msad->connect();
 				$msad->sync();
-			} catch(\Exception $e) {}
+			} catch(\Exception $e) {
+				return false;
+			}
 		}
 		return true;
 	}
@@ -347,6 +350,7 @@ class Msad extends Auth {
 			$this->updateAllUsers();
 			$this->updateAllGroups();
 		}
+		$gs = array();
 		foreach($this->ucache as $usid => $user) {
 			$results2 = ldap_search($this->ldap, $this->dn,"(objectcategory=group)",array("distinguishedname","primarygrouptoken","objectsid"));
 			$entries2 = ldap_get_entries($this->ldap, $results2);
@@ -366,10 +370,21 @@ class Msad extends Auth {
 							"description" => $g['description'],
 							"users" => $g['users']
 						));
+						if(!isset($gs[$g['id']])) {
+							$gs[$g['id']] = array(
+								"id" => $g['id'],
+								"description" => $g['description'],
+								"users" => $g['users'],
+								"name" => $g['name']
+							);
+						}
 					}
 					break;
 				}
 			}
+		}
+		foreach($gs as $g) {
+			$this->updateGroupHook($g['id'], $g['name'], $g['name'], $g['description'], $g['users']);
 		}
 	}
 
@@ -412,6 +427,18 @@ class Msad extends Auth {
 					"description" => !empty($group['description'][0]) ? $group['description'][0] : '',
 					"users" => $members
 				));
+				if($um['new']) {
+					$this->addGroupHook($um['id'], $group['cn'][0], (!empty($group['description'][0]) ? $group['description'][0] : ''), $members);
+				} else {
+					$this->updateGroupHook($um['id'], $group['cn'][0], $group['cn'][0], (!empty($group['description'][0]) ? $group['description'][0] : ''), $members);
+				}
+			}
+		}
+		//remove users
+		$fgroups = $this->getAllGroups();
+		foreach($fgroups as $group) {
+			if(!isset($this->gcache[$group['authid']])) {
+				$this->deleteGroupByGID($group['id']);
 			}
 		}
 	}
@@ -427,6 +454,7 @@ class Msad extends Auth {
 		$sr = ldap_search($this->ldap, $this->dn, "(&(objectCategory=Person)(sAMAccountName=*))");
 		$users = ldap_get_entries($this->ldap, $sr);
 		unset($users['count']);
+		//add and update users
 		foreach($users as $user) {
 			$sid = $this->binToStrSid($user['objectsid'][0]);
 			$this->ucache[$sid] = $user;
@@ -453,6 +481,18 @@ class Msad extends Auth {
 					}
 				}
 				$this->updateUserData($um['id'], $data);
+				if($um['new']) {
+					$this->addUserHook($um['id'], $user['samaccountname'][0], (!empty($user['description'][0]) ? $user['description'][0] : ''), null, false, $data);
+				} else {
+					$this->updateUserHook($um['id'], $user['samaccountname'][0], $user['samaccountname'][0], (!empty($user['description'][0]) ? $user['description'][0] : ''), null, $data);
+				}
+			}
+		}
+		//remove users
+		$fusers = $this->getAllUsers();
+		foreach($fusers as $user) {
+			if(!isset($this->ucache[$user['authid']])) {
+				$this->deleteUserByID($user['id']);
 			}
 		}
 	}

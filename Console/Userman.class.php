@@ -22,16 +22,24 @@ class Userman extends Command {
   protected function execute(InputInterface $input, OutputInterface $output){
     $args = $input->getArgument('args');
     $command = isset($args[0])?$args[0]:'';
-		$soundlang = \FreePBX::create()->Userman;
+		$userman = \FreePBX::create()->Userman;
 		switch ($command) {
-			case "auth":
+      case "sync":
+        $auth = $userman->getAuthObject();
+        if(method_exists($auth,"sync")) {
+          $output->write("Starting Sync...");
+          $auth->sync();
+          $output->writeln("Finished");
+        } else {
+          $output->writeln("<comment>The active authentication driver does not support syncing.</comment>");
+        }
       break;
       case "migrate":
 	    break;
 	    default:
 	      $output->writeln("<error>The command provided is not valid.</error>");
         $output->writeln("Avalible commands are:");
-        $output->writeln("<info>auth <user> <password></info> - Authenticate user and get information about user back");
+        $output->writeln("<info>sync</info> - Syncronize User information from a remote source");
         $output->writeln("<info>migrate<id></info> - Migrate/Update voicemail users into User Manager");
 	      exit(4);
 	    break;

@@ -372,8 +372,40 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 							}
 						}
 					}
+
+					$sync = $_POST['cronsync'];
+					$this->setConfig('sync', $sync);
 					$this->setConfig('auth', $_POST['authtype']);
 					$this->switchAuth($_POST['authtype']);
+
+					switch($sync) {
+						case "":
+						case "*/15 * * * *":
+						case "*/30 * * * *":
+						case "0 * * * *":
+						case "0 */6 * * *":
+						case "0 0 * *":
+						break;
+						default:
+							$sync = "0 */6 * * *";
+						break;
+					}
+
+					$AMPASTERISKWEBUSER = $this->FreePBX->Config->get("AMPASTERISKWEBUSER");
+					$AMPSBIN = $this->FreePBX->Config->get("AMPSBIN");
+					$freepbxCron = $this->FreePBX->Cron($AMPASTERISKWEBUSER);
+					$crons = $freepbxCron->getAll();
+					foreach($crons as $cron) {
+						$str = str_replace("/", "\/", $AMPSBIN."/fwconsole userman sync");
+						if(preg_match("/fwconsole userman sync$/",$cron)) {
+							if(!preg_match("/".$str."$/i",$cron)) {
+								$freepbxCron->remove($cron);
+							}
+						}
+					}
+					if(method_exists($this->auth,"sync") && !empty($sync)) {
+						$freepbxCron->addLine($sync ." ".$AMPSBIN."/fwconsole userman sync");
+					}
 				break;
 			}
 		}
@@ -599,7 +631,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 				$emailsubject = $this->getGlobalsetting('emailsubject');
 				$autoEmail = $this->getGlobalsetting('autoEmail');
 				$autoEmail = is_null($autoEmail) ? true : $autoEmail;
-				$html .= load_view(dirname(__FILE__).'/views/welcome.php',array("autoEmail" => $autoEmail, "authtype" => $this->getConfig("auth"), "auths" => $auths, "brand" => $this->brand, "permissions" => $permissions, "groups" => $groups, "users" => $users, "sections" => $sections,
+				$html .= load_view(dirname(__FILE__).'/views/welcome.php',array("autoEmail" => $autoEmail, "sync" => $this->getConfig("sync"), "authtype" => $this->getConfig("auth"), "auths" => $auths, "brand" => $this->brand, "permissions" => $permissions, "groups" => $groups, "users" => $users, "sections" => $sections,
 				 																																"message" => $this->message, "emailbody" => $emailbody, "emailsubject" => $emailsubject));
 			break;
 		}
@@ -968,7 +1000,6 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	private function delUser($id,$data) {
 		$request = $_REQUEST;
 		$display = !empty($request['display']) ? $request['display'] : "";
-		$this->FreePBX->Hooks->processHooks($id, $display, $data);
 	}
 
 	/**
@@ -981,7 +1012,6 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	private function delGroup($gid,$data) {
 		$request = $_REQUEST;
 		$display = !empty($request['display']) ? $request['display'] : "";
-		$this->FreePBX->Hooks->processHooks($gid, $display, $data);
 	}
 
 	/**
@@ -1010,9 +1040,6 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		if(!$status['status']) {
 			return $status;
 		}
-		$id = $status['id'];
-		$this->callHooks('addUser',array("id" => $id, "username" => $username, "description" => $description, "password" => $password, "encrypted" => $encrypt, "extraData" => $extraData));
-		$this->FreePBX->Hooks->processHooks($id, $display, array("id" => $id, "username" => $username, "description" => $description, "password" => $password, "encrypted" => $encrypt, "extraData" => $extraData));
 		return $status;
 	}
 
@@ -1022,12 +1049,10 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		}
 		set_time_limit(0);
 		$display = !empty($_REQUEST['display']) ? $_REQUEST['display'] : "";
-		$status = $this->auth->addGroup($groupname, $description=null, $users=array());
+		$status = $this->auth->addGroup($groupname, $description, $users);
 		if(!$status['status']) {
 			return $status;
 		}
-		$id = $status['id'];
-		$this->FreePBX->Hooks->processHooks($id, $display, array("id" => $id, "groupname" => $groupname, "description" => $description, "users" => $users));
 		return $status;
 	}
 
@@ -1084,8 +1109,6 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		}
 		$id = $status['id'];
 
-		$this->callHooks('updateUser',array("id" => $id, "prevUsername" => $prevUsername, "username" => $username, "description" => $description, "password" => $password, "extraData" => $extraData));
-		$this->FreePBX->Hooks->processHooks($id, $display, array("id" => $id, "prevUsername" => $prevUsername, "username" => $username, "description" => $description, "password" => $password, "extraData" => $extraData));
 		return $status;
 	}
 
@@ -1116,8 +1139,6 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		if(!$status['status']) {
 			return $status;
 		}
-		$id = $status['id'];
-		$this->FreePBX->Hooks->processHooks($id, $display, array("id" => $id, "prevGroupname" => $prevGroupname, "groupname" => $groupname, "description" => $description, "users" => $users));
 		return $status;
 	}
 

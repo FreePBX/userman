@@ -118,6 +118,7 @@ class Freepbx extends Auth {
 
 		$id = $this->db->lastInsertId();
 		$this->updateUserData($id,$extraData);
+		$this->addUserHook($id, $username, $description, $password, $encrypt, $extraData);
 		return array("status" => true, "type" => "success", "message" => _("User Successfully Added"), "id" => $id);
 	}
 
@@ -131,6 +132,7 @@ class Freepbx extends Auth {
 		}
 
 		$id = $this->db->lastInsertId();
+		$this->addGroupHook($id, $groupname, $description, $users);
 		return array("status" => true, "type" => "success", "message" => _("Group Successfully Added"), "id" => $id);
 	}
 
@@ -181,6 +183,7 @@ class Freepbx extends Auth {
 		if(!$this->updateUserData($user['id'],$extraData)) {
 			return array("status" => false, "type" => "danger", "message" => _("An Unknown error occured while trying to update user data"));
 		}
+		$this->updateUserHook($uid, $prevUsername, $username, $description, $password, $extraData);
 		return array("status" => true, "type" => "success", "message" => $message, "id" => $user['id']);
 	}
 
@@ -204,6 +207,7 @@ class Freepbx extends Auth {
 			return array("status" => false, "type" => "danger", "message" => $e->getMessage());
 		}
 		$message = _("Updated Group");
+		$this->updateGroupHook($gid, $prevGroupname, $groupname, $description, $users);
 		return array("status" => true, "type" => "success", "message" => $message, "id" => $gid);
 	}
 

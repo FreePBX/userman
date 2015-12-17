@@ -21,6 +21,30 @@ abstract class Auth implements Base {
 		$this->auth = strtolower($f->getShortName());
 	}
 
+	public function addUserHook($id, $username, $description, $password, $encrypt, $extraData) {
+		$this->FreePBX->Hooks->processHooksByClassMethod("FreePBX\\modules\\Userman", "addUser", array($id, "", array("id" => $id, "username" => $username, "description" => $description, "password" => $password, "encrypted" => $encrypt, "extraData" => $extraData)));
+	}
+
+	public function updateUserHook($id, $prevUsername, $username, $description, $password, $extraData) {
+		$this->FreePBX->Hooks->processHooksByClassMethod("FreePBX\\modules\\Userman", "updateUser", array($id, "", array("id" => $id, "prevUsername" => $prevUsername, "username" => $username, "description" => $description, "password" => $password, "extraData" => $extraData)));
+	}
+
+	public function delUserHook($id, $data) {
+		$this->FreePBX->Hooks->processHooksByClassMethod("FreePBX\\modules\\Userman", "delUser", array($id, "", $data));
+	}
+
+	public function addGroupHook($id, $groupname, $description, $users) {
+		$this->FreePBX->Hooks->processHooksByClassMethod("FreePBX\\modules\\Userman", "addGroup", array($id, "", array("id" => $id, "groupname" => $groupname, "description" => $description, "users" => $users)));
+	}
+
+	public function updateGroupHook($id, $prevGroupname, $groupname, $description, $users) {
+		$this->FreePBX->Hooks->processHooksByClassMethod("FreePBX\\modules\\Userman", "updateGroup", array($id, "", array("id" => $id, "prevGroupname" => $prevGroupname, "groupname" => $groupname, "description" => $description, "users" => $users)));
+	}
+
+	public function delGroupHook($gid, $data) {
+		$this->FreePBX->Hooks->processHooksByClassMethod("FreePBX\\modules\\Userman", "UpdateGroup", array($gid, "", $data));
+	}
+
 	public function getDefaultGroups() {
 		return array();
 	}
@@ -278,6 +302,7 @@ abstract class Auth implements Base {
 		$sql = "DELETE FROM ".$this->userSettingsTable." WHERE `uid` = :uid";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':uid' => $id));
+		$this->delUserHook($id, $user);
 		return array("status" => true, "type" => "success", "message" => _("User Successfully Deleted"));
 	}
 
@@ -286,18 +311,19 @@ abstract class Auth implements Base {
 	* @param int $gid The group ID
 	*/
 	public function deleteGroupByGID($gid) {
-		$user = $this->getUserByID($gid);
-		if(!$user) {
+		$group = $this->getGroupByGID($gid);
+		if(!$group) {
 			return array("status" => false, "type" => "danger", "message" => _("Group Does Not Exist"));
 		}
 		$sql = "DELETE FROM ".$this->groupTable." WHERE `id` = :id AND auth = :auth";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':id' => $gidm, ':auth' => $this->auth));
+		$sth->execute(array(':id' => $gid, ':auth' => $this->auth));
 
 		$sql = "DELETE FROM ".$this->groupSettingsTable." WHERE `gid` = :gid";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':gid' => $gid));
-		return array("status" => true, "type" => "success", "message" => _("User Successfully Deleted"));
+		$this->delGroupHook($gid, $group);
+		return array("status" => true, "type" => "success", "message" => _("Group Successfully Deleted"));
 	}
 
 	/**
@@ -360,7 +386,7 @@ abstract class Auth implements Base {
 			}
 
 			$id = $this->db->lastInsertId();
-			return array("status" => true, "type" => "success", "message" => _("User Successfully Added"), "id" => $id);
+			return array("status" => true, "type" => "success", "message" => _("User Successfully Added"), "id" => $id, "new" => true);
 		} else {
 			$sql = "UPDATE ".$this->userTable." SET username = :username WHERE auth = :auth AND authid = :authid AND id = :id";
 			$sth = $this->db->prepare($sql);
@@ -369,12 +395,12 @@ abstract class Auth implements Base {
 			} catch (\Exception $e) {
 				return array("status" => false, "type" => "danger", "message" => $e->getMessage());
 			}
-			return array("status" => true, "type" => "success", "message" => _("User Successfully Updated"), "id" => $previous['id']);
+			return array("status" => true, "type" => "success", "message" => _("User Successfully Updated"), "id" => $previous['id'], "new" => false);
 		}
 	}
 
 	/**
-	* Link user from external auth system into Usermanager
+	* Link group from external auth system into Usermanager
 	* @param string $username    The username of the user
 	* @param string $default     the default extension to assign
 	* @param string $description The description
@@ -406,7 +432,7 @@ abstract class Auth implements Base {
 			}
 
 			$id = $this->db->lastInsertId();
-			return array("status" => true, "type" => "success", "message" => _("group Successfully Added"), "id" => $id);
+			return array("status" => true, "type" => "success", "message" => _("group Successfully Added"), "id" => $id, "new" => true);
 		} else {
 			$sql = "UPDATE ".$this->groupTable." SET groupname = :groupname WHERE auth = :auth AND authid = :authid AND id = :id";
 			$sth = $this->db->prepare($sql);
@@ -415,7 +441,7 @@ abstract class Auth implements Base {
 			} catch (\Exception $e) {
 				return array("status" => false, "type" => "danger", "message" => $e->getMessage());
 			}
-			return array("status" => true, "type" => "success", "message" => _("Group Successfully Updated"), "id" => $previous['id']);
+			return array("status" => true, "type" => "success", "message" => _("Group Successfully Updated"), "id" => $previous['id'], "new" => false);
 		}
 	}
 

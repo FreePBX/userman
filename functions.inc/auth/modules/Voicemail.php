@@ -60,16 +60,21 @@ class Voicemail extends Auth {
 		$config = $this->userman->getConfig("authVoicemailSettings");
 		$d = $this->FreePBX->Voicemail->getVoicemail();
 		if(!empty($d[$config['context']])) {
-			foreach($d[$config['context']] as $username => $data) {
+			foreach($d[$config['context']] as $username => $d) {
 				$um = $this->linkUser($username, 'voicemail', $username);
 				if($um['status']) {
 					$data = array(
-						"description" => $data['name'],
-						"displayname" => $data['name'],
-						"email" => $data['email'],
+						"description" => $d['name'],
+						"displayname" => $d['name'],
+						"email" => $d['email'],
 						"default_extension" => $username
 					);
 					$this->updateUserData($um['id'], $data);
+					if($um['new']) {
+						$this->addUserHook($um['id'], $username, $d['name'], $d['pwd'], false, $data);
+					} else {
+						$this->updateUserHook($um['id'], $username, $username, $d['name'], $d['pwd'], $data);
+					}
 				}
 			}
 		}
@@ -128,21 +133,6 @@ class Voicemail extends Auth {
 	}
 
 	/**
-	* Delete a Group by it's ID
-	* @param int $gid The group ID
-	*/
-	public function deleteGroupByGID($gid) {
-		$sql = "DELETE FROM userman_groups WHERE `auth` = :auth AND `id` = :gid";
-		$sth = $this->db->prepare($sql);
-		try {
-			$sth->execute(array(':auth' => 'voicemail', ':gid' => $gid));
-		} catch (\Exception $e) {
-			return array("status" => false, "type" => "danger", "message" => $e->getMessage());
-		}
-		return array("status" => true, "type" => "success", "message" => _("Group Successfully Deleted"));
-	}
-
-	/**
 	* Add a user to User Manager
 	*
 	* This adds a new user to user manager
@@ -178,6 +168,7 @@ class Voicemail extends Auth {
 		}
 
 		$id = $this->db->lastInsertId();
+		$this->addGroupHook($id, $groupname, $description, $users);
 		return array("status" => true, "type" => "success", "message" => _("Group Successfully Added"), "id" => $id);
 	}
 
@@ -195,6 +186,7 @@ class Voicemail extends Auth {
 	 * @return array
 	 */
 	public function updateUser($uid, $prevUsername, $username, $default='none', $description=null, $extraData=array(), $password=null) {
+		$this->updateUserHook($id, $prevUsername, $username, $description, $password, $extraData);
 		return array("status" => true, "type" => "success", "message" => _("User updated"), "id" => $uid);
 	}
 
@@ -218,6 +210,7 @@ class Voicemail extends Auth {
 			return array("status" => false, "type" => "danger", "message" => $e->getMessage());
 		}
 		$message = _("Updated Group");
+		$this->updateGroupHook($id, $prevGroupname, $groupname, $description, $users);
 		return array("status" => true, "type" => "success", "message" => $message, "id" => $gid);
 	}
 

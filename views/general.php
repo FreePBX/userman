@@ -118,6 +118,35 @@
 					</div>
 				</div>
 			</div>
+			<div class="element-container">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="row">
+							<div class="form-group">
+								<div class="col-md-3">
+									<label class="control-label" for="cronsync"><?php echo _("Synchronize")?></label>
+									<i class="fa fa-question-circle fpbx-help-icon" data-for="cronsync"></i>
+								</div>
+								<div class="col-md-9">
+									<select name="cronsync" id="cronsync" class="form-control">
+										<option value="">Never</option>
+										<option value="*/15 * * * *" <?php echo isset($sync) && $sync == '*/15 * * * *' ? 'selected' : ''?>>15 Minutes</option>
+										<option value="*/30 * * * *" <?php echo isset($sync) && $sync == '*/30 * * * *' ? 'selected' : ''?>>30 Minutes</option>
+										<option value="0 * * * *" <?php echo !isset($sync) || (isset($sync) && $sync == '0 * * * *') ? 'selected' : ''?>>1 Hour</option>
+										<option value="0 */6 * * *" <?php echo isset($sync) && $sync == '0 */6 * * *' ? 'selected' : ''?>>6 Hours</option>
+										<option value="0 0 * *" <?php echo isset($sync) && $sync == '0 0 * *' ? 'selected' : ''?>>1 Day</option>
+									</select>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<span id="cronsync-help" class="help-block fpbx-help-block"><?php echo _("This setting only applies to external authentication engines that require remote updates. For engines that do not support synchronizing this setting will be ignored.")?></span>
+					</div>
+				</div>
+			</div>
 			<?php foreach($auths as $rawname => $auth) {?>
 				<div id="<?php echo $rawname?>-auth-settings" class="auth-settings hidden">
 					<?php echo $auth['html']?>
