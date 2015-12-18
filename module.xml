@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>13.0.40</version>
+	<version>13.0.41</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -12,6 +12,7 @@
 		Modules like iSymphony, Rest API and User Control Panel and FreePBX itself use this module to manage their users.
 	</description>
 	<changelog>
+		*13.0.41* FREEPBX-11002 require Asterisk to be connected
 		*13.0.40* FREEPBX-10973
 		*13.0.39* Allow sorting/ordering of groups
 		*13.0.38* FREEPBX-11019
@@ -94,7 +95,7 @@
 	<info/>
 	<category>Admin</category>
 	<menuitems>
-		<userman>User Management</userman>
+		<userman needsenginedb="yes">User Management</userman>
 	</menuitems>
 	<depends>
 		<phpversion>5.3.3</phpversion>
