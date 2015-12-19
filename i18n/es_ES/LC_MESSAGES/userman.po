@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-17 12:52-0800\n"
+"POT-Creation-Date: 2015-12-18 16:41-0800\n"
 "PO-Revision-Date: 2015-10-22 01:10+0200\n"
 "Last-Translator: Ernesto <ecasas@sangoma.com>\n"
 "Language-Team: Spanish <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -300,7 +300,7 @@ msgstr ""
 msgid "Group Details"
 msgstr ""
 
-#: functions.inc/auth/Auth.php:316
+#: functions.inc/auth/Auth.php:322
 msgid "Group Does Not Exist"
 msgstr ""
 
@@ -314,19 +314,19 @@ msgstr ""
 msgid "Group Successfully Added"
 msgstr ""
 
-#: functions.inc/auth/Auth.php:326
+#: functions.inc/auth/Auth.php:332
 msgid "Group Successfully Deleted"
 msgstr ""
 
-#: functions.inc/auth/Auth.php:444
+#: functions.inc/auth/Auth.php:450
 msgid "Group Successfully Updated"
 msgstr ""
 
-#: functions.inc/auth/modules/Msad.php:317
+#: functions.inc/auth/modules/Msad.php:320
 msgid "Group updated"
 msgstr ""
 
-#: functions.inc/auth/Auth.php:415
+#: functions.inc/auth/Auth.php:421
 msgid "Groupname Can Not Be Blank!"
 msgstr ""
 
@@ -818,7 +818,7 @@ msgstr "Usuario '%s' No Existe"
 msgid "User Details"
 msgstr ""
 
-#: functions.inc/auth/Auth.php:296
+#: functions.inc/auth/Auth.php:302
 msgid "User Does Not Exist"
 msgstr "Usuario No Existe"
 
@@ -846,19 +846,19 @@ msgstr "Configuración de Gestión de Usuario"
 msgid "User Manager Users"
 msgstr ""
 
-#: functions.inc/auth/Auth.php:389 functions.inc/auth/modules/Freepbx.php:122
+#: functions.inc/auth/Auth.php:395 functions.inc/auth/modules/Freepbx.php:122
 msgid "User Successfully Added"
 msgstr "Usuario añadido Satisfactoriamente"
 
-#: functions.inc/auth/Auth.php:306
+#: functions.inc/auth/Auth.php:312
 msgid "User Successfully Deleted"
 msgstr "Usuario Eliminado Satisfactoriamente"
 
-#: functions.inc/auth/Auth.php:398
+#: functions.inc/auth/Auth.php:404
 msgid "User Successfully Updated"
 msgstr ""
 
-#: functions.inc/auth/modules/Msad.php:306
+#: functions.inc/auth/modules/Msad.php:307
 #: functions.inc/auth/modules/Voicemail.php:190
 msgid "User updated"
 msgstr ""
@@ -868,7 +868,7 @@ msgstr ""
 msgid "Username"
 msgstr "Nombre Usuario"
 
-#: functions.inc/auth/Auth.php:369
+#: functions.inc/auth/Auth.php:375
 msgid "Username Can Not Be Blank!"
 msgstr ""
 
@@ -939,7 +939,7 @@ msgstr ""
 msgid "group"
 msgstr ""
 
-#: functions.inc/auth/Auth.php:435
+#: functions.inc/auth/Auth.php:441
 msgid "group Successfully Added"
 msgstr ""
 
