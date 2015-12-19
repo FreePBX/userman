@@ -303,6 +303,7 @@ class Msad extends Auth {
 		} catch (\Exception $e) {
 			return array("status" => false, "type" => "danger", "message" => $e->getMessage());
 		}
+		$this->updateUserHook($id, $prevUsername, $username, $description, $password, $extraData);
 		return array("status" => true, "type" => "success", "message" => _("User updated"), "id" => $uid);
 	}
 
@@ -314,6 +315,8 @@ class Msad extends Auth {
 	 * @param array  $users         Array of users in this Group
 	 */
 	public function updateGroup($gid, $prevGroupname, $groupname, $description=null, $users=array()) {
+		$group = $this->getGroupByUsername($prevGroupname);
+		$this->updateGroupHook($gid, $prevGroupname, $groupname, $description, $group['users']);
 		return array("status" => true, "type" => "success", "message" => _("Group updated"), "id" => $gid);
 	}
 

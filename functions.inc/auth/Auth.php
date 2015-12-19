@@ -22,27 +22,33 @@ abstract class Auth implements Base {
 	}
 
 	public function addUserHook($id, $username, $description, $password, $encrypt, $extraData) {
-		$this->FreePBX->Hooks->processHooksByClassMethod("FreePBX\\modules\\Userman", "addUser", array($id, "", array("id" => $id, "username" => $username, "description" => $description, "password" => $password, "encrypted" => $encrypt, "extraData" => $extraData)));
+		$display = isset($_REQUEST['display']) ? $_REQUEST['display'] : "";
+		$this->FreePBX->Hooks->processHooksByClassMethod("FreePBX\\modules\\Userman", "addUser", array($id, $display, array("id" => $id, "username" => $username, "description" => $description, "password" => $password, "encrypted" => $encrypt, "extraData" => $extraData)));
 	}
 
 	public function updateUserHook($id, $prevUsername, $username, $description, $password, $extraData) {
-		$this->FreePBX->Hooks->processHooksByClassMethod("FreePBX\\modules\\Userman", "updateUser", array($id, "", array("id" => $id, "prevUsername" => $prevUsername, "username" => $username, "description" => $description, "password" => $password, "extraData" => $extraData)));
+		$display = isset($_REQUEST['display']) ? $_REQUEST['display'] : "";
+		$this->FreePBX->Hooks->processHooksByClassMethod("FreePBX\\modules\\Userman", "updateUser", array($id, $display, array("id" => $id, "prevUsername" => $prevUsername, "username" => $username, "description" => $description, "password" => $password, "extraData" => $extraData)));
 	}
 
 	public function delUserHook($id, $data) {
-		$this->FreePBX->Hooks->processHooksByClassMethod("FreePBX\\modules\\Userman", "delUser", array($id, "", $data));
+		$display = isset($_REQUEST['display']) ? $_REQUEST['display'] : "";
+		$this->FreePBX->Hooks->processHooksByClassMethod("FreePBX\\modules\\Userman", "delUser", array($id, $display, $data));
 	}
 
 	public function addGroupHook($id, $groupname, $description, $users) {
-		$this->FreePBX->Hooks->processHooksByClassMethod("FreePBX\\modules\\Userman", "addGroup", array($id, "", array("id" => $id, "groupname" => $groupname, "description" => $description, "users" => $users)));
+		$display = isset($_REQUEST['display']) ? $_REQUEST['display'] : "";
+		$this->FreePBX->Hooks->processHooksByClassMethod("FreePBX\\modules\\Userman", "addGroup", array($id, $display, array("id" => $id, "groupname" => $groupname, "description" => $description, "users" => $users)));
 	}
 
 	public function updateGroupHook($id, $prevGroupname, $groupname, $description, $users) {
-		$this->FreePBX->Hooks->processHooksByClassMethod("FreePBX\\modules\\Userman", "updateGroup", array($id, "", array("id" => $id, "prevGroupname" => $prevGroupname, "groupname" => $groupname, "description" => $description, "users" => $users)));
+		$display = isset($_REQUEST['display']) ? $_REQUEST['display'] : "";
+		$this->FreePBX->Hooks->processHooksByClassMethod("FreePBX\\modules\\Userman", "updateGroup", array($id, $display, array("id" => $id, "prevGroupname" => $prevGroupname, "groupname" => $groupname, "description" => $description, "users" => $users)));
 	}
 
 	public function delGroupHook($gid, $data) {
-		$this->FreePBX->Hooks->processHooksByClassMethod("FreePBX\\modules\\Userman", "UpdateGroup", array($gid, "", $data));
+		$display = isset($_REQUEST['display']) ? $_REQUEST['display'] : "";
+		$this->FreePBX->Hooks->processHooksByClassMethod("FreePBX\\modules\\Userman", "UpdateGroup", array($gid, $display, $data));
 	}
 
 	public function getDefaultGroups() {
