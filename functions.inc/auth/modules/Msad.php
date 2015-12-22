@@ -303,7 +303,7 @@ class Msad extends Auth {
 		} catch (\Exception $e) {
 			return array("status" => false, "type" => "danger", "message" => $e->getMessage());
 		}
-		$this->updateUserHook($id, $prevUsername, $username, $description, $password, $extraData);
+		$this->updateUserHook($uid, $prevUsername, $username, $description, $password, $extraData);
 		return array("status" => true, "type" => "success", "message" => _("User updated"), "id" => $uid);
 	}
 
@@ -482,6 +482,8 @@ class Msad extends Auth {
 						//TODO: Technically we could create an extension here..
 						dbug("Extension ".$user[$this->linkAttr][0] . " does not exist, skipping link");
 					}
+				} elseif(!empty($this->linkAttr) && empty($user[$this->linkAttr][0])) {
+					dbug("Link Attribute '".$this->linkAttr."' set but ".$user['samaccountname'][0]." is missing the attribute");
 				}
 				$this->updateUserData($um['id'], $data);
 				if($um['new']) {
