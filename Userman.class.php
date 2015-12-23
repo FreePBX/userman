@@ -373,6 +373,12 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 						}
 					}
 
+					$remoteips = isset($_POST['remoteips']) ? $_POST['remoteips'] : array();
+					if(!empty($remoteips)) {
+						$remoteips = explode(",", $remoteips);
+					}
+					$this->setConfig('remoteips', $remoteips);
+
 					$sync = $_POST['cronsync'];
 					$this->setConfig('sync', $sync);
 					$this->setConfig('auth', $_POST['authtype']);
@@ -631,7 +637,9 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 				$emailsubject = $this->getGlobalsetting('emailsubject');
 				$autoEmail = $this->getGlobalsetting('autoEmail');
 				$autoEmail = is_null($autoEmail) ? true : $autoEmail;
-				$html .= load_view(dirname(__FILE__).'/views/welcome.php',array("autoEmail" => $autoEmail, "sync" => $this->getConfig("sync"), "authtype" => $this->getConfig("auth"), "auths" => $auths, "brand" => $this->brand, "permissions" => $permissions, "groups" => $groups, "users" => $users, "sections" => $sections,
+				$remoteips = $this->getConfig('remoteips');
+				$remoteips = is_array($remoteips) ? implode(",", $remoteips) : "";
+				$html .= load_view(dirname(__FILE__).'/views/welcome.php',array("autoEmail" => $autoEmail, "remoteips" => $remoteips, "sync" => $this->getConfig("sync"), "authtype" => $this->getConfig("auth"), "auths" => $auths, "brand" => $this->brand, "permissions" => $permissions, "groups" => $groups, "users" => $users, "sections" => $sections,
 				 																																"message" => $this->message, "emailbody" => $emailbody, "emailsubject" => $emailsubject));
 			break;
 		}
@@ -685,7 +693,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * @param string $req     The request type
 	 * @param string $setting Settings to return back
 	 */
-	public function ajaxRequest($req, $setting){
+	public function ajaxRequest($req, &$setting){
 		switch($req){
 			case "getUsers":
 			case "getGroups":
@@ -694,6 +702,15 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 			case "updatePassword":
 			case "delete":
 			case "email":
+				return true;
+			break;
+			case "auth":
+				$ips = $this->getConfig('remoteips');
+				if(empty($ips) || !is_array($ips) || !in_array($_SERVER['REMOTE_ADDR'],$ips)) {
+					return false;
+				}
+				$setting['authenticate'] = false;
+				$setting['allowremote'] = true;
 				return true;
 			break;
 			default:
@@ -708,6 +725,14 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	public function ajaxHandler(){
 		$request = $_REQUEST;
 		switch($request['command']){
+			case "auth":
+				$out = $this->checkCredentials($_POST["username"],$_POST["password"]);
+				if($out) {
+					return array("status" => true);
+				} else {
+					return array("status" => false);
+				}
+			break;
 			case "updateSort":
 				$sort = json_decode($_POST['sort'],true);
 				foreach($sort as $order => $gid) {

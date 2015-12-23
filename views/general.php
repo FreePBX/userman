@@ -124,6 +124,28 @@
 						<div class="row">
 							<div class="form-group">
 								<div class="col-md-3">
+									<label class="control-label" for="remoteips"><?php echo _("Remote Authenitcation IP Addresses")?></label>
+									<i class="fa fa-question-circle fpbx-help-icon" data-for="remoteips"></i>
+								</div>
+								<div class="col-md-9">
+									<input id="remoteips" name="remoteips" class="form-control" value="<?php echo $remoteips?>">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<span id="remoteips-help" class="help-block fpbx-help-block"><?php echo sprintf(_("Comma separated list of IP addresses that can send a POST query to %s supplying the parameters of '%s' and '%s' which can be used for remote servers to authenicate against User Manager. Supplying no addresses disables this feature"),$_SERVER['HTTP_HOST']."/admin/ajax.php?module=userman&command=auth","userman","password")?></span>
+					</div>
+				</div>
+			</div>
+			<div class="element-container">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="row">
+							<div class="form-group">
+								<div class="col-md-3">
 									<label class="control-label" for="cronsync"><?php echo _("Synchronize")?></label>
 									<i class="fa fa-question-circle fpbx-help-icon" data-for="cronsync"></i>
 								</div>
