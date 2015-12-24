@@ -186,7 +186,7 @@ class Voicemail extends Auth {
 	 * @return array
 	 */
 	public function updateUser($uid, $prevUsername, $username, $default='none', $description=null, $extraData=array(), $password=null) {
-		$this->updateUserHook($id, $prevUsername, $username, $description, $password, $extraData);
+		$this->updateUserHook($uid, $prevUsername, $username, $description, $password, $extraData);
 		return array("status" => true, "type" => "success", "message" => _("User updated"), "id" => $uid);
 	}
 
@@ -210,7 +210,7 @@ class Voicemail extends Auth {
 			return array("status" => false, "type" => "danger", "message" => $e->getMessage());
 		}
 		$message = _("Updated Group");
-		$this->updateGroupHook($id, $prevGroupname, $groupname, $description, $users);
+		$this->updateGroupHook($gid, $prevGroupname, $groupname, $description, $users);
 		return array("status" => true, "type" => "success", "message" => $message, "id" => $gid);
 	}
 
