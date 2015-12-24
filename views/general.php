@@ -43,6 +43,28 @@
 				</div>
 			</div>
 			<!--END Email Subject-->
+			<div class="element-container">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="row">
+							<div class="form-group">
+								<div class="col-md-3">
+									<label class="control-label" for="hostname"><?php echo _("Host Name")?></label>
+									<i class="fa fa-question-circle fpbx-help-icon" data-for="hostname"></i>
+								</div>
+								<div class="col-md-9">
+									<input type="text" class="form-control" id="hostname" name="hostname" value="<?php echo !empty($hostname) ? $hostname : ""?>" >
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<span id="hostname-help" class="help-block fpbx-help-block"><?php echo sprintf(_("The hostname used for email. If left blank the default value of '%s' will be used"),$host)?></span>
+					</div>
+				</div>
+			</div>
 			<!--Email Subject-->
 			<div class="element-container">
 				<div class="row">
@@ -124,7 +146,7 @@
 						<div class="row">
 							<div class="form-group">
 								<div class="col-md-3">
-									<label class="control-label" for="remoteips"><?php echo _("Remote Authenitcation IP Addresses")?></label>
+									<label class="control-label" for="remoteips"><?php echo _("Remote Authentication IP Addresses")?></label>
 									<i class="fa fa-question-circle fpbx-help-icon" data-for="remoteips"></i>
 								</div>
 								<div class="col-md-9">

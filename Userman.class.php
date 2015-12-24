@@ -354,6 +354,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 				case 'general':
 					$this->setGlobalsetting('emailbody',$request['emailbody']);
 					$this->setGlobalsetting('emailsubject',$request['emailsubject']);
+					$this->setGlobalsetting('hostname', $request['hostname']);
 					$this->setGlobalsetting('autoEmail',($request['auto-email'] == "yes") ? 1 : 0);
 					$this->message = array(
 						'message' => _('Saved'),
@@ -635,11 +636,14 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 
 				$emailbody = $this->getGlobalsetting('emailbody');
 				$emailsubject = $this->getGlobalsetting('emailsubject');
+				$hostname = $this->getGlobalsetting('hostname');
 				$autoEmail = $this->getGlobalsetting('autoEmail');
 				$autoEmail = is_null($autoEmail) ? true : $autoEmail;
 				$remoteips = $this->getConfig('remoteips');
 				$remoteips = is_array($remoteips) ? implode(",", $remoteips) : "";
-				$html .= load_view(dirname(__FILE__).'/views/welcome.php',array("autoEmail" => $autoEmail, "remoteips" => $remoteips, "sync" => $this->getConfig("sync"), "authtype" => $this->getConfig("auth"), "auths" => $auths, "brand" => $this->brand, "permissions" => $permissions, "groups" => $groups, "users" => $users, "sections" => $sections,
+				$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https" : "http";
+				$host = $protocol.'://'.$_SERVER["SERVER_NAME"];
+				$html .= load_view(dirname(__FILE__).'/views/welcome.php',array("hostname" => $hostname, "host" => $host, "autoEmail" => $autoEmail, "remoteips" => $remoteips, "sync" => $this->getConfig("sync"), "authtype" => $this->getConfig("auth"), "auths" => $auths, "brand" => $this->brand, "permissions" => $permissions, "groups" => $groups, "users" => $users, "sections" => $sections,
 				 																																"message" => $this->message, "emailbody" => $emailbody, "emailsubject" => $emailsubject));
 			break;
 		}
@@ -1830,8 +1834,13 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 			return false;
 		}
 
-		$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https" : "http";
-		$user['host'] = $protocol.'://'.$_SERVER["SERVER_NAME"];
+		$hostname = $this->getGlobalsetting("hostname");
+		if(empty($hostname)) {
+			$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https" : "http";
+			$user['host'] = $protocol.'://'.$_SERVER["SERVER_NAME"];
+		} else {
+			$user['host'] = $hostname;
+		}
 		$user['brand'] = $this->brand;
 
 		$usettings = $this->getAuthAllPermissions();

@@ -88,7 +88,7 @@
 							</div>
 							<div role="tabpane" id="settings" class="tab-pane display">
 								<div class="container-fluid">
-									<?php echo load_view(dirname(__FILE__).'/general.php', array("remoteips" => $remoteips, "sync" => $sync, "brand" => $brand, "auths" => $auths, "authtype" => $authtype, "autoEmail" => $autoEmail,"emailbody" => $emailbody, "emailsubject" => $emailsubject)); ?>
+									<?php echo load_view(dirname(__FILE__).'/general.php', array("hostname" => $hostname, "host" => $host, "remoteips" => $remoteips, "sync" => $sync, "brand" => $brand, "auths" => $auths, "authtype" => $authtype, "autoEmail" => $autoEmail,"emailbody" => $emailbody, "emailsubject" => $emailsubject)); ?>
 								</div>
 							</div>
 						</div>

@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-22 18:10-0800\n"
+"POT-Creation-Date: 2015-12-23 16:53-0800\n"
 "PO-Revision-Date: 2015-10-30 07:56+0200\n"
 "Last-Translator: Kevin <kevin@qloog.com>\n"
 "Language-Team: Japanese <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -54,7 +54,7 @@ msgstr ""
 "ザーを作成・管理しようとしていたいくつかのモジュールの統一版です。%s 12で新し"
 "く登場したユーザーコントロールパネルも「ユーザー管理」の情報を使用します。"
 
-#: Userman.class.php:2087
+#: Userman.class.php:2096
 #, php-format
 msgid "%s records failed validation"
 msgstr "%s つの記録は認証に失敗しました"
@@ -71,11 +71,11 @@ msgstr "アクション"
 msgid "Add"
 msgstr "追加"
 
-#: Userman.class.php:657
+#: Userman.class.php:661
 msgid "Add Device"
 msgstr "デバイスを追加"
 
-#: Userman.class.php:657
+#: Userman.class.php:661
 msgid "Add Extension"
 msgstr "内線を追加"
 
@@ -108,7 +108,7 @@ msgstr "%s 管理者ログインを許可"
 msgid "An Unknown error occured while trying to update user data"
 msgstr "ユーザー情報を更新中に不明なエラーが発生しました"
 
-#: Userman.class.php:658
+#: Userman.class.php:662
 msgid "Apply Changes Bar"
 msgstr "「設定適用」ボタン"
 
@@ -130,7 +130,7 @@ msgstr "Asteriskボイスメール"
 msgid "Authentication Settings"
 msgstr "認証設定"
 
-#: views/general.php:101
+#: views/general.php:123
 msgid "Authentication Type"
 msgstr "認証の種類"
 
@@ -143,7 +143,7 @@ msgstr "新規デバイス作成時にユーザーを自動生成しました"
 msgid "Base DN"
 msgstr "ベースDN"
 
-#: Userman.class.php:2029 Userman.class.php:2030 views/users.php:354
+#: Userman.class.php:2038 Userman.class.php:2039 views/users.php:354
 msgid "Cell Phone Number"
 msgstr "携帯番号"
 
@@ -151,11 +151,11 @@ msgstr "携帯番号"
 msgid "Close"
 msgstr "閉じる"
 
-#: Userman.class.php:2060
+#: Userman.class.php:2069
 msgid "Comma delimited list of users"
 msgstr "コンマで区切ったユーザのリスト"
 
-#: views/general.php:139
+#: views/general.php:161
 #, php-format
 msgid ""
 "Comma separated list of IP addresses that can send a POST query to %s "
@@ -164,7 +164,7 @@ msgid ""
 "this feature"
 msgstr ""
 
-#: Userman.class.php:2017 Userman.class.php:2018 views/users.php:282
+#: Userman.class.php:2026 Userman.class.php:2027 views/users.php:282
 msgid "Company"
 msgstr "会社"
 
@@ -192,7 +192,7 @@ msgstr "データベース名称変更できませんでした"
 msgid "Default Groups"
 msgstr "デフォルトグループ"
 
-#: Userman.class.php:463 views/welcome.php:39 views/welcome.php:72
+#: Userman.class.php:464 views/welcome.php:39 views/welcome.php:72
 #: assets/js/userman.js:33 assets/js/userman.js:39 assets/js/userman.js:67
 msgid "Delete"
 msgstr "削除"
@@ -201,17 +201,17 @@ msgstr "削除"
 msgid "Deleting..."
 msgstr "削除中..."
 
-#: Userman.class.php:2021 Userman.class.php:2022 views/users.php:306
+#: Userman.class.php:2030 Userman.class.php:2031 views/users.php:306
 msgid "Department"
 msgstr "部署"
 
-#: Userman.class.php:1997 Userman.class.php:1998 Userman.class.php:2055
-#: Userman.class.php:2056 views/rnav.php:12 views/rnav.php:27
+#: Userman.class.php:2006 Userman.class.php:2007 Userman.class.php:2064
+#: Userman.class.php:2065 views/rnav.php:12 views/rnav.php:27
 #: views/users.php:77 views/welcome.php:55 views/welcome.php:81
 msgid "Description"
 msgstr "詳細"
 
-#: Userman.class.php:2009 Userman.class.php:2010 views/users.php:234
+#: Userman.class.php:2018 Userman.class.php:2019 views/users.php:234
 #: views/welcome.php:51
 msgid "Display Name"
 msgstr "表示名"
@@ -236,11 +236,11 @@ msgstr "グループを編集"
 msgid "Edit User"
 msgstr "ユーザーを編集"
 
-#: Userman.class.php:2025 Userman.class.php:2026 views/users.php:330
+#: Userman.class.php:2034 Userman.class.php:2035 views/users.php:330
 msgid "Email Address"
 msgstr "メールアドレス"
 
-#: views/general.php:77
+#: views/general.php:99
 msgid "Email Body"
 msgstr "メール本文"
 
@@ -252,7 +252,7 @@ msgstr "メールを送信しました。"
 msgid "Email Settings"
 msgstr "メール設定"
 
-#: views/general.php:53
+#: views/general.php:75
 msgid "Email Subject"
 msgstr "メール件名"
 
@@ -260,11 +260,11 @@ msgstr "メール件名"
 msgid "Enable User Manager for this extension"
 msgstr "この内線に対してユーザ管理を有効にする。"
 
-#: Userman.class.php:760
+#: Userman.class.php:764
 msgid "Error: No id provided"
 msgstr "エラー: id がありません"
 
-#: Userman.class.php:792
+#: Userman.class.php:796
 msgid "Error: You should never see this"
 msgstr "エラー: このメッセージは見えないはず"
 
@@ -272,16 +272,16 @@ msgstr "エラー: このメッセージは見えないはず"
 msgid "Extension Link Attribute"
 msgstr "内線リンク属性"
 
-#: Userman.class.php:2041 Userman.class.php:2042 views/users.php:426
+#: Userman.class.php:2050 Userman.class.php:2051 views/users.php:426
 msgid "Fax Phone Number"
 msgstr "FAX番号"
 
-#: Userman.class.php:2001 Userman.class.php:2002 views/users.php:186
+#: Userman.class.php:2010 Userman.class.php:2011 views/users.php:186
 #: views/welcome.php:52
 msgid "First Name"
 msgstr "名"
 
-#: Userman.class.php:965 Userman.class.php:1149
+#: Userman.class.php:969 Userman.class.php:1153
 msgid "GID was not numeric"
 msgstr "GIDは数字以外の文字になっています"
 
@@ -321,7 +321,7 @@ msgstr "グループの詳細"
 msgid "Group Does Not Exist"
 msgstr "グループは存在しません"
 
-#: Userman.class.php:2051 Userman.class.php:2052 views/groups.php:51
+#: Userman.class.php:2060 Userman.class.php:2061 views/groups.php:51
 #: views/rnav.php:26 views/welcome.php:80
 msgid "Group Name"
 msgstr "グループ名"
@@ -347,7 +347,7 @@ msgstr "グループを更新しました"
 msgid "Groupname Can Not Be Blank!"
 msgstr "グループ名は必須項目です。"
 
-#: Userman.class.php:1073
+#: Userman.class.php:1077
 msgid "Groupname can not be blank"
 msgstr "グループ名は必須項目です。"
 
@@ -364,7 +364,7 @@ msgstr ""
 "このユーザが所属するグループ。この画面ではグループからユーザの削除・追加もで"
 "きます。"
 
-#: Userman.class.php:2037 Userman.class.php:2038 views/users.php:402
+#: Userman.class.php:2046 Userman.class.php:2047 views/users.php:402
 msgid "Home Phone Number"
 msgstr "自宅番号"
 
@@ -372,7 +372,11 @@ msgstr "自宅番号"
 msgid "Host"
 msgstr "ホスト"
 
-#: Userman.class.php:946
+#: views/general.php:52
+msgid "Host Name"
+msgstr ""
+
+#: Userman.class.php:950
 msgid "ID was not numeric"
 msgstr "IDには数字以外の文字が入っています"
 
@@ -417,7 +421,7 @@ msgstr ""
 msgid "Inherit"
 msgstr "引き継ぐ"
 
-#: Userman.class.php:755
+#: Userman.class.php:759
 msgid "Invalid User"
 msgstr "無効なユーザ"
 
@@ -431,7 +435,7 @@ msgstr "LDAPは読み取り専用モードのため追加できません。"
 msgid "LDAP is in Read Only Mode. Deletion denied"
 msgstr "LDAPは読み取り専用モードのため削除できません。"
 
-#: Userman.class.php:2005 Userman.class.php:2006 views/users.php:210
+#: Userman.class.php:2014 Userman.class.php:2015 views/users.php:210
 #: views/welcome.php:53
 msgid "Last Name"
 msgstr "性"
@@ -473,7 +477,7 @@ msgstr "ユーザを一覧表示"
 msgid "Login Details"
 msgstr "ログイン情報"
 
-#: Userman.class.php:1983 Userman.class.php:1984 views/users.php:53
+#: Userman.class.php:1992 Userman.class.php:1993 views/users.php:53
 msgid "Login Name"
 msgstr "ログイン名"
 
@@ -491,11 +495,11 @@ msgstr "このユーザが %s が管理者としてのログインを許可す�
 msgid "Microsoft Active Directory"
 msgstr "Microsoft Active Directory"
 
-#: Userman.class.php:1800
+#: Userman.class.php:1804
 msgid "Migrated user from voicemail"
 msgstr "ボイスメールから移行したユーザー"
 
-#: Userman.class.php:497
+#: Userman.class.php:498
 msgid "Module Core is disabled. Please enable it"
 msgstr "モジュール「コア」が無効です。有効にしてください"
 
@@ -517,7 +521,7 @@ msgstr "接続していません"
 msgid "Not all of the connection parameters have been filled out"
 msgstr "まだ入力していないパラメータがあります。"
 
-#: Userman.class.php:1843
+#: Userman.class.php:1852
 msgid "Obfuscated. To reset use the reset link in this email"
 msgstr ""
 "非表示。リセットするには、このメールに含まれたリセットのリンク先を使ってくだ"
@@ -527,12 +531,12 @@ msgstr ""
 msgid "Other Settings"
 msgstr "その他の設定"
 
-#: Userman.class.php:1988 views/msad.php:73 views/passwordmodal.php:16
+#: Userman.class.php:1997 views/msad.php:73 views/passwordmodal.php:16
 #: views/users.php:102
 msgid "Password"
 msgstr "パスワード"
 
-#: Userman.class.php:1989
+#: Userman.class.php:1998
 msgid "Password - plaintext"
 msgstr "パスワード: プレーンテキスト"
 
@@ -540,7 +544,7 @@ msgstr "パスワード: プレーンテキスト"
 msgid "Password For New User"
 msgstr "新規ユーザーのパスワード"
 
-#: Userman.class.php:1060
+#: Userman.class.php:1064
 msgid "Password can not be blank"
 msgstr "パスワードは必須項目です。"
 
@@ -552,19 +556,19 @@ msgstr "新規ユーザーの作成に使える有効なユーザー名を指定
 msgid "Port"
 msgstr "ポート"
 
-#: Userman.class.php:1152
+#: Userman.class.php:1156
 msgid "Previous Groupname can not be blank"
 msgstr "前のグループ名は必須項目です。"
 
-#: Userman.class.php:1121
+#: Userman.class.php:1125
 msgid "Previous Username can not be blank"
 msgstr "前のユーザ名は必須項目です。"
 
-#: Userman.class.php:1993
+#: Userman.class.php:2002
 msgid "Primary Extension"
 msgstr "プライマリ内線"
 
-#: Userman.class.php:1994 views/users.php:153
+#: Userman.class.php:2003 views/users.php:153
 msgid "Primary Linked Extension"
 msgstr "プライマリ連動内線"
 
@@ -572,11 +576,11 @@ msgstr "プライマリ連動内線"
 msgid "Priority"
 msgstr ""
 
-#: views/general.php:127
-msgid "Remote Authenitcation IP Addresses"
+#: views/general.php:149
+msgid "Remote Authentication IP Addresses"
 msgstr ""
 
-#: Userman.class.php:469
+#: Userman.class.php:470
 msgid "Reset"
 msgstr "リセット"
 
@@ -595,7 +599,7 @@ msgid ""
 msgstr ""
 "このユーザの閲覧権限を、レンジ内の ①内線 ②着信グループ ③キュー に制限します。"
 
-#: Userman.class.php:359
+#: Userman.class.php:360
 msgid "Saved"
 msgstr "保存済み"
 
@@ -640,7 +644,7 @@ msgstr "外部のユーザ作成時にメールを送信する"
 msgid "Set Password"
 msgstr "パスワードを設定"
 
-#: Userman.class.php:1841
+#: Userman.class.php:1850
 msgid "Set by your administrator"
 msgstr "管理者に設定されました。"
 
@@ -652,19 +656,19 @@ msgstr "設定"
 msgid "Status"
 msgstr "ステータス"
 
-#: Userman.class.php:457
+#: Userman.class.php:458
 msgid "Submit"
 msgstr "送信"
 
-#: Userman.class.php:451
+#: Userman.class.php:452
 msgid "Submit & Send Email to User"
 msgstr "送信してユーザにメールを送信"
 
-#: views/general.php:149
+#: views/general.php:171
 msgid "Synchronize"
 msgstr ""
 
-#: views/general.php:89
+#: views/general.php:111
 #, php-format
 msgid ""
 "Text to be used for the body of the welcome email. Useable variables are:"
@@ -676,7 +680,7 @@ msgstr ""
 "li><li>lname: 性</li><li>brand: %s</li><li>title: 役職</li><li>username: ユー"
 "ザ名</li><li>password: パスワード</li></ul>"
 
-#: views/general.php:65
+#: views/general.php:87
 #, php-format
 msgid ""
 "Text to be used for the subject of the welcome email. Useable variables are:"
@@ -708,7 +712,7 @@ msgstr "Active Directoryのポート番号"
 msgid "The active directory username"
 msgstr "Active Directoryのユーザ名"
 
-#: views/general.php:117
+#: views/general.php:139
 #, php-format
 msgid "The authentication engine to use"
 msgstr "使用する認証エンジン。"
@@ -724,6 +728,13 @@ msgstr "Active Directoryサーバの接続ステータス。"
 #: views/users.php:342
 msgid "The email address to associate with this user."
 msgstr "このユーザーに紐付けるメールアドレス。"
+
+#: views/general.php:64
+#, php-format
+msgid ""
+"The hostname used for email. If left blank the default value of '%s' will be "
+"used"
+msgstr ""
 
 #: views/users.php:366
 msgid "The user's cell (mobile) phone number."
@@ -777,7 +788,7 @@ msgid ""
 "FreePBX itself use this module to manage their users."
 msgstr ""
 
-#: Userman.class.php:2177 Userman.class.php:2234
+#: Userman.class.php:2186 Userman.class.php:2243
 msgid "This authentication driver does not allow importing"
 msgstr "この認証ドライバではインポート機能が使えません。"
 
@@ -800,18 +811,18 @@ msgstr ""
 msgid "This is the name that the user will use when logging in."
 msgstr "ログインに使うユーザー名。"
 
-#: views/general.php:168
+#: views/general.php:190
 msgid ""
 "This setting only applies to external authentication engines that require "
 "remote updates. For engines that do not support synchronizing this setting "
 "will be ignored."
 msgstr ""
 
-#: Userman.class.php:2013 Userman.class.php:2014 views/users.php:258
+#: Userman.class.php:2022 Userman.class.php:2023 views/users.php:258
 msgid "Title"
 msgstr "肩書"
 
-#: Userman.class.php:1118
+#: Userman.class.php:1122
 msgid "UID was not numeric"
 msgstr "UIDには数字以外の文字が入っています"
 
@@ -855,7 +866,7 @@ msgstr "ユーザの情報"
 msgid "User Does Not Exist"
 msgstr "ユーザーは存在しません"
 
-#: Userman.class.php:2059
+#: Userman.class.php:2068
 msgid "User List"
 msgstr "ユーザー一覧"
 
@@ -867,7 +878,7 @@ msgstr "ユーザー管理"
 msgid "User Manager"
 msgstr "ユーザ管理"
 
-#: Userman.class.php:1966 Userman.class.php:1967 views/quickCreate.php:36
+#: Userman.class.php:1975 Userman.class.php:1976 views/quickCreate.php:36
 msgid "User Manager Groups"
 msgstr "ユーザ管理のグループ"
 
@@ -875,7 +886,7 @@ msgstr "ユーザ管理のグループ"
 msgid "User Manager Settings"
 msgstr "ユーザー管理の設定"
 
-#: Userman.class.php:1960 Userman.class.php:1961
+#: Userman.class.php:1969 Userman.class.php:1970
 msgid "User Manager Users"
 msgstr "ユーザ管理のユーザ"
 
@@ -905,7 +916,7 @@ msgstr "ユーザー名"
 msgid "Username Can Not Be Blank!"
 msgstr "ユーザ名は必須項目です。"
 
-#: Userman.class.php:1057
+#: Userman.class.php:1061
 msgid "Username can not be blank"
 msgstr "ユーザ名は必須項目です。"
 
@@ -953,7 +964,7 @@ msgstr "このユーザの所属するグループ。"
 msgid "Which users are in this group"
 msgstr "このグループに所属するユーザ。"
 
-#: Userman.class.php:2033 Userman.class.php:2034 views/users.php:378
+#: Userman.class.php:2042 Userman.class.php:2043 views/users.php:378
 msgid "Work Phone Number"
 msgstr "仕事の電話番号"
 
@@ -962,11 +973,11 @@ msgstr "仕事の電話番号"
 msgid "Yes"
 msgstr "はい"
 
-#: Userman.class.php:1882 views/general.php:57
+#: Userman.class.php:1891 views/general.php:79
 msgid "Your %brand% Account"
 msgstr "自分の %brand% アカウント"
 
-#: Userman.class.php:2116
+#: Userman.class.php:2125
 msgid "default_extension is required."
 msgstr "default_extensionは必須項目です。"
 
@@ -978,7 +989,7 @@ msgstr "グループ"
 msgid "group Successfully Added"
 msgstr "グループ 追加しました"
 
-#: Userman.class.php:2185
+#: Userman.class.php:2194
 msgid "groupname is required."
 msgstr "groupname は必須項目です"
 
@@ -986,7 +997,7 @@ msgstr "groupname は必須項目です"
 msgid "groups"
 msgstr "グループ"
 
-#: Userman.class.php:2113
+#: Userman.class.php:2122
 msgid "password is required."
 msgstr "passwordは必須項目です。"
 
@@ -994,7 +1005,7 @@ msgstr "passwordは必須項目です。"
 msgid "user"
 msgstr "ユーザ"
 
-#: Userman.class.php:2110
+#: Userman.class.php:2119
 msgid "username is required."
 msgstr "usernameは必須項目です。"
 
