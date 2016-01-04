@@ -126,18 +126,18 @@ $( document ).ready(function() {
 //this fires when you change tabs
 $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
 	//Button Related
-	switch(e.target.text){
-		case "Settings":
+	switch(e.target.hash){
+		case "#settings":
 			$("#action-bar").removeClass("hidden");
 			$('input[name="submit"]').removeClass('hidden');
 			$('input[name="reset"]').removeClass('hidden');
 		break;
-		case "Users":
+		case "#users":
 			$("#action-bar").addClass("hidden");
 			$('input[name="submit"]').addClass('hidden');
 			$('input[name="reset"]').addClass('hidden');
 		break;
-		case "Groups":
+		case "#groups":
 			$("#action-bar").addClass("hidden");
 			$('input[name="submit"]').addClass('hidden');
 			$('input[name="reset"]').addClass('hidden');
