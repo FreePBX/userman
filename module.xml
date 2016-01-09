@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>13.0.47</version>
+	<version>13.0.48</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -12,6 +12,7 @@
 		Modules like iSymphony, Rest API and User Control Panel and FreePBX itself use this module to manage their users.
 	</description>
 	<changelog>
+		*13.0.48* FREEPBX-10962 with fax support as well in fax and faxpro
 		*13.0.47* Fix bad id in voicemail driver
 		*13.0.46* Fix broken voicemail auth driver
 		*13.0.45* FREEPBX-10861

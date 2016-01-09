@@ -294,9 +294,10 @@ abstract class Auth implements Base {
 	* !!This should never be called externally outside of User Manager!!
 	*
 	* @param string $id The ID of the user from User Manager
+	* @param bool $processHooks Whether to processHooks or not
 	* @return array
 	*/
-	public function deleteUserByID($id) {
+	public function deleteUserByID($id, $processHooks=true) {
 		$user = $this->getUserByID($id);
 		if(!$user) {
 			return array("status" => false, "type" => "danger", "message" => _("User Does Not Exist"));
@@ -308,15 +309,18 @@ abstract class Auth implements Base {
 		$sql = "DELETE FROM ".$this->userSettingsTable." WHERE `uid` = :uid";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':uid' => $id));
-		$this->delUserHook($id, $user);
+		if($processHooks) {
+			$this->delUserHook($id, $user);
+		}
 		return array("status" => true, "type" => "success", "message" => _("User Successfully Deleted"));
 	}
 
 	/**
 	* Delete a Group by it's ID
 	* @param int $gid The group ID
+	* @param bool $processHooks Whether to processHooks or not
 	*/
-	public function deleteGroupByGID($gid) {
+	public function deleteGroupByGID($gid, $processHooks=true) {
 		$group = $this->getGroupByGID($gid);
 		if(!$group) {
 			return array("status" => false, "type" => "danger", "message" => _("Group Does Not Exist"));

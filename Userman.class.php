@@ -1964,18 +1964,19 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 
 	public function bulkhandlerGetTypes() {
 		$final = array();
-		if($this->getAuthPermission('addGroup')) {
+		if($this->getAuthPermission('addUser')) {
 			$final['usermanusers'] = array(
 				'name' => _('User Manager Users'),
 				'description' => _('User Manager Users')
 			);
 		}
-		if($this->getAuthPermission('addUser')) {
+		if($this->getAuthPermission('addGroup')) {
 			$final['usermangroups'] = array(
 				'name' => _('User Manager Groups'),
 				'description' => _('User Manager Groups')
 			);
 		}
+		return $final;
 	}
 
 	/**
@@ -2017,39 +2018,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 					'displayname' => array(
 						'identifier' => _('Display Name'),
 						'description' => _('Display Name'),
-					),
-					'title' => array(
-						'identifier' => _('Title'),
-						'description' => _('Title'),
-					),
-					'company' => array(
-						'identifier' => _('Company'),
-						'description' => _('Company'),
-					),
-					'department' => array(
-						'identifier' => _('Department'),
-						'description' => _('Department'),
-					),
-					'email' => array(
-						'identifier' => _('Email Address'),
-						'description' => _('Email Address'),
-					),
-					'cell' => array(
-						'identifier' => _('Cell Phone Number'),
-						'description' => _('Cell Phone Number'),
-					),
-					'work' => array(
-						'identifier' => _('Work Phone Number'),
-						'description' => _('Work Phone Number'),
-					),
-					'home' => array(
-						'identifier' => _('Home Phone Number'),
-						'description' => _('Home Phone Number'),
-					),
-					'fax' => array(
-						'identifier' => _('Fax Phone Number'),
-						'description' => _('Fax Phone Number'),
-					),
+					)
 				);
 
 				return $headers;
@@ -2063,11 +2032,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 					'description' => array(
 						'identifier' => _('Description'),
 						'description' => _('Description'),
-					),
-					'users' => array(
-						'identifier' => _('User List'),
-						'description' => _('Comma delimited list of users'),
-					),
+					)
 				);
 
 				return $headers;
@@ -2108,7 +2073,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * @param  array $rawData The raw data as an array
 	 * @return array          Full blown status
 	 */
-	public function bulkhandlerImport($type, $rawData) {
+	public function bulkhandlerImport($type, $rawData, $replaceExisting = false) {
 		$ret = NULL;
 
 		switch ($type) {
@@ -2117,9 +2082,6 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 				foreach ($rawData as $data) {
 					if (empty($data['username'])) {
 						return array("status" => false, "message" => _("username is required."));
-					}
-					if (empty($data['password'])) {
-						return array("status" => false, "message" => _("password is required."));
 					}
 					if (empty($data['default_extension'])) {
 						return array("status" => false, "message" => _("default_extension is required."));
@@ -2145,8 +2107,12 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 					);
 
 					$existing = $this->getUserByUsername($username);
+					if(!$replaceExisting && $existing) {
+						return array("status" => false, "message" => _("User already exists"));
+					}
 					if ($existing) {
 						try {
+							$password = !empty($password) ? $password : null;
 							$status = $this->updateUser($existing['id'], $username, $username, $default_extension, $description, $extraData, $password);
 						} catch (\Exception $e) {
 							return array("status" => false, "message" => $e->getMessage());
@@ -2159,6 +2125,9 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 							return $ret;
 						}
 					} else {
+						if (empty($data['password'])) {
+							return array("status" => false, "message" => _("password is required."));
+						}
 						try {
 							$status = $this->addUser($username, $password, $default_extension, $description, $extraData, true);
 						} catch (\Exception $e) {
@@ -2209,6 +2178,9 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 					}
 
 					$existing = $this->getGroupByUsername($groupname);
+					if(!$replaceExisting && $existing) {
+						return array("status" => false, "message" => _("Group already exists"));
+					}
 					if ($existing) {
 						try {
 							$status = $this->updateGroup($existing['id'], $groupname, $groupname, $description, $users);
@@ -2265,6 +2237,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 					'username' => $user['username'],
 					'description' => $user['description'],
 					'default_extension' => $user['default_extension'],
+					'password' => '',
 					'fname' => $user['fname'],
 					'lname' => $user['lname'],
 					'displayname' => $user['displayname'],
