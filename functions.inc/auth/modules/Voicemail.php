@@ -58,7 +58,7 @@ class Voicemail extends Auth {
 
 	public function sync() {
 		$config = $this->userman->getConfig("authVoicemailSettings");
-		$d = $this->FreePBX->Voicemail->getVoicemail();
+		$d = $this->FreePBX->Voicemail->getVoicemail(false);
 		if(!empty($d[$config['context']])) {
 			foreach($d[$config['context']] as $username => $d) {
 				$um = $this->linkUser($username, 'voicemail', $username);

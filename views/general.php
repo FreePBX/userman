@@ -114,13 +114,14 @@
 			</div>
 		</div>
 		<div id="tab2" class="tab-pane display">
+			<div class="alert alert-info"><?php echo sprintf(_("Hitting submit on this page will start manual syncronization for engines other than the %s Internal Directory"),$brand)?></div>
 			<div class="element-container">
 				<div class="row">
 					<div class="col-md-12">
 						<div class="row">
 							<div class="form-group">
 								<div class="col-md-3">
-									<label class="control-label" for="authtype"><?php echo _("Authentication Type")?></label>
+									<label class="control-label" for="authtype"><?php echo _("Authentication Engine")?></label>
 									<i class="fa fa-question-circle fpbx-help-icon" data-for="authtype"></i>
 								</div>
 								<div class="col-md-9">
@@ -187,7 +188,7 @@
 				</div>
 				<div class="row">
 					<div class="col-md-12">
-						<span id="cronsync-help" class="help-block fpbx-help-block"><?php echo _("This setting only applies to external authentication engines that require remote updates. For engines that do not support synchronizing this setting will be ignored.")?></span>
+						<span id="cronsync-help" class="help-block fpbx-help-block"><?php echo sprintf(_("This setting only applies to authentication engines other than the %s Internal Directory. For the %s Internal Directory this setting will be ignored."),$brand,$brand)?></span>
 					</div>
 				</div>
 			</div>

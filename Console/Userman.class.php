@@ -34,13 +34,10 @@ class Userman extends Command {
           $output->writeln("<comment>The active authentication driver does not support syncing.</comment>");
         }
       break;
-      case "migrate":
-	    break;
 	    default:
 	      $output->writeln("<error>The command provided is not valid.</error>");
         $output->writeln("Avalible commands are:");
-        $output->writeln("<info>sync</info> - Syncronize User information from a remote source");
-        $output->writeln("<info>migrate<id></info> - Migrate/Update voicemail users into User Manager");
+        $output->writeln("<info>sync</info> - Syncronize User/Group information for an authentication engine");
 	      exit(4);
 	    break;
     }
