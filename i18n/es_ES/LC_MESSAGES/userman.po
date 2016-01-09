@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-08 17:49-0800\n"
+"POT-Creation-Date: 2016-01-09 00:27-0800\n"
 "PO-Revision-Date: 2015-10-22 01:10+0200\n"
 "Last-Translator: Ernesto <ecasas@sangoma.com>\n"
 "Language-Team: Spanish <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -118,12 +118,12 @@ msgstr ""
 msgid "Asterisk Voicemail"
 msgstr ""
 
-#: views/general.php:10
-msgid "Authentication Settings"
+#: views/general.php:124
+msgid "Authentication Engine"
 msgstr ""
 
-#: views/general.php:123
-msgid "Authentication Type"
+#: views/general.php:10
+msgid "Authentication Settings"
 msgstr ""
 
 #: Userman.class.php:149 functions.inc/guihooks.php:194
@@ -143,7 +143,7 @@ msgstr "Número de Móvil"
 msgid "Close"
 msgstr ""
 
-#: views/general.php:161
+#: views/general.php:162
 #, php-format
 msgid ""
 "Comma separated list of IP addresses that can send a POST query to %s "
@@ -352,6 +352,13 @@ msgstr ""
 msgid ""
 "Groups that this user is a part of. You can add and remove this user from "
 "groups in this view as well"
+msgstr ""
+
+#: views/general.php:117
+#, php-format
+msgid ""
+"Hitting submit on this page will start manual syncronization for engines "
+"other than the %s Internal Directory"
 msgstr ""
 
 #: views/users.php:402
@@ -564,7 +571,7 @@ msgstr ""
 msgid "Priority"
 msgstr ""
 
-#: views/general.php:149
+#: views/general.php:150
 msgid "Remote Authentication IP Addresses"
 msgstr ""
 
@@ -652,7 +659,7 @@ msgstr ""
 msgid "Submit & Send Email to User"
 msgstr ""
 
-#: views/general.php:171
+#: views/general.php:172
 msgid "Synchronize"
 msgstr ""
 
@@ -694,7 +701,7 @@ msgstr ""
 msgid "The active directory username"
 msgstr ""
 
-#: views/general.php:139
+#: views/general.php:140
 #, php-format
 msgid "The authentication engine to use"
 msgstr ""
@@ -791,11 +798,12 @@ msgstr ""
 msgid "This is the name that the user will use when logging in."
 msgstr "Este es el nombre que el usuario va a usar para iniciar una sesión."
 
-#: views/general.php:190
+#: views/general.php:191
+#, php-format
 msgid ""
-"This setting only applies to external authentication engines that require "
-"remote updates. For engines that do not support synchronizing this setting "
-"will be ignored."
+"This setting only applies to authentication engines other than the %s "
+"Internal Directory. For the %s Internal Directory this setting will be "
+"ignored."
 msgstr ""
 
 #: views/users.php:258

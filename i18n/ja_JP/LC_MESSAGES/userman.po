@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-08 17:49-0800\n"
+"POT-Creation-Date: 2016-01-09 00:27-0800\n"
 "PO-Revision-Date: 2015-10-30 07:56+0200\n"
 "Last-Translator: Kevin <kevin@qloog.com>\n"
 "Language-Team: Japanese <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -126,13 +126,13 @@ msgstr "この %s を削除してもよろしいですか？"
 msgid "Asterisk Voicemail"
 msgstr "Asteriskボイスメール"
 
+#: views/general.php:124
+msgid "Authentication Engine"
+msgstr ""
+
 #: views/general.php:10
 msgid "Authentication Settings"
 msgstr "認証設定"
-
-#: views/general.php:123
-msgid "Authentication Type"
-msgstr "認証の種類"
 
 #: Userman.class.php:149 functions.inc/guihooks.php:194
 #: functions.inc/guihooks.php:260
@@ -151,7 +151,7 @@ msgstr "携帯番号"
 msgid "Close"
 msgstr "閉じる"
 
-#: views/general.php:161
+#: views/general.php:162
 #, php-format
 msgid ""
 "Comma separated list of IP addresses that can send a POST query to %s "
@@ -363,6 +363,13 @@ msgid ""
 msgstr ""
 "このユーザが所属するグループ。この画面ではグループからユーザの削除・追加もで"
 "きます。"
+
+#: views/general.php:117
+#, php-format
+msgid ""
+"Hitting submit on this page will start manual syncronization for engines "
+"other than the %s Internal Directory"
+msgstr ""
 
 #: views/users.php:402
 msgid "Home Phone Number"
@@ -576,7 +583,7 @@ msgstr "プライマリ連動内線"
 msgid "Priority"
 msgstr ""
 
-#: views/general.php:149
+#: views/general.php:150
 msgid "Remote Authentication IP Addresses"
 msgstr ""
 
@@ -664,7 +671,7 @@ msgstr "送信"
 msgid "Submit & Send Email to User"
 msgstr "送信してユーザにメールを送信"
 
-#: views/general.php:171
+#: views/general.php:172
 msgid "Synchronize"
 msgstr ""
 
@@ -712,7 +719,7 @@ msgstr "Active Directoryのポート番号"
 msgid "The active directory username"
 msgstr "Active Directoryのユーザ名"
 
-#: views/general.php:139
+#: views/general.php:140
 #, php-format
 msgid "The authentication engine to use"
 msgstr "使用する認証エンジン。"
@@ -811,11 +818,12 @@ msgstr ""
 msgid "This is the name that the user will use when logging in."
 msgstr "ログインに使うユーザー名。"
 
-#: views/general.php:190
+#: views/general.php:191
+#, php-format
 msgid ""
-"This setting only applies to external authentication engines that require "
-"remote updates. For engines that do not support synchronizing this setting "
-"will be ignored."
+"This setting only applies to authentication engines other than the %s "
+"Internal Directory. For the %s Internal Directory this setting will be "
+"ignored."
 msgstr ""
 
 #: views/users.php:258
@@ -1012,6 +1020,9 @@ msgstr "usernameは必須項目です。"
 #: assets/js/userman.js:7
 msgid "users"
 msgstr "ユーザ"
+
+#~ msgid "Authentication Type"
+#~ msgstr "認証の種類"
 
 #~ msgid "Comma delimited list of users"
 #~ msgstr "コンマで区切ったユーザのリスト"
