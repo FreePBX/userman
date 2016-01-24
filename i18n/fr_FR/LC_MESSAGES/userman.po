@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-09 00:27-0800\n"
-"PO-Revision-Date: 2016-01-22 09:15+0200\n"
+"PO-Revision-Date: 2016-01-24 07:49+0200\n"
 "Last-Translator: Nicolas <forums@riendeau.org>\n"
 "Language-Team: French "
 "<http://weblate.freepbx.org/projects/freepbx/userman/fr_FR/>\n"
@@ -214,27 +214,27 @@ msgstr ""
 
 #: views/users.php:3
 msgid "Edit User"
-msgstr ""
+msgstr "Éditer l'utilisateur"
 
 #: views/users.php:330
 msgid "Email Address"
-msgstr ""
+msgstr "Courriel"
 
 #: views/general.php:99
 msgid "Email Body"
-msgstr ""
+msgstr "Corps du courriel"
 
 #: assets/js/userman.js:15
 msgid "Email Sent"
-msgstr ""
+msgstr "Courriel envoyé"
 
 #: views/general.php:9 views/general.php:16
 msgid "Email Settings"
-msgstr ""
+msgstr "Paramètres de courriel"
 
 #: views/general.php:75
 msgid "Email Subject"
-msgstr ""
+msgstr "Sujet du courriel"
 
 #: views/quickCreate.php:25
 msgid "Enable User Manager for this extension"
@@ -246,7 +246,7 @@ msgstr ""
 
 #: Userman.class.php:796
 msgid "Error: You should never see this"
-msgstr ""
+msgstr "Erreur : Vous ne devriez jamais voir ceci"
 
 #: views/msad.php:139
 msgid "Extension Link Attribute"
@@ -254,24 +254,24 @@ msgstr ""
 
 #: views/users.php:426
 msgid "Fax Phone Number"
-msgstr ""
+msgstr "Numéro de télécopieur"
 
 #: Userman.class.php:2011 Userman.class.php:2012 views/users.php:186
 #: views/welcome.php:52
 msgid "First Name"
-msgstr ""
+msgstr "Prénom"
 
 #: Userman.class.php:969 Userman.class.php:1153
 msgid "GID was not numeric"
-msgstr ""
+msgstr "Le GID n'était pas numérique"
 
 #: views/groups.php:85
 msgid "Give the group a description"
-msgstr ""
+msgstr "Donne une description au groupe"
 
 #: views/groups.php:63
 msgid "Give the group a name"
-msgstr ""
+msgstr "Donne un nom au groupe"
 
 #: views/groups.php:149 views/users.php:479
 msgid "Grant Full Administration Rights"
