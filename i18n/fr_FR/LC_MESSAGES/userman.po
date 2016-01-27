@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-09 00:27-0800\n"
-"PO-Revision-Date: 2016-01-24 07:49+0200\n"
+"PO-Revision-Date: 2016-01-27 08:13+0200\n"
 "Last-Translator: Nicolas <forums@riendeau.org>\n"
 "Language-Team: French "
 "<http://weblate.freepbx.org/projects/freepbx/userman/fr_FR/>\n"
@@ -24,12 +24,12 @@ msgstr ""
 #: views/groups.php:28 views/users.php:28
 #, php-format
 msgid "%s Administration GUI"
-msgstr ""
+msgstr "Interface d'administration de %s"
 
 #: functions.inc/auth/modules/Freepbx.php:24
 #, php-format
 msgid "%s Internal Directory"
-msgstr ""
+msgstr "Répertoire interne de %s"
 
 #: views/welcome.php:15
 #, php-format
@@ -47,7 +47,7 @@ msgstr ""
 
 #: views/users.php:89
 msgid "A brief description for this user."
-msgstr ""
+msgstr "Une brève description de cet utilisateur."
 
 #: views/welcome.php:56 views/welcome.php:83
 msgid "Action"
@@ -59,7 +59,7 @@ msgstr "Ajouter"
 
 #: Userman.class.php:661
 msgid "Add Device"
-msgstr ""
+msgstr "Ajouter un dispositif"
 
 #: Userman.class.php:661
 msgid "Add Extension"
@@ -79,11 +79,11 @@ msgstr "Admin"
 
 #: views/groups.php:196 views/users.php:528
 msgid "Administration Access"
-msgstr ""
+msgstr "Accès d'administration"
 
 #: install.php:218
 msgid "All Users"
-msgstr ""
+msgstr "Tous les utilisateurs"
 
 #: views/groups.php:124 views/users.php:452
 #, php-format
