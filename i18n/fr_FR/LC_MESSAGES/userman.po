@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-09 00:27-0800\n"
-"PO-Revision-Date: 2016-01-27 08:13+0200\n"
+"PO-Revision-Date: 2016-01-28 18:23+0200\n"
 "Last-Translator: Nicolas <forums@riendeau.org>\n"
 "Language-Team: French "
 "<http://weblate.freepbx.org/projects/freepbx/userman/fr_FR/>\n"
@@ -93,15 +93,17 @@ msgstr ""
 #: functions.inc/auth/modules/Freepbx.php:184
 msgid "An Unknown error occured while trying to update user data"
 msgstr ""
+"Une erreur inconnue est survenue lors de la mise à jour de l'information "
+"l'utilisateur"
 
 #: Userman.class.php:662
 msgid "Apply Changes Bar"
-msgstr ""
+msgstr "Barre d'application des changements"
 
 #: assets/js/userman.js:28
 #, perl-format
 msgid "Are you sure you wish to delete these %s?"
-msgstr ""
+msgstr "Êtes-vous sûr de vouloir supprimer ces %s ?"
 
 #: assets/js/userman.js:59
 #, perl-format
