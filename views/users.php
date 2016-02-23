@@ -507,7 +507,7 @@ echo $heading;
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="pbx_range"></i>
 												</div>
 												<div class="col-md-9">
-													<input name="pbx_low" type="number" min="0" class="form-control" style="display: inline;width:48%"> - <input name="pbx_high" type="number" min="1" class="form-control" style="display: inline;width:48%">
+													<input name="pbx_low" type="number" min="0" class="form-control" style="display: inline;width:48%" value="<?php echo $pbx_low?>"> - <input name="pbx_high" type="number" min="1" class="form-control" style="display: inline;width:48%" value="<?php echo $pbx_high?>">
 												</div>
 											</div>
 										</div>
