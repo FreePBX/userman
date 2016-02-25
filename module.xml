@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>13.0.50</version>
+	<version>13.0.51</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -12,6 +12,7 @@
 		Modules like iSymphony, Rest API and User Control Panel and FreePBX itself use this module to manage their users.
 	</description>
 	<changelog>
+		*13.0.51* Remove en_US Translations
 		*13.0.50* Better notices
 		*13.0.49* FREEPBX-11069
 		*13.0.48* FREEPBX-10962 with fax support as well in fax and faxpro
@@ -101,7 +102,7 @@
 		*2.11.0alpha2* Add more fields
 		*2.11.0alpha1* Initial Module
 	</changelog>
-	<info/>
+	<info />
 	<category>Admin</category>
 	<menuitems>
 		<userman needsenginedb="yes">User Management</userman>
@@ -115,11 +116,11 @@
 			<method callingMethod="getQuickCreateDisplay" class="Userman" namespace="FreePBX\modules">getQuickCreateDisplay</method>
 			<method callingMethod="processQuickCreate" class="Userman" namespace="FreePBX\modules">processQuickCreate</method>
 		</core>
-		<bulkhandler namespace="FreePBX\modules" class="Bulkhandler" priority="150">
-			<method namespace="FreePBX\modules" class="Userman" callingMethod="getHeaders">bulkhandlerGetHeaders</method>
-			<method namespace="FreePBX\modules" class="Userman" callingMethod="getTypes">bulkhandlerGetTypes</method>
-			<method namespace="FreePBX\modules" class="Userman" callingMethod="import">bulkhandlerImport</method>
-			<method namespace="FreePBX\modules" class="Userman" callingMethod="export">bulkhandlerExport</method>
+		<bulkhandler class="Bulkhandler" namespace="FreePBX\modules" priority="150">
+			<method callingMethod="getHeaders" class="Userman" namespace="FreePBX\modules">bulkhandlerGetHeaders</method>
+			<method callingMethod="getTypes" class="Userman" namespace="FreePBX\modules">bulkhandlerGetTypes</method>
+			<method callingMethod="import" class="Userman" namespace="FreePBX\modules">bulkhandlerImport</method>
+			<method callingMethod="export" class="Userman" namespace="FreePBX\modules">bulkhandlerExport</method>
 		</bulkhandler>
 	</hooks>
 	<supported>
