@@ -9,15 +9,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-09 00:27-0800\n"
+"POT-Creation-Date: 2016-03-01 11:09-0800\n"
 "PO-Revision-Date: 2016-02-05 11:51+0200\n"
 "Last-Translator: Nicolas Riendeau <freepbx@riendeau.org>\n"
-"Language-Team: French "
-"<http://weblate.freepbx.org/projects/freepbx/userman/fr_FR/>\n"
-"Language: fr_FR\n"
+"Language-Team: French <http://weblate.freepbx.org/projects/freepbx/userman/"
+"fr_FR/>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: fr_FR\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Generator: Weblate 2.2-dev\n"
 
@@ -219,6 +219,10 @@ msgstr "Éditer le groupe"
 #: views/users.php:3
 msgid "Edit User"
 msgstr "Éditer l'utilisateur"
+
+#: userman.i18n.php:14
+msgid "Email "
+msgstr ""
 
 #: views/users.php:330
 msgid "Email Address"
@@ -662,6 +666,11 @@ msgid ""
 "li></ul>"
 msgstr ""
 
+#: userman.i18n.php:18
+msgid ""
+"The From: field for emails when using the user management email feature."
+msgstr ""
+
 #: views/msad.php:107
 msgid "The active directory domain"
 msgstr ""
@@ -837,6 +846,10 @@ msgstr "L'utilisateur n'existe pas"
 
 #: userman.i18n.php:4 userman.i18n.php:10
 msgid "User Management"
+msgstr ""
+
+#: userman.i18n.php:16
+msgid "User Management Module"
 msgstr ""
 
 #: Console/Userman.class.php:18 views/welcome.php:6
