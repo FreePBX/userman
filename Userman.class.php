@@ -403,11 +403,8 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 					$freepbxCron = $this->FreePBX->Cron($AMPASTERISKWEBUSER);
 					$crons = $freepbxCron->getAll();
 					foreach($crons as $cron) {
-						$str = str_replace("/", "\/", $AMPSBIN."/fwconsole userman sync");
 						if(preg_match("/fwconsole userman sync$/",$cron)) {
-							if(!preg_match("/".$str."$/i",$cron)) {
-								$freepbxCron->remove($cron);
-							}
+							$freepbxCron->remove($cron);
 						}
 					}
 					if(method_exists($this->auth,"sync") && !empty($sync)) {
