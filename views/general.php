@@ -179,7 +179,7 @@
 										<option value="*/30 * * * *" <?php echo isset($sync) && $sync == '*/30 * * * *' ? 'selected' : ''?>>30 Minutes</option>
 										<option value="0 * * * *" <?php echo !isset($sync) || (isset($sync) && $sync == '0 * * * *') ? 'selected' : ''?>>1 Hour</option>
 										<option value="0 */6 * * *" <?php echo isset($sync) && $sync == '0 */6 * * *' ? 'selected' : ''?>>6 Hours</option>
-										<option value="0 0 * *" <?php echo isset($sync) && $sync == '0 0 * *' ? 'selected' : ''?>>1 Day</option>
+										<option value="0 0 * * *" <?php echo isset($sync) && $sync == '0 0 * * *' ? 'selected' : ''?>>1 Day</option>
 									</select>
 								</div>
 							</div>

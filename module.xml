@@ -12,6 +12,7 @@
 		Modules like iSymphony, Rest API and User Control Panel and FreePBX itself use this module to manage their users.
 	</description>
 	<changelog>
+		*13.0.53* FREEPBX-11795 Fix erroring cron
 		*13.0.52* Remove extra crons when saving
 		*13.0.51* Remove en_US Translations
 		*13.0.50* Better notices

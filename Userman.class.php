@@ -391,7 +391,11 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 						case "*/30 * * * *":
 						case "0 * * * *":
 						case "0 */6 * * *":
+						case "0 0 * * *":
+						break;
+						//catch and fix cron error
 						case "0 0 * *":
+							$sync = "0 0 * * *";
 						break;
 						default:
 							$sync = "0 */6 * * *";
