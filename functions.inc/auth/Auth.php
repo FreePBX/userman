@@ -299,7 +299,7 @@ abstract class Auth implements Base {
 	*/
 	public function deleteUserByID($id, $processHooks=true) {
 		$user = $this->getUserByID($id);
-		if(!$user) {
+		if(empty($user)) {
 			return array("status" => false, "type" => "danger", "message" => _("User Does Not Exist"));
 		}
 		$sql = "DELETE FROM ".$this->userTable." WHERE `id` = :id AND auth = :auth";
@@ -322,7 +322,7 @@ abstract class Auth implements Base {
 	*/
 	public function deleteGroupByGID($gid, $processHooks=true) {
 		$group = $this->getGroupByGID($gid);
-		if(!$group) {
+		if(empty($group)) {
 			return array("status" => false, "type" => "danger", "message" => _("Group Does Not Exist"));
 		}
 		$sql = "DELETE FROM ".$this->groupTable." WHERE `id` = :id AND auth = :auth";
