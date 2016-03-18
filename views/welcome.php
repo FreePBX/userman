@@ -61,6 +61,7 @@
 							</div>
 							<div role="tabpanel" id="groups" class="tab-pane display">
 								<div class="table-responsive">
+									<div class="alert alert-info"><?php echo _("Group Priorities can be changed by clicking and dragging groups around in the order you'd like. Groups with a lower number for priority take priority (EG 0 is higher than 1)")?></div>
 									<div id="toolbar-groups">
 										<?php if($permissions['addGroup']) {?>
 										<a href="config.php?display=userman&amp;action=addgroup" id="add-groups" class="btn btn-add" data-type="groupss" data-section="groups">

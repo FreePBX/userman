@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>13.0.54</version>
+	<version>13.0.55</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -12,6 +12,7 @@
 		Modules like iSymphony, Rest API and User Control Panel and FreePBX itself use this module to manage their users.
 	</description>
 	<changelog>
+		*13.0.55* Put notice up about group priorities
 		*13.0.54* Fix strange race condition, check if empty not if false
 		*13.0.53* FREEPBX-11795 Fix erroring cron
 		*13.0.52* Remove extra crons when saving
