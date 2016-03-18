@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-10 12:58-0800\n"
+"POT-Creation-Date: 2016-03-18 13:59-0700\n"
 "PO-Revision-Date: 2015-10-14 14:59+0200\n"
 "Last-Translator: james <zhulizhong@gmail.com>\n"
 "Language-Team: Simplified Chinese <http://weblate.freepbx.org/projects/"
@@ -49,11 +49,11 @@ msgstr ""
 msgid "A brief description for this user."
 msgstr "用户描述。"
 
-#: views/welcome.php:56 views/welcome.php:83
+#: views/welcome.php:56 views/welcome.php:84
 msgid "Action"
 msgstr "命令"
 
-#: views/welcome.php:34 views/welcome.php:67
+#: views/welcome.php:34 views/welcome.php:68
 msgid "Add"
 msgstr "添加"
 
@@ -174,7 +174,7 @@ msgstr "没有完成数据库重新命名"
 msgid "Default Groups"
 msgstr "默认组"
 
-#: Userman.class.php:465 views/welcome.php:39 views/welcome.php:72
+#: Userman.class.php:465 views/welcome.php:39 views/welcome.php:73
 #: assets/js/userman.js:33 assets/js/userman.js:39 assets/js/userman.js:67
 msgid "Delete"
 msgstr "删除"
@@ -189,7 +189,7 @@ msgstr "部门"
 
 #: Userman.class.php:2008 Userman.class.php:2009 Userman.class.php:2034
 #: Userman.class.php:2035 views/rnav.php:12 views/rnav.php:27
-#: views/users.php:77 views/welcome.php:55 views/welcome.php:81
+#: views/users.php:77 views/welcome.php:55 views/welcome.php:82
 msgid "Description"
 msgstr "描述"
 
@@ -306,9 +306,16 @@ msgid "Group Does Not Exist"
 msgstr "组不存在"
 
 #: Userman.class.php:2030 Userman.class.php:2031 views/groups.php:51
-#: views/rnav.php:26 views/welcome.php:80
+#: views/rnav.php:26 views/welcome.php:81
 msgid "Group Name"
 msgstr "组名称"
+
+#: views/welcome.php:64
+msgid ""
+"Group Priorities can be changed by clicking and dragging groups around in "
+"the order you'd like. Groups with a lower number for priority take priority "
+"(EG 0 is higher than 1)"
+msgstr ""
 
 #: functions.inc/auth/modules/Freepbx.php:136
 #: functions.inc/auth/modules/Voicemail.php:172
@@ -555,7 +562,7 @@ msgstr ""
 msgid "Primary Linked Extension"
 msgstr ""
 
-#: views/welcome.php:82
+#: views/welcome.php:83
 msgid "Priority"
 msgstr ""
 

@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-10 12:58-0800\n"
+"POT-Creation-Date: 2016-03-18 13:59-0700\n"
 "PO-Revision-Date: 2015-10-30 07:56+0200\n"
 "Last-Translator: Kevin <kevin@qloog.com>\n"
 "Language-Team: Japanese <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -63,11 +63,11 @@ msgstr "%s つの記録は認証に失敗しました"
 msgid "A brief description for this user."
 msgstr "このユーザーの短い説明。"
 
-#: views/welcome.php:56 views/welcome.php:83
+#: views/welcome.php:56 views/welcome.php:84
 msgid "Action"
 msgstr "アクション"
 
-#: views/welcome.php:34 views/welcome.php:67
+#: views/welcome.php:34 views/welcome.php:68
 msgid "Add"
 msgstr "追加"
 
@@ -188,7 +188,7 @@ msgstr "データベース名称変更できませんでした"
 msgid "Default Groups"
 msgstr "デフォルトグループ"
 
-#: Userman.class.php:465 views/welcome.php:39 views/welcome.php:72
+#: Userman.class.php:465 views/welcome.php:39 views/welcome.php:73
 #: assets/js/userman.js:33 assets/js/userman.js:39 assets/js/userman.js:67
 msgid "Delete"
 msgstr "削除"
@@ -203,7 +203,7 @@ msgstr "部署"
 
 #: Userman.class.php:2008 Userman.class.php:2009 Userman.class.php:2034
 #: Userman.class.php:2035 views/rnav.php:12 views/rnav.php:27
-#: views/users.php:77 views/welcome.php:55 views/welcome.php:81
+#: views/users.php:77 views/welcome.php:55 views/welcome.php:82
 msgid "Description"
 msgstr "詳細"
 
@@ -322,9 +322,16 @@ msgid "Group Does Not Exist"
 msgstr "グループは存在しません"
 
 #: Userman.class.php:2030 Userman.class.php:2031 views/groups.php:51
-#: views/rnav.php:26 views/welcome.php:80
+#: views/rnav.php:26 views/welcome.php:81
 msgid "Group Name"
 msgstr "グループ名"
+
+#: views/welcome.php:64
+msgid ""
+"Group Priorities can be changed by clicking and dragging groups around in "
+"the order you'd like. Groups with a lower number for priority take priority "
+"(EG 0 is higher than 1)"
+msgstr ""
 
 #: functions.inc/auth/modules/Freepbx.php:136
 #: functions.inc/auth/modules/Voicemail.php:172
@@ -583,7 +590,7 @@ msgstr "プライマリ内線"
 msgid "Primary Linked Extension"
 msgstr "プライマリ連動内線"
 
-#: views/welcome.php:82
+#: views/welcome.php:83
 msgid "Priority"
 msgstr ""
 

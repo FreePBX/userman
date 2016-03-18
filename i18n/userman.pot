@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-10 12:58-0800\n"
+"POT-Creation-Date: 2016-03-18 13:59-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -47,12 +47,12 @@ msgid "A brief description for this user."
 msgstr ""
 
 #: views/welcome.php:56
-#: views/welcome.php:83
+#: views/welcome.php:84
 msgid "Action"
 msgstr ""
 
 #: views/welcome.php:34
-#: views/welcome.php:67
+#: views/welcome.php:68
 msgid "Add"
 msgstr ""
 
@@ -183,7 +183,7 @@ msgstr ""
 
 #: Userman.class.php:465
 #: views/welcome.php:39
-#: views/welcome.php:72
+#: views/welcome.php:73
 #: assets/js/userman.js:33
 #: assets/js/userman.js:39
 #: assets/js/userman.js:67
@@ -206,7 +206,7 @@ msgstr ""
 #: views/rnav.php:27
 #: views/users.php:77
 #: views/welcome.php:55
-#: views/welcome.php:81
+#: views/welcome.php:82
 msgid "Description"
 msgstr ""
 
@@ -334,8 +334,15 @@ msgstr ""
 #: Userman.class.php:2031
 #: views/groups.php:51
 #: views/rnav.php:26
-#: views/welcome.php:80
+#: views/welcome.php:81
 msgid "Group Name"
+msgstr ""
+
+#: views/welcome.php:64
+msgid ""
+"Group Priorities can be changed by clicking and dragging groups around in "
+"the order you'd like. Groups with a lower number for priority take priority "
+"(EG 0 is higher than 1)"
 msgstr ""
 
 #: functions.inc/auth/modules/Freepbx.php:136
@@ -604,7 +611,7 @@ msgstr ""
 msgid "Primary Linked Extension"
 msgstr ""
 
-#: views/welcome.php:82
+#: views/welcome.php:83
 msgid "Priority"
 msgstr ""
 
