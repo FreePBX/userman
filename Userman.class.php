@@ -898,11 +898,11 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	*
 	* This gets user information by Email
 	*
-	* @param string $username The User Manager Email Address
+	* @param string $email The User Manager Email Address
 	* @return bool
 	*/
-	public function getUserByEmail($username) {
-		return $this->auth->getUserByEmail($username);
+	public function getUserByEmail($email) {
+		return $this->auth->getUserByEmail($email);
 	}
 
 	/**
@@ -951,13 +951,12 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 			throw new \Exception(_("ID was not numeric"));
 		}
 		set_time_limit(0);
-		$data = $this->auth->deleteUserByID($id);
 		$status = $this->auth->deleteUserByID($id);
 		if(!$status['status']) {
 			return $status;
 		}
-		$this->callHooks('delUser',$data);
-		$this->delUser($id,$data);
+		$this->callHooks('delUser',$status);
+		$this->delUser($id,$status);
 		return $status;
 	}
 
@@ -1403,6 +1402,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$sql = "REPLACE INTO ".$this->userSettingsTable." (`uid`, `module`, `key`, `val`, `type`) VALUES(:uid, :module, :setting, :value, :type)";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':uid' => $uid, ':module' => 'global', ':setting' => $setting, ':value' => $value, ':type' => $type));
+		return true;
 	}
 
 	/**
@@ -1439,6 +1439,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$sql = "REPLACE INTO ".$this->groupSettingsTable." (`gid`, `module`, `key`, `val`, `type`) VALUES(:gid, :module, :setting, :value, :type)";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':gid' => $gid, ':module' => 'global', ':setting' => $setting, ':value' => $value, ':type' => $type));
+		return true;
 	}
 
 	/**
@@ -1571,6 +1572,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$sql = "REPLACE INTO ".$this->userSettingsTable." (`uid`, `module`, `key`, `val`, `type`) VALUES(:id, :module, :setting, :value, :type)";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':id' => $uid, ':module' => $module, ':setting' => $setting, ':value' => $value, ':type' => $type));
+		return true;
 	}
 
 	/**
@@ -1599,6 +1601,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$sql = "REPLACE INTO ".$this->groupSettingsTable." (`gid`, `module`, `key`, `val`, `type`) VALUES(:id, :module, :setting, :value, :type)";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':id' => $gid, ':module' => $module, ':setting' => $setting, ':value' => $value, ':type' => $type));
+		return true;
 	}
 
 	/**
