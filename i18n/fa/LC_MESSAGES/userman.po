@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-03-18 13:59-0700\n"
-"PO-Revision-Date: 2016-04-02 18:58+0200\n"
+"PO-Revision-Date: 2016-04-02 18:59+0200\n"
 "Last-Translator: Media <mousavi.media@gmail.com>\n"
 "Language-Team: Persian "
 "<http://weblate.freepbx.org/projects/freepbx/userman/fa/>\n"
@@ -472,7 +472,7 @@ msgstr "لینک به کاربر پیشفرض"
 
 #: functions.inc/guihooks.php:110
 msgid "Link to a Different Default User:"
-msgstr "لینک به کاربر پیشفرض متفاوت"
+msgstr "لینک به کاربر پیشفرض متفاوت:"
 
 #: functions.inc/guihooks.php:90
 msgid "Linked"
@@ -781,7 +781,7 @@ msgstr "بخش کاربر."
 
 #: views/users.php:438
 msgid "The user's fax phone number."
-msgstr "شماره دورنگار کاربر"
+msgstr "شماره دورنگار کاربر."
 
 #: views/users.php:198
 msgid "The user's first name."
