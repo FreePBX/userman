@@ -1952,6 +1952,12 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * Get all extensions that are in user as the "default extension"
 	 */
 	private function getAllInUseExtensions() {
+		//Cleanup any linked extensions that aren't in the linked auth
+		$sql = 'UPDATE '.$this->userTable.' SET default_extension = "none" WHERE auth != ?';
+		$auth = $this->getConfig('auth');
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array($auth));
+
 		$sql = 'SELECT default_extension FROM '.$this->userTable;
 		$sth = $this->db->prepare($sql);
 		$sth->execute();
