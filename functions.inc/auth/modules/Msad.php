@@ -76,7 +76,7 @@ class Msad extends Auth {
 		$this->domain = $config['domain'];
 		$this->user = $config['username'];
 		$this->password = $config['password'];
-		$this->linkAttr = isset($config['la']) ? $config['la'] : '';
+		$this->linkAttr = isset($config['la']) ? strtolower($config['la']) : '';
 		$this->output = null;
 	}
 
