@@ -405,7 +405,7 @@ abstract class Auth implements Base {
 			} catch (\Exception $e) {
 				return array("status" => false, "type" => "danger", "message" => $e->getMessage());
 			}
-			return array("status" => true, "type" => "success", "message" => _("User Successfully Updated"), "id" => $previous['id'], "new" => false);
+			return array("status" => true, "type" => "success", "message" => _("User Successfully Updated"), "id" => $previous['id'], "prevUsername" => $previous['username'], "new" => false);
 		}
 	}
 
@@ -451,7 +451,7 @@ abstract class Auth implements Base {
 			} catch (\Exception $e) {
 				return array("status" => false, "type" => "danger", "message" => $e->getMessage());
 			}
-			return array("status" => true, "type" => "success", "message" => _("Group Successfully Updated"), "id" => $previous['id'], "new" => false);
+			return array("status" => true, "type" => "success", "message" => _("Group Successfully Updated"), "id" => $previous['id'], "prevGroupname" => $previous['groupname'], "new" => false);
 		}
 	}
 

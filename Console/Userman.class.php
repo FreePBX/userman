@@ -28,7 +28,7 @@ class Userman extends Command {
         $auth = $userman->getAuthObject();
         if(method_exists($auth,"sync")) {
           $output->write("Starting Sync...");
-          $auth->sync();
+          $auth->sync($output);
           $output->writeln("Finished");
         } else {
           $output->writeln("<comment>The active authentication driver does not support syncing.</comment>");

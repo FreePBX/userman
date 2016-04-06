@@ -56,6 +56,16 @@ class Msad extends Auth {
 	 */
 	private $gcache = array();
 
+	private $userHooks = array(
+		'add' => array(),
+		'update' => array()
+	);
+
+	private $groupHooks = array(
+		'add' => array(),
+		'update' => array()
+	);
+
 	public function __construct($userman, $freepbx) {
 		parent::__construct($userman, $freepbx);
 		$this->FreePBX = $freepbx;
@@ -67,6 +77,7 @@ class Msad extends Auth {
 		$this->user = $config['username'];
 		$this->password = $config['password'];
 		$this->linkAttr = isset($config['la']) ? $config['la'] : '';
+		$this->output = null;
 	}
 
 	/**
@@ -165,8 +176,8 @@ class Msad extends Auth {
 	/**
 	 * Connect to the LDAP server
 	 */
-	public function connect() {
-		if(!$this->ldap) {
+	public function connect($reconnect = false) {
+		if($reconnect || !$this->ldap) {
 			$this->ldap = ldap_connect($this->host,$this->port);
 			if($this->ldap === false) {
 				$this->ldap = null;
@@ -184,12 +195,50 @@ class Msad extends Auth {
 	/**
 	 * Sync users and groups to the local database
 	 */
-	public function sync() {
+	public function sync($output=null) {
 		set_time_limit(0);
+		if(php_sapi_name() !== 'cli') {
+			$path = $this->FreePBX->Config->get("AMPSBIN");
+			exec($path."/fwconsole userman sync");
+			return;
+		}
 		$this->connect();
+		$this->output = $output;
+		$this->out("");
+		$this->out("Updating All Users");
 		$this->updateAllUsers();
+		$this->out("Updating All Groups");
 		$this->updateAllGroups();
+		$this->out("Updating Primary Groups");
 		$this->updatePrimaryGroups();
+		$this->out("Executing User Manager Hooks");
+		$this->executeHooks();
+	}
+
+	/**
+	 * Execute all User Manager hooks. After processing
+	 */
+	public function executeHooks() {
+		foreach($this->userHooks['add'] as $user) {
+			$this->out("\tAdding User ".$user[1]."...",false);
+			call_user_func_array(array($this,"updateUserHook"),$user);
+			$this->out("done");
+		}
+		foreach($this->userHooks['update'] as $user) {
+			$this->out("\tUpdating User ".$user[1]."...",false);
+			call_user_func_array(array($this,"addUserHook"),$user);
+			$this->out("done");
+		}
+		foreach($this->groupHooks['add'] as $group) {
+			$this->out("\tAdding Group ".$group[1]."...",false);
+			call_user_func_array(array($this,"addGroupHook"),$group);
+			$this->out("done");
+		}
+		foreach($this->groupHooks['update'] as $group) {
+			$this->out("\tUpdating Group ".$group[1]."...",false);
+			call_user_func_array(array($this,"updateGroupHook"),$group);
+			$this->out("done");
+		}
 	}
 
 	/**
@@ -349,45 +398,49 @@ class Msad extends Auth {
 	 * This should be run after updating groups and users
 	 */
 	private function updatePrimaryGroups() {
-		if(empty($this->ucache)) {
+		if(empty($this->ucache) || empty($this->gcache)) {
 			$this->updateAllUsers();
 			$this->updateAllGroups();
 		}
-		$gs = array();
+
+		$groups = array();
+		foreach($this->gcache as $gsid => $group) {
+			$groups[$gsid] = $this->getGroupByAuthID($gsid);
+			$groups[$gsid]['cache'] = $group;
+		}
+		$process = array();
 		foreach($this->ucache as $usid => $user) {
-			$results2 = ldap_search($this->ldap, $this->dn,"(objectcategory=group)",array("distinguishedname","primarygrouptoken","objectsid"));
-			$entries2 = ldap_get_entries($this->ldap, $results2);
-
-			// Remove extraneous first entry
-			array_shift($entries2);
-
-			// Loop through and find group with a matching primary group token
-			foreach($entries2 as $e) {
-				$gsid = $this->binToStrSid($e['objectsid'][0]);
-				$g = $this->getGroupByAuthID($gsid);
-				$u = $this->getUserByAuthID($usid);
-				if(!empty($g) && !empty($u) && ($e['primarygrouptoken'][0] == $user['primarygroupid'][0])) {
-					if(!in_array($u['id'], $g['users'])) {
-						$g['users'][] = $u['id'];
-						$this->updateGroupData($g['id'], array(
-							"description" => $g['description'],
-							"users" => $g['users']
-						));
-						if(!isset($gs[$g['id']])) {
-							$gs[$g['id']] = array(
-								"id" => $g['id'],
-								"description" => $g['description'],
-								"users" => $g['users'],
-								"name" => $g['name']
+			$u = $this->getUserByAuthID($usid);
+			foreach($groups as $gsid => $group) {
+				if(!empty($group) && !empty($u) && ($group['cache']['primarygrouptoken'][0] == $user['primarygroupid'][0])) {
+					if(!in_array($u['id'], $group['users'])) {
+						$this->out("\tAdding ".$u['username']." to ".$group['groupname']."...",false);
+						if(empty($process[$group['id']])) {
+							$process[$group['id']] = array(
+								"id" => $group['id'],
+								"description" => $group['description'],
+								"users" => $group['users'],
+								"name" => $group['groupname']
 							);
 						}
+						if(!in_array($u['id'],$process[$group['id']]['users'])) {
+							$process[$group['id']]['users'][] = $u['id'];
+						}
+						$this->out("Done");
 					}
-					break;
 				}
 			}
 		}
-		foreach($gs as $g) {
-			$this->updateGroupHook($g['id'], $g['name'], $g['name'], $g['description'], $g['users']);
+		foreach($process as $id => $g) {
+			$this->updateGroupData($g['id'], array(
+				"description" => $g['description'],
+				"users" => $g['users']
+			));
+			if(isset($this->groupHooks['update'][$g['id']])) {
+				$this->groupHooks['update'][$g['id']] = array($g['id'], $this->groupHooks['update'][$g['id']][2], $g['name'], $g['description'], $g['users']);
+			} else {
+				$this->groupHooks['update'][$g['id']] = array($g['id'], $g['name'], $g['name'], $g['description'], $g['users']);
+			}
 		}
 	}
 
@@ -399,24 +452,73 @@ class Msad extends Auth {
 		if(!empty($this->gcache)) {
 			return true;
 		}
+		if(php_sapi_name() !== 'cli') {
+			throw new \Exception("Can only update groups over CLI");
+		}
 		$this->connect();
-		$sr = ldap_search($this->ldap, $this->dn, "(objectCategory=Group)");
+		$this->out("Retrieving all groups...",false);
+		$sr = ldap_search($this->ldap, $this->dn, "(objectCategory=Group)",array("distinguishedname","primarygrouptoken","objectsid","description","cn"));
 		if($sr === false) {
 			return false;
 		}
 		$groups = ldap_get_entries($this->ldap, $sr);
+		$this->out("Got ".$groups['count']. " groups");
 		unset($groups['count']);
-		foreach($groups as $group) {
-			//Now get the users for this group
-			$members = array();
-			//http://www.rlmueller.net/CharactersEscaped.htm
-			$group['distinguishedname'][0] = stripslashes($group['distinguishedname'][0]);
-			$gs = ldap_search($this->ldap, $this->dn, "(&(objectCategory=Person)(sAMAccountName=*)(memberof=".$group['distinguishedname'][0]."))");
-			if($gs === false) {
-				continue;
+
+		$sql = "DROP TABLE IF EXISTS msad_procs_temp";
+		$sth = $this->FreePBX->Database->prepare($sql);
+		$sth->execute();
+		$tempsql = "CREATE TABLE msad_procs_temp (
+			`pid` int NOT NULL,
+			`udata` BLOB,
+			`gdata` BLOB,
+			PRIMARY KEY(pid)
+		)";
+		$sth = $this->FreePBX->Database->prepare($tempsql);
+		$sth->execute();
+		$this->out("Forking child processes");
+		foreach($groups as $i => $group) {
+			$pid = pcntl_fork();
+
+			if (!$pid) {
+					\FreePBX::Database()->__construct();
+					$db = new \DB();
+					$this->connect(true);
+					//http://www.rlmueller.net/CharactersEscaped.htm
+					$group['distinguishedname'][0] = stripslashes($group['distinguishedname'][0]);
+					$this->out("\tGetting users from ".$group['cn'][0]."...");
+					$gs = ldap_search($this->ldap, $this->dn, "(&(objectCategory=Person)(sAMAccountName=*)(memberof=".$group['distinguishedname'][0]."))");
+					if($gs !== false) {
+						$users = ldap_get_entries($this->ldap, $gs);
+						$susers = serialize($users);
+						$sgroup = serialize($group);
+						$sql = "INSERT INTO msad_procs_temp (`pid`,`udata`,`gdata`) VALUES (?,?,?)";
+						$sth = $this->FreePBX->Database->prepare($sql);
+						$sth->execute(array($i,$susers,$sgroup));
+					}
+					$this->out("\tFinished Getting users from ".$group['cn'][0]);
+					exit($i);
 			}
-			$users = ldap_get_entries($this->ldap, $gs);
+		}
+		\FreePBX::Database()->__construct();
+		$db = new \DB();
+
+		while (pcntl_waitpid(0, $status) != -1) {
+				$status = pcntl_wexitstatus($status);
+		}
+		$this->out("Child processes have finished");
+		$sql = "SELECT * FROM msad_procs_temp";
+		$sth = $this->FreePBX->Database->prepare($sql);
+		$sth->execute();
+		$children = $sth->fetchAll(\PDO::FETCH_ASSOC);
+		$this->out("Adding Users from non-primary groups...");
+		foreach($children as $child) {
+			$users = unserialize($child['udata']);
+			$group = unserialize($child['gdata']);
+
+			$this->out("\tFound ".$users['count']. " users in ".$group['cn'][0]);
 			unset($users['count']);
+			$members = array();
 			foreach($users as $user) {
 				$usid = $this->binToStrSid($user['objectsid'][0]);
 				$u = $this->getUserByAuthID($usid);
@@ -431,9 +533,13 @@ class Msad extends Auth {
 					"users" => $members
 				));
 				if($um['new']) {
-					$this->addGroupHook($um['id'], $group['cn'][0], (!empty($group['description'][0]) ? $group['description'][0] : ''), $members);
+					$this->out("\tAdding ".$group['cn'][0]."...",false);
+					$this->groupHooks['add'][$um['id']] = array($um['id'], $group['cn'][0], (!empty($group['description'][0]) ? $group['description'][0] : ''), $members);
+					$this->out("Done");
 				} else {
-					$this->updateGroupHook($um['id'], $group['cn'][0], $group['cn'][0], (!empty($group['description'][0]) ? $group['description'][0] : ''), $members);
+					$this->out("\tUpdating ".$group['cn'][0]."...",false);
+					$this->groupHooks['update'][$um['id']] = array($um['id'], $um['prevGroupname'], $group['cn'][0], (!empty($group['description'][0]) ? $group['description'][0] : ''), $members);
+					$this->out("Done");
 				}
 			}
 		}
@@ -441,9 +547,15 @@ class Msad extends Auth {
 		$fgroups = $this->getAllGroups();
 		foreach($fgroups as $group) {
 			if(!isset($this->gcache[$group['authid']])) {
+				$this->out("\tRemoving ".$group['groupname']."...",false);
 				$this->deleteGroupByGID($group['id']);
+				$this->out("Done");
 			}
 		}
+		$sql = "DROP TABLE msad_procs_temp";
+		$sth = $this->FreePBX->Database->prepare($sql);
+		$sth->execute();
+		$this->out("Finished adding users from non-primary groups");
 	}
 
 	/**
@@ -454,8 +566,14 @@ class Msad extends Auth {
 			return true;
 		}
 		$this->connect();
+
+		$this->out("Retrieving all users...",false);
+
 		$sr = ldap_search($this->ldap, $this->dn, "(&(objectCategory=Person)(sAMAccountName=*))");
 		$users = ldap_get_entries($this->ldap, $sr);
+
+		$this->out("Got ".$users['count']. " users");
+
 		unset($users['count']);
 		//add and update users
 		foreach($users as $user) {
@@ -487,9 +605,13 @@ class Msad extends Auth {
 				}
 				$this->updateUserData($um['id'], $data);
 				if($um['new']) {
-					$this->addUserHook($um['id'], $user['samaccountname'][0], (!empty($user['description'][0]) ? $user['description'][0] : ''), null, false, $data);
+					$this->out("\tAdd ".$user['samaccountname'][0]."...",false);
+					$this->userHooks['add'][$um['id']] = array($um['id'], $user['samaccountname'][0], (!empty($user['description'][0]) ? $user['description'][0] : ''), null, false, $data);
+					$this->out("Done");
 				} else {
-					$this->updateUserHook($um['id'], $user['samaccountname'][0], $user['samaccountname'][0], (!empty($user['description'][0]) ? $user['description'][0] : ''), null, $data);
+					$this->out("\tUpdating ".$user['samaccountname'][0]."...",false);
+					$this->userHooks['update'][$um['id']] = array($um['id'], $um['prevUsername'], $user['samaccountname'][0], (!empty($user['description'][0]) ? $user['description'][0] : ''), null, $data);
+					$this->out("Done");
 				}
 			}
 		}
@@ -497,7 +619,9 @@ class Msad extends Auth {
 		$fusers = $this->getAllUsers();
 		foreach($fusers as $user) {
 			if(!isset($this->ucache[$user['authid']])) {
+				$this->out("\tRemoving ".$user['username']."...",false);
 				$this->deleteUserByID($user['id']);
+				$this->out("done");
 			}
 		}
 	}
@@ -534,5 +658,22 @@ class Msad extends Auth {
 			$result .= substr($hex, $x, 2);
 		}
 		return $result;
+	}
+
+	/**
+	 * Debug messages
+	 * @param  string $message The message
+	 * @param  boolean $nl      New line or not
+	 */
+	private function out($message,$nl=true) {
+		if(is_object($this->output) && $this->output->isVerbose()) {
+			if($nl) {
+				$this->output->writeln($message);
+			} else {
+				$this->output->write($message);
+			}
+		} elseif(!is_object($this->output)) {
+			dbug($message);
+		}
 	}
 }
