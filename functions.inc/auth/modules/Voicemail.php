@@ -185,8 +185,8 @@ class Voicemail extends Auth {
 	 * @param string $password The updated password, if null then password isn't updated
 	 * @return array
 	 */
-	public function updateUser($uid, $prevUsername, $username, $default='none', $description=null, $extraData=array(), $password=null) {
-		$this->updateUserHook($uid, $prevUsername, $username, $description, $password, $extraData);
+	public function updateUser($uid, $prevUsername, $username, $default='none', $description=null, $extraData=array(), $password=null,$nodisplay=false) {
+		$this->updateUserHook($uid, $prevUsername, $username, $description, $password, $extraData, $nodisplay);
 		return array("status" => true, "type" => "success", "message" => _("User updated"), "id" => $uid);
 	}
 
@@ -197,7 +197,7 @@ class Voicemail extends Auth {
 	 * @param string $description   The group description
 	 * @param array  $users         Array of users in this Group
 	 */
-	public function updateGroup($gid, $prevGroupname, $groupname, $description=null, $users=array()) {
+	public function updateGroup($gid, $prevGroupname, $groupname, $description=null, $users=array(), $nodisplay=false) {
 		$group = $this->getGroupByUsername($prevGroupname);
 		if(!$group || empty($group)) {
 			return array("status" => false, "type" => "danger", "message" => sprintf(_("Group '%s' Does Not Exist"),$group));
@@ -210,7 +210,7 @@ class Voicemail extends Auth {
 			return array("status" => false, "type" => "danger", "message" => $e->getMessage());
 		}
 		$message = _("Updated Group");
-		$this->updateGroupHook($gid, $prevGroupname, $groupname, $description, $users);
+		$this->updateGroupHook($gid, $prevGroupname, $groupname, $description, $users, $nodisplay);
 		return array("status" => true, "type" => "success", "message" => $message, "id" => $gid);
 	}
 

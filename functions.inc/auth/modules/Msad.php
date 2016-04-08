@@ -221,12 +221,12 @@ class Msad extends Auth {
 	public function executeHooks() {
 		foreach($this->userHooks['add'] as $user) {
 			$this->out("\tAdding User ".$user[1]."...",false);
-			call_user_func_array(array($this,"updateUserHook"),$user);
+			call_user_func_array(array($this,"addUserHook"),$user);
 			$this->out("done");
 		}
 		foreach($this->userHooks['update'] as $user) {
 			$this->out("\tUpdating User ".$user[1]."...",false);
-			call_user_func_array(array($this,"addUserHook"),$user);
+			call_user_func_array(array($this,"updateUserHook"),$user);
 			$this->out("done");
 		}
 		foreach($this->groupHooks['add'] as $group) {
@@ -344,7 +344,7 @@ class Msad extends Auth {
 	 * @param string $password The updated password, if null then password isn't updated
 	 * @return array
 	 */
-	public function updateUser($uid, $prevUsername, $username, $default='none', $description=null, $extraData=array(), $password=null) {
+	public function updateUser($uid, $prevUsername, $username, $default='none', $description=null, $extraData=array(), $password=null, $nodisplay=false) {
 		$sql = "UPDATE ".$this->userTable." SET `default_extension` = :default_extension WHERE `id` = :uid";
 		$sth = $this->db->prepare($sql);
 		try {
@@ -352,7 +352,7 @@ class Msad extends Auth {
 		} catch (\Exception $e) {
 			return array("status" => false, "type" => "danger", "message" => $e->getMessage());
 		}
-		$this->updateUserHook($uid, $prevUsername, $username, $description, $password, $extraData);
+		$this->updateUserHook($uid, $prevUsername, $username, $description, $password, $extraData, $nodisplay);
 		return array("status" => true, "type" => "success", "message" => _("User updated"), "id" => $uid);
 	}
 
@@ -363,9 +363,9 @@ class Msad extends Auth {
 	 * @param string $description   The group description
 	 * @param array  $users         Array of users in this Group
 	 */
-	public function updateGroup($gid, $prevGroupname, $groupname, $description=null, $users=array()) {
+	public function updateGroup($gid, $prevGroupname, $groupname, $description=null, $users=array(), $nodisplay=false) {
 		$group = $this->getGroupByUsername($prevGroupname);
-		$this->updateGroupHook($gid, $prevGroupname, $groupname, $description, $group['users']);
+		$this->updateGroupHook($gid, $prevGroupname, $groupname, $description, $group['users'],$nodisplay);
 		return array("status" => true, "type" => "success", "message" => _("Group updated"), "id" => $gid);
 	}
 
@@ -485,7 +485,7 @@ class Msad extends Auth {
 					$db = new \DB();
 					$this->connect(true);
 					//http://www.rlmueller.net/CharactersEscaped.htm
-					$group['distinguishedname'][0] = stripslashes($group['distinguishedname'][0]);
+					$group['distinguishedname'][0] = ldap_escape($group['distinguishedname'][0]);
 					$this->out("\tGetting users from ".$group['cn'][0]."...");
 					$gs = ldap_search($this->ldap, $this->dn, "(&(objectCategory=Person)(sAMAccountName=*)(memberof=".$group['distinguishedname'][0]."))");
 					if($gs !== false) {

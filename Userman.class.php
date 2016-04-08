@@ -16,6 +16,12 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	private $auth = null;
 	private $auths = array();
 
+	private $moduleGroupSettingsCache = array();
+	private $moduleUserSettingsCache = array();
+
+	private $allUsersCache = array();
+	private $allGroupsByUserCache = array();
+
 	public function __construct($freepbx = null) {
 		$this->FreePBX = $freepbx;
 		$this->db = $freepbx->Database;
@@ -331,10 +337,10 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 							foreach($groups as $group) {
 								if(in_array($group['id'],$_POST['groups']) && !in_array($ret['id'],$group['users'])) {
 									$group['users'][] = $ret['id'];
-									$this->updateGroup($group['id'],$group['groupname'], $group['groupname'], $group['description'], $group['users']);
+									$this->updateGroup($group['id'],$group['groupname'], $group['groupname'], $group['description'], $group['users'], true);
 								} elseif(!in_array($group['id'],$_POST['groups']) && in_array($ret['id'],$group['users'])) {
 									$group['users'] = array_diff($group['users'], array($ret['id']));
-									$this->updateGroup($group['id'],$group['groupname'], $group['groupname'], $group['description'], $group['users']);
+									$this->updateGroup($group['id'],$group['groupname'], $group['groupname'], $group['description'], $group['users'], true);
 								}
 							}
 						} else {
@@ -342,7 +348,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 							foreach($groups as $gid) {
 								$group = $this->getGroupByGID($gid);
 								$group['users'] = array_diff($group['users'], array($ret['id']));
-								$this->updateGroup($group['id'],$group['groupname'], $group['groupname'], $group['description'], $group['users']);
+								$this->updateGroup($group['id'],$group['groupname'], $group['groupname'], $group['description'], $group['users'], true);
 							}
 						}
 						if(isset($_POST['submittype']) && $_POST['submittype'] == "guisend") {
@@ -1127,7 +1133,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * @param string $password The updated password, if null then password isn't updated
 	 * @return array
 	 */
-	public function updateUser($uid, $prevUsername, $username, $default='none', $description=null, $extraData=array(), $password=null) {
+	public function updateUser($uid, $prevUsername, $username, $default='none', $description=null, $extraData=array(), $password=null, $nodisplay = false) {
 		if(!is_numeric($uid)) {
 			throw new \Exception(_("UID was not numeric"));
 		}
@@ -1141,8 +1147,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		if(empty($username)) {
 			$username = $prevUsername;
 		}
-		$display = !empty($_REQUEST['display']) ? $_REQUEST['display'] : "";
-		$status = $this->auth->updateUser($uid, $prevUsername, $username, $default, $description, $extraData, $password);
+		$status = $this->auth->updateUser($uid, $prevUsername, $username, $default, $description, $extraData, $password, $nodisplay);
 		if(!$status['status']) {
 			return $status;
 		}
@@ -1158,7 +1163,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * @param string $description   The group description
 	 * @param array  $users         Array of users in this Group
 	 */
-	public function updateGroup($gid, $prevGroupname, $groupname, $description=null, $users=array()) {
+	public function updateGroup($gid, $prevGroupname, $groupname, $description=null, $users=array(), $nodisplay = false) {
 		if(!is_numeric($gid)) {
 			throw new \Exception(_("GID was not numeric"));
 		}
@@ -1173,8 +1178,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		if(empty($groupname)) {
 			$groupname = $prevGroupname;
 		}
-		$display = !empty($_REQUEST['display']) ? $_REQUEST['display'] : "";
-		$status = $this->auth->updateGroup($gid, $prevGroupname, $groupname, $description, $users);
+		$status = $this->auth->updateGroup($gid, $prevGroupname, $groupname, $description, $users, $nodisplay);
 		if(!$status['status']) {
 			return $status;
 		}
@@ -1321,6 +1325,8 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$groupid = -1;
 		$groupname = "user";
 		$output = $this->getGlobalSettingByID($id,$setting,true);
+		//$this->allUsersCache = !empty($this->allUsersCache) ? $this->allUsersCache : $this->getAllUsers();
+		//$this->allGroupsByUserCache[$id] = !empty($this->allGroupsByUserCache[$id]) ? $this->allGroupsByUserCache[$id] : $this->getGroupsByID($id);
 		if(is_null($output)) {
 			$groups = $this->getGroupsByID($id);
 			foreach($groups as $group) {
@@ -1524,14 +1530,34 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * @return mixed false if nothing, else array
 	 */
 	public function getModuleSettingByID($uid,$module,$setting,$null=false) {
-		$sql = "SELECT a.val, a.type FROM ".$this->userSettingsTable." a, ".$this->userTable." b WHERE b.id = :id AND b.id = a.uid AND a.module = :module AND a.key = :setting";
-		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':id' => $uid, ':setting' => $setting, ':module' => $module));
-		$result = $sth->fetch(\PDO::FETCH_ASSOC);
-		if($result) {
-			return ($result['type'] == 'json-arr' && $this->isJson($result['val'])) ? json_decode($result['val'],true) : $result['val'];
+		$settings = $this->getAllModuleUserSettings();
+
+		if(isset($settings[$uid][$module][$setting])) {
+			return $settings[$uid][$module][$setting];
 		}
+
 		return ($null) ? null : false;
+	}
+
+	/**
+	 * Get all Module User Settings
+	 * @return array The settings as an ASSOC array
+	 */
+	private function getAllModuleUserSettings() {
+		if(!empty($this->moduleUserSettingsCache)) {
+			return $this->moduleUserSettingsCache;
+		}
+		$sql = "SELECT * FROM ".$this->userSettingsTable;
+		$sth = $this->db->prepare($sql);
+		$sth->execute();
+		$results = $sth->fetchAll(\PDO::FETCH_ASSOC);
+		$final = array();
+		foreach($results as $r) {
+			$val = ($r['type'] == 'json-arr' && $this->isJson($r['val'])) ? json_decode($r['val'],true) : $r['val'];
+			$final[$r['uid']][$r['module']][$r['key']] = $val;
+		}
+		$this->moduleUserSettingsCache = $final;
+		return $this->moduleUserSettingsCache;
 	}
 
 	/**
@@ -1546,14 +1572,34 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	* @return mixed false if nothing, else array
 	*/
 	public function getModuleSettingByGID($gid,$module,$setting,$null=false) {
-		$sql = "SELECT a.val, a.type FROM ".$this->groupSettingsTable." a, ".$this->groupTable." b WHERE b.id = :id AND b.id = a.gid AND a.module = :module AND a.key = :setting";
-		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':id' => $gid, ':setting' => $setting, ':module' => $module));
-		$result = $sth->fetch(\PDO::FETCH_ASSOC);
-		if($result) {
-			return ($result['type'] == 'json-arr' && $this->isJson($result['val'])) ? json_decode($result['val'],true) : $result['val'];
+		$settings = $this->getAllModuleGroupSettings();
+
+		if(isset($settings[$gid][$module][$setting])) {
+			return $settings[$gid][$module][$setting];
 		}
+
 		return ($null) ? null : false;
+	}
+
+	/**
+	 * Get all Module Group Settings
+	 * @return array The settings as an ASSOC array
+	 */
+	private function getAllModuleGroupSettings() {
+		if(!empty($this->moduleGroupSettingsCache)) {
+			return $this->moduleGroupSettingsCache;
+		}
+		$sql = "SELECT * FROM ".$this->groupSettingsTable;
+		$sth = $this->db->prepare($sql);
+		$sth->execute();
+		$results = $sth->fetchAll(\PDO::FETCH_ASSOC);
+		$final = array();
+		foreach($results as $r) {
+			$val = ($r['type'] == 'json-arr' && $this->isJson($r['val'])) ? json_decode($r['val'],true) : $r['val'];
+			$final[$r['gid']][$r['module']][$r['key']] = $val;
+		}
+		$this->moduleGroupSettingsCache = $final;
+		return $this->moduleGroupSettingsCache;
 	}
 
 	/**
@@ -1582,6 +1628,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$sql = "REPLACE INTO ".$this->userSettingsTable." (`uid`, `module`, `key`, `val`, `type`) VALUES(:id, :module, :setting, :value, :type)";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':id' => $uid, ':module' => $module, ':setting' => $setting, ':value' => $value, ':type' => $type));
+		$this->moduleUserSettingsCache = array();
 		return true;
 	}
 
@@ -1611,6 +1658,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$sql = "REPLACE INTO ".$this->groupSettingsTable." (`gid`, `module`, `key`, `val`, `type`) VALUES(:id, :module, :setting, :value, :type)";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':id' => $gid, ':module' => $module, ':setting' => $setting, ':value' => $value, ':type' => $type));
+		$this->moduleGroupSettingsCache = array();
 		return true;
 	}
 

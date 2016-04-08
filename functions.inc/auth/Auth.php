@@ -26,8 +26,8 @@ abstract class Auth implements Base {
 		$this->FreePBX->Hooks->processHooksByClassMethod("FreePBX\\modules\\Userman", "addUser", array($id, $display, array("id" => $id, "username" => $username, "description" => $description, "password" => $password, "encrypted" => $encrypt, "extraData" => $extraData)));
 	}
 
-	public function updateUserHook($id, $prevUsername, $username, $description, $password, $extraData) {
-		$display = isset($_REQUEST['display']) ? $_REQUEST['display'] : "";
+	public function updateUserHook($id, $prevUsername, $username, $description, $password, $extraData, $nodisplay=false) {
+		$display = !$nodisplay && isset($_REQUEST['display']) ? $_REQUEST['display'] : "";
 		$this->FreePBX->Hooks->processHooksByClassMethod("FreePBX\\modules\\Userman", "updateUser", array($id, $display, array("id" => $id, "prevUsername" => $prevUsername, "username" => $username, "description" => $description, "password" => $password, "extraData" => $extraData)));
 	}
 
@@ -41,8 +41,8 @@ abstract class Auth implements Base {
 		$this->FreePBX->Hooks->processHooksByClassMethod("FreePBX\\modules\\Userman", "addGroup", array($id, $display, array("id" => $id, "groupname" => $groupname, "description" => $description, "users" => $users)));
 	}
 
-	public function updateGroupHook($id, $prevGroupname, $groupname, $description, $users) {
-		$display = isset($_REQUEST['display']) ? $_REQUEST['display'] : "";
+	public function updateGroupHook($id, $prevGroupname, $groupname, $description, $users, $nodisplay=false) {
+		$display = !$nodisplay && isset($_REQUEST['display']) ? $_REQUEST['display'] : "";
 		$this->FreePBX->Hooks->processHooksByClassMethod("FreePBX\\modules\\Userman", "updateGroup", array($id, $display, array("id" => $id, "prevGroupname" => $prevGroupname, "groupname" => $groupname, "description" => $description, "users" => $users)));
 	}
 
