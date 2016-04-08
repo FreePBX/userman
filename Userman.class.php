@@ -834,6 +834,16 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		return $this->auth->getAllGroups();
 	}
 
+	/** Get Default Groups
+	 *
+	 * Get a list of all default groups
+	 *
+	 * @return array
+	 */
+	public function getDefaultGroups() {
+		return $this->auth->getDefaultGroups();
+	}
+
 	/**
 	 * Get all Users as contacts
 	 *
