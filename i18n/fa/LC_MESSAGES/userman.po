@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-08 16:55-0700\n"
+"POT-Creation-Date: 2016-04-11 10:34-0700\n"
 "PO-Revision-Date: 2016-04-02 19:03+0200\n"
 "Last-Translator: Media <mousavi.media@gmail.com>\n"
 "Language-Team: Persian <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -348,7 +348,7 @@ msgstr "گروه با موفقیت به روز شد"
 msgid "Group already exists"
 msgstr "گرو موجود است"
 
-#: functions.inc/auth/modules/Msad.php:369
+#: functions.inc/auth/modules/Msad.php:377
 msgid "Group updated"
 msgstr "گروه به روز شده"
 
@@ -447,13 +447,13 @@ msgstr "ارثی"
 msgid "Invalid User"
 msgstr "کاربر نادرست"
 
-#: functions.inc/auth/modules/Msad.php:318
-#: functions.inc/auth/modules/Msad.php:331
+#: functions.inc/auth/modules/Msad.php:326
+#: functions.inc/auth/modules/Msad.php:339
 msgid "LDAP is in Read Only Mode. Addition denied"
 msgstr "LDAP در حالت فقط خواندنی است. افزودن ممنوع است"
 
-#: functions.inc/auth/modules/Msad.php:293
 #: functions.inc/auth/modules/Msad.php:301
+#: functions.inc/auth/modules/Msad.php:309
 msgid "LDAP is in Read Only Mode. Deletion denied"
 msgstr "LDAP در حالت فقط خواندنی است. حذف ممنوع است"
 
@@ -946,7 +946,7 @@ msgstr "کاربربا موفقیت به روز شد"
 msgid "User already exists"
 msgstr "کاربر موجود است"
 
-#: functions.inc/auth/modules/Msad.php:356
+#: functions.inc/auth/modules/Msad.php:364
 #: functions.inc/auth/modules/Voicemail.php:190
 msgid "User updated"
 msgstr "کاربر به روز شد"

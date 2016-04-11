@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-08 16:55-0700\n"
+"POT-Creation-Date: 2016-04-11 10:34-0700\n"
 "PO-Revision-Date: 2014-07-22 16:15+0200\n"
 "Last-Translator: Chavdar <chavdar_75@yahoo.com>\n"
 "Language-Team: Bulgarian <http://git.freepbx.org/projects/freepbx/userman/bg/"
@@ -345,7 +345,7 @@ msgstr ""
 msgid "Group already exists"
 msgstr ""
 
-#: functions.inc/auth/modules/Msad.php:369
+#: functions.inc/auth/modules/Msad.php:377
 msgid "Group updated"
 msgstr ""
 
@@ -428,13 +428,13 @@ msgstr ""
 msgid "Invalid User"
 msgstr ""
 
-#: functions.inc/auth/modules/Msad.php:318
-#: functions.inc/auth/modules/Msad.php:331
+#: functions.inc/auth/modules/Msad.php:326
+#: functions.inc/auth/modules/Msad.php:339
 msgid "LDAP is in Read Only Mode. Addition denied"
 msgstr ""
 
-#: functions.inc/auth/modules/Msad.php:293
 #: functions.inc/auth/modules/Msad.php:301
+#: functions.inc/auth/modules/Msad.php:309
 msgid "LDAP is in Read Only Mode. Deletion denied"
 msgstr ""
 
@@ -898,7 +898,7 @@ msgstr ""
 msgid "User already exists"
 msgstr ""
 
-#: functions.inc/auth/modules/Msad.php:356
+#: functions.inc/auth/modules/Msad.php:364
 #: functions.inc/auth/modules/Voicemail.php:190
 msgid "User updated"
 msgstr ""
