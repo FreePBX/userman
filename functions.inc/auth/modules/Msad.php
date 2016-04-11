@@ -623,7 +623,7 @@ class Msad extends Auth {
 						dbug("Extension ".$user[$this->linkAttr][0] . " does not exist, skipping link");
 					}
 				} elseif(!empty($this->linkAttr) && empty($user[$this->linkAttr][0])) {
-					dbug("Link Attribute '".$this->linkAttr."' set but ".$user['samaccountname'][0]." is missing the attribute");
+					$data["default_extension"] = 'none';
 				}
 				$this->updateUserData($um['id'], $data);
 				if($um['new']) {
