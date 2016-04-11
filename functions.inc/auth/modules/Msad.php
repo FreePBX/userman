@@ -196,23 +196,31 @@ class Msad extends Auth {
 	 * Sync users and groups to the local database
 	 */
 	public function sync($output=null) {
-		set_time_limit(0);
+
 		if(php_sapi_name() !== 'cli') {
 			$path = $this->FreePBX->Config->get("AMPSBIN");
 			exec($path."/fwconsole userman sync");
 			return;
 		}
-		$this->connect();
-		$this->output = $output;
-		$this->out("");
-		$this->out("Updating All Users");
-		$this->updateAllUsers();
-		$this->out("Updating All Groups");
-		$this->updateAllGroups();
-		$this->out("Updating Primary Groups");
-		$this->updatePrimaryGroups();
-		$this->out("Executing User Manager Hooks");
-		$this->executeHooks();
+		$pid = getmypid();
+		if(!file_exists("/var/run/asterisk/userman.lock")) {
+			file_put_contents("/var/run/asterisk/userman.lock",$pid);
+			$this->connect();
+			$this->output = $output;
+			$this->out("");
+			$this->out("Updating All Users");
+			$this->updateAllUsers();
+			$this->out("Updating All Groups");
+			$this->updateAllGroups();
+			$this->out("Updating Primary Groups");
+			$this->updatePrimaryGroups();
+			$this->out("Executing User Manager Hooks");
+			$this->executeHooks();
+			unlink("/var/run/asterisk/userman.lock");
+		} else {
+			print_r("User Manager is already syncing (File exists at: /var/run/asterisk/userman.lock)");
+		}
+
 	}
 
 	/**
