@@ -74,7 +74,7 @@
 										</button>
 										<?php } ?>
 									</div>
-									<table data-reorderable-rows="true" data-use-row-attr-func="true" data-toolbar="#toolbar-groups" data-url="ajax.php?module=userman&amp;command=getGroups" data-sort-name="priority" data-cache="false" data-toggle="table" data-pagination="true" data-search="true" class="table table-striped" id="table-groups" data-type="groups">
+									<table data-reorderable-rows="true" data-use-row-attr-func="true" data-toolbar="#toolbar-groups" data-url="ajax.php?module=userman&amp;command=getGroups" data-sort-name="priority" data-cache="false" data-toggle="table" data-pagination="false" data-search="true" class="table table-striped" id="table-groups" data-type="groups">
 										<thead>
 											<tr>
 												<th data-checkbox="true"></th>

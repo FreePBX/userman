@@ -478,17 +478,22 @@ class Msad extends Auth {
 		$sth->execute();
 		$tempsql = "CREATE TABLE msad_procs_temp (
 			`pid` int NOT NULL,
-			`udata` BLOB,
-			`gdata` BLOB,
+			`udata` varchar(255),
+			`gdata` varchar(255),
 			PRIMARY KEY(pid)
-		)";
+		) ENGINE = MEMORY";
 		$sth = $this->FreePBX->Database->prepare($tempsql);
 		$sth->execute();
 		$this->out("Forking child processes");
+		$tpath = __DIR__."/tmp";
+		if(!file_exists($tpath)) {
+			mkdir($tpath,0777,true);
+		}
 		foreach($groups as $i => $group) {
 			$pid = pcntl_fork();
 
 			if (!$pid) {
+					$iid = getmypid();
 					\FreePBX::Database()->__construct();
 					$db = new \DB();
 					$this->connect(true);
@@ -499,10 +504,12 @@ class Msad extends Auth {
 					if($gs !== false) {
 						$users = ldap_get_entries($this->ldap, $gs);
 						$susers = serialize($users);
+						file_put_contents($tpath."/".$iid."-users",$susers);
 						$sgroup = serialize($group);
+						file_put_contents($tpath."/".$iid."-group",$sgroup);
 						$sql = "INSERT INTO msad_procs_temp (`pid`,`udata`,`gdata`) VALUES (?,?,?)";
 						$sth = $this->FreePBX->Database->prepare($sql);
-						$sth->execute(array($i,$susers,$sgroup));
+						$sth->execute(array($i,$iid."-users",$iid."-group"));
 					}
 					$this->out("\tFinished Getting users from ".$group['cn'][0]);
 					exit($i);
@@ -521,8 +528,15 @@ class Msad extends Auth {
 		$children = $sth->fetchAll(\PDO::FETCH_ASSOC);
 		$this->out("Adding Users from non-primary groups...");
 		foreach($children as $child) {
-			$users = unserialize($child['udata']);
-			$group = unserialize($child['gdata']);
+			if(!file_exists($tpath."/".$child['udata']) || !file_exists($tpath."/".$child['gdata'])) {
+				continue;
+			}
+			$udata = file_get_contents($tpath."/".$child['udata']);
+			unlink($tpath."/".$child['udata']);
+			$users = unserialize($udata);
+			$gdata = file_get_contents($tpath."/".$child['gdata']);
+			unlink($tpath."/".$child['gdata']);
+			$group = unserialize($gdata);
 
 			$this->out("\tFound ".$users['count']. " users in ".$group['cn'][0]);
 			unset($users['count']);
