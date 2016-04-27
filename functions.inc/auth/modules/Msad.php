@@ -58,12 +58,14 @@ class Msad extends Auth {
 
 	private $userHooks = array(
 		'add' => array(),
-		'update' => array()
+		'update' => array(),
+		'remove' => array()
 	);
 
 	private $groupHooks = array(
 		'add' => array(),
-		'update' => array()
+		'update' => array(),
+		'remove' => array()
 	);
 
 	public function __construct($userman, $freepbx) {
