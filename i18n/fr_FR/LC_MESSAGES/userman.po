@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-27 08:57-0700\n"
+"POT-Creation-Date: 2016-04-27 16:05-0700\n"
 "PO-Revision-Date: 2016-02-05 11:51+0200\n"
 "Last-Translator: Nicolas Riendeau <freepbx@riendeau.org>\n"
 "Language-Team: French <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -154,7 +154,7 @@ msgstr ""
 msgid "Company"
 msgstr "Compagnie"
 
-#: functions.inc/auth/modules/Msad.php:118
+#: functions.inc/auth/modules/Msad.php:120
 msgid "Connected"
 msgstr "Connecté"
 
@@ -338,7 +338,7 @@ msgstr "Le groupe a été mis à jour avec succès"
 msgid "Group already exists"
 msgstr "Le groupe existe déjà"
 
-#: functions.inc/auth/modules/Msad.php:366
+#: functions.inc/auth/modules/Msad.php:368
 msgid "Group updated"
 msgstr "Le groupe a été mis à jour"
 
@@ -421,8 +421,8 @@ msgstr "Hérite"
 msgid "Invalid User"
 msgstr "Utilisateur invalide"
 
-#: functions.inc/auth/modules/Msad.php:315
-#: functions.inc/auth/modules/Msad.php:328
+#: functions.inc/auth/modules/Msad.php:317
+#: functions.inc/auth/modules/Msad.php:330
 msgid "LDAP is in Read Only Mode. Addition denied"
 msgstr ""
 
@@ -482,7 +482,7 @@ msgstr ""
 msgid "May this user log in to the %s Administration Pages?"
 msgstr ""
 
-#: functions.inc/auth/modules/Msad.php:94
+#: functions.inc/auth/modules/Msad.php:96
 msgid "Microsoft Active Directory"
 msgstr "Microsoft Active Directory"
 
@@ -504,11 +504,11 @@ msgstr "Non"
 msgid "None"
 msgstr "Aucun"
 
-#: functions.inc/auth/modules/Msad.php:109
+#: functions.inc/auth/modules/Msad.php:111
 msgid "Not Connected"
 msgstr "Non connecté"
 
-#: functions.inc/auth/modules/Msad.php:131
+#: functions.inc/auth/modules/Msad.php:133
 msgid "Not all of the connection parameters have been filled out"
 msgstr ""
 
@@ -886,7 +886,7 @@ msgstr "L'utilisateur a été mis à jour avec succès"
 msgid "User already exists"
 msgstr "L'utilisateur existe déjà"
 
-#: functions.inc/auth/modules/Msad.php:353
+#: functions.inc/auth/modules/Msad.php:355
 #: functions.inc/auth/modules/Voicemail.php:190
 msgid "User updated"
 msgstr "L'utilisateur a été mis à jour"

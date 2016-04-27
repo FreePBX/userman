@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-27 08:57-0700\n"
+"POT-Creation-Date: 2016-04-27 16:05-0700\n"
 "PO-Revision-Date: 2016-04-02 19:03+0200\n"
 "Last-Translator: Media <mousavi.media@gmail.com>\n"
 "Language-Team: Persian <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -158,7 +158,7 @@ msgstr ""
 msgid "Company"
 msgstr "شرکت"
 
-#: functions.inc/auth/modules/Msad.php:118
+#: functions.inc/auth/modules/Msad.php:120
 msgid "Connected"
 msgstr "متصل شده"
 
@@ -348,7 +348,7 @@ msgstr "گروه با موفقیت به روز شد"
 msgid "Group already exists"
 msgstr "گرو موجود است"
 
-#: functions.inc/auth/modules/Msad.php:366
+#: functions.inc/auth/modules/Msad.php:368
 msgid "Group updated"
 msgstr "گروه به روز شده"
 
@@ -447,8 +447,8 @@ msgstr "ارثی"
 msgid "Invalid User"
 msgstr "کاربر نادرست"
 
-#: functions.inc/auth/modules/Msad.php:315
-#: functions.inc/auth/modules/Msad.php:328
+#: functions.inc/auth/modules/Msad.php:317
+#: functions.inc/auth/modules/Msad.php:330
 msgid "LDAP is in Read Only Mode. Addition denied"
 msgstr "LDAP در حالت فقط خواندنی است. افزودن ممنوع است"
 
@@ -508,7 +508,7 @@ msgstr "لاگ گروه در صفحات مدیریت %s وجود دارد؟"
 msgid "May this user log in to the %s Administration Pages?"
 msgstr "لاگ کاربر در صفحات مدیریت %s وجود دارد؟"
 
-#: functions.inc/auth/modules/Msad.php:94
+#: functions.inc/auth/modules/Msad.php:96
 msgid "Microsoft Active Directory"
 msgstr "مایکروسافت اکتیو دایرکتوری"
 
@@ -530,11 +530,11 @@ msgstr "خیر"
 msgid "None"
 msgstr "هیچ"
 
-#: functions.inc/auth/modules/Msad.php:109
+#: functions.inc/auth/modules/Msad.php:111
 msgid "Not Connected"
 msgstr "متصل نشد"
 
-#: functions.inc/auth/modules/Msad.php:131
+#: functions.inc/auth/modules/Msad.php:133
 msgid "Not all of the connection parameters have been filled out"
 msgstr "تمامی پارامترهای اتصال پر نشده"
 
@@ -941,7 +941,7 @@ msgstr "کاربربا موفقیت به روز شد"
 msgid "User already exists"
 msgstr "کاربر موجود است"
 
-#: functions.inc/auth/modules/Msad.php:353
+#: functions.inc/auth/modules/Msad.php:355
 #: functions.inc/auth/modules/Voicemail.php:190
 msgid "User updated"
 msgstr "کاربر به روز شد"
