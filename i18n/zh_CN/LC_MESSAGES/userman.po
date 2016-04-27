@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-11 10:34-0700\n"
+"POT-Creation-Date: 2016-04-27 08:57-0700\n"
 "PO-Revision-Date: 2015-10-14 14:59+0200\n"
 "Last-Translator: james <zhulizhong@gmail.com>\n"
 "Language-Team: Simplified Chinese <http://weblate.freepbx.org/projects/"
@@ -322,11 +322,11 @@ msgstr ""
 msgid "Group Successfully Added"
 msgstr "成功添加组"
 
-#: functions.inc/auth/Auth.php:336
+#: functions.inc/auth/Auth.php:338
 msgid "Group Successfully Deleted"
 msgstr "成功删除组"
 
-#: functions.inc/auth/Auth.php:454
+#: functions.inc/auth/Auth.php:456
 msgid "Group Successfully Updated"
 msgstr "成功更新组"
 
@@ -334,11 +334,11 @@ msgstr "成功更新组"
 msgid "Group already exists"
 msgstr ""
 
-#: functions.inc/auth/modules/Msad.php:377
+#: functions.inc/auth/modules/Msad.php:366
 msgid "Group updated"
 msgstr "组更新"
 
-#: functions.inc/auth/Auth.php:425
+#: functions.inc/auth/Auth.php:427
 msgid "Groupname Can Not Be Blank!"
 msgstr "组名称不能为空！"
 
@@ -417,14 +417,9 @@ msgstr ""
 msgid "Invalid User"
 msgstr ""
 
-#: functions.inc/auth/modules/Msad.php:326
-#: functions.inc/auth/modules/Msad.php:339
+#: functions.inc/auth/modules/Msad.php:315
+#: functions.inc/auth/modules/Msad.php:328
 msgid "LDAP is in Read Only Mode. Addition denied"
-msgstr ""
-
-#: functions.inc/auth/modules/Msad.php:301
-#: functions.inc/auth/modules/Msad.php:309
-msgid "LDAP is in Read Only Mode. Deletion denied"
 msgstr ""
 
 #: Userman.class.php:2083 Userman.class.php:2084 views/users.php:210
@@ -871,7 +866,7 @@ msgstr ""
 msgid "User Manager Users"
 msgstr ""
 
-#: functions.inc/auth/Auth.php:399 functions.inc/auth/modules/Freepbx.php:122
+#: functions.inc/auth/Auth.php:401 functions.inc/auth/modules/Freepbx.php:122
 msgid "User Successfully Added"
 msgstr ""
 
@@ -879,7 +874,7 @@ msgstr ""
 msgid "User Successfully Deleted"
 msgstr ""
 
-#: functions.inc/auth/Auth.php:408
+#: functions.inc/auth/Auth.php:410
 msgid "User Successfully Updated"
 msgstr ""
 
@@ -887,7 +882,7 @@ msgstr ""
 msgid "User already exists"
 msgstr ""
 
-#: functions.inc/auth/modules/Msad.php:364
+#: functions.inc/auth/modules/Msad.php:353
 #: functions.inc/auth/modules/Voicemail.php:190
 msgid "User updated"
 msgstr ""
@@ -897,7 +892,7 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
-#: functions.inc/auth/Auth.php:379
+#: functions.inc/auth/Auth.php:381
 msgid "Username Can Not Be Blank!"
 msgstr ""
 
@@ -968,7 +963,7 @@ msgstr ""
 msgid "group"
 msgstr ""
 
-#: functions.inc/auth/Auth.php:445
+#: functions.inc/auth/Auth.php:447
 msgid "group Successfully Added"
 msgstr ""
 
