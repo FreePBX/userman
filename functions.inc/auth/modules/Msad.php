@@ -237,6 +237,11 @@ class Msad extends Auth {
 			call_user_func_array(array($this,"updateUserHook"),$user);
 			$this->out("done");
 		}
+		foreach($this->userHooks['remove'] as $user) {
+			$this->out("\tRemoving User ".$user[1]."...",false);
+			call_user_func_array(array($this,"delUserHook"),$user);
+			$this->out("done");
+		}
 		foreach($this->groupHooks['add'] as $group) {
 			$this->out("\tAdding Group ".$group[1]."...",false);
 			call_user_func_array(array($this,"addGroupHook"),$group);
@@ -245,6 +250,11 @@ class Msad extends Auth {
 		foreach($this->groupHooks['update'] as $group) {
 			$this->out("\tUpdating Group ".$group[1]."...",false);
 			call_user_func_array(array($this,"updateGroupHook"),$group);
+			$this->out("done");
+		}
+		foreach($this->groupHooks['remove'] as $group) {
+			$this->out("\tRemoving Group ".$group[1]."...",false);
+			call_user_func_array(array($this,"delGroupHook"),$group);
 			$this->out("done");
 		}
 	}
@@ -286,27 +296,6 @@ class Msad extends Auth {
 	*/
 	public function getAllGroups() {
 		return parent::getAllGroups('msad');
-	}
-
-	/**
-	* Get User Information by Username
-	*
-	* This gets user information by username.
-	* !!This should never be called externally outside of User Manager!!
-	*
-	* @param string $id The ID of the user from User Manager
-	* @return array
-	*/
-	public function deleteUserByID($id) {
-		return array("status" => false, "type" => "danger", "message" => _("LDAP is in Read Only Mode. Deletion denied"));
-	}
-
-	/**
-	* Delete a Group by it's ID
-	* @param int $gid The group ID
-	*/
-	public function deleteGroupByGID($gid) {
-		return array("status" => false, "type" => "danger", "message" => _("LDAP is in Read Only Mode. Deletion denied"));
 	}
 
 	/**
@@ -555,13 +544,9 @@ class Msad extends Auth {
 					"users" => $members
 				));
 				if($um['new']) {
-					$this->out("\tAdding ".$group['cn'][0]."...",false);
 					$this->groupHooks['add'][$um['id']] = array($um['id'], $group['cn'][0], (!empty($group['description'][0]) ? $group['description'][0] : ''), $members);
-					$this->out("Done");
 				} else {
-					$this->out("\tUpdating ".$group['cn'][0]."...",false);
 					$this->groupHooks['update'][$um['id']] = array($um['id'], $um['prevGroupname'], $group['cn'][0], (!empty($group['description'][0]) ? $group['description'][0] : ''), $members);
-					$this->out("Done");
 				}
 			}
 		}
@@ -569,9 +554,8 @@ class Msad extends Auth {
 		$fgroups = $this->getAllGroups();
 		foreach($fgroups as $group) {
 			if(!isset($this->gcache[$group['authid']])) {
-				$this->out("\tRemoving ".$group['groupname']."...",false);
-				$this->deleteGroupByGID($group['id']);
-				$this->out("Done");
+				$this->deleteGroupByGID($group['id'], false);
+				$this->groupHooks['remove'][$group['id']] = array($group['id'], $group);
 			}
 		}
 		$sql = "DROP TABLE msad_procs_temp";
@@ -627,13 +611,9 @@ class Msad extends Auth {
 				}
 				$this->updateUserData($um['id'], $data);
 				if($um['new']) {
-					$this->out("\tAdd ".$user['samaccountname'][0]."...",false);
 					$this->userHooks['add'][$um['id']] = array($um['id'], $user['samaccountname'][0], (!empty($user['description'][0]) ? $user['description'][0] : ''), null, false, $data);
-					$this->out("Done");
 				} else {
-					$this->out("\tUpdating ".$user['samaccountname'][0]."...",false);
 					$this->userHooks['update'][$um['id']] = array($um['id'], $um['prevUsername'], $user['samaccountname'][0], (!empty($user['description'][0]) ? $user['description'][0] : ''), null, $data);
-					$this->out("Done");
 				}
 			}
 		}
@@ -641,9 +621,8 @@ class Msad extends Auth {
 		$fusers = $this->getAllUsers();
 		foreach($fusers as $user) {
 			if(!isset($this->ucache[$user['authid']])) {
-				$this->out("\tRemoving ".$user['username']."...",false);
-				$this->deleteUserByID($user['id']);
-				$this->out("done");
+				$this->deleteUserByID($user['id'], false);
+				$this->userHooks['remove'][$user['id']] = array($user['id'],$user);
 			}
 		}
 	}

@@ -1359,14 +1359,14 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		}
 	}
 
-	public function getCombinedModuleSettingByID($id, $module, $setting, $detailed = false) {
+	public function getCombinedModuleSettingByID($id, $module, $setting, $detailed = false, $cached = true) {
 		$groupid = -1;
 		$groupname = "user";
-		$output = $this->getModuleSettingByID($id,$module,$setting,true);
+		$output = $this->getModuleSettingByID($id,$module,$setting,true,$cached);
 		if(is_null($output)) {
 			$groups = $this->getGroupsByID($id);
 			foreach($groups as $group) {
-				$gs = $this->getModuleSettingByGID($group,$module,$setting,true);
+				$gs = $this->getModuleSettingByGID($group,$module,$setting,true,$cached);
 				if(!is_null($gs)) {
 					//Find and replace the word "self" with this users extension
 					if(is_array($gs) && in_array("self",$gs)) {
@@ -1529,8 +1529,8 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * @param bool $null If true return null if the setting doesn't exist, else return false
 	 * @return mixed false if nothing, else array
 	 */
-	public function getModuleSettingByID($uid,$module,$setting,$null=false) {
-		$settings = $this->getAllModuleUserSettings();
+	public function getModuleSettingByID($uid,$module,$setting,$null=false,$cached=true) {
+		$settings = $this->getAllModuleUserSettings($cached);
 
 		if(isset($settings[$uid][$module][$setting])) {
 			return $settings[$uid][$module][$setting];
@@ -1543,8 +1543,8 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * Get all Module User Settings
 	 * @return array The settings as an ASSOC array
 	 */
-	private function getAllModuleUserSettings() {
-		if(!empty($this->moduleUserSettingsCache)) {
+	private function getAllModuleUserSettings($cached = true) {
+		if($cached && !empty($this->moduleUserSettingsCache)) {
 			return $this->moduleUserSettingsCache;
 		}
 		$sql = "SELECT * FROM ".$this->userSettingsTable;
@@ -1571,8 +1571,8 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	* @param bool $null If true return null if the setting doesn't exist, else return false
 	* @return mixed false if nothing, else array
 	*/
-	public function getModuleSettingByGID($gid,$module,$setting,$null=false) {
-		$settings = $this->getAllModuleGroupSettings();
+	public function getModuleSettingByGID($gid,$module,$setting,$null=false,$cached=true) {
+		$settings = $this->getAllModuleGroupSettings($cached);
 
 		if(isset($settings[$gid][$module][$setting])) {
 			return $settings[$gid][$module][$setting];
@@ -1585,8 +1585,8 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * Get all Module Group Settings
 	 * @return array The settings as an ASSOC array
 	 */
-	private function getAllModuleGroupSettings() {
-		if(!empty($this->moduleGroupSettingsCache)) {
+	private function getAllModuleGroupSettings($cached=true) {
+		if($cached && !empty($this->moduleGroupSettingsCache)) {
 			return $this->moduleGroupSettingsCache;
 		}
 		$sql = "SELECT * FROM ".$this->groupSettingsTable;

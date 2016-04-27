@@ -332,7 +332,9 @@ abstract class Auth implements Base {
 		$sql = "DELETE FROM ".$this->groupSettingsTable." WHERE `gid` = :gid";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':gid' => $gid));
-		$this->delGroupHook($gid, $group);
+		if($processHooks) {
+			$this->delGroupHook($gid, $group);
+		}
 		return array("status" => true, "type" => "success", "message" => _("Group Successfully Deleted"));
 	}
 
