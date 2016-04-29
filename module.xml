@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>13.0.59</version>
+	<version>13.0.60</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -12,6 +12,7 @@
 		Modules like iSymphony, Rest API and User Control Panel and FreePBX itself use this module to manage their users.
 	</description>
 	<changelog>
+		*13.0.60* FREEPBX-12165 error with extension adds with user conflicts
 		*13.0.59* FREEPBX-12167 Define array
 		*13.0.58* FREEPBX-12167 LDAP sync not deleting old records
 		*13.0.57* FREEPBX-12029 Use file based storage to avoid issues with database packet limits
