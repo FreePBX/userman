@@ -1094,7 +1094,14 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		}
 		set_time_limit(0);
 		$display = !empty($_REQUEST['display']) ? $_REQUEST['display'] : "";
-		$status = $this->auth->addGroup($groupname, $description, $users);
+		//remove faulty users from group
+		$fusers = array();
+		foreach($users as $u) {
+			if(!empty($u)) {
+				$fusers[] = $u;
+			}
+		}
+		$status = $this->auth->addGroup($groupname, $description, $fusers);
 		if(!$status['status']) {
 			return $status;
 		}
@@ -1178,7 +1185,14 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		if(empty($groupname)) {
 			$groupname = $prevGroupname;
 		}
-		$status = $this->auth->updateGroup($gid, $prevGroupname, $groupname, $description, $users, $nodisplay);
+		//remove faulty users from group
+		$fusers = array();
+		foreach($users as $u) {
+			if(!empty($u)) {
+				$fusers[] = $u;
+			}
+		}
+		$status = $this->auth->updateGroup($gid, $prevGroupname, $groupname, $description, $fusers, $nodisplay);
 		if(!$status['status']) {
 			return $status;
 		}
