@@ -10,9 +10,9 @@
 						</div>
 						<div class="col-md-9">
 							<span class="radioset">
-								<input type="radio" name="um" id="um_on" value="yes">
+								<input type="radio" name="um" id="um_on" value="yes" checked>
 								<label for="um_on"><?php echo _('Yes')?></label>
-								<input type="radio" name="um" id="um_off" value="no" checked>
+								<input type="radio" name="um" id="um_off" value="no">
 								<label for="um_off"><?php echo _('No')?></label>
 							</span>
 						</div>
@@ -37,7 +37,7 @@
 								<i class="fa fa-question-circle fpbx-help-icon" data-for="um-groups"></i>
 							</div>
 							<div class="col-md-9">
-								<select id="um-groups" data-placeholder="Groups" class="form-control chosenmultiselect" name="um-groups[]" multiple="multiple" disabled>
+								<select id="um-groups" data-placeholder="Groups" class="form-control chosenmultiselect" name="um-groups[]" multiple="multiple">
 									<?php foreach($groups as $group) {?>
 										<option value="<?php echo $group['id']?>" <?php echo in_array($group['id'],$dgroups) ? "selected" : ""?>><?php echo $group['groupname']?></option>
 									<?php } ?>

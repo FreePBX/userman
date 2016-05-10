@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>13.0.61</version>
+	<version>13.0.62</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -12,6 +12,7 @@
 		Modules like iSymphony, Rest API and User Control Panel and FreePBX itself use this module to manage their users.
 	</description>
 	<changelog>
+		*13.0.62* FREEPBX-11597 default to yes, require core module
 		*13.0.61* Remove null users from groups
 		*13.0.60* FREEPBX-12165 error with extension adds with user conflicts
 		*13.0.59* FREEPBX-12167 Define array
@@ -80,37 +81,6 @@
 		*13.0.1alpha8* Initial groups support
 		*13.0.1alpha2* Visual Changes
 		*12.0.10* Invisible display names...
-		*12.0.9* Provide a method to get contact details (hookable)
-		*12.0.8* NULL values if they are empty
-		*12.0.7* Add new Display Name Field
-		*12.0.6* Escape out class
-		*12.0.5* User proper 12 hooking
-		*12.0.4* FREEPBX-7797 require confirmation before user delete
-		*12.0.3* FREEPBX-8049 Auto Generation of User Management from ARI (amportal a userman migrate)
-		*12.0.2* Tweaks and cleanup
-		*12.0.1* Redo module_hook calls to use static obj
-		*2.11.11* Send emails out on new user creation or on editing
-		*2.11.10* FREEPBX-7494 Userman automaticly links like extensions with leading 0
-		*2.11.9* Finishing touches to creating new user from extensions page
-		*2.11.8* Sorting order and display fixes
-		*2.11.7* Check for Class instead of version
-		*2.11.6* Update to Extra attributes, if they dont exist dont erase them
-		*2.11.5* FREEPBX-7686 can not edit user
-		*2.11.4* Prevent duplicate usernames when changing username
-		*2.11.3* FREEPBX-7405 Unlink Extension from User when Extension is deleted
-		*2.11.2* Cleanup and languaging and some javascript helpers
-		*2.11.0beta10* Update license
-		*2.11.0beta9* Fixe bug when assigning a user to an extension
-		*2.11.0beta8* Fixes FREEPBX-7253 dont try to use the array if its false
-		*2.11.0beta7* Fixes FREEPBX-7245 forgetting user data on inital add
-		*2.11.0beta6* Skinning Changes
-		*2.11.0beta5* Spelling Mistakes
-		*2.11.0beta4* Cleanup and Extensive Documentation
-		*2.11.0beta3* Move Processes into hook function for 2.11
-		*2.11.0beta2* Fixed the order of updating users
-		*2.11.0beta1* Change to beta
-		*2.11.0alpha2* Add more fields
-		*2.11.0alpha1* Initial Module
 	</changelog>
 	<info />
 	<category>Admin</category>
@@ -120,6 +90,7 @@
 	<depends>
 		<phpversion>5.3.3</phpversion>
 		<version>13.0.103</version>
+		<module>core ge 13.0.84</module>
 	</depends>
 	<hooks>
 		<core class="Core" namespace="FreePBX\modules">
