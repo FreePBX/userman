@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-29 09:21-0700\n"
+"POT-Creation-Date: 2016-05-13 11:33-0700\n"
 "PO-Revision-Date: 2015-10-30 07:56+0200\n"
 "Last-Translator: Kevin <kevin@qloog.com>\n"
 "Language-Team: Japanese <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -95,7 +95,7 @@ msgstr "アドミン"
 msgid "Administration Access"
 msgstr "管理者アクセス"
 
-#: install.php:218
+#: install.php:229
 msgid "All Users"
 msgstr "全てのユーザ"
 
@@ -745,8 +745,10 @@ msgid "The connection status of the Active Directory Server"
 msgstr "Active Directoryサーバの接続ステータス。"
 
 #: views/users.php:342
-msgid "The email address to associate with this user."
-msgstr "このユーザーに紐付けるメールアドレス。"
+msgid ""
+"The email address to associate with this user. Multiple email address need "
+"to be separated with a comma."
+msgstr ""
 
 #: views/general.php:64
 #, php-format
@@ -811,7 +813,7 @@ msgstr ""
 msgid "This authentication driver does not allow importing"
 msgstr "この認証ドライバではインポート機能が使えません。"
 
-#: install.php:218
+#: install.php:229
 msgid ""
 "This group was created on install and is automatically assigned to new "
 "users. This can be disabled in User Manager Settings"
@@ -1036,6 +1038,9 @@ msgstr "usernameは必須項目です。"
 #: assets/js/userman.js:7
 msgid "users"
 msgstr "ユーザ"
+
+#~ msgid "The email address to associate with this user."
+#~ msgstr "このユーザーに紐付けるメールアドレス。"
 
 #~ msgid "LDAP is in Read Only Mode. Deletion denied"
 #~ msgstr "LDAPは読み取り専用モードのため削除できません。"

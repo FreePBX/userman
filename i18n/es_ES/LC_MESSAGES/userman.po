@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-29 09:21-0700\n"
+"POT-Creation-Date: 2016-05-13 11:33-0700\n"
 "PO-Revision-Date: 2015-10-22 01:10+0200\n"
 "Last-Translator: Ernesto <ecasas@sangoma.com>\n"
 "Language-Team: Spanish <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -86,7 +86,7 @@ msgstr "Administrador"
 msgid "Administration Access"
 msgstr ""
 
-#: install.php:218
+#: install.php:229
 msgid "All Users"
 msgstr ""
 
@@ -728,8 +728,10 @@ msgid "The connection status of the Active Directory Server"
 msgstr ""
 
 #: views/users.php:342
-msgid "The email address to associate with this user."
-msgstr "Correo Electrónico a ser asociado con este usuario."
+msgid ""
+"The email address to associate with this user. Multiple email address need "
+"to be separated with a comma."
+msgstr ""
 
 #: views/general.php:64
 #, php-format
@@ -794,7 +796,7 @@ msgstr ""
 msgid "This authentication driver does not allow importing"
 msgstr ""
 
-#: install.php:218
+#: install.php:229
 msgid ""
 "This group was created on install and is automatically assigned to new "
 "users. This can be disabled in User Manager Settings"
@@ -1015,6 +1017,9 @@ msgstr ""
 #: assets/js/userman.js:7
 msgid "users"
 msgstr ""
+
+#~ msgid "The email address to associate with this user."
+#~ msgstr "Correo Electrónico a ser asociado con este usuario."
 
 #~ msgid "User List"
 #~ msgstr "Lista de Usuario"

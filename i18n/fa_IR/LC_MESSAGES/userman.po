@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-29 09:21-0700\n"
+"POT-Creation-Date: 2016-05-13 11:33-0700\n"
 "PO-Revision-Date: 2016-04-02 19:03+0200\n"
 "Last-Translator: Media <mousavi.media@gmail.com>\n"
 "Language-Team: Persian <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -85,7 +85,7 @@ msgstr "مدیر"
 msgid "Administration Access"
 msgstr "دسترسی مدیریت"
 
-#: install.php:218
+#: install.php:229
 msgid "All Users"
 msgstr "تمام کاربران"
 
@@ -750,8 +750,10 @@ msgid "The connection status of the Active Directory Server"
 msgstr "وضعیت اتصال به سرور اکتیو دایرکتوری"
 
 #: views/users.php:342
-msgid "The email address to associate with this user."
-msgstr "آدرس ایمیل وابسته به این کاربر."
+msgid ""
+"The email address to associate with this user. Multiple email address need "
+"to be separated with a comma."
+msgstr ""
 
 #: views/general.php:64
 #, php-format
@@ -822,7 +824,7 @@ msgstr ""
 msgid "This authentication driver does not allow importing"
 msgstr "درایور احراز هویت اجازه ورود نمیدهد"
 
-#: install.php:218
+#: install.php:229
 msgid ""
 "This group was created on install and is automatically assigned to new "
 "users. This can be disabled in User Manager Settings"
@@ -1051,6 +1053,9 @@ msgstr "نام کاربری احتیاج است."
 #: assets/js/userman.js:7
 msgid "users"
 msgstr "کاربران"
+
+#~ msgid "The email address to associate with this user."
+#~ msgstr "آدرس ایمیل وابسته به این کاربر."
 
 #~ msgid "LDAP is in Read Only Mode. Deletion denied"
 #~ msgstr "LDAP در حالت فقط خواندنی است. حذف ممنوع است"
