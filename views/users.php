@@ -331,7 +331,7 @@ echo $heading;
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="email"></i>
 											</div>
 											<div class="col-md-9">
-												<input type="email" class="form-control" id="email" name="email" value="<?php echo !empty($user['email']) ? $user['email'] : ''; ?>" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
+												<input type="text" class="form-control" id="email" name="email" value="<?php echo !empty($user['email']) ? $user['email'] : ''; ?>" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
 											</div>
 										</div>
 									</div>
@@ -339,7 +339,7 @@ echo $heading;
 							</div>
 							<div class="row">
 								<div class="col-md-12">
-									<span id="email-help" class="help-block fpbx-help-block"><?php echo _("The email address to associate with this user.")?></span>
+									<span id="email-help" class="help-block fpbx-help-block"><?php echo _("The email address to associate with this user. Multiple email address need to be separated with a comma.")?></span>
 								</div>
 							</div>
 						</div>

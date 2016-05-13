@@ -54,7 +54,7 @@ $sqls[] = "CREATE TABLE IF NOT EXISTS `userman_users` (
 	`title` varchar(100) DEFAULT NULL,
 	`company` varchar(100) DEFAULT NULL,
 	`department` varchar(100) DEFAULT NULL,
-	`email` varchar(100) DEFAULT NULL,
+	`email` text DEFAULT NULL,
 	`cell` varchar(100) DEFAULT NULL,
 	`work` varchar(100) DEFAULT NULL,
 	`home` varchar(100) DEFAULT NULL,
@@ -158,6 +158,17 @@ if (!$db->getAll('SHOW COLUMNS FROM `userman_users` WHERE FIELD = "fax"')) {
 	out("Adding additional field fax");
 	$sql = "ALTER TABLE `userman_users` ADD COLUMN `fax` VARCHAR(100) NULL DEFAULT NULL AFTER `home`";
 	$result = $db->query($sql);
+}
+
+$sql = 'SHOW COLUMNS FROM userman_users WHERE FIELD = "email"';
+$sth = FreePBX::Database()->prepare($sql);
+$sth->execute();
+$res = $sth->fetch(\PDO::FETCH_ASSOC);
+if($res['Type'] != "text") {
+	$sql = "ALTER TABLE userman_users
+	CHANGE COLUMN `email` `email` text NULL DEFAULT NULL";
+	$sth = FreePBX::Database()->prepare($sql);
+	$sth->execute();
 }
 
 $sql = 'SHOW COLUMNS FROM userman_users WHERE FIELD = "auth"';
