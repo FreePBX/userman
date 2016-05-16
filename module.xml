@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>13.0.63</version>
+	<version>13.0.64</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -12,6 +12,7 @@
 		Modules like iSymphony, Rest API and User Control Panel and FreePBX itself use this module to manage their users.
 	</description>
 	<changelog>
+		*13.0.64* FREEPBX-11767 fix authentication when using voicemail, also add deletions during sync
 		*13.0.63* FREEPBX-11183 increase email field to allow comma separated email addresses
 		*13.0.62* FREEPBX-11597 default to yes, require core module
 		*13.0.61* Remove null users from groups
