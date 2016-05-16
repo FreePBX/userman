@@ -352,7 +352,11 @@ function userman_configprocess() {
 			}
 		break;
 	}
-	if($userman->getAuthName() == "Voicemail") {
-		$userman->sync();
+	if(!empty($action) && $userman->getAuthName() == "Voicemail") {
+		$auth = $userman->getAuthObject();
+		if(method_exists($auth,"sync")) {
+			//so that it picks up voicemail
+			exec("sleep .5 && fwconsole userman sync");
+		}
 	}
 }

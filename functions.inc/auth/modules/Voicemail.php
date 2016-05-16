@@ -69,7 +69,7 @@ class Voicemail extends Auth {
 					$data = array(
 						"description" => $d['name'],
 						"displayname" => $d['name'],
-						"email" => $d['email'],
+						"email" => str_replace("|",",",$d['email']),
 						"default_extension" => $username
 					);
 					$this->updateUserData($um['id'], $data);
