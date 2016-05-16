@@ -352,4 +352,7 @@ function userman_configprocess() {
 			}
 		break;
 	}
+	if($userman->getAuthName() == "Voicemail") {
+		$userman->sync();
+	}
 }

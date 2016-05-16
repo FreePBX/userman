@@ -38,6 +38,14 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	}
 
 	/**
+	 * Get the name of the Auth Object
+	 * @return string The auth object basename
+	 */
+	public function getAuthName() {
+		return str_replace('FreePBX\modules\Userman\Auth\\','',get_class($this->auth));
+	}
+
+	/**
 	 * Return the active authentication object
 	 * @return object The authentication object
 	 */

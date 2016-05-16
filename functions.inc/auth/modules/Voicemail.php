@@ -57,9 +57,12 @@ class Voicemail extends Auth {
 	}
 
 	public function sync($output=null) {
+		$this->output = $output;
 		$config = $this->userman->getConfig("authVoicemailSettings");
 		$d = $this->FreePBX->Voicemail->getVoicemail(false);
 		if(!empty($d[$config['context']])) {
+			$this->out("");
+			$valid = array();
 			foreach($d[$config['context']] as $username => $d) {
 				$um = $this->linkUser($username, 'voicemail', $username);
 				if($um['status']) {
@@ -71,12 +74,25 @@ class Voicemail extends Auth {
 					);
 					$this->updateUserData($um['id'], $data);
 					if($um['new']) {
-						$this->addUserHook($um['id'], $username, $d['name'], $d['pwd'], false, $data);
+						$this->out(sprintf(_("Added Voicemail User %s"),$username));
+						$this->addUserHook($um['id'], $username, $d['name'], null, false, $data);
 					} else {
-						$this->updateUserHook($um['id'], $username, $username, $d['name'], $d['pwd'], $data);
+						$this->out(sprintf(_("Updated Voicemail User %s"),$username));
+						$this->updateUserHook($um['id'], $username, $username, $d['name'], null, $data);
 					}
+					$valid[] = $username;
 				}
 			}
+			//remove users
+			$fusers = $this->getAllUsers();
+			foreach($fusers as $user) {
+				if(!in_array($user['authid'],$valid)) {
+					$this->out(sprintf(_("Removed Voicemail User %s"),$user['authid']));
+					$this->deleteUserByID($user['id']);
+				}
+			}
+		} else {
+			$this->out("<error>"._("Could not find the voicemail context")."</error>");
 		}
 	}
 
@@ -117,19 +133,6 @@ class Voicemail extends Auth {
 	*/
 	public function getAllGroups() {
 		return parent::getAllGroups('voicemail');
-	}
-
-	/**
-	* Get User Information by Username
-	*
-	* This gets user information by username.
-	* !!This should never be called externally outside of User Manager!!
-	*
-	* @param string $id The ID of the user from User Manager
-	* @return array
-	*/
-	public function deleteUserByID($id) {
-		return array("status" => false, "type" => "danger", "message" => _("Voicemail is in Read Only Mode. Deletion denied"));
 	}
 
 	/**
@@ -221,13 +224,45 @@ class Voicemail extends Auth {
 	 */
 	public function checkCredentials($username, $password) {
 		$config = $this->userman->getConfig("authVoicemailSettings");
-		$d = $this->FreePBX->Voicemail->getVoicemail();
+		try {
+			$d = $this->FreePBX->Voicemail->getVoicemail();
+		} catch(\Exception $e) {
+			$path = $this->FreePBX->Config->get("AMPWEBROOT");
+			$moduledir = $path."/admin/modules/voicemail";
+			$modulename = "voicemail";
+			$mn = ucfirst($modulename);
+			$bmofile = "$moduledir/$mn.class.php";
+			if (file_exists($bmofile)) {
+				\FreePBX::create()->injectClass($mn, $bmofile);
+			}
+			$d = $this->FreePBX->Voicemail->getVoicemail();
+		}
 		if(!empty($d[$config['context']][$username])) {
 			if($password == $d[$config['context']][$username]['pwd']) {
+				//Injecting breaks how FreePBX protects itself
+				//To fix this just force a refresh of modules
+				$this->FreePBX->Modules->active_modules = array();
 				$user = $this->getUserByUsername($username);
 				return !empty($user['id']) ? $user['id'] : false;
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Debug messages
+	 * @param  string $message The message
+	 * @param  boolean $nl      New line or not
+	 */
+	private function out($message,$nl=true) {
+		if(is_object($this->output) && $this->output->isVerbose()) {
+			if($nl) {
+				$this->output->writeln($message);
+			} else {
+				$this->output->write($message);
+			}
+		} elseif(!is_object($this->output)) {
+			dbug($message);
+		}
 	}
 }
