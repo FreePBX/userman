@@ -320,6 +320,54 @@ echo $heading;
 							</div>
 						</div>
 						<!--END DEPARTMENT-->
+						<!--Language-->
+						<div class="element-container">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="row">
+										<div class="form-group">
+											<div class="col-md-3">
+												<label class="control-label" for="language"><?php echo _("Language") ?></label>
+												<i class="fa fa-question-circle fpbx-help-icon" data-for="language"></i>
+											</div>
+											<div class="col-md-9">
+												<input type="text" class="form-control" id="language" name="language" value="<?php echo isset($language)?$language:''?>">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-12">
+									<span id="language-help" class="help-block fpbx-help-block"><?php echo _("Language for this user")?></span>
+								</div>
+							</div>
+						</div>
+						<!--END Language-->
+						<!--Timezone-->
+						<div class="element-container">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="row">
+										<div class="form-group">
+											<div class="col-md-3">
+												<label class="control-label" for="timezone"><?php echo _("Timezone") ?></label>
+												<i class="fa fa-question-circle fpbx-help-icon" data-for="timezone"></i>
+											</div>
+											<div class="col-md-9">
+												<input type="text" class="form-control" id="timezone" name="timezone" value="<?php echo isset($timezone)?$timezone:''?>">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-12">
+									<span id="timezone-help" class="help-block fpbx-help-block"><?php echo _("Timezone for this user")?></span>
+								</div>
+							</div>
+						</div>
+						<!--END Timezone-->
 						<!--EMAIL-->
 						<div class="element-container">
 							<div class="row">

@@ -54,6 +54,8 @@ $sqls[] = "CREATE TABLE IF NOT EXISTS `userman_users` (
 	`title` varchar(100) DEFAULT NULL,
 	`company` varchar(100) DEFAULT NULL,
 	`department` varchar(100) DEFAULT NULL,
+	`language` varchar(100) DEFAULT NULL,
+	`timezone` varchar(100) DEFAULT NULL,
 	`email` text DEFAULT NULL,
 	`cell` varchar(100) DEFAULT NULL,
 	`work` varchar(100) DEFAULT NULL,
@@ -157,6 +159,18 @@ if (!$db->getAll('SHOW COLUMNS FROM `userman_users` WHERE FIELD = "company"')) {
 if (!$db->getAll('SHOW COLUMNS FROM `userman_users` WHERE FIELD = "fax"')) {
 	out("Adding additional field fax");
 	$sql = "ALTER TABLE `userman_users` ADD COLUMN `fax` VARCHAR(100) NULL DEFAULT NULL AFTER `home`";
+	$result = $db->query($sql);
+}
+
+if (!$db->getAll('SHOW COLUMNS FROM `userman_users` WHERE FIELD = "language"')) {
+	out("Adding additional field fax");
+	$sql = "ALTER TABLE `userman_users` ADD COLUMN `language` VARCHAR(100) NULL DEFAULT NULL AFTER `department`";
+	$result = $db->query($sql);
+}
+
+if (!$db->getAll('SHOW COLUMNS FROM `userman_users` WHERE FIELD = "timezone"')) {
+	out("Adding additional field fax");
+	$sql = "ALTER TABLE `userman_users` ADD COLUMN `timezone` VARCHAR(100) NULL DEFAULT NULL AFTER `language`";
 	$result = $db->query($sql);
 }
 
