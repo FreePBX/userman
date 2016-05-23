@@ -10,14 +10,14 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-05-16 11:58-0700\n"
-"PO-Revision-Date: 2016-05-15 03:58+0200\n"
+"PO-Revision-Date: 2016-05-20 11:30+0200\n"
 "Last-Translator: Media <mousavi.media@gmail.com>\n"
-"Language-Team: Persian (Iran) <http://weblate.freepbx.org/projects/freepbx/"
-"userman/fa_IR/>\n"
+"Language-Team: Persian (Iran) "
+"<http://weblate.freepbx.org/projects/freepbx/userman/fa_IR/>\n"
+"Language: fa_IR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fa_IR\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 2.4\n"
 
@@ -80,7 +80,7 @@ msgstr "افزودن کاربر"
 #: functions.inc/auth/modules/Voicemail.php:77
 #, php-format
 msgid "Added Voicemail User %s"
-msgstr ""
+msgstr "افزودن ایمیل صوتی کاربر %s"
 
 #: userman.i18n.php:6 userman.i18n.php:12
 msgid "Admin"
@@ -173,7 +173,7 @@ msgstr "زمینه"
 
 #: functions.inc/auth/modules/Voicemail.php:95
 msgid "Could not find the voicemail context"
-msgstr ""
+msgstr "نمیتواند زمینه ایمیل صوتی را پیدا کند"
 
 #: functions.inc/guihooks.php:84 functions.inc/guihooks.php:140
 msgid "Create New User"
@@ -607,7 +607,7 @@ msgstr "آدرس آی پی احراز هویت راه دور"
 #: functions.inc/auth/modules/Voicemail.php:90
 #, php-format
 msgid "Removed Voicemail User %s"
-msgstr ""
+msgstr "ایمیل صوتی کاربر %s حذف شد"
 
 #: Userman.class.php:485
 msgid "Reset"
@@ -893,7 +893,7 @@ msgstr "کاربر به روز شد"
 #: functions.inc/auth/modules/Voicemail.php:80
 #, php-format
 msgid "Updated Voicemail User %s"
-msgstr ""
+msgstr "ایمیل صوتی کاربر %s به روز شد"
 
 #: assets/js/userman.js:162
 msgid "Updating"
