@@ -601,7 +601,7 @@ class Msad extends Auth {
 					"work" => !empty($user['telephonenumber'][0]) ? $user['telephonenumber'][0] : '',
 				);
 				if(!empty($this->linkAttr) && !empty($user[$this->linkAttr][0])) {
-					$d = $this->FreePBX->Core->getDevice((string)$user[$this->linkAttr][0]);
+					$d = $this->FreePBX->Core->getUser((string)$user[$this->linkAttr][0]);
 					if(!empty($d)) {
 						$data["default_extension"] = !empty($user[$this->linkAttr][0]) ? $user[$this->linkAttr][0] : '';
 					} else {
