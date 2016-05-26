@@ -215,3 +215,23 @@ $("#user-side").on("click-row.bs.table", function(row, $element) {
 $("#group-side").on("click-row.bs.table", function(row, $element) {
 	window.location = "?display=userman&action=showgroup&group="+$element.id;
 });
+$("#browsertz").on("click", function(e){
+		e.preventDefault();
+		var btz =  moment.tz.guess();
+		if(typeof btz === 'undefined'){
+			fpbxToast("The Browser Timezone could not be determined");
+		}else{
+			$("#timezone").multiselect('select', btz);
+			$("#timezone").multiselect('refresh');
+		}
+});
+$("#systemtz").on("click", function(e){
+		e.preventDefault();
+		var stz = fpbx.conf['PHPTIMEZONE'];
+		if(typeof stz === 'undefined'){
+			fpbxToast("The FreePBX Timezone is not set");
+		}else{
+			$("#timezone").multiselect('select', stz);
+			$("#timezone").multiselect('refresh');
+		}
+});

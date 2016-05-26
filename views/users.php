@@ -355,7 +355,15 @@ echo $heading;
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="timezone"></i>
 											</div>
 											<div class="col-md-9">
-												<input type="text" class="form-control" id="timezone" name="timezone" value="<?php echo isset($timezone)?$timezone:''?>">
+												<div class="input-group">
+													<?php echo drawtimezone('timezone',$timezone); ?>
+													<span class="input-group-btn">
+														<a href="#" class="btn btn-default" id="browsertz"><?php echo _("Use Browser Timezone")?></a>
+													</span>
+													<span class="input-group-btn">
+														<a href="#" class="btn btn-default" id="systemtz"><?php echo _("Use FreePBX Timezone")?></a>
+													</span>
+												</div>
 											</div>
 										</div>
 									</div>

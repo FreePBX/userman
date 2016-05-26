@@ -283,6 +283,8 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 						'title' => isset($request['title']) ? $request['title'] : null,
 						'company' => isset($request['company']) ? $request['company'] : null,
 						'department' => isset($request['department']) ? $request['department'] : null,
+						'language' => isset($request['language']) ? $request['language'] : $this->FreePBX->Config->get("UIDEFAULTLANG"),
+						'timezone' => isset($request['timezone']) ? $request['timezone'] : $this->FreePBX->Config->get("PHPTIMEZONE"),
 						'email' => isset($request['email']) ? $request['email'] : null,
 						'cell' => isset($request['cell']) ? $request['cell'] : null,
 						'work' => isset($request['work']) ? $request['work'] : null,

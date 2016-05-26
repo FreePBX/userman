@@ -495,7 +495,7 @@ abstract class Auth implements Base {
 		if(empty($data)) {
 			return true;
 		}
-		$sql = "UPDATE ".$this->userTable." SET `fname` = :fname, `lname` = :lname, `default_extension` = :default_extension, `displayname` = :displayname, `company` = :company, `title` = :title, `email` = :email, `cell` = :cell, `work` = :work, `home` = :home, `fax` = :fax, `department` = :department, `description` = :description, `primary_group` = :primary_group WHERE `id` = :uid AND auth = :auth";
+		$sql = "UPDATE ".$this->userTable." SET `fname` = :fname, `lname` = :lname, `default_extension` = :default_extension, `displayname` = :displayname, `company` = :company, `title` = :title, `email` = :email, `cell` = :cell, `work` = :work, `home` = :home, `fax` = :fax, `department` = :department, `language` = :language, `timezone` = :timezone, `description` = :description, `primary_group` = :primary_group WHERE `id` = :uid AND auth = :auth";
 		$defaults = $this->getUserByID($uid);
 		$sth = $this->db->prepare($sql);
 		$fname = isset($data['fname']) ? $data['fname'] : (!isset($data['fname']) && !empty($defaults['fname']) ? $defaults['fname'] : null);
@@ -510,6 +510,8 @@ abstract class Auth implements Base {
 		$fax = isset($data['fax']) ? $data['fax'] : (!isset($data['fax']) && !empty($defaults['fax']) ? $defaults['fax'] : null);
 		$displayname = isset($data['displayname']) ? $data['displayname'] : (!isset($data['displayname']) && !empty($defaults['displayname']) ? $defaults['displayname'] : null);
 		$department = isset($data['department']) ? $data['department'] : (!isset($data['department']) && !empty($defaults['department']) ? $defaults['department'] : null);
+		$language = isset($data['language']) ? $data['language'] : (!isset($data['language']) && !empty($defaults['language']) ? $defaults['language'] : null);
+		$timezone = isset($data['timezone']) ? $data['timezone'] : (!isset($data['timezone']) && !empty($defaults['timezone']) ? $defaults['timezone'] : null);
 		$description = isset($data['description']) ? $data['description'] : (!isset($data['description']) && !empty($defaults['description']) ? $defaults['description'] : null);
 		$primary_group = isset($data['primary_group']) ? $data['primary_group'] : (!isset($data['primary_group']) && !empty($defaults['primary_group']) ? $defaults['primary_group'] : null);
 
@@ -528,6 +530,8 @@ abstract class Auth implements Base {
 					':home' => $home,
 					':fax' => $fax,
 					':department' => $department,
+					':language' => $language,
+					':timezone' => $timezone,
 					':description' => $description,
 					':primary_group' => $primary_group,
 					':uid' => $uid,
