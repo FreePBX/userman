@@ -361,7 +361,7 @@ echo $heading;
 														<a href="#" class="btn btn-default" id="browsertz"><?php echo _("Use Browser Timezone")?></a>
 													</span>
 													<span class="input-group-btn">
-														<a href="#" class="btn btn-default" id="systemtz"><?php echo _("Use FreePBX Timezone")?></a>
+														<a href="#" class="btn btn-default" id="systemtz"><?php echo _("Use PBX Timezone")?></a>
 													</span>
 												</div>
 											</div>
