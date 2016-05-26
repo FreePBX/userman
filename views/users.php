@@ -356,7 +356,7 @@ echo $heading;
 											</div>
 											<div class="col-md-9">
 												<div class="input-group">
-													<?php echo drawtimezone('timezone',$timezone); ?>
+													<?php echo FreePBX::View()->timezoneDrawSelect('timezone',$timezone); ?>
 													<span class="input-group-btn">
 														<a href="#" class="btn btn-default" id="browsertz"><?php echo _("Use Browser Timezone")?></a>
 													</span>
