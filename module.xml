@@ -1,88 +1,16 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>13.0.64</version>
+	<version>14.0.1alpha1</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
 	<repo>standard</repo>
 	<description>
-		This Module manages all FreePBX users
-		It allows an Administrator to create a User Account that can be used by other applications for login or API purposes.
-		Modules like iSymphony, Rest API and User Control Panel and FreePBX itself use this module to manage their users.
+		This Module manages all PBX users. It allows an Administrator to create a User Account that can be used by other applications for login or API purposes.
 	</description>
 	<changelog>
-		*13.0.64* FREEPBX-11767 fix authentication when using voicemail, also add deletions during sync
-		*13.0.63* FREEPBX-11183 increase email field to allow comma separated email addresses
-		*13.0.62* FREEPBX-11597 default to yes, require core module
-		*13.0.61* Remove null users from groups
-		*13.0.60* FREEPBX-12165 error with extension adds with user conflicts
-		*13.0.59* FREEPBX-12167 Define array
-		*13.0.58* FREEPBX-12167 LDAP sync not deleting old records
-		*13.0.57* FREEPBX-12029 Use file based storage to avoid issues with database packet limits
-		*13.0.56* FREEPBX-12009 FREEPBX-11747 FREEPBX-11147 FREEPBX-11184 FREEPBX-11442 FREEPBX-11972
-		*13.0.55* Put notice up about group priorities
-		*13.0.54* Fix strange race condition, check if empty not if false
-		*13.0.53* FREEPBX-11795 Fix erroring cron
-		*13.0.52* Remove extra crons when saving
-		*13.0.51* Remove en_US Translations
-		*13.0.50* Better notices
-		*13.0.49* FREEPBX-11069
-		*13.0.48* FREEPBX-10962 with fax support as well in fax and faxpro
-		*13.0.47* Fix bad id in voicemail driver
-		*13.0.46* Fix broken voicemail auth driver
-		*13.0.45* FREEPBX-10861
-		*13.0.44* FREEPBX-10775
-		*13.0.43* Fix invalid variable
-		*13.0.42* More work done on FREEPBX-10973
-		*13.0.41* FREEPBX-11002 require Asterisk to be connected
-		*13.0.40* FREEPBX-10973
-		*13.0.39* Allow sorting/ordering of groups
-		*13.0.38* FREEPBX-11019
-		*13.0.37* FREEPBX-10840 switch to using asterisk type variables in emails (old still supported)
-		*13.0.36* FREEPBX-10802 Hard Coded Database name
-		*13.0.35* FREEPBX-10621 add missing function back
-		*13.0.34* FREEPBX-10535 Additional group settings for the default group
-		*13.0.33* Add side nav functionality and fix up two functions
-		*13.0.32* Fix array diff error when it is not an array
-		*13.0.31* Move everything back into install.php
-		*13.0.30* FREEPBX-10421 Dont show drivers that arent supported
-		*13.0.29* FREEPBX-9118 Selectable columns
-		*13.0.28* FREEPBX-8919 Delete WebRTC when account is deleted
-		*13.0.27* Adjustments to escaping of distinguished name
-		*13.0.26* FREEPBX-9858 add voicemail auth (untested)
-		*13.0.25* Bump to force an upgrade
-		*13.0.24* Add method to get default group
-		*13.0.23* FREEPBX-10215 Add default permissions for default group
-		*13.0.22* FREEPBX-10282 Allow creating of files
-		*13.0.21* Console functionality
-		*13.0.20* FREEPBX-10246 Fix labels, buttons and save on main page.
-		*13.0.19* FREEPBX-10204 No default Userman Group is created at install or upgrade time
-		*13.0.18* Need to insert a blank array into the DB
-		*13.0.17* Default groups, quick create permissions and fixes
-		*13.0.16* Add Active Directory users to their primary groups
-		*13.0.15* Group settings added to extensions page, proper active directory username represenation, default groups, dont send emails
-		*13.0.14* Add ability to link users to extensions through active directory attributes
-		*13.0.13* FREEPBX-10034 Actually fix Active Directory functionality so that it works
-		*13.0.12* FREEPBX-9987 Invalid module count
-		*13.0.11* FREEPBX-9907 Cannot autogenerate new user from drop-down in existing extension
-		*13.0.10* FREEPBX-9832 Dont let userman changes be submitted twice
-		*13.0.9* FREEPBX-9799 bug in JS prevented JS updates
-		*13.0.8* FREEPBX-9732 Fixes broken group and user delete and rnav
-		*13.0.7* Proper uninstall commands
-		*13.0.6* FREEPBX-9653 Bulk handler errors
-		*13.0.5* Finalize authentication engines. Now supporting Microsoft Active Directory
-		*13.0.4* Set priority of bulkhandler hooks
-		*13.0.3* Add hooks for bulkhandler module
-		*13.0.2.1* Typo fix
-		*13.0.2* Version bump Beta
-		*13.0.1alpha14* FREEPBX-9500 Can't change user's password in User Management with "Key" action button
-		*13.0.1alpha13* FREEPBX-9467 add search hooks
-		*13.0.1alpha12* Tab scrolls
-		*13.0.1alpha11* Better quick create visuals
-		*13.0.1alpha8* Initial groups support
-		*13.0.1alpha2* Visual Changes
-		*12.0.10* Invisible display names...
+		*14.0.1alpha1* Inital Release
 	</changelog>
 	<info />
 	<category>Admin</category>
@@ -107,6 +35,6 @@
 		</bulkhandler>
 	</hooks>
 	<supported>
-		<version>13.0</version>
+		<version>14.0</version>
 	</supported>
 </module>
