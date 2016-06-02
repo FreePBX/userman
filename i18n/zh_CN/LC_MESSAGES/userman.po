@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-16 11:58-0700\n"
+"POT-Creation-Date: 2016-06-01 23:46-0700\n"
 "PO-Revision-Date: 2015-10-14 14:59+0200\n"
 "Last-Translator: james <zhulizhong@gmail.com>\n"
 "Language-Team: Simplified Chinese <http://weblate.freepbx.org/projects/"
@@ -343,7 +343,7 @@ msgstr "成功更新组"
 msgid "Group already exists"
 msgstr ""
 
-#: functions.inc/auth/modules/Msad.php:368
+#: functions.inc/auth/modules/Msad.php:381
 msgid "Group updated"
 msgstr "组更新"
 
@@ -426,8 +426,8 @@ msgstr ""
 msgid "Invalid User"
 msgstr ""
 
-#: functions.inc/auth/modules/Msad.php:317
 #: functions.inc/auth/modules/Msad.php:330
+#: functions.inc/auth/modules/Msad.php:343
 msgid "LDAP is in Read Only Mode. Addition denied"
 msgstr ""
 
@@ -903,7 +903,7 @@ msgstr ""
 msgid "User already exists"
 msgstr ""
 
-#: functions.inc/auth/modules/Msad.php:355
+#: functions.inc/auth/modules/Msad.php:368
 #: functions.inc/auth/modules/Voicemail.php:193
 msgid "User updated"
 msgstr ""

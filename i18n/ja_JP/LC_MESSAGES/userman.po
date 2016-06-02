@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-16 11:58-0700\n"
+"POT-Creation-Date: 2016-06-01 23:46-0700\n"
 "PO-Revision-Date: 2015-10-30 07:56+0200\n"
 "Last-Translator: Kevin <kevin@qloog.com>\n"
 "Language-Team: Japanese <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -359,7 +359,7 @@ msgstr "グループを更新しました"
 msgid "Group already exists"
 msgstr ""
 
-#: functions.inc/auth/modules/Msad.php:368
+#: functions.inc/auth/modules/Msad.php:381
 msgid "Group updated"
 msgstr "グループを更新しました"
 
@@ -452,8 +452,8 @@ msgstr "引き継ぐ"
 msgid "Invalid User"
 msgstr "無効なユーザ"
 
-#: functions.inc/auth/modules/Msad.php:317
 #: functions.inc/auth/modules/Msad.php:330
+#: functions.inc/auth/modules/Msad.php:343
 msgid "LDAP is in Read Only Mode. Addition denied"
 msgstr "LDAPは読み取り専用モードのため追加できません。"
 
@@ -947,7 +947,7 @@ msgstr "ユーザ情報を更新しました"
 msgid "User already exists"
 msgstr ""
 
-#: functions.inc/auth/modules/Msad.php:355
+#: functions.inc/auth/modules/Msad.php:368
 #: functions.inc/auth/modules/Voicemail.php:193
 msgid "User updated"
 msgstr "ユーザを更新しました"

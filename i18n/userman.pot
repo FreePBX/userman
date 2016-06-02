@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-16 11:58-0700\n"
+"POT-Creation-Date: 2016-06-01 23:46-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -371,7 +371,7 @@ msgstr ""
 msgid "Group already exists"
 msgstr ""
 
-#: functions.inc/auth/modules/Msad.php:368
+#: functions.inc/auth/modules/Msad.php:381
 msgid "Group updated"
 msgstr ""
 
@@ -460,8 +460,8 @@ msgstr ""
 msgid "Invalid User"
 msgstr ""
 
-#: functions.inc/auth/modules/Msad.php:317
 #: functions.inc/auth/modules/Msad.php:330
+#: functions.inc/auth/modules/Msad.php:343
 msgid "LDAP is in Read Only Mode. Addition denied"
 msgstr ""
 
@@ -962,7 +962,7 @@ msgstr ""
 msgid "User already exists"
 msgstr ""
 
-#: functions.inc/auth/modules/Msad.php:355
+#: functions.inc/auth/modules/Msad.php:368
 #: functions.inc/auth/modules/Voicemail.php:193
 msgid "User updated"
 msgstr ""
