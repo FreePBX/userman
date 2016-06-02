@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>13.0.65</version>
+	<version>13.0.66</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -12,6 +12,7 @@
 		Modules like iSymphony, Rest API and User Control Panel and FreePBX itself use this module to manage their users.
 	</description>
 	<changelog>
+		*13.0.66* FREEPBX-12291 remove lock file if pid is not active
 		*13.0.65* FREEPBX-12038 User Manager doesnt Sync link Extension attribute to Virtual Extensions
 		*13.0.64* FREEPBX-11767 fix authentication when using voicemail, also add deletions during sync
 		*13.0.63* FREEPBX-11183 increase email field to allow comma separated email addresses
