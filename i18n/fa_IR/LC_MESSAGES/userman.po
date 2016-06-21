@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-06-01 23:46-0700\n"
+"POT-Creation-Date: 2016-06-21 16:20-0700\n"
 "PO-Revision-Date: 2016-05-20 11:30+0200\n"
 "Last-Translator: Media <mousavi.media@gmail.com>\n"
 "Language-Team: Persian (Iran) <http://weblate.freepbx.org/projects/freepbx/"
@@ -44,7 +44,7 @@ msgstr ""
 "iSymphony and RestAPI are examples of these type of modules. In %s 12, the "
 "new User Control Panel also uses User Manager."
 
-#: Userman.class.php:2151
+#: Userman.class.php:2156
 #, php-format
 msgid "%s records failed validation"
 msgstr "اعتبار سنجی ناموفق رکوردهای %s"
@@ -204,13 +204,13 @@ msgstr "حذف شدن..."
 msgid "Department"
 msgstr "بخش"
 
-#: Userman.class.php:2097 Userman.class.php:2098 Userman.class.php:2123
-#: Userman.class.php:2124 views/rnav.php:12 views/rnav.php:27
+#: Userman.class.php:2102 Userman.class.php:2103 Userman.class.php:2128
+#: Userman.class.php:2129 views/rnav.php:12 views/rnav.php:27
 #: views/users.php:77 views/welcome.php:55 views/welcome.php:82
 msgid "Description"
 msgstr "شرح"
 
-#: Userman.class.php:2109 Userman.class.php:2110 views/users.php:234
+#: Userman.class.php:2114 Userman.class.php:2115 views/users.php:234
 #: views/welcome.php:51
 msgid "Display Name"
 msgstr "نام نمایشی"
@@ -279,7 +279,7 @@ msgstr "صفت لینک داخلی"
 msgid "Fax Phone Number"
 msgstr "شماره دورنگار"
 
-#: Userman.class.php:2101 Userman.class.php:2102 views/users.php:186
+#: Userman.class.php:2106 Userman.class.php:2107 views/users.php:186
 #: views/welcome.php:52
 msgid "First Name"
 msgstr "نام"
@@ -325,7 +325,7 @@ msgstr "جزییات گروه"
 msgid "Group Does Not Exist"
 msgstr "گروه موجود نیست"
 
-#: Userman.class.php:2119 Userman.class.php:2120 views/groups.php:51
+#: Userman.class.php:2124 Userman.class.php:2125 views/groups.php:51
 #: views/rnav.php:26 views/welcome.php:81
 msgid "Group Name"
 msgstr "نام گروه"
@@ -353,7 +353,7 @@ msgstr "گروه با موفقیت حذف شد"
 msgid "Group Successfully Updated"
 msgstr "گروه با موفقیت به روز شد"
 
-#: Userman.class.php:2272
+#: Userman.class.php:2277
 msgid "Group already exists"
 msgstr "گرو موجود است"
 
@@ -461,7 +461,7 @@ msgstr "کاربر نادرست"
 msgid "LDAP is in Read Only Mode. Addition denied"
 msgstr "LDAP در حالت فقط خواندنی است. افزودن ممنوع است"
 
-#: Userman.class.php:2105 Userman.class.php:2106 views/users.php:210
+#: Userman.class.php:2110 Userman.class.php:2111 views/users.php:210
 #: views/welcome.php:53
 msgid "Last Name"
 msgstr "نام خانوادگی"
@@ -503,7 +503,7 @@ msgstr "فهرست کاربران"
 msgid "Login Details"
 msgstr "جزییات ورود"
 
-#: Userman.class.php:2083 Userman.class.php:2084 views/users.php:53
+#: Userman.class.php:2088 Userman.class.php:2089 views/users.php:53
 msgid "Login Name"
 msgstr "نام ورود"
 
@@ -521,7 +521,7 @@ msgstr "لاگ کاربر در صفحات مدیریت %s وجود دارد؟"
 msgid "Microsoft Active Directory"
 msgstr "مایکروسافت اکتیو دایرکتوری"
 
-#: Userman.class.php:1888
+#: Userman.class.php:1893
 msgid "Migrated user from voicemail"
 msgstr "کاربر منتقل شده از صندوق صوتی"
 
@@ -547,7 +547,7 @@ msgstr "متصل نشد"
 msgid "Not all of the connection parameters have been filled out"
 msgstr "تمامی پارامترهای اتصال پر نشده"
 
-#: Userman.class.php:1936
+#: Userman.class.php:1941
 msgid "Obfuscated. To reset use the reset link in this email"
 msgstr "مبهم. برای بازنشانی از لینک موجود در ایمیل استفاده کنید"
 
@@ -555,12 +555,12 @@ msgstr "مبهم. برای بازنشانی از لینک موجود در ایم
 msgid "Other Settings"
 msgstr "دیگر تنظیمات"
 
-#: Userman.class.php:2088 views/msad.php:73 views/passwordmodal.php:16
+#: Userman.class.php:2093 views/msad.php:73 views/passwordmodal.php:16
 #: views/users.php:102
 msgid "Password"
 msgstr "کلمه عبور"
 
-#: Userman.class.php:2089
+#: Userman.class.php:2094
 msgid "Password - plaintext"
 msgstr "کلمه عبور - متن ساده"
 
@@ -588,11 +588,11 @@ msgstr "نام گروه قبلی نمیتواند خالی باشد"
 msgid "Previous Username can not be blank"
 msgstr "نام کاربری قبلی نمیتواند خالی باشد"
 
-#: Userman.class.php:2093
+#: Userman.class.php:2098
 msgid "Primary Extension"
 msgstr "داخلی اصلی"
 
-#: Userman.class.php:2094 views/users.php:153
+#: Userman.class.php:2099 views/users.php:153
 msgid "Primary Linked Extension"
 msgstr "داخلی اصلی متصل"
 
@@ -673,7 +673,7 @@ msgstr "ارسال ایمیل خارجی در هنگام ایجاد کاربر �
 msgid "Set Password"
 msgstr "تنظیم کلمه عبور"
 
-#: Userman.class.php:1934
+#: Userman.class.php:1939
 msgid "Set by your administrator"
 msgstr "تنظیم به وسیله مدیر شما"
 
@@ -834,7 +834,7 @@ msgstr ""
 "API purposes.\t\tModules like iSymphony, Rest API and User Control Panel and "
 "FreePBX itself use this module to manage their users."
 
-#: Userman.class.php:2245 Userman.class.php:2305
+#: Userman.class.php:2250 Userman.class.php:2310
 msgid "This authentication driver does not allow importing"
 msgstr "درایور احراز هویت اجازه ورود نمیدهد"
 
@@ -934,7 +934,7 @@ msgstr "ماژول مدیریت کاربر"
 msgid "User Manager"
 msgstr "مدیریت کاربر"
 
-#: Userman.class.php:2065 Userman.class.php:2066 views/quickCreate.php:36
+#: Userman.class.php:2070 Userman.class.php:2071 views/quickCreate.php:36
 msgid "User Manager Groups"
 msgstr "گروههای مدیریت کاربر"
 
@@ -942,7 +942,7 @@ msgstr "گروههای مدیریت کاربر"
 msgid "User Manager Settings"
 msgstr "تنظیمات مدیریت کاربر"
 
-#: Userman.class.php:2059 Userman.class.php:2060
+#: Userman.class.php:2064 Userman.class.php:2065
 msgid "User Manager Users"
 msgstr "کاربران مدیریت کاربر"
 
@@ -958,7 +958,7 @@ msgstr "کاربر با موفقیت حذف شد"
 msgid "User Successfully Updated"
 msgstr "کاربربا موفقیت به روز شد"
 
-#: Userman.class.php:2201
+#: Userman.class.php:2206
 msgid "User already exists"
 msgstr "کاربر موجود است"
 
@@ -1029,11 +1029,11 @@ msgstr "تلفن محل کار"
 msgid "Yes"
 msgstr "بله"
 
-#: Userman.class.php:1975 views/general.php:79
+#: Userman.class.php:1980 views/general.php:79
 msgid "Your %brand% Account"
 msgstr "حساب %برند% شما"
 
-#: Userman.class.php:2177
+#: Userman.class.php:2182
 msgid "default_extension is required."
 msgstr "داخلی پیشفرض احتیاج است."
 
@@ -1045,7 +1045,7 @@ msgstr "گروه"
 msgid "group Successfully Added"
 msgstr "گروه با موفقیت اضافه شد"
 
-#: Userman.class.php:2253
+#: Userman.class.php:2258
 msgid "groupname is required."
 msgstr "نام گروه احتیاج است."
 
@@ -1053,7 +1053,7 @@ msgstr "نام گروه احتیاج است."
 msgid "groups"
 msgstr "گروهها"
 
-#: Userman.class.php:2219
+#: Userman.class.php:2224
 msgid "password is required."
 msgstr "کلمه عبور احتیاج است."
 
@@ -1061,7 +1061,7 @@ msgstr "کلمه عبور احتیاج است."
 msgid "user"
 msgstr "کاربر"
 
-#: Userman.class.php:2174
+#: Userman.class.php:2179
 msgid "username is required."
 msgstr "نام کاربری احتیاج است."
 
