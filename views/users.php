@@ -54,7 +54,7 @@ echo $heading;
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="username"></i>
 											</div>
 											<div class="col-md-9">
-												<input type="text" class="form-control" id="username" name="username" value="<?php echo !empty($user['username']) ? $user['username'] : ''; ?>" required pattern=".{3,255}" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
+												<input type="text" class="form-control" id="username" name="username" value="<?php echo !empty($user['username']) ? $user['username'] : ''; ?>" required pattern=".{1,255}" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
 											</div>
 										</div>
 									</div>

@@ -1387,6 +1387,9 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$groupid = -1;
 		$groupname = "user";
 		$output = $this->getModuleSettingByID($id,$module,$setting,true,$cached);
+		if($module == 'contactmanager' && $setting == 'show') {
+			dbug($output);
+		}
 		if(is_null($output)) {
 			$groups = $this->getGroupsByID($id);
 			foreach($groups as $group) {
@@ -1642,6 +1645,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 			$sql = "DELETE FROM ".$this->userSettingsTable." WHERE uid = :id AND module = :module AND `key` = :setting";
 			$sth = $this->db->prepare($sql);
 			$sth->execute(array(':id' => $uid, ':module' => $module, ':setting' => $setting));
+			$this->moduleUserSettingsCache = array();
 			return true;
 		}
 		if(is_bool($value)) {
@@ -1672,6 +1676,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 			$sql = "DELETE FROM ".$this->groupSettingsTable." WHERE gid = :id AND module = :module AND `key` = :setting";
 			$sth = $this->db->prepare($sql);
 			$sth->execute(array(':id' => $gid, ':module' => $module, ':setting' => $setting));
+			$this->moduleGroupSettingsCache = array();
 			return true;
 		}
 		if(is_bool($value)) {

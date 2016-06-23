@@ -204,9 +204,22 @@ class Msad extends Auth {
 			exec($path."/fwconsole userman sync");
 			return;
 		}
-		$pid = getmypid();
-		if(!file_exists("/var/run/asterisk/userman.lock")) {
-			file_put_contents("/var/run/asterisk/userman.lock",$pid);
+
+		$ASTRUNDIR = \FreePBX::Config()->get("ASTRUNDIR");
+		$lock = $ASTRUNDIR."/userman.lock";
+
+		$continue = true;
+		if(file_exists($lock)) {
+			$pid = file_get_contents($lock);
+			if(posix_getpgid($pid) !== false) {
+				$continue = false;
+			} else {
+				unlink($lock);
+			}
+		}
+		if($continue) {
+			$pid = getmypid();
+			file_put_contents($lock,$pid);
 			$this->connect();
 			$this->output = $output;
 			$this->out("");
@@ -218,9 +231,9 @@ class Msad extends Auth {
 			$this->updatePrimaryGroups();
 			$this->out("Executing User Manager Hooks");
 			$this->executeHooks();
-			unlink("/var/run/asterisk/userman.lock");
+			unlink($lock);
 		} else {
-			print_r("User Manager is already syncing (File exists at: /var/run/asterisk/userman.lock)");
+			print_r("User Manager is already syncing (Process: ".$pid.")");
 		}
 
 	}
@@ -601,7 +614,7 @@ class Msad extends Auth {
 					"work" => !empty($user['telephonenumber'][0]) ? $user['telephonenumber'][0] : '',
 				);
 				if(!empty($this->linkAttr) && !empty($user[$this->linkAttr][0])) {
-					$d = $this->FreePBX->Core->getDevice((string)$user[$this->linkAttr][0]);
+					$d = $this->FreePBX->Core->getUser((string)$user[$this->linkAttr][0]);
 					if(!empty($d)) {
 						$data["default_extension"] = !empty($user[$this->linkAttr][0]) ? $user[$this->linkAttr][0] : '';
 					} else {
