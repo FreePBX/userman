@@ -164,7 +164,7 @@ $("#pwsub").on("click", function(){
 	var uid = $("#pwuid").val();
 	var pass = $("#password").val();
 	$.ajax({
-		url: "/admin/ajax.php",
+		url: "ajax.php",
 		data: {
 			module:'userman',
 			command:'updatePassword',
