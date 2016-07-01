@@ -163,13 +163,13 @@ if (!$db->getAll('SHOW COLUMNS FROM `userman_users` WHERE FIELD = "fax"')) {
 }
 
 if (!$db->getAll('SHOW COLUMNS FROM `userman_users` WHERE FIELD = "language"')) {
-	out("Adding additional field fax");
+	out("Adding additional field language");
 	$sql = "ALTER TABLE `userman_users` ADD COLUMN `language` VARCHAR(100) NULL DEFAULT NULL AFTER `department`";
 	$result = $db->query($sql);
 }
 
 if (!$db->getAll('SHOW COLUMNS FROM `userman_users` WHERE FIELD = "timezone"')) {
-	out("Adding additional field fax");
+	out("Adding additional field timezone");
 	$sql = "ALTER TABLE `userman_users` ADD COLUMN `timezone` VARCHAR(100) NULL DEFAULT NULL AFTER `language`";
 	$result = $db->query($sql);
 }
