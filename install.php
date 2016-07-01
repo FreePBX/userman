@@ -56,6 +56,9 @@ $sqls[] = "CREATE TABLE IF NOT EXISTS `userman_users` (
 	`department` varchar(100) DEFAULT NULL,
 	`language` varchar(100) DEFAULT NULL,
 	`timezone` varchar(100) DEFAULT NULL,
+	`dateformat` varchar(100) DEFAULT NULL,
+	`timeformat` varchar(100) DEFAULT NULL,
+	`datetimeformat` varchar(100) DEFAULT NULL,
 	`email` text DEFAULT NULL,
 	`cell` varchar(100) DEFAULT NULL,
 	`work` varchar(100) DEFAULT NULL,
@@ -80,6 +83,11 @@ $sqls[] = "CREATE TABLE IF NOT EXISTS `userman_groups` (
 	`authid` varchar(255) DEFAULT NULL,
 	`groupname` varchar(150) DEFAULT NULL,
 	`description` varchar(255) DEFAULT NULL,
+	`language` varchar(100) DEFAULT NULL,
+	`timezone` varchar(100) DEFAULT NULL,
+	`dateformat` varchar(100) DEFAULT NULL,
+	`timeformat` varchar(100) DEFAULT NULL,
+	`datetimeformat` varchar(100) DEFAULT NULL,
 	`priority` int(11) NOT NULL DEFAULT 5,
 	`users` BLOB,
 	`permissions` BLOB,
@@ -171,6 +179,54 @@ if (!$db->getAll('SHOW COLUMNS FROM `userman_users` WHERE FIELD = "language"')) 
 if (!$db->getAll('SHOW COLUMNS FROM `userman_users` WHERE FIELD = "timezone"')) {
 	out("Adding additional field timezone");
 	$sql = "ALTER TABLE `userman_users` ADD COLUMN `timezone` VARCHAR(100) NULL DEFAULT NULL AFTER `language`";
+	$result = $db->query($sql);
+}
+
+if (!$db->getAll('SHOW COLUMNS FROM `userman_users` WHERE FIELD = "dateformat"')) {
+	out("Adding additional field dateformat");
+	$sql = "ALTER TABLE `userman_users` ADD COLUMN `dateformat` VARCHAR(100) NULL DEFAULT NULL AFTER `timezone`";
+	$result = $db->query($sql);
+}
+
+if (!$db->getAll('SHOW COLUMNS FROM `userman_users` WHERE FIELD = "timeformat"')) {
+	out("Adding additional field timeformat");
+	$sql = "ALTER TABLE `userman_users` ADD COLUMN `timeformat` VARCHAR(100) NULL DEFAULT NULL AFTER `dateformat`";
+	$result = $db->query($sql);
+}
+
+if (!$db->getAll('SHOW COLUMNS FROM `userman_users` WHERE FIELD = "datetimeformat"')) {
+	out("Adding additional field datetimeformat");
+	$sql = "ALTER TABLE `userman_users` ADD COLUMN `datetimeformat` VARCHAR(100) NULL DEFAULT NULL AFTER `timeformat`";
+	$result = $db->query($sql);
+}
+
+if (!$db->getAll('SHOW COLUMNS FROM `userman_groups` WHERE FIELD = "language"')) {
+	out("Adding additional field language");
+	$sql = "ALTER TABLE `userman_groups` ADD COLUMN `language` VARCHAR(100) NULL DEFAULT NULL AFTER `description`";
+	$result = $db->query($sql);
+}
+
+if (!$db->getAll('SHOW COLUMNS FROM `userman_groups` WHERE FIELD = "timezone"')) {
+	out("Adding additional field timezone");
+	$sql = "ALTER TABLE `userman_groups` ADD COLUMN `timezone` VARCHAR(100) NULL DEFAULT NULL AFTER `language`";
+	$result = $db->query($sql);
+}
+
+if (!$db->getAll('SHOW COLUMNS FROM `userman_groups` WHERE FIELD = "dateformat"')) {
+	out("Adding additional field dateformat");
+	$sql = "ALTER TABLE `userman_groups` ADD COLUMN `dateformat` VARCHAR(100) NULL DEFAULT NULL AFTER `timezone`";
+	$result = $db->query($sql);
+}
+
+if (!$db->getAll('SHOW COLUMNS FROM `userman_groups` WHERE FIELD = "timeformat"')) {
+	out("Adding additional field timeformat");
+	$sql = "ALTER TABLE `userman_groups` ADD COLUMN `timeformat` VARCHAR(100) NULL DEFAULT NULL AFTER `dateformat`";
+	$result = $db->query($sql);
+}
+
+if (!$db->getAll('SHOW COLUMNS FROM `userman_groups` WHERE FIELD = "datetimeformat"')) {
+	out("Adding additional field datetimeformat");
+	$sql = "ALTER TABLE `userman_groups` ADD COLUMN `datetimeformat` VARCHAR(100) NULL DEFAULT NULL AFTER `timeformat`";
 	$result = $db->query($sql);
 }
 

@@ -230,6 +230,13 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 					$description = !empty($request['description']) ? $request['description'] : '';
 					$prevGroupname = !empty($request['prevGroupname']) ? $request['prevGroupname'] : '';
 					$users = !empty($request['users']) ? $request['users'] : array();
+					$extraData = array(
+						'language' => isset($request['language']) ? $request['language'] : null,
+						'timezone' => isset($request['timezone']) ? $request['timezone'] : null,
+						'timeformat' => isset($request['timeformat']) ? $request['timeformat'] : null,
+						'dateformat' => isset($request['dateformat']) ? $request['dateformat'] : null,
+						'datetimeformat' => isset($request['datetimeformat']) ? $request['datetimeformat'] : null,
+					);
 					if($request['group'] == "") {
 						$ret = $this->addGroup($groupname, $description, $users);
 						if($ret['status']) {
@@ -245,7 +252,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 							return false;
 						}
 					} else {
-						$ret = $this->updateGroup($request['group'],$prevGroupname, $groupname, $description, $users);
+						$ret = $this->updateGroup($request['group'],$prevGroupname, $groupname, $description, $users, false, $extraData);
 						if($ret['status']) {
 							$this->message = array(
 								'message' => $ret['message'],
@@ -283,8 +290,11 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 						'title' => isset($request['title']) ? $request['title'] : null,
 						'company' => isset($request['company']) ? $request['company'] : null,
 						'department' => isset($request['department']) ? $request['department'] : null,
-						'language' => isset($request['language']) ? $request['language'] : $this->FreePBX->Config->get("UIDEFAULTLANG"),
-						'timezone' => isset($request['timezone']) ? $request['timezone'] : $this->FreePBX->Config->get("PHPTIMEZONE"),
+						'language' => isset($request['language']) ? $request['language'] : null,
+						'timezone' => isset($request['timezone']) ? $request['timezone'] : null,
+						'timeformat' => isset($request['timeformat']) ? $request['timeformat'] : null,
+						'dateformat' => isset($request['dateformat']) ? $request['dateformat'] : null,
+						'datetimeformat' => isset($request['datetimeformat']) ? $request['datetimeformat'] : null,
 						'email' => isset($request['email']) ? $request['email'] : null,
 						'cell' => isset($request['cell']) ? $request['cell'] : null,
 						'work' => isset($request['work']) ? $request['work'] : null,
@@ -1098,7 +1108,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		return $status;
 	}
 
-	public function addGroup($groupname, $description=null, $users=array()) {
+	public function addGroup($groupname, $description=null, $users=array(), $extraData=array()) {
 		if(empty($groupname)) {
 			throw new \Exception(_("Groupname can not be blank"));
 		}
@@ -1111,7 +1121,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 				$fusers[] = $u;
 			}
 		}
-		$status = $this->auth->addGroup($groupname, $description, $fusers);
+		$status = $this->auth->addGroup($groupname, $description, $fusers, $extraData);
 		if(!$status['status']) {
 			return $status;
 		}
@@ -1133,6 +1143,24 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 			return false;
 		}
 		$o = $this->updateUser($id, $user['username'], $user['username'], $user['default_extension'], $user['description'], $data);
+		return $o['status'];
+	}
+
+	/**
+	 * Update User Extra Data
+	 *
+	 * This updates Extra Data about the user
+	 * (fname,lname,title,email,cell,work,home,department)
+	 *
+	 * @param int $id The User Manager User ID
+	 * @param array $data A hash of data to update (see above)
+	 */
+	public function updateGroupExtraData($gid,$data=array()) {
+		$group = $this->getGroupByID($id);
+		if(empty($group)) {
+			return false;
+		}
+		$o = $this->updateGroup($gid, $group['groupname'], $group['groupname'], $group['groupname'], $group['users'],false,$data);
 		return $o['status'];
 	}
 
@@ -1180,7 +1208,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * @param string $description   The group description
 	 * @param array  $users         Array of users in this Group
 	 */
-	public function updateGroup($gid, $prevGroupname, $groupname, $description=null, $users=array(), $nodisplay = false) {
+	public function updateGroup($gid, $prevGroupname, $groupname, $description=null, $users=array(), $nodisplay = false, $extraData=array()) {
 		if(!is_numeric($gid)) {
 			throw new \Exception(_("GID was not numeric"));
 		}
@@ -1202,7 +1230,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 				$fusers[] = $u;
 			}
 		}
-		$status = $this->auth->updateGroup($gid, $prevGroupname, $groupname, $description, $fusers, $nodisplay);
+		$status = $this->auth->updateGroup($gid, $prevGroupname, $groupname, $description, $fusers, $nodisplay, $extraData);
 		if(!$status['status']) {
 			return $status;
 		}

@@ -215,23 +215,44 @@ $("#user-side").on("click-row.bs.table", function(row, $element) {
 $("#group-side").on("click-row.bs.table", function(row, $element) {
 	window.location = "?display=userman&action=showgroup&group="+$element.id;
 });
+$("#browserlang").on("click", function(e){
+	e.preventDefault();
+	var bl =  browserLocale();
+	bl = bl.replace("-","_");
+	if(typeof bl === 'undefined'){
+		fpbxToast(_("The Browser Language could not be determined"));
+	}else{
+		$("#language").multiselect('select', bl);
+		$("#language").multiselect('refresh');
+	}
+});
+$("#systemlang").on("click", function(e){
+	e.preventDefault();
+	var sl = fpbx.conf.UIDEFAULTLANG;
+	if(typeof sl === 'undefined'){
+		fpbxToast(_("The PBX Language is not set"));
+	}else{
+		$("#language").multiselect('select', sl);
+		$("#language").multiselect('refresh');
+	}
+});
 $("#browsertz").on("click", function(e){
-		e.preventDefault();
-		var btz =  moment.tz.guess();
-		if(typeof btz === 'undefined'){
-			fpbxToast("The Browser Timezone could not be determined");
-		}else{
-			$("#timezone").multiselect('select', btz);
-			$("#timezone").multiselect('refresh');
-		}
+	e.preventDefault();
+	var btz =  moment.tz.guess();
+	if(typeof btz === 'undefined'){
+		fpbxToast(_("The Browser Timezone could not be determined"));
+	}else{
+		$("#timezone").multiselect('select', btz);
+		$("#timezone").multiselect('refresh');
+	}
 });
 $("#systemtz").on("click", function(e){
-		e.preventDefault();
-		var stz = fpbx.conf['PHPTIMEZONE'];
-		if(typeof stz === 'undefined'){
-			fpbxToast("The FreePBX Timezone is not set");
-		}else{
-			$("#timezone").multiselect('select', stz);
-			$("#timezone").multiselect('refresh');
-		}
+	e.preventDefault();
+	var stz = fpbx.conf.PHPTIMEZONE;
+	if(typeof stz === 'undefined'){
+		fpbxToast(_("The PBX Timezone is not set"));
+	}else{
+		$("#timezone").multiselect('select', stz);
+		$("#timezone").multiselect('refresh');
+	}
 });

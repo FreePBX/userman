@@ -132,6 +132,7 @@ class Freepbx extends Auth {
 		}
 
 		$id = $this->db->lastInsertId();
+		$this->updateGroupData($id,$extraData);
 		$this->addGroupHook($id, $groupname, $description, $users);
 		return array("status" => true, "type" => "success", "message" => _("Group Successfully Added"), "id" => $id);
 	}
@@ -194,7 +195,7 @@ class Freepbx extends Auth {
 	* @param string $description   The group description
 	* @param array  $users         Array of users in this Group
 	*/
-	public function updateGroup($gid, $prevGroupname, $groupname, $description=null, $users=array(), $nodisplay = false) {
+	public function updateGroup($gid, $prevGroupname, $groupname, $description=null, $users=array(), $nodisplay = false, $extraData=array()) {
 		$group = $this->getGroupByUsername($prevGroupname);
 		if(!$group || empty($group)) {
 			return array("status" => false, "type" => "danger", "message" => sprintf(_("Group '%s' Does Not Exist"),$group));
@@ -205,6 +206,9 @@ class Freepbx extends Auth {
 			$sth->execute(array(':groupname' => $groupname, ':gid' => $gid, ':description' => $description, ':users' => json_encode($users)));
 		} catch (\Exception $e) {
 			return array("status" => false, "type" => "danger", "message" => $e->getMessage());
+		}
+		if(!$this->updateGroupData($gid,$extraData)) {
+			return array("status" => false, "type" => "danger", "message" => _("An Unknown error occured while trying to update user data"));
 		}
 		$message = _("Updated Group");
 		$this->updateGroupHook($gid, $prevGroupname, $groupname, $description, $users, $nodisplay);
