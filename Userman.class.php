@@ -735,6 +735,10 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 			case "email":
 				return true;
 			break;
+			case "setlocales":
+				$setting['changesession'] = true;
+				return true;
+			break;
 			case "auth":
 				$ips = $this->getConfig('remoteips');
 				if(empty($ips) || !is_array($ips) || !in_array($_SERVER['REMOTE_ADDR'],$ips)) {
@@ -756,6 +760,19 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	public function ajaxHandler(){
 		$request = $_REQUEST;
 		switch($request['command']){
+			case "setlocales":
+				if(!empty($_SESSION['AMP_user']->id) && ($_SESSION['AMP_user']->id == $_POST['id'])) {
+					/*
+					$_SESSION['AMP_user']->lang = !empty($_POST['language']) ? $_POST['language'] : $this->getLocaleSpecificSetting($_POST['id'],"language");
+					$_SESSION['AMP_user']->tz = !empty($_POST['timezone']) ? $_POST['timezone'] : $this->getLocaleSpecificSetting($_POST['id'],"timezone");
+					$_SESSION['AMP_user']->timeformat = !empty($_POST['timeformat']) ? $_POST['timeformat'] : $this->getLocaleSpecificSetting($_POST['id'],"timeformat");
+					$_SESSION['AMP_user']->dateformat = !empty($_POST['dateformat']) ? $_POST['dateformat'] : $this->getLocaleSpecificSetting($_POST['id'],"dateformat");
+					$_SESSION['AMP_user']->datetimeformat = !empty($_POST['datetimeformat']) ? $_POST['datetimeformat'] : $this->getLocaleSpecificSetting($_POST['id'],"datetimeformat");
+					dbug($_SESSION);
+					*/
+				}
+				return array("status" => true);
+			break;
 			case "auth":
 				$out = $this->checkCredentials($_POST["username"],$_POST["password"]);
 				if($out) {
@@ -913,8 +930,8 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * @param string $username The User Manager Username
 	 * @return bool
 	 */
-	public function getUserByUsername($username) {
-		return $this->auth->getUserByUsername($username);
+	public function getUserByUsername($username, $extraInfo = true) {
+		return $this->auth->getUserByUsername($username, $extraInfo);
 	}
 
 	/**
@@ -937,8 +954,8 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	* @param string $email The User Manager Email Address
 	* @return bool
 	*/
-	public function getUserByEmail($email) {
-		return $this->auth->getUserByEmail($email);
+	public function getUserByEmail($email, $extraInfo = true) {
+		return $this->auth->getUserByEmail($email, $extraInfo);
 	}
 
 	/**
@@ -949,8 +966,8 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * @param string $id The ID of the user from User Manager
 	 * @return bool
 	 */
-	public function getUserByID($id) {
-		return $this->auth->getUserByID($id);
+	public function getUserByID($id, $extraInfo = true) {
+		return $this->auth->getUserByID($id, $extraInfo);
 	}
 
 	/**
@@ -1361,6 +1378,30 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		return ($null) ? null : false;
 	}
 
+	public function getLocaleSpecificSetting($uid, $keyword) {
+		$user = $this->getUserByID($uid, false);
+		if(empty($user)) {
+			return null;
+		}
+		$allowed = array("language","timezone","dateformat","timeformat","datetimeformat");
+		if(!in_array($keyword,$allowed)) {
+			throw new \Exception($keyword . " is not a valid keyword");
+		}
+		if(empty($user[$keyword])) {
+			$groups = $this->getGroupsByID($uid);
+			foreach($groups as $group) {
+				$g = $this->getGroupByGID($group);
+				if(!empty($g[$keyword])) {
+					return $g[$keyword];
+				}
+			}
+		} else {
+			return $user[$keyword];
+		}
+
+		return null;
+	}
+
 	/**
 	 * Gets a single setting after determining groups
 	 * by merging group settings into user settings
@@ -1373,12 +1414,10 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * @param int $uid     The user ID to lookup
 	 * @param string $setting The setting to get
 	 */
-	public function getCombinedGlobalSettingByID($id,$setting, $detailed = false) {
+	public function getCombinedGlobalSettingByID($id, $setting, $detailed = false) {
 		$groupid = -1;
 		$groupname = "user";
 		$output = $this->getGlobalSettingByID($id,$setting,true);
-		//$this->allUsersCache = !empty($this->allUsersCache) ? $this->allUsersCache : $this->getAllUsers();
-		//$this->allGroupsByUserCache[$id] = !empty($this->allGroupsByUserCache[$id]) ? $this->allGroupsByUserCache[$id] : $this->getGroupsByID($id);
 		if(is_null($output)) {
 			$groups = $this->getGroupsByID($id);
 			foreach($groups as $group) {

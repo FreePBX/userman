@@ -110,11 +110,14 @@ abstract class Auth implements Base {
 	 * @param string $username The User Manager Username
 	 * @return bool
 	 */
-	public function getUserByUsername($username) {
+	public function getUserByUsername($username, $extraInfo = true) {
 		$sql = "SELECT * FROM ".$this->userTable." WHERE username = :username AND auth = :auth";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':username' => $username, ':auth' => $this->auth));
 		$user = $sth->fetch(\PDO::FETCH_ASSOC);
+		if($extraInfo) {
+			$user = $this->userman->getExtraContactInfo($user);
+		}
 		return $user;
 	}
 
@@ -126,12 +129,14 @@ abstract class Auth implements Base {
 	 * @param string $username The User Manager Email Address
 	 * @return bool
 	 */
-	public function getUserByEmail($username) {
+	public function getUserByEmail($username, $extraInfo = true) {
 		$sql = "SELECT * FROM ".$this->userTable." WHERE email = :email AND auth = :auth";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':email' => $username, ':auth' => $this->auth));
 		$user = $sth->fetch(\PDO::FETCH_ASSOC);
-		$user = $this->userman->getExtraContactInfo($user);
+		if($extraInfo) {
+			$user = $this->userman->getExtraContactInfo($user);
+		}
 		return $user;
 	}
 
@@ -143,12 +148,14 @@ abstract class Auth implements Base {
 	 * @param string $id The ID of the user from User Manager
 	 * @return bool
 	 */
-	public function getUserByID($id) {
+	public function getUserByID($id, $extraInfo = true) {
 		$sql = "SELECT * FROM ".$this->userTable." WHERE id = :id AND auth = :auth";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':id' => $id, ':auth' => $this->auth));
 		$user = $sth->fetch(\PDO::FETCH_ASSOC);
-		$user = $this->userman->getExtraContactInfo($user);
+		if($extraInfo) {
+			$user = $this->userman->getExtraContactInfo($user);
+		}
 		return $user;
 	}
 
@@ -157,12 +164,14 @@ abstract class Auth implements Base {
 	 * @param  string $id The external auth ID
 	 * @return array     Array of user data
 	 */
-	public function getUserByAuthID($id) {
+	public function getUserByAuthID($id, $extraInfo = true) {
 		$sql = "SELECT * FROM ".$this->userTable." WHERE authid = :id AND auth = :auth";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':id' => $id, ':auth' => $this->auth));
 		$user = $sth->fetch(\PDO::FETCH_ASSOC);
-		$user = $this->userman->getExtraContactInfo($user);
+		if($extraInfo) {
+			$user = $this->userman->getExtraContactInfo($user);
+		}
 		return $user;
 	}
 

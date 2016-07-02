@@ -90,12 +90,47 @@ $("table").on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs
   });
 });
 
+$("#submit").click(function(e) {
+	e.stopPropagation();
+	e.preventDefault();
+	setLocales(function() {
+		$(".fpbx-submit").submit();
+	});
+});
+
 $("#submitsend").click(function(e) {
 	e.stopPropagation();
 	e.preventDefault();
 	$("input[name=submittype]").val("guisend");
-	$(".fpbx-submit").submit();
+	setLocales(function() {
+		$(".fpbx-submit").submit();
+	});
 });
+
+function setLocales(callback) {
+	if(!$("#editM").length) {
+		callback();
+	}
+	var type = $("form input[name=type]").val(), id = (type == "user") ? $("form input[name=user]").val() : $("form input[name=group]").val();
+	var data = {
+		command: "setlocales",
+		module: "userman",
+		timezone: $("#timezone").val(),
+		language: $("#language").val(),
+		datetimeformat: $("#datetimeformat").val(),
+		timeformat: $("#timeformat").val(),
+		dateformat: $("#dateformat").val(),
+		id: id,
+		type: type
+	};
+	$.post( "ajax.php", data, function(data) {
+		if(data.status) {
+			if(typeof callback === "function") {
+				callback();
+			}
+		}
+	});
+}
 
 //from http://stackoverflow.com/a/26744533 loads url params to an array
 var params={};window.location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi,function(str,key,value){params[key] = value;});
