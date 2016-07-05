@@ -1385,9 +1385,6 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$groupid = -1;
 		$groupname = "user";
 		$output = $this->getModuleSettingByID($id,$module,$setting,true,$cached);
-		if($module == 'contactmanager' && $setting == 'show') {
-			dbug($output);
-		}
 		if(is_null($output)) {
 			$groups = $this->getGroupsByID($id);
 			foreach($groups as $group) {
