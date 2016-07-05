@@ -762,14 +762,11 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		switch($request['command']){
 			case "setlocales":
 				if(!empty($_SESSION['AMP_user']->id) && ($_SESSION['AMP_user']->id == $_POST['id'])) {
-					/*
 					$_SESSION['AMP_user']->lang = !empty($_POST['language']) ? $_POST['language'] : $this->getLocaleSpecificSetting($_POST['id'],"language");
 					$_SESSION['AMP_user']->tz = !empty($_POST['timezone']) ? $_POST['timezone'] : $this->getLocaleSpecificSetting($_POST['id'],"timezone");
 					$_SESSION['AMP_user']->timeformat = !empty($_POST['timeformat']) ? $_POST['timeformat'] : $this->getLocaleSpecificSetting($_POST['id'],"timeformat");
 					$_SESSION['AMP_user']->dateformat = !empty($_POST['dateformat']) ? $_POST['dateformat'] : $this->getLocaleSpecificSetting($_POST['id'],"dateformat");
 					$_SESSION['AMP_user']->datetimeformat = !empty($_POST['datetimeformat']) ? $_POST['datetimeformat'] : $this->getLocaleSpecificSetting($_POST['id'],"datetimeformat");
-					dbug($_SESSION);
-					*/
 				}
 				return array("status" => true);
 			break;
@@ -1454,9 +1451,6 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$groupid = -1;
 		$groupname = "user";
 		$output = $this->getModuleSettingByID($id,$module,$setting,true,$cached);
-		if($module == 'contactmanager' && $setting == 'show') {
-			dbug($output);
-		}
 		if(is_null($output)) {
 			$groups = $this->getGroupsByID($id);
 			foreach($groups as $group) {
