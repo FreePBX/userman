@@ -9,19 +9,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-06-30 17:26-0700\n"
+"POT-Creation-Date: 2016-07-06 10:58+1000\n"
 "PO-Revision-Date: 2016-05-20 11:30+0200\n"
 "Last-Translator: Media <mousavi.media@gmail.com>\n"
 "Language-Team: Persian (Iran) <http://weblate.freepbx.org/projects/freepbx/"
 "userman/fa_IR/>\n"
-"Language: fa_IR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: fa_IR\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 2.4\n"
 
-#: views/groups.php:28 views/users.php:28
+#: views/groups.php:29 views/users.php:29
 #, php-format
 msgid "%s Administration GUI"
 msgstr "رابط گرافیکی مدیریت %s"
@@ -44,12 +44,12 @@ msgstr ""
 "iSymphony and RestAPI are examples of these type of modules. In %s 12, the "
 "new User Control Panel also uses User Manager."
 
-#: Userman.class.php:2158
+#: Userman.class.php:2219
 #, php-format
 msgid "%s records failed validation"
 msgstr "اعتبار سنجی ناموفق رکوردهای %s"
 
-#: views/users.php:89
+#: views/users.php:90
 msgid "A brief description for this user."
 msgstr "توضیح مختصر برای این کاربر."
 
@@ -61,11 +61,11 @@ msgstr "عمل"
 msgid "Add"
 msgstr "افزودن"
 
-#: Userman.class.php:678
+#: Userman.class.php:688
 msgid "Add Device"
 msgstr "افزودن دستگاه"
 
-#: Userman.class.php:678
+#: Userman.class.php:688
 msgid "Add Extension"
 msgstr "افزودن داخلی"
 
@@ -86,24 +86,29 @@ msgstr "افزودن ایمیل صوتی کاربر %s"
 msgid "Admin"
 msgstr "مدیر"
 
-#: views/groups.php:196 views/users.php:584
+#: views/groups.php:329 views/users.php:661
 msgid "Administration Access"
 msgstr "دسترسی مدیریت"
 
-#: install.php:243
+#: views/groups.php:27 views/users.php:27
+msgid "Advanced"
+msgstr ""
+
+#: install.php:299
 msgid "All Users"
 msgstr "تمام کاربران"
 
-#: views/groups.php:124 views/users.php:508
+#: views/groups.php:257 views/users.php:585
 #, php-format
 msgid "Allow %s Administration Login"
 msgstr "اجازه %s  ورود مدیریت"
 
-#: functions.inc/auth/modules/Freepbx.php:184
+#: functions.inc/auth/modules/Freepbx.php:185
+#: functions.inc/auth/modules/Freepbx.php:211
 msgid "An Unknown error occured while trying to update user data"
 msgstr "یک خطای نا معلوم در هنگام به روزرسانی اطلاعات کاربری"
 
-#: Userman.class.php:679
+#: Userman.class.php:689
 msgid "Apply Changes Bar"
 msgstr "میله اعمال تغییرات"
 
@@ -138,7 +143,7 @@ msgstr "تولید اتوماتیک کاربر در ایجاد دستگاه جد
 msgid "Base DN"
 msgstr "Base  DN"
 
-#: views/users.php:410
+#: views/users.php:419
 msgid "Cell Phone Number"
 msgstr "شماره موبایل"
 
@@ -159,7 +164,7 @@ msgstr ""
 "servers to authenicate against User Manager. Supplying no addresses disables "
 "this feature"
 
-#: views/users.php:282
+#: views/users.php:283
 msgid "Company"
 msgstr "شرکت"
 
@@ -187,11 +192,19 @@ msgstr "ایجاد کاربر مدیریت کاربر"
 msgid "Database rename not completed"
 msgstr "تغیر نام بانک اطلاعات کامل نشد"
 
+#: views/groups.php:210 views/users.php:539
+msgid "Date Format"
+msgstr ""
+
+#: views/groups.php:188 views/users.php:517
+msgid "Date and Time Format"
+msgstr ""
+
 #: views/freepbx.php:7
 msgid "Default Groups"
 msgstr "گروههای پیشفرض"
 
-#: Userman.class.php:481 views/welcome.php:39 views/welcome.php:73
+#: Userman.class.php:491 views/welcome.php:39 views/welcome.php:73
 #: assets/js/userman.js:33 assets/js/userman.js:39 assets/js/userman.js:67
 msgid "Delete"
 msgstr "حذف"
@@ -200,22 +213,22 @@ msgstr "حذف"
 msgid "Deleting..."
 msgstr "حذف شدن..."
 
-#: views/users.php:306
+#: views/users.php:307
 msgid "Department"
 msgstr "بخش"
 
-#: Userman.class.php:2104 Userman.class.php:2105 Userman.class.php:2130
-#: Userman.class.php:2131 views/rnav.php:12 views/rnav.php:27
-#: views/users.php:77 views/welcome.php:55 views/welcome.php:82
+#: Userman.class.php:2165 Userman.class.php:2166 Userman.class.php:2191
+#: Userman.class.php:2192 views/rnav.php:12 views/rnav.php:27
+#: views/users.php:78 views/welcome.php:55 views/welcome.php:82
 msgid "Description"
 msgstr "شرح"
 
-#: Userman.class.php:2116 Userman.class.php:2117 views/users.php:234
+#: Userman.class.php:2177 Userman.class.php:2178 views/users.php:235
 #: views/welcome.php:51
 msgid "Display Name"
 msgstr "نام نمایشی"
 
-#: views/users.php:246
+#: views/users.php:247
 msgid ""
 "Display Name. Used in User Control Panel and Contact Manager to display a "
 "customized user name"
@@ -239,7 +252,7 @@ msgstr "ویرایش کاربر"
 msgid "Email "
 msgstr "ایمیل "
 
-#: views/users.php:386
+#: views/users.php:395
 msgid "Email Address"
 msgstr "آدرس ایمیل"
 
@@ -263,11 +276,11 @@ msgstr "موضوع ایمیل"
 msgid "Enable User Manager for this extension"
 msgstr "فعال کردن مدیریت کاربر برای این داخلی"
 
-#: Userman.class.php:781
+#: Userman.class.php:805
 msgid "Error: No id provided"
 msgstr "خطا: شناسه ای فراهم نشده"
 
-#: Userman.class.php:813
+#: Userman.class.php:837
 msgid "Error: You should never see this"
 msgstr "خطا: شما هرگز نباید این را ببینید"
 
@@ -275,45 +288,45 @@ msgstr "خطا: شما هرگز نباید این را ببینید"
 msgid "Extension Link Attribute"
 msgstr "صفت لینک داخلی"
 
-#: views/users.php:482
+#: views/users.php:491
 msgid "Fax Phone Number"
 msgstr "شماره دورنگار"
 
-#: Userman.class.php:2108 Userman.class.php:2109 views/users.php:186
+#: Userman.class.php:2169 Userman.class.php:2170 views/users.php:187
 #: views/welcome.php:52
 msgid "First Name"
 msgstr "نام"
 
-#: Userman.class.php:995 Userman.class.php:1185
+#: Userman.class.php:1019 Userman.class.php:1227
 msgid "GID was not numeric"
 msgstr "شناسه گروه موجود نیست"
 
-#: views/groups.php:85
+#: views/groups.php:86
 msgid "Give the group a description"
 msgstr "شرح دادن گروه"
 
-#: views/groups.php:63
+#: views/groups.php:64
 msgid "Give the group a name"
 msgstr "دادن یک نام به گروه"
 
-#: views/groups.php:149 views/users.php:535
+#: views/groups.php:282 views/users.php:612
 msgid "Grant Full Administration Rights"
 msgstr "اعطای حقوق مدیریت کامل"
 
-#: views/groups.php:164 views/users.php:552
+#: views/groups.php:297 views/users.php:629
 msgid ""
 "Grant full administration rights regardless of extension range or module "
 "access."
 msgstr ""
 "اعطای دسترسی کامل مدیریتی بدون در نظر گرفتن بازه داخلی ها و یا دسترسی ماژول."
 
-#: functions.inc/auth/modules/Freepbx.php:200
+#: functions.inc/auth/modules/Freepbx.php:201
 #: functions.inc/auth/modules/Voicemail.php:206
 #, php-format
 msgid "Group '%s' Does Not Exist"
 msgstr "گروه '%s' موجود نیست"
 
-#: views/groups.php:73
+#: views/groups.php:74
 msgid "Group Description"
 msgstr "شرح گروه"
 
@@ -321,11 +334,11 @@ msgstr "شرح گروه"
 msgid "Group Details"
 msgstr "جزییات گروه"
 
-#: functions.inc/auth/Auth.php:326
+#: functions.inc/auth/Auth.php:335
 msgid "Group Does Not Exist"
 msgstr "گروه موجود نیست"
 
-#: Userman.class.php:2126 Userman.class.php:2127 views/groups.php:51
+#: Userman.class.php:2187 Userman.class.php:2188 views/groups.php:52
 #: views/rnav.php:26 views/welcome.php:81
 msgid "Group Name"
 msgstr "نام گروه"
@@ -340,20 +353,20 @@ msgstr ""
 "the order you'd like. Groups with a lower number for priority take priority "
 "(EG 0 is higher than 1)"
 
-#: functions.inc/auth/modules/Freepbx.php:136
+#: functions.inc/auth/modules/Freepbx.php:137
 #: functions.inc/auth/modules/Voicemail.php:175
 msgid "Group Successfully Added"
 msgstr "گروه با موفقیت اضافه شد"
 
-#: functions.inc/auth/Auth.php:338
+#: functions.inc/auth/Auth.php:347
 msgid "Group Successfully Deleted"
 msgstr "گروه با موفقیت حذف شد"
 
-#: functions.inc/auth/Auth.php:456
+#: functions.inc/auth/Auth.php:465
 msgid "Group Successfully Updated"
 msgstr "گروه با موفقیت به روز شد"
 
-#: Userman.class.php:2279
+#: Userman.class.php:2340
 msgid "Group already exists"
 msgstr "گرو موجود است"
 
@@ -361,16 +374,16 @@ msgstr "گرو موجود است"
 msgid "Group updated"
 msgstr "گروه به روز شده"
 
-#: functions.inc/auth/Auth.php:427
+#: functions.inc/auth/Auth.php:436
 msgid "Groupname Can Not Be Blank!"
 msgstr "نام گروه نمیتواند خالی باشد!"
 
-#: Userman.class.php:1103
+#: Userman.class.php:1127
 msgid "Groupname can not be blank"
 msgstr "نام گروه نمیتواند خالی باشد"
 
 #: functions.inc/guihooks.php:127 functions.inc/guihooks.php:165
-#: views/users.php:126 views/welcome.php:25
+#: views/users.php:127 views/welcome.php:25
 msgid "Groups"
 msgstr "گروهها"
 
@@ -391,7 +404,7 @@ msgstr ""
 "با فشردن دکمه ارسال در این صفحه هماهنگ سازی با دایرکتوری های داخلی %s صورت "
 "میگیرد"
 
-#: views/users.php:458
+#: views/users.php:467
 msgid "Home Phone Number"
 msgstr "شماره تلفن منزل"
 
@@ -403,7 +416,7 @@ msgstr "هاست"
 msgid "Host Name"
 msgstr "نام هاست"
 
-#: Userman.class.php:977
+#: Userman.class.php:1001
 msgid "ID was not numeric"
 msgstr "شناسه عددی نیست"
 
@@ -448,11 +461,12 @@ msgstr ""
 "example, a new user can be created that can log into User Control Panel and "
 "access the voicemail of 3 other accounts."
 
-#: views/users.php:517 views/users.php:544
+#: views/users.php:336 views/users.php:368 views/users.php:594
+#: views/users.php:621
 msgid "Inherit"
 msgstr "ارثی"
 
-#: Userman.class.php:776
+#: Userman.class.php:800
 msgid "Invalid User"
 msgstr "کاربر نادرست"
 
@@ -461,15 +475,15 @@ msgstr "کاربر نادرست"
 msgid "LDAP is in Read Only Mode. Addition denied"
 msgstr "LDAP در حالت فقط خواندنی است. افزودن ممنوع است"
 
-#: views/users.php:330
+#: views/groups.php:97 views/users.php:331
 msgid "Language"
 msgstr ""
 
-#: views/users.php:342
+#: views/groups.php:117 views/users.php:351
 msgid "Language for this user"
 msgstr ""
 
-#: Userman.class.php:2112 Userman.class.php:2113 views/users.php:210
+#: Userman.class.php:2173 Userman.class.php:2174 views/users.php:211
 #: views/welcome.php:53
 msgid "Last Name"
 msgstr "نام خانوادگی"
@@ -511,16 +525,16 @@ msgstr "فهرست کاربران"
 msgid "Login Details"
 msgstr "جزییات ورود"
 
-#: Userman.class.php:2090 Userman.class.php:2091 views/users.php:53
+#: Userman.class.php:2151 Userman.class.php:2152 views/users.php:54
 msgid "Login Name"
 msgstr "نام ورود"
 
-#: views/groups.php:139
+#: views/groups.php:272
 #, php-format
 msgid "May this group log in to the %s Administration Pages?"
 msgstr "لاگ گروه در صفحات مدیریت %s وجود دارد؟"
 
-#: views/users.php:525
+#: views/users.php:602
 #, php-format
 msgid "May this user log in to the %s Administration Pages?"
 msgstr "لاگ کاربر در صفحات مدیریت %s وجود دارد؟"
@@ -529,16 +543,16 @@ msgstr "لاگ کاربر در صفحات مدیریت %s وجود دارد؟"
 msgid "Microsoft Active Directory"
 msgstr "مایکروسافت اکتیو دایرکتوری"
 
-#: Userman.class.php:1895
+#: Userman.class.php:1956
 msgid "Migrated user from voicemail"
 msgstr "کاربر منتقل شده از صندوق صوتی"
 
-#: Userman.class.php:515
+#: Userman.class.php:525
 msgid "Module Core is disabled. Please enable it"
 msgstr "ماژول هسته غیرفعال است . لطفا آن را فعال کنید"
 
-#: views/general.php:32 views/groups.php:131 views/groups.php:156
-#: views/quickCreate.php:16 views/users.php:515 views/users.php:542
+#: views/general.php:32 views/groups.php:264 views/groups.php:289
+#: views/quickCreate.php:16 views/users.php:592 views/users.php:619
 msgid "No"
 msgstr "خیر"
 
@@ -555,20 +569,20 @@ msgstr "متصل نشد"
 msgid "Not all of the connection parameters have been filled out"
 msgstr "تمامی پارامترهای اتصال پر نشده"
 
-#: Userman.class.php:1943
+#: Userman.class.php:2004
 msgid "Obfuscated. To reset use the reset link in this email"
 msgstr "مبهم. برای بازنشانی از لینک موجود در ایمیل استفاده کنید"
 
-#: views/users.php:33
+#: views/users.php:34
 msgid "Other Settings"
 msgstr "دیگر تنظیمات"
 
-#: Userman.class.php:2095 views/msad.php:73 views/passwordmodal.php:16
-#: views/users.php:102
+#: Userman.class.php:2156 views/msad.php:73 views/passwordmodal.php:16
+#: views/users.php:103
 msgid "Password"
 msgstr "کلمه عبور"
 
-#: Userman.class.php:2096
+#: Userman.class.php:2157
 msgid "Password - plaintext"
 msgstr "کلمه عبور - متن ساده"
 
@@ -576,7 +590,7 @@ msgstr "کلمه عبور - متن ساده"
 msgid "Password For New User"
 msgstr "کلمه عبور برای کاربر جدید"
 
-#: Userman.class.php:1090
+#: Userman.class.php:1114
 msgid "Password can not be blank"
 msgstr "کلمه عبور نمیتواند خالی باشد"
 
@@ -588,19 +602,19 @@ msgstr "لطفا یک نام کاربری صحیح برای ایجاد کارب�
 msgid "Port"
 msgstr "پورت"
 
-#: Userman.class.php:1188
+#: Userman.class.php:1230
 msgid "Previous Groupname can not be blank"
 msgstr "نام گروه قبلی نمیتواند خالی باشد"
 
-#: Userman.class.php:1158
+#: Userman.class.php:1200
 msgid "Previous Username can not be blank"
 msgstr "نام کاربری قبلی نمیتواند خالی باشد"
 
-#: Userman.class.php:2100
+#: Userman.class.php:2161
 msgid "Primary Extension"
 msgstr "داخلی اصلی"
 
-#: Userman.class.php:2101 views/users.php:153
+#: Userman.class.php:2162 views/users.php:154
 msgid "Primary Linked Extension"
 msgstr "داخلی اصلی متصل"
 
@@ -617,18 +631,18 @@ msgstr "آدرس آی پی احراز هویت راه دور"
 msgid "Removed Voicemail User %s"
 msgstr "ایمیل صوتی کاربر %s حذف شد"
 
-#: Userman.class.php:487
+#: Userman.class.php:497
 msgid "Reset"
 msgstr "بازنشانی"
 
-#: views/groups.php:186
+#: views/groups.php:319
 msgid ""
 "Restrict this groups's view to only Extensions, Ring Groups, and Queues "
 "within this range."
 msgstr ""
 "محدودیت مشاهده فقط این داخلی ها توسط گروه، گروه های زنگ، و صف های این بازه."
 
-#: views/users.php:574
+#: views/users.php:651
 msgid ""
 "Restrict this user's view to only Extensions, Ring Groups, and Queues within "
 "this range."
@@ -636,7 +650,7 @@ msgstr ""
 "محدودیت کاربر برای مشاهده فقط این داخلی ها، گروه های زنگ، و صف ها نیز در این "
 "بازه هستند."
 
-#: Userman.class.php:376
+#: Userman.class.php:386
 msgid "Saved"
 msgstr "ذخیره شد"
 
@@ -657,11 +671,11 @@ msgstr ""
 "کاربری انتخاب کنید که به مدیریت کاربری پیوند شود، درغیراینصورت برای عدم "
 "اختصاص کاربر انتخابی نکنید"
 
-#: views/groups.php:212
+#: views/groups.php:345
 msgid "Select the Admin Sections this group should have access to."
 msgstr "بخش مدیریتی را که این گروه به آن دسترسی دارد انتخاب کنید."
 
-#: views/users.php:600
+#: views/users.php:677
 msgid "Select the Admin Sections this user should have access to."
 msgstr "بخش مدیریتی که این کاربر به آن دسترسی دارد انتخاب کنید."
 
@@ -681,7 +695,7 @@ msgstr "ارسال ایمیل خارجی در هنگام ایجاد کاربر �
 msgid "Set Password"
 msgstr "تنظیم کلمه عبور"
 
-#: Userman.class.php:1941
+#: Userman.class.php:2002
 msgid "Set by your administrator"
 msgstr "تنظیم به وسیله مدیر شما"
 
@@ -693,11 +707,11 @@ msgstr "تنظیمات"
 msgid "Status"
 msgstr "وضعیت"
 
-#: Userman.class.php:475
+#: Userman.class.php:485
 msgid "Submit"
 msgstr "ارسال"
 
-#: Userman.class.php:469
+#: Userman.class.php:479
 msgid "Submit & Send Email to User"
 msgstr "تایید و ارسال ایمیل به کاربر"
 
@@ -731,12 +745,28 @@ msgstr ""
 "li><li>title: title</li><li>username: Username</li><li>password: Password</"
 "li></ul>"
 
+#: assets/js/userman.js:258
+msgid "The Browser Language could not be determined"
+msgstr ""
+
+#: assets/js/userman.js:278
+msgid "The Browser Timezone could not be determined"
+msgstr ""
+
 #: userman.i18n.php:18
 msgid ""
 "The From: field for emails when using the user management email feature."
 msgstr ""
 "از طرف: این فیلد آدرس ایمیلی را قبول میکند که هنگام استفاده از مدیریت کاربری "
 "کاربردی است."
+
+#: assets/js/userman.js:268
+msgid "The PBX Language is not set"
+msgstr ""
+
+#: assets/js/userman.js:288
+msgid "The PBX Timezone is not set"
+msgstr ""
 
 #: views/msad.php:107
 msgid "The active directory domain"
@@ -771,11 +801,53 @@ msgstr "The base DN. Usually in  the format of CN=Users,DC=domain,DC=local"
 msgid "The connection status of the Active Directory Server"
 msgstr "وضعیت اتصال به سرور اکتیو دایرکتوری"
 
-#: views/users.php:398
+#: views/users.php:407
 msgid ""
 "The email address to associate with this user. Multiple email address need "
 "to be separated with a comma."
 msgstr "آدرس ایمیل مختص به این کاربر. چند ایمیل آدرس با کاما از هم جدا میشوند."
+
+#: views/users.php:529
+msgid ""
+"The format dates and times should display in. The default of \"llll\" is "
+"locale aware. If left blank this will use the group/system format. For more "
+"formats please see: http://momentjs.com/docs/#/displaying/format/"
+msgstr ""
+
+#: views/groups.php:200
+msgid ""
+"The format dates and times should display in. The default of \"llll\" is "
+"locale aware. If left blank this will use the system format. For more "
+"formats please see: http://momentjs.com/docs/#/displaying/format/"
+msgstr ""
+
+#: views/users.php:551
+msgid ""
+"The format dates should display in. The default of \"l\" is locale aware. If "
+"left blank this will use the group/system format. For more formats please "
+"see: http://momentjs.com/docs/#/displaying/format/"
+msgstr ""
+
+#: views/groups.php:222
+msgid ""
+"The format dates should display in. The default of \"l\" is locale aware. If "
+"left blank this will use the system format. For more formats please see: "
+"http://momentjs.com/docs/#/displaying/format/"
+msgstr ""
+
+#: views/users.php:573
+msgid ""
+"The format times should display in. The default of \"LT\" is locale aware. "
+"If left blank this will use the group/system format. For more formats please "
+"see: http://momentjs.com/docs/#/displaying/format/"
+msgstr ""
+
+#: views/groups.php:244
+msgid ""
+"The format times should display in. The default of \"LT\" is locale aware. "
+"If left blank this will use the system format. For more formats please see: "
+"http://momentjs.com/docs/#/displaying/format/"
+msgstr ""
 
 #: views/general.php:64
 #, php-format
@@ -786,43 +858,43 @@ msgstr ""
 "نام هاست که برای ایمیل استفاده میشود. اگر خالی باشد از مقدار پیشفرض '%s' "
 "استفاده میشود"
 
-#: views/users.php:422
+#: views/users.php:431
 msgid "The user's cell (mobile) phone number."
 msgstr "شماره تلفن همراه (موبایل) کاربر."
 
-#: views/users.php:294
+#: views/users.php:295
 msgid "The user's company."
 msgstr "شرکت کاربر."
 
-#: views/users.php:318
+#: views/users.php:319
 msgid "The user's department."
 msgstr "بخش کاربر."
 
-#: views/users.php:494
+#: views/users.php:503
 msgid "The user's fax phone number."
 msgstr "شماره دورنگار کاربر."
 
-#: views/users.php:198
+#: views/users.php:199
 msgid "The user's first name."
 msgstr "اسم کوچک کاربر."
 
-#: views/users.php:470
+#: views/users.php:479
 msgid "The user's home phone number."
 msgstr "شماره تلفن منزل کاربر."
 
-#: views/users.php:222
+#: views/users.php:223
 msgid "The user's last name."
 msgstr "نام خانوادگی کاربر."
 
-#: views/users.php:114
+#: views/users.php:115
 msgid "The user's password."
 msgstr "کلمه عبور کاربر."
 
-#: views/users.php:270
+#: views/users.php:271
 msgid "The user's title."
 msgstr "عنوان کاربر."
 
-#: views/users.php:446
+#: views/users.php:455
 msgid "The user's work phone number."
 msgstr "شماره تلفن محل کار کاربر."
 
@@ -832,16 +904,21 @@ msgstr "چهارچوب صندوق صوتی برای دریافت فرم کارب
 
 #: userman.i18n.php:8
 msgid ""
-"This Module manages all PBX users. It allows an Administrator to create a "
-"User Account that can be used by other applications for login or API "
-"purposes."
+"This Module manages all FreePBX users\t\tIt allows an Administrator to "
+"create a User Account that can be used by other applications for login or "
+"API purposes.\t\tModules like iSymphony, Rest API and User Control Panel and "
+"FreePBX itself use this module to manage their users."
 msgstr ""
+"This Module manages all FreePBX users\t\tIt allows an Administrator to  "
+"create a User Account that can be used by other applications for login or "
+"API purposes.\t\tModules like iSymphony, Rest API and User Control Panel and "
+"FreePBX itself use this module to manage their users."
 
-#: Userman.class.php:2252 Userman.class.php:2312
+#: Userman.class.php:2313 Userman.class.php:2373
 msgid "This authentication driver does not allow importing"
 msgstr "درایور احراز هویت اجازه ورود نمیدهد"
 
-#: install.php:243
+#: install.php:299
 msgid ""
 "This group was created on install and is automatically assigned to new "
 "users. This can be disabled in User Manager Settings"
@@ -849,7 +926,7 @@ msgstr ""
 "این گروه در هنگام نصب ایجاد شده و به صورت خودکار به کاربران جدید اختصاص داده "
 "میشود. در تنظیمات مدیریت کاربر میتوان غیرفعال کرد"
 
-#: views/users.php:169
+#: views/users.php:170
 msgid ""
 "This is the extension this user is linked to from the Extensions page. A "
 "single user can only be linked to one extension, and one extension can only "
@@ -858,7 +935,7 @@ msgstr ""
 "داخلی که کاربر از صفحه داخلی ها به آن پیوند داده شده. یک کاربر میتواند تنها "
 "به یک داخلی پیوند داده شود، و برعکس."
 
-#: views/users.php:65
+#: views/users.php:66
 msgid "This is the name that the user will use when logging in."
 msgstr "نامی که کاربر در هنگام ورود استفاده میکند."
 
@@ -872,32 +949,36 @@ msgstr ""
 "این تنظیمات فقط به موتور احراز هویت  اعمال میشود که این غیر از دایرکتوری "
 "داخلی %s است. برای دایرکتوری داخلی %s این تنظیمات پذیرفته نمیشوند."
 
-#: views/users.php:354
+#: views/groups.php:232 views/users.php:561
+msgid "Time Format"
+msgstr ""
+
+#: views/groups.php:129 views/users.php:363
 msgid "Timezone"
 msgstr ""
 
-#: views/users.php:374
+#: views/groups.php:149 views/users.php:383
 msgid "Timezone for this user"
 msgstr ""
 
-#: views/users.php:258
+#: views/users.php:259
 msgid "Title"
 msgstr "عنوان"
 
-#: Userman.class.php:1155
+#: Userman.class.php:1197
 msgid "UID was not numeric"
 msgstr "شناسه کاربری عدد نیست"
 
-#: views/passwordmodal.php:30 assets/js/userman.js:158
+#: views/passwordmodal.php:30 assets/js/userman.js:193
 msgid "Update Password"
 msgstr "کلمه عبور به روز شد"
 
-#: functions.inc/auth/modules/Freepbx.php:209
+#: functions.inc/auth/modules/Freepbx.php:213
 #: functions.inc/auth/modules/Voicemail.php:215
 msgid "Updated Group"
 msgstr "گروه به روز شد"
 
-#: functions.inc/auth/modules/Freepbx.php:181
+#: functions.inc/auth/modules/Freepbx.php:182
 msgid "Updated User"
 msgstr "کاربر به روز شد"
 
@@ -906,11 +987,15 @@ msgstr "کاربر به روز شد"
 msgid "Updated Voicemail User %s"
 msgstr "ایمیل صوتی کاربر %s به روز شد"
 
-#: assets/js/userman.js:162
+#: assets/js/userman.js:197
 msgid "Updating"
 msgstr "به روزرسانی"
 
-#: views/users.php:361
+#: views/groups.php:104 views/users.php:338
+msgid "Use Browser Language"
+msgstr ""
+
+#: views/groups.php:136 views/users.php:370
 msgid "Use Browser Timezone"
 msgstr ""
 
@@ -918,17 +1003,29 @@ msgstr ""
 msgid "Use Custom Username"
 msgstr "استفاده از نام کاربری سفارشی"
 
-#: views/users.php:364
+#: views/groups.php:107 views/users.php:341
+msgid "Use PBX Language"
+msgstr ""
+
+#: views/groups.php:139 views/users.php:373
 msgid "Use PBX Timezone"
 msgstr ""
 
+#: views/groups.php:102
+msgid "Use System Language"
+msgstr ""
+
+#: views/groups.php:134
+msgid "Use System Timezone"
+msgstr ""
+
 #: functions.inc/auth/modules/Freepbx.php:108
-#: functions.inc/auth/modules/Freepbx.php:171
+#: functions.inc/auth/modules/Freepbx.php:172
 #, php-format
 msgid "User '%s' Already Exists"
 msgstr "کاربر '%s' موجود است"
 
-#: functions.inc/auth/modules/Freepbx.php:159
+#: functions.inc/auth/modules/Freepbx.php:160
 #, php-format
 msgid "User '%s' Does Not Exist"
 msgstr "کاربر '%s' موجود نیست"
@@ -937,7 +1034,7 @@ msgstr "کاربر '%s' موجود نیست"
 msgid "User Details"
 msgstr "جزییات کاربر"
 
-#: functions.inc/auth/Auth.php:303
+#: functions.inc/auth/Auth.php:312
 msgid "User Does Not Exist"
 msgstr "کاربر وجود ندارد"
 
@@ -953,7 +1050,7 @@ msgstr "ماژول مدیریت کاربر"
 msgid "User Manager"
 msgstr "مدیریت کاربر"
 
-#: Userman.class.php:2072 Userman.class.php:2073 views/quickCreate.php:36
+#: Userman.class.php:2133 Userman.class.php:2134 views/quickCreate.php:36
 msgid "User Manager Groups"
 msgstr "گروههای مدیریت کاربر"
 
@@ -961,23 +1058,23 @@ msgstr "گروههای مدیریت کاربر"
 msgid "User Manager Settings"
 msgstr "تنظیمات مدیریت کاربر"
 
-#: Userman.class.php:2066 Userman.class.php:2067
+#: Userman.class.php:2127 Userman.class.php:2128
 msgid "User Manager Users"
 msgstr "کاربران مدیریت کاربر"
 
-#: functions.inc/auth/Auth.php:401 functions.inc/auth/modules/Freepbx.php:122
+#: functions.inc/auth/Auth.php:410 functions.inc/auth/modules/Freepbx.php:122
 msgid "User Successfully Added"
 msgstr "کاربر با موفقیت اضافه شد"
 
-#: functions.inc/auth/Auth.php:315
+#: functions.inc/auth/Auth.php:324
 msgid "User Successfully Deleted"
 msgstr "کاربر با موفقیت حذف شد"
 
-#: functions.inc/auth/Auth.php:410
+#: functions.inc/auth/Auth.php:419
 msgid "User Successfully Updated"
 msgstr "کاربربا موفقیت به روز شد"
 
-#: Userman.class.php:2208
+#: Userman.class.php:2269
 msgid "User already exists"
 msgstr "کاربر موجود است"
 
@@ -991,11 +1088,11 @@ msgstr "کاربر به روز شد"
 msgid "Username"
 msgstr "نام کاربری"
 
-#: functions.inc/auth/Auth.php:381
+#: functions.inc/auth/Auth.php:390
 msgid "Username Can Not Be Blank!"
 msgstr "نام کاربری نمیتواند خالی باشد!"
 
-#: Userman.class.php:1087
+#: Userman.class.php:1111
 msgid "Username can not be blank"
 msgstr "نام کاربری نمیتواند خالی باشد"
 
@@ -1003,11 +1100,11 @@ msgstr "نام کاربری نمیتواند خالی باشد"
 msgid "Username/Password Can Not Be Blank!"
 msgstr "نام کاربری/کلمه عبور نمیتواند خالی باشد!"
 
-#: views/groups.php:95 views/welcome.php:24
+#: views/groups.php:160 views/welcome.php:24
 msgid "Users"
 msgstr "کاربران"
 
-#: views/groups.php:174 views/users.php:562
+#: views/groups.php:307 views/users.php:639
 msgid "Visible Extension Range"
 msgstr "بازه داخلی های مشخص"
 
@@ -1031,28 +1128,28 @@ msgstr ""
 msgid "Which User Manager user this extension will link to"
 msgstr "کاربری که این داخلی به آن لینک میشود"
 
-#: views/quickCreate.php:52 views/users.php:142
+#: views/quickCreate.php:52 views/users.php:143
 msgid "Which groups this user is in"
 msgstr "گروهی که کاربر عضو آن است"
 
-#: views/groups.php:111
+#: views/groups.php:176
 msgid "Which users are in this group"
 msgstr "کاربرانی که در این گروهند"
 
-#: views/users.php:434
+#: views/users.php:443
 msgid "Work Phone Number"
 msgstr "تلفن محل کار"
 
-#: views/general.php:30 views/groups.php:129 views/groups.php:154
-#: views/quickCreate.php:14 views/users.php:513 views/users.php:540
+#: views/general.php:30 views/groups.php:262 views/groups.php:287
+#: views/quickCreate.php:14 views/users.php:590 views/users.php:617
 msgid "Yes"
 msgstr "بله"
 
-#: Userman.class.php:1982 views/general.php:79
+#: Userman.class.php:2043 views/general.php:79
 msgid "Your %brand% Account"
 msgstr "حساب %برند% شما"
 
-#: Userman.class.php:2184
+#: Userman.class.php:2245
 msgid "default_extension is required."
 msgstr "داخلی پیشفرض احتیاج است."
 
@@ -1060,11 +1157,11 @@ msgstr "داخلی پیشفرض احتیاج است."
 msgid "group"
 msgstr "گروه"
 
-#: functions.inc/auth/Auth.php:447
+#: functions.inc/auth/Auth.php:456
 msgid "group Successfully Added"
 msgstr "گروه با موفقیت اضافه شد"
 
-#: Userman.class.php:2260
+#: Userman.class.php:2321
 msgid "groupname is required."
 msgstr "نام گروه احتیاج است."
 
@@ -1072,7 +1169,7 @@ msgstr "نام گروه احتیاج است."
 msgid "groups"
 msgstr "گروهها"
 
-#: Userman.class.php:2226
+#: Userman.class.php:2287
 msgid "password is required."
 msgstr "کلمه عبور احتیاج است."
 
@@ -1080,24 +1177,13 @@ msgstr "کلمه عبور احتیاج است."
 msgid "user"
 msgstr "کاربر"
 
-#: Userman.class.php:2181
+#: Userman.class.php:2242
 msgid "username is required."
 msgstr "نام کاربری احتیاج است."
 
 #: assets/js/userman.js:7
 msgid "users"
 msgstr "کاربران"
-
-#~ msgid ""
-#~ "This Module manages all FreePBX users\t\tIt allows an Administrator to "
-#~ "create a User Account that can be used by other applications for login or "
-#~ "API purposes.\t\tModules like iSymphony, Rest API and User Control Panel "
-#~ "and FreePBX itself use this module to manage their users."
-#~ msgstr ""
-#~ "This Module manages all FreePBX users\t\tIt allows an Administrator to  "
-#~ "create a User Account that can be used by other applications for login or "
-#~ "API purposes.\t\tModules like iSymphony, Rest API and User Control Panel "
-#~ "and FreePBX itself use this module to manage their users."
 
 #~ msgid "Voicemail is in Read Only Mode. Deletion denied"
 #~ msgstr "ایمیل صوتی فقط خواندنی است.حذف رد شد"
