@@ -70,7 +70,7 @@ $sqls[] = "CREATE TABLE IF NOT EXISTS `userman_users` (
 $sqls[] = "CREATE TABLE IF NOT EXISTS `userman_users_settings` (
 	`uid` int(11) NOT NULL,
 	`module` char(65) NOT NULL,
-	`key` char(255) NOT NULL,
+	`key` char(190) NOT NULL,
 	`val` longblob NOT NULL,
 	`type` char(16) DEFAULT NULL,
 	UNIQUE KEY `index4` (`uid`,`module`,`key`),
@@ -97,7 +97,7 @@ $sqls[] = "CREATE TABLE IF NOT EXISTS `userman_groups` (
 $sqls[] = "CREATE TABLE IF NOT EXISTS `userman_groups_settings` (
 	`gid` int(11) NOT NULL,
 	`module` char(65) NOT NULL,
-	`key` char(255) NOT NULL,
+	`key` char(190) NOT NULL,
 	`val` longblob NOT NULL,
 	`type` char(16) DEFAULT NULL,
 	UNIQUE KEY `index4` (`gid`,`module`,`key`),
