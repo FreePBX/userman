@@ -712,7 +712,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':username' => $username));
 		$result = $sth->fetch(\PDO::FETCH_ASSOC);
-		if(!empty($result) && ($password_sha1 == $result['password'])) {
+		if(!empty($result) && ($password_sha1 === $result['password'])) {
 			return $result['id'];
 		}
 		return false;
