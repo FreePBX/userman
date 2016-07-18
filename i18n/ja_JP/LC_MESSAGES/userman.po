@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-21 11:49-0700\n"
+"POT-Creation-Date: 2016-07-18 16:45-0400\n"
 "PO-Revision-Date: 2015-07-27 08:57+0200\n"
 "Last-Translator: Kevin <kevin@qloog.com>\n"
 "Language-Team: Japanese <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -72,6 +72,10 @@ msgstr "追加の内線"
 msgid "Additional Extensions over which this user will have control."
 msgstr "このユーザーが制御できる追加の内線。"
 
+#: userman.i18n.php:6 userman.i18n.php:12
+msgid "Admin"
+msgstr "アドミン"
+
 #: Userman.class.php:489
 msgid "An Unknown error occured while trying to update user data"
 msgstr "ユーザー情報を更新中に不明なエラーが発生しました"
@@ -117,6 +121,10 @@ msgstr ""
 #: views/users.php:1
 msgid "Edit User"
 msgstr "ユーザーを編集"
+
+#: userman.i18n.php:14
+msgid "Email "
+msgstr "メール "
 
 #: views/users.php:55
 msgid "Email Address"
@@ -302,6 +310,12 @@ msgstr ""
 "ユーザー名</li><li>password: パスワード</li></ul><br> この枠をリセットするに"
 "は空にしてください"
 
+#: userman.i18n.php:18
+msgid ""
+"The From: field for emails when using the user management email feature."
+msgstr ""
+"「ユーザー管理」のメール機能で使用する From: (送信者) の情報を設定します。"
+
 #: Userman.class.php:110
 msgid "The Password Can Not Be blank!"
 msgstr "パスワードは空にできません！"
@@ -345,6 +359,19 @@ msgstr "ユーザーの肩書。"
 #: views/users.php:63
 msgid "The user's work phone number."
 msgstr "ユーザーの仕事電話番号。"
+
+#: userman.i18n.php:8
+msgid ""
+"This Module manages all FreePBX users excluding Administrators (at this "
+"time).\t\tIt allows an Administrator to create a User Account that can be "
+"used by other applications for login or API purposes.\t\tModules like "
+"iSymphony, Rest API and User Control Panel use this module to manage their "
+"users."
+msgstr ""
+"現時点では管理者以外の全てのFreePBXユーザーを管理します。\t\t管理者が、アプリ"
+"ケーションやAPIで使われるユーザーのアカウントを作成できます。\t\tiSymphonyや"
+"Rest API、またはユーザーコントロールパネルはこのモジュールを通じてユーザーを"
+"管理します。"
 
 #: views/users.php:75
 msgid ""
@@ -399,6 +426,14 @@ msgstr "ユーザーは存在しません"
 msgid "User List"
 msgstr "ユーザー一覧"
 
+#: userman.i18n.php:4 userman.i18n.php:10
+msgid "User Management"
+msgstr "ユーザー管理"
+
+#: userman.i18n.php:16
+msgid "User Management Module"
+msgstr "ユーザー管理モジュール"
+
 #: functions.inc/guihooks.php:69 functions.inc/guihooks.php:122
 msgid "User Manager Settings"
 msgstr "ユーザー管理の設定"
@@ -439,29 +474,6 @@ msgstr "仕事の電話番号"
 msgid "Your %brand% Account"
 msgstr "自分の %brand% アカウント"
 
-#~ msgid "Admin"
-#~ msgstr "アドミン"
-
-#~ msgid "Email "
-#~ msgstr "メール "
-
-#~ msgid ""
-#~ "The From: field for emails when using the user management email feature."
-#~ msgstr ""
-#~ "「ユーザー管理」のメール機能で使用する From: (送信者) の情報を設定します。"
-
-#~ msgid ""
-#~ "This Module manages all FreePBX users excluding Administrators (at this "
-#~ "time).\t\tIt allows an Administrator to create a User Account that can be "
-#~ "used by other applications for login or API purposes.\t\tModules like "
-#~ "iSymphony, Rest API and User Control Panel use this module to manage "
-#~ "their users."
-#~ msgstr ""
-#~ "現時点では管理者以外の全てのFreePBXユーザーを管理します。\t\t管理者が、ア"
-#~ "プリケーションやAPIで使われるユーザーのアカウントを作成できます。\t"
-#~ "\tiSymphonyやRest API、またはユーザーコントロールパネルはこのモジュールを"
-#~ "通じてユーザーを管理します。"
-
 #~ msgid ""
 #~ "This Module manages all FreePBX users excluding Administrators (at this "
 #~ "time).\n"
@@ -475,12 +487,6 @@ msgstr "自分の %brand% アカウント"
 #~ "きます。\n"
 #~ "iSymphonyやRest API、またはユーザーコントロールパネルはこのモジュールを通"
 #~ "じてユーザーを管理します。"
-
-#~ msgid "User Management"
-#~ msgstr "ユーザー管理"
-
-#~ msgid "User Management Module"
-#~ msgstr "ユーザー管理モジュール"
 
 #~ msgid "Assign to a Different Default User:"
 #~ msgstr "違うデフォルトユーザーにアサインします:"
