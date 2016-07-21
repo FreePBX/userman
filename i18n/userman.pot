@@ -256,6 +256,14 @@ msgstr ""
 msgid "Email Body"
 msgstr ""
 
+#: views/general.php:53
+msgid "Send Email as HTML"
+msgstr ""
+
+#: views/general.php:70
+msgid "Whether Email Body will send as HTML or plain text to the user."
+msgstr ""
+
 #: assets/js/userman.js:15
 msgid "Email Sent"
 msgstr ""
