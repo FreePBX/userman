@@ -592,6 +592,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 					$assigned = array();
 					$default = null;
 				}
+				$extrauserdetails = $this->getExtraUserDetailsDisplay($user);
 				$fpbxusers = array();
 				$dfpbxusers = array();
 				$cul = array();
@@ -634,7 +635,8 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 						"fpbxusers" => $fpbxusers,
 						"user" => $user,
 						"message" => $this->message,
-						"permissions" => $permissions
+						"permissions" => $permissions,
+						"extrauserdetails" => $extrauserdetails
 					)
 				);
 			break;
@@ -664,6 +666,17 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		}
 
 		return $html;
+	}
+
+	public function getExtraUserDetailsDisplay($user) {
+		$mods = $this->FreePBX->Hooks->processHooks($user);
+		$final = array();
+		foreach($mods as $mod) {
+			foreach($mod as $item) {
+				$final[] = $item;
+			}
+		}
+		return $final;
 	}
 
 	/**

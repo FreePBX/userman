@@ -440,6 +440,9 @@ echo $heading;
 							</div>
 						</div>
 						<!--END FAX-->
+						<?php foreach($extrauserdetails as $html) { ?>
+							<?php echo $html?>
+						<?php } ?>
 						</div>
 						<!--END User Details-->
 						<div role="tabpanel" class="tab-pane display" id="pbx">

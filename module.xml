@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>13.0.69</version>
+	<version>13.0.70</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -12,6 +12,7 @@
 		Modules like iSymphony, Rest API and User Control Panel and FreePBX itself use this module to manage their users.
 	</description>
 	<changelog>
+		*13.0.70* Add additional hook point
 		*13.0.69* FREEPBX-12606 Absolute paths used in some modules.
 		*13.0.68* FREEPBX-12496 Purge cache when setting values to null
 		*13.0.67* Allow editing of 1-2 character usernames
