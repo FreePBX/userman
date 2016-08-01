@@ -370,6 +370,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 					$this->setGlobalsetting('emailsubject',$request['emailsubject']);
 					$this->setGlobalsetting('hostname', $request['hostname']);
 					$this->setGlobalsetting('autoEmail',($request['auto-email'] == "yes") ? 1 : 0);
+					$this->setGlobalsetting('mailtype',$request['mailtype']);
 					$this->message = array(
 						'message' => _('Saved'),
 						'type' => 'success'
@@ -651,6 +652,8 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 					}
 				}
 
+				$mailtype = $this->getGlobalsetting('mailtype');
+				$mailtype = $mailtype === 'html' ? 'html' : 'text';
 				$emailbody = $this->getGlobalsetting('emailbody');
 				$emailsubject = $this->getGlobalsetting('emailsubject');
 				$hostname = $this->getGlobalsetting('hostname');
@@ -661,7 +664,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 				$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https" : "http";
 				$host = $protocol.'://'.$_SERVER["SERVER_NAME"];
 				$html .= load_view(dirname(__FILE__).'/views/welcome.php',array("hostname" => $hostname, "host" => $host, "autoEmail" => $autoEmail, "remoteips" => $remoteips, "sync" => $this->getConfig("sync"), "authtype" => $this->getConfig("auth"), "auths" => $auths, "brand" => $this->brand, "permissions" => $permissions, "groups" => $groups, "users" => $users, "sections" => $sections,
-				 																																"message" => $this->message, "emailbody" => $emailbody, "emailsubject" => $emailsubject));
+				 																																"message" => $this->message, "emailbody" => $emailbody, "emailsubject" => $emailsubject, "mailtype" => $mailtype));
 			break;
 		}
 
@@ -1984,6 +1987,10 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$email = new \CI_Email();
 		$from = !empty($amp_conf['AMPUSERMANEMAILFROM']) ? $amp_conf['AMPUSERMANEMAILFROM'] : 'freepbx@freepbx.org';
 
+		$mailtype = $this->getGlobalsetting('mailtype');
+		$mailtype = $mailtype === 'html' ? 'html' : 'text';
+
+		$email->set_mailtype($mailtype);
 		$email->from($from);
 		$email->to($user['email']);
 		$dbsubject = $this->getGlobalsetting('emailsubject');
@@ -2026,6 +2033,10 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 
 		$from = !empty($femail) ? $femail : get_current_user() . '@' . gethostname();
 
+		$mailtype = $this->getGlobalsetting('mailtype');
+		$mailtype = $mailtype === 'html' ? 'html' : 'text';
+
+		$email->set_mailtype($mailtype);
 		$email->from($from);
 		$email->to($user['email']);
 
