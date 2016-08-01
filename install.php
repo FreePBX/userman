@@ -113,7 +113,7 @@ foreach($sqls as $sql) {
 
 if (!$db->getAll('SHOW COLUMNS FROM `userman_users` WHERE FIELD = "auth"')) {
 	out("Adding default extension column");
-		$sql = "ALTER TABLE `userman_users` ADD COLUMN `auth` varchar(255) DEFAULT 'freepbx' AFTER `id`";
+		$sql = "ALTER TABLE `userman_users` ADD COLUMN `auth` varchar(150) DEFAULT 'freepbx' AFTER `id`";
 		$result = $db->query($sql);
 		$sql = "ALTER TABLE `userman_users` ADD COLUMN `authid` varchar(255) DEFAULT NULL AFTER `auth`";
 		$result = $db->query($sql);
@@ -121,7 +121,7 @@ if (!$db->getAll('SHOW COLUMNS FROM `userman_users` WHERE FIELD = "auth"')) {
 
 if (!$db->getAll('SHOW COLUMNS FROM `userman_groups` WHERE FIELD = "auth"')) {
 	out("Adding default extension column");
-		$sql = "ALTER TABLE `userman_groups` ADD COLUMN `auth` varchar(255) DEFAULT 'freepbx' AFTER `id`";
+		$sql = "ALTER TABLE `userman_groups` ADD COLUMN `auth` varchar(150) DEFAULT 'freepbx' AFTER `id`";
 		$result = $db->query($sql);
 		$sql = "ALTER TABLE `userman_groups` ADD COLUMN `authid` varchar(255) DEFAULT NULL AFTER `auth`";
 		$result = $db->query($sql);
