@@ -20,10 +20,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-07-08 14:36-0700\n"
+"POT-Creation-Date: 2016-08-01 13:18-0700\n"
 "PO-Revision-Date: 2015-10-30 07:56+0200\n"
 "Last-Translator: Kevin <kevin@qloog.com>\n"
-"Language-Team: Japanese <http://weblate.freepbx.org/projects/freepbx/userman/ja_JP/>\n"
+"Language-Team: Japanese <http://weblate.freepbx.org/projects/freepbx/userman/"
+"ja_JP/>\n"
 "Language: ja_JP\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,10 +44,17 @@ msgstr "%s 内部ディレクトリ"
 
 #: views/welcome.php:15
 #, php-format
-msgid "%s User Manager is taking the place of several modules which have attempted to create and manage users separate from Extensions. Modules such as iSymphony and RestAPI are examples of these type of modules. In %s 12, the new User Control Panel also uses User Manager."
-msgstr "%s 「ユーザー管理」は、かつてiSymphonyやRestAPIなどのように内線とは別のユーザーを作成・管理しようとしていたいくつかのモジュールの統一版です。%s 12で新しく登場したユーザーコントロールパネルも「ユーザー管理」の情報を使用します。"
+msgid ""
+"%s User Manager is taking the place of several modules which have attempted "
+"to create and manage users separate from Extensions. Modules such as "
+"iSymphony and RestAPI are examples of these type of modules. In %s 12, the "
+"new User Control Panel also uses User Manager."
+msgstr ""
+"%s 「ユーザー管理」は、かつてiSymphonyやRestAPIなどのように内線とは別のユー"
+"ザーを作成・管理しようとしていたいくつかのモジュールの統一版です。%s 12で新し"
+"く登場したユーザーコントロールパネルも「ユーザー管理」の情報を使用します。"
 
-#: Userman.class.php:2219
+#: Userman.class.php:2243
 #, php-format
 msgid "%s records failed validation"
 msgstr "%s つの記録は認証に失敗しました"
@@ -63,11 +71,11 @@ msgstr "アクション"
 msgid "Add"
 msgstr "追加"
 
-#: Userman.class.php:688
+#: Userman.class.php:704
 msgid "Add Device"
 msgstr "デバイスを追加"
 
-#: Userman.class.php:688
+#: Userman.class.php:704
 msgid "Add Extension"
 msgstr "内線を追加"
 
@@ -88,7 +96,7 @@ msgstr ""
 msgid "Admin"
 msgstr "アドミン"
 
-#: views/groups.php:329 views/users.php:661
+#: views/groups.php:329 views/users.php:664
 msgid "Administration Access"
 msgstr "管理者アクセス"
 
@@ -100,7 +108,7 @@ msgstr ""
 msgid "All Users"
 msgstr "全てのユーザ"
 
-#: views/groups.php:257 views/users.php:585
+#: views/groups.php:257 views/users.php:588
 #, php-format
 msgid "Allow %s Administration Login"
 msgstr "%s 管理者ログインを許可"
@@ -110,7 +118,7 @@ msgstr "%s 管理者ログインを許可"
 msgid "An Unknown error occured while trying to update user data"
 msgstr "ユーザー情報を更新中に不明なエラーが発生しました"
 
-#: Userman.class.php:689
+#: Userman.class.php:705
 msgid "Apply Changes Bar"
 msgstr "「設定適用」ボタン"
 
@@ -128,7 +136,7 @@ msgstr "この %s を削除してもよろしいですか？"
 msgid "Asterisk Voicemail"
 msgstr "Asteriskボイスメール"
 
-#: views/general.php:124
+#: views/general.php:153
 msgid "Authentication Engine"
 msgstr ""
 
@@ -153,9 +161,13 @@ msgstr "携帯番号"
 msgid "Close"
 msgstr "閉じる"
 
-#: views/general.php:162
+#: views/general.php:191
 #, php-format
-msgid "Comma separated list of IP addresses that can send a POST query to %s supplying the parameters of '%s' and '%s' which can be used for remote servers to authenicate against User Manager. Supplying no addresses disables this feature"
+msgid ""
+"Comma separated list of IP addresses that can send a POST query to %s "
+"supplying the parameters of '%s' and '%s' which can be used for remote "
+"servers to authenicate against User Manager. Supplying no addresses disables "
+"this feature"
 msgstr ""
 
 #: views/users.php:283
@@ -186,11 +198,11 @@ msgstr "「ユーザ管理」のユーザを作成"
 msgid "Database rename not completed"
 msgstr "データベース名称変更できませんでした"
 
-#: views/groups.php:210 views/users.php:539
+#: views/groups.php:210 views/users.php:542
 msgid "Date Format"
 msgstr ""
 
-#: views/groups.php:188 views/users.php:517
+#: views/groups.php:188 views/users.php:520
 msgid "Date and Time Format"
 msgstr ""
 
@@ -198,7 +210,7 @@ msgstr ""
 msgid "Default Groups"
 msgstr "デフォルトグループ"
 
-#: Userman.class.php:491 views/welcome.php:39 views/welcome.php:73
+#: Userman.class.php:492 views/welcome.php:39 views/welcome.php:73
 #: assets/js/userman.js:33 assets/js/userman.js:39 assets/js/userman.js:67
 msgid "Delete"
 msgstr "削除"
@@ -211,20 +223,24 @@ msgstr "削除中..."
 msgid "Department"
 msgstr "部署"
 
-#: Userman.class.php:2165 Userman.class.php:2166 Userman.class.php:2191
-#: Userman.class.php:2192 views/rnav.php:12 views/rnav.php:27
+#: Userman.class.php:2189 Userman.class.php:2190 Userman.class.php:2215
+#: Userman.class.php:2216 views/rnav.php:12 views/rnav.php:27
 #: views/users.php:78 views/welcome.php:55 views/welcome.php:82
 msgid "Description"
 msgstr "詳細"
 
-#: Userman.class.php:2177 Userman.class.php:2178 views/users.php:235
+#: Userman.class.php:2201 Userman.class.php:2202 views/users.php:235
 #: views/welcome.php:51
 msgid "Display Name"
 msgstr "表示名"
 
 #: views/users.php:247
-msgid "Display Name. Used in User Control Panel and Contact Manager to display a customized user name"
-msgstr "表示する名前。「ユーザーコントロールパネル」や「連絡先の管理」でカスタムのユーザー名を表示するために使用します"
+msgid ""
+"Display Name. Used in User Control Panel and Contact Manager to display a "
+"customized user name"
+msgstr ""
+"表示する名前。「ユーザーコントロールパネル」や「連絡先の管理」でカスタムの"
+"ユーザー名を表示するために使用します"
 
 #: views/msad.php:95
 msgid "Domain"
@@ -246,7 +262,7 @@ msgstr "メール "
 msgid "Email Address"
 msgstr "メールアドレス"
 
-#: views/general.php:99
+#: views/general.php:128
 msgid "Email Body"
 msgstr "メール本文"
 
@@ -258,7 +274,7 @@ msgstr "メールを送信しました。"
 msgid "Email Settings"
 msgstr "メール設定"
 
-#: views/general.php:75
+#: views/general.php:104
 msgid "Email Subject"
 msgstr "メール件名"
 
@@ -266,11 +282,11 @@ msgstr "メール件名"
 msgid "Enable User Manager for this extension"
 msgstr "この内線に対してユーザ管理を有効にする。"
 
-#: Userman.class.php:805
+#: Userman.class.php:821
 msgid "Error: No id provided"
 msgstr "エラー: id がありません"
 
-#: Userman.class.php:837
+#: Userman.class.php:853
 msgid "Error: You should never see this"
 msgstr "エラー: このメッセージは見えないはず"
 
@@ -282,12 +298,12 @@ msgstr "内線リンク属性"
 msgid "Fax Phone Number"
 msgstr "FAX番号"
 
-#: Userman.class.php:2169 Userman.class.php:2170 views/users.php:187
+#: Userman.class.php:2193 Userman.class.php:2194 views/users.php:187
 #: views/welcome.php:52
 msgid "First Name"
 msgstr "名"
 
-#: Userman.class.php:1019 Userman.class.php:1227
+#: Userman.class.php:1035 Userman.class.php:1243
 msgid "GID was not numeric"
 msgstr "GIDは数字以外の文字になっています"
 
@@ -299,12 +315,14 @@ msgstr "グループの説明。"
 msgid "Give the group a name"
 msgstr "グループの名前。"
 
-#: views/groups.php:282 views/users.php:612
+#: views/groups.php:282 views/users.php:615
 msgid "Grant Full Administration Rights"
 msgstr "管理者の全ての権限を与える"
 
-#: views/groups.php:297 views/users.php:629
-msgid "Grant full administration rights regardless of extension range or module access."
+#: views/groups.php:297 views/users.php:632
+msgid ""
+"Grant full administration rights regardless of extension range or module "
+"access."
 msgstr "他の条件にかかわらず、管理者が持つ全ての権限を与えます。"
 
 #: functions.inc/auth/modules/Freepbx.php:201
@@ -325,13 +343,16 @@ msgstr "グループの詳細"
 msgid "Group Does Not Exist"
 msgstr "グループは存在しません"
 
-#: Userman.class.php:2187 Userman.class.php:2188 views/groups.php:52
+#: Userman.class.php:2211 Userman.class.php:2212 views/groups.php:52
 #: views/rnav.php:26 views/welcome.php:81
 msgid "Group Name"
 msgstr "グループ名"
 
 #: views/welcome.php:64
-msgid "Group Priorities can be changed by clicking and dragging groups around in the order you'd like. Groups with a lower number for priority take priority (EG 0 is higher than 1)"
+msgid ""
+"Group Priorities can be changed by clicking and dragging groups around in "
+"the order you'd like. Groups with a lower number for priority take priority "
+"(EG 0 is higher than 1)"
 msgstr ""
 
 #: functions.inc/auth/modules/Freepbx.php:137
@@ -347,7 +368,7 @@ msgstr "グループを削除しました"
 msgid "Group Successfully Updated"
 msgstr "グループを更新しました"
 
-#: Userman.class.php:2340
+#: Userman.class.php:2364
 msgid "Group already exists"
 msgstr ""
 
@@ -359,7 +380,7 @@ msgstr "グループを更新しました"
 msgid "Groupname Can Not Be Blank!"
 msgstr "グループ名は必須項目です。"
 
-#: Userman.class.php:1127
+#: Userman.class.php:1143
 msgid "Groupname can not be blank"
 msgstr "グループ名は必須項目です。"
 
@@ -369,12 +390,18 @@ msgid "Groups"
 msgstr "グループ"
 
 #: functions.inc/guihooks.php:127 functions.inc/guihooks.php:165
-msgid "Groups that this user is a part of. You can add and remove this user from groups in this view as well"
-msgstr "このユーザが所属するグループ。この画面ではグループからユーザの削除・追加もできます。"
+msgid ""
+"Groups that this user is a part of. You can add and remove this user from "
+"groups in this view as well"
+msgstr ""
+"このユーザが所属するグループ。この画面ではグループからユーザの削除・追加もで"
+"きます。"
 
-#: views/general.php:117
+#: views/general.php:146
 #, php-format
-msgid "Hitting submit on this page will start manual syncronization for engines other than the %s Internal Directory"
+msgid ""
+"Hitting submit on this page will start manual syncronization for engines "
+"other than the %s Internal Directory"
 msgstr ""
 
 #: views/users.php:467
@@ -385,37 +412,57 @@ msgstr "自宅番号"
 msgid "Host"
 msgstr "ホスト"
 
-#: views/general.php:52
+#: views/general.php:81
 msgid "Host Name"
 msgstr ""
 
-#: Userman.class.php:1001
+#: Userman.class.php:1017
 msgid "ID was not numeric"
 msgstr "IDには数字以外の文字が入っています"
 
 #: functions.inc/guihooks.php:124 functions.inc/guihooks.php:161
-msgid "If Create New User is selected this will be the autogenerated users new password"
-msgstr "「新規ユーザーを作成」が選択されている場合は、これが生成されるユーザーのパスワードになります"
+msgid ""
+"If Create New User is selected this will be the autogenerated users new "
+"password"
+msgstr ""
+"「新規ユーザーを作成」が選択されている場合は、これが生成されるユーザーのパス"
+"ワードになります"
 
 #: functions.inc/guihooks.php:123 functions.inc/guihooks.php:160
-msgid "If Create New User is selected this will be the username. If blank the username will be the same number as this device"
-msgstr "「新規ユーザーを作成」が選択されている場合は、これがユーザー名になります。空にするとこのデバイスと同じ番号を使用します"
+msgid ""
+"If Create New User is selected this will be the username. If blank the "
+"username will be the same number as this device"
+msgstr ""
+"「新規ユーザーを作成」が選択されている場合は、これがユーザー名になります。空"
+"にするとこのデバイスと同じ番号を使用します"
 
 #: views/msad.php:151
-msgid "If this is set then User Manager will use the defined attribute of the user from the Active Directory server as the extension link. NOTE: If this field is set it will overwrite any manually linked extensions where this attribute extists!!"
+msgid ""
+"If this is set then User Manager will use the defined attribute of the user "
+"from the Active Directory server as the extension link. NOTE: If this field "
+"is set it will overwrite any manually linked extensions where this attribute "
+"extists!!"
 msgstr ""
 
 #: views/welcome.php:16
 #, php-format
-msgid "In %s User Manager you can create users that have access to Extensions or Device/User Mode Users and the settings associated with those Devices. For example, a new user can be created that can log into User Control Panel and access the voicemail of 3 other accounts."
-msgstr "%s ユーザー管理では、ユーザーを作成して、そのユーザーに制御できる内線／デバイスを設定できます。例えば、新しいユーザーを作成して、そのユーザーがユーザーコントロールパネルにログインすると3つの違うアカウントのボイスメールをアクセスできる仕組みを作ることが可能です。"
+msgid ""
+"In %s User Manager you can create users that have access to Extensions or "
+"Device/User Mode Users and the settings associated with those Devices. For "
+"example, a new user can be created that can log into User Control Panel and "
+"access the voicemail of 3 other accounts."
+msgstr ""
+"%s ユーザー管理では、ユーザーを作成して、そのユーザーに制御できる内線／デバイ"
+"スを設定できます。例えば、新しいユーザーを作成して、そのユーザーがユーザーコ"
+"ントロールパネルにログインすると3つの違うアカウントのボイスメールをアクセスで"
+"きる仕組みを作ることが可能です。"
 
-#: views/users.php:336 views/users.php:368 views/users.php:594
-#: views/users.php:621
+#: views/users.php:336 views/users.php:368 views/users.php:597
+#: views/users.php:624
 msgid "Inherit"
 msgstr "引き継ぐ"
 
-#: Userman.class.php:800
+#: Userman.class.php:816
 msgid "Invalid User"
 msgstr "無効なユーザ"
 
@@ -432,7 +479,7 @@ msgstr ""
 msgid "Language for this user"
 msgstr ""
 
-#: Userman.class.php:2173 Userman.class.php:2174 views/users.php:211
+#: Userman.class.php:2197 Userman.class.php:2198 views/users.php:211
 #: views/welcome.php:53
 msgid "Last Name"
 msgstr "性"
@@ -474,7 +521,7 @@ msgstr "ユーザを一覧表示"
 msgid "Login Details"
 msgstr "ログイン情報"
 
-#: Userman.class.php:2151 Userman.class.php:2152 views/users.php:54
+#: Userman.class.php:2175 Userman.class.php:2176 views/users.php:54
 msgid "Login Name"
 msgstr "ログイン名"
 
@@ -483,7 +530,7 @@ msgstr "ログイン名"
 msgid "May this group log in to the %s Administration Pages?"
 msgstr "このグループグループ"
 
-#: views/users.php:602
+#: views/users.php:605
 #, php-format
 msgid "May this user log in to the %s Administration Pages?"
 msgstr "このユーザが %s が管理者としてのログインを許可するかどうか。"
@@ -492,16 +539,17 @@ msgstr "このユーザが %s が管理者としてのログインを許可す�
 msgid "Microsoft Active Directory"
 msgstr "Microsoft Active Directory"
 
-#: Userman.class.php:1956
+#: Userman.class.php:1972
 msgid "Migrated user from voicemail"
 msgstr "ボイスメールから移行したユーザー"
 
-#: Userman.class.php:525
+#: Userman.class.php:526
 msgid "Module Core is disabled. Please enable it"
 msgstr "モジュール「コア」が無効です。有効にしてください"
 
-#: views/general.php:32 views/groups.php:264 views/groups.php:289
-#: views/quickCreate.php:16 views/users.php:592 views/users.php:619
+#: views/general.php:32 views/general.php:61 views/groups.php:264
+#: views/groups.php:289 views/quickCreate.php:16 views/users.php:595
+#: views/users.php:622
 msgid "No"
 msgstr "いいえ"
 
@@ -518,20 +566,22 @@ msgstr "接続していません"
 msgid "Not all of the connection parameters have been filled out"
 msgstr "まだ入力していないパラメータがあります。"
 
-#: Userman.class.php:2004
+#: Userman.class.php:2020
 msgid "Obfuscated. To reset use the reset link in this email"
-msgstr "非表示。リセットするには、このメールに含まれたリセットのリンク先を使ってください"
+msgstr ""
+"非表示。リセットするには、このメールに含まれたリセットのリンク先を使ってくだ"
+"さい"
 
 #: views/users.php:34
 msgid "Other Settings"
 msgstr "その他の設定"
 
-#: Userman.class.php:2156 views/msad.php:73 views/passwordmodal.php:16
+#: Userman.class.php:2180 views/msad.php:73 views/passwordmodal.php:16
 #: views/users.php:103
 msgid "Password"
 msgstr "パスワード"
 
-#: Userman.class.php:2157
+#: Userman.class.php:2181
 msgid "Password - plaintext"
 msgstr "パスワード: プレーンテキスト"
 
@@ -539,7 +589,7 @@ msgstr "パスワード: プレーンテキスト"
 msgid "Password For New User"
 msgstr "新規ユーザーのパスワード"
 
-#: Userman.class.php:1114
+#: Userman.class.php:1130
 msgid "Password can not be blank"
 msgstr "パスワードは必須項目です。"
 
@@ -551,19 +601,19 @@ msgstr "新規ユーザーの作成に使える有効なユーザー名を指定
 msgid "Port"
 msgstr "ポート"
 
-#: Userman.class.php:1230
+#: Userman.class.php:1246
 msgid "Previous Groupname can not be blank"
 msgstr "前のグループ名は必須項目です。"
 
-#: Userman.class.php:1200
+#: Userman.class.php:1216
 msgid "Previous Username can not be blank"
 msgstr "前のユーザ名は必須項目です。"
 
-#: Userman.class.php:2161
+#: Userman.class.php:2185
 msgid "Primary Extension"
 msgstr "プライマリ内線"
 
-#: Userman.class.php:2162 views/users.php:154
+#: Userman.class.php:2186 views/users.php:154
 msgid "Primary Linked Extension"
 msgstr "プライマリ連動内線"
 
@@ -571,7 +621,7 @@ msgstr "プライマリ連動内線"
 msgid "Priority"
 msgstr ""
 
-#: views/general.php:150
+#: views/general.php:179
 msgid "Remote Authentication IP Addresses"
 msgstr ""
 
@@ -580,35 +630,51 @@ msgstr ""
 msgid "Removed Voicemail User %s"
 msgstr ""
 
-#: Userman.class.php:497
+#: Userman.class.php:498
 msgid "Reset"
 msgstr "リセット"
 
 #: views/groups.php:319
-msgid "Restrict this groups's view to only Extensions, Ring Groups, and Queues within this range."
-msgstr "このグループの閲覧権限を、レンジ内の ①内線 ②着信グループ ③キュー に制限します。"
+msgid ""
+"Restrict this groups's view to only Extensions, Ring Groups, and Queues "
+"within this range."
+msgstr ""
+"このグループの閲覧権限を、レンジ内の ①内線 ②着信グループ ③キュー に制限しま"
+"す。"
 
-#: views/users.php:651
-msgid "Restrict this user's view to only Extensions, Ring Groups, and Queues within this range."
-msgstr "このユーザの閲覧権限を、レンジ内の ①内線 ②着信グループ ③キュー に制限します。"
+#: views/users.php:654
+msgid ""
+"Restrict this user's view to only Extensions, Ring Groups, and Queues within "
+"this range."
+msgstr ""
+"このユーザの閲覧権限を、レンジ内の ①内線 ②着信グループ ③キュー に制限します。"
 
-#: Userman.class.php:386
+#: Userman.class.php:387
 msgid "Saved"
 msgstr "保存済み"
 
 #: functions.inc/guihooks.php:110 functions.inc/guihooks.php:114
-msgid "Select a user that this extension should be linked to in User Manager, else select Create New User to have User Manager autogenerate a new user that will be linked to this extension"
-msgstr "「ユーザー管理」で連動する既存のユーザーを選択するか、新規ユーザーを作成でこの内線と連動する新しいユーザーを作成します"
+msgid ""
+"Select a user that this extension should be linked to in User Manager, else "
+"select Create New User to have User Manager autogenerate a new user that "
+"will be linked to this extension"
+msgstr ""
+"「ユーザー管理」で連動する既存のユーザーを選択するか、新規ユーザーを作成でこ"
+"の内線と連動する新しいユーザーを作成します"
 
 #: functions.inc/guihooks.php:158
-msgid "Select a user that this extension should be linked to in User Manager, else select None to have no association to a user"
-msgstr "「ユーザー管理」でこの内線と連動するユーザーを選択します。連動しない場合は「なし」を選択してください"
+msgid ""
+"Select a user that this extension should be linked to in User Manager, else "
+"select None to have no association to a user"
+msgstr ""
+"「ユーザー管理」でこの内線と連動するユーザーを選択します。連動しない場合は"
+"「なし」を選択してください"
 
 #: views/groups.php:345
 msgid "Select the Admin Sections this group should have access to."
 msgstr "グループのメンバーがアクセスできる管理者ページを制限します。"
 
-#: views/users.php:677
+#: views/users.php:680
 msgid "Select the Admin Sections this user should have access to."
 msgstr "ユーザがアクセスできる管理者ページを制限します。"
 
@@ -620,6 +686,10 @@ msgstr "ユーザ作成時に所属するグループを選択肢ます。"
 msgid "Send Email"
 msgstr "メールを送信"
 
+#: views/general.php:53
+msgid "Send Email as HTML"
+msgstr ""
+
 #: views/general.php:24
 msgid "Send Email on External New User Creation"
 msgstr "外部のユーザ作成時にメールを送信する"
@@ -628,7 +698,7 @@ msgstr "外部のユーザ作成時にメールを送信する"
 msgid "Set Password"
 msgstr "パスワードを設定"
 
-#: Userman.class.php:2002
+#: Userman.class.php:2018
 msgid "Set by your administrator"
 msgstr "管理者に設定されました。"
 
@@ -640,27 +710,41 @@ msgstr "設定"
 msgid "Status"
 msgstr "ステータス"
 
-#: Userman.class.php:485
+#: Userman.class.php:486
 msgid "Submit"
 msgstr "送信"
 
-#: Userman.class.php:479
+#: Userman.class.php:480
 msgid "Submit & Send Email to User"
 msgstr "送信してユーザにメールを送信"
 
-#: views/general.php:172
+#: views/general.php:201
 msgid "Synchronize"
 msgstr ""
 
-#: views/general.php:111
+#: views/general.php:140
 #, php-format
-msgid "Text to be used for the body of the welcome email. Useable variables are:<ul><li>fname: First name</li><li>lname: Last name</li><li>brand: %s</li><li>title: title</li><li>username: Username</li><li>password: Password</li></ul>"
-msgstr "案内メールの本文に使用するテキスト。以下の変数が使えます:<ul><li>fname: 名</li><li>lname: 性</li><li>brand: %s</li><li>title: 役職</li><li>username: ユーザ名</li><li>password: パスワード</li></ul>"
+msgid ""
+"Text to be used for the body of the welcome email. Useable variables are:"
+"<ul><li>fname: First name</li><li>lname: Last name</li><li>brand: %s</"
+"li><li>title: title</li><li>username: Username</li><li>password: Password</"
+"li></ul>"
+msgstr ""
+"案内メールの本文に使用するテキスト。以下の変数が使えます:<ul><li>fname: 名</"
+"li><li>lname: 性</li><li>brand: %s</li><li>title: 役職</li><li>username: ユー"
+"ザ名</li><li>password: パスワード</li></ul>"
 
-#: views/general.php:87
+#: views/general.php:116
 #, php-format
-msgid "Text to be used for the subject of the welcome email. Useable variables are:<ul><li>fname: First name</li><li>lname: Last name</li><li>brand: %s</li><li>title: title</li><li>username: Username</li><li>password: Password</li></ul>"
-msgstr "案内メールの件名に使用するテキスト。以下の変数が使えます:<ul><li>fname: 名</li><li>lname: 性</li><li>brand: %s</li><li>title: 役職</li><li>username: ユーザ名</li><li>password: パスワード</li></ul>"
+msgid ""
+"Text to be used for the subject of the welcome email. Useable variables are:"
+"<ul><li>fname: First name</li><li>lname: Last name</li><li>brand: %s</"
+"li><li>title: title</li><li>username: Username</li><li>password: Password</"
+"li></ul>"
+msgstr ""
+"案内メールの件名に使用するテキスト。以下の変数が使えます:<ul><li>fname: 名</"
+"li><li>lname: 性</li><li>brand: %s</li><li>title: 役職</li><li>username: ユー"
+"ザ名</li><li>password: パスワード</li></ul>"
 
 #: assets/js/userman.js:258
 msgid "The Browser Language could not be determined"
@@ -671,8 +755,10 @@ msgid "The Browser Timezone could not be determined"
 msgstr ""
 
 #: userman.i18n.php:18
-msgid "The From: field for emails when using the user management email feature."
-msgstr "「ユーザー管理」のメール機能で使用する From: (送信者) の情報を設定します。"
+msgid ""
+"The From: field for emails when using the user management email feature."
+msgstr ""
+"「ユーザー管理」のメール機能で使用する From: (送信者) の情報を設定します。"
 
 #: assets/js/userman.js:268
 msgid "The PBX Language is not set"
@@ -702,7 +788,7 @@ msgstr "Active Directoryのポート番号"
 msgid "The active directory username"
 msgstr "Active Directoryのユーザ名"
 
-#: views/general.php:140
+#: views/general.php:169
 #, php-format
 msgid "The authentication engine to use"
 msgstr "使用する認証エンジン。"
@@ -716,36 +802,58 @@ msgid "The connection status of the Active Directory Server"
 msgstr "Active Directoryサーバの接続ステータス。"
 
 #: views/users.php:407
-msgid "The email address to associate with this user. Multiple email address need to be separated with a comma."
+msgid ""
+"The email address to associate with this user. Multiple email address need "
+"to be separated with a comma."
 msgstr ""
 
-#: views/users.php:529
-msgid "The format dates and times should display in. The default of \"llll\" is locale aware. If left blank this will use the group/system format. For more formats please see: http://momentjs.com/docs/#/displaying/format/"
+#: views/users.php:532
+msgid ""
+"The format dates and times should display in. The default of \"llll\" is "
+"locale aware. If left blank this will use the group/system format. For more "
+"formats please see: http://momentjs.com/docs/#/displaying/format/"
 msgstr ""
 
 #: views/groups.php:200
-msgid "The format dates and times should display in. The default of \"llll\" is locale aware. If left blank this will use the system format. For more formats please see: http://momentjs.com/docs/#/displaying/format/"
+msgid ""
+"The format dates and times should display in. The default of \"llll\" is "
+"locale aware. If left blank this will use the system format. For more "
+"formats please see: http://momentjs.com/docs/#/displaying/format/"
 msgstr ""
 
-#: views/users.php:551
-msgid "The format dates should display in. The default of \"l\" is locale aware. If left blank this will use the group/system format. For more formats please see: http://momentjs.com/docs/#/displaying/format/"
+#: views/users.php:554
+msgid ""
+"The format dates should display in. The default of \"l\" is locale aware. If "
+"left blank this will use the group/system format. For more formats please "
+"see: http://momentjs.com/docs/#/displaying/format/"
 msgstr ""
 
 #: views/groups.php:222
-msgid "The format dates should display in. The default of \"l\" is locale aware. If left blank this will use the system format. For more formats please see: http://momentjs.com/docs/#/displaying/format/"
+msgid ""
+"The format dates should display in. The default of \"l\" is locale aware. If "
+"left blank this will use the system format. For more formats please see: "
+"http://momentjs.com/docs/#/displaying/format/"
 msgstr ""
 
-#: views/users.php:573
-msgid "The format times should display in. The default of \"LT\" is locale aware. If left blank this will use the group/system format. For more formats please see: http://momentjs.com/docs/#/displaying/format/"
+#: views/users.php:576
+msgid ""
+"The format times should display in. The default of \"LT\" is locale aware. "
+"If left blank this will use the group/system format. For more formats please "
+"see: http://momentjs.com/docs/#/displaying/format/"
 msgstr ""
 
 #: views/groups.php:244
-msgid "The format times should display in. The default of \"LT\" is locale aware. If left blank this will use the system format. For more formats please see: http://momentjs.com/docs/#/displaying/format/"
+msgid ""
+"The format times should display in. The default of \"LT\" is locale aware. "
+"If left blank this will use the system format. For more formats please see: "
+"http://momentjs.com/docs/#/displaying/format/"
 msgstr ""
 
-#: views/general.php:64
+#: views/general.php:93
 #, php-format
-msgid "The hostname used for email. If left blank the default value of '%s' will be used"
+msgid ""
+"The hostname used for email. If left blank the default value of '%s' will be "
+"used"
 msgstr ""
 
 #: views/users.php:431
@@ -793,31 +901,44 @@ msgid "The voicemail context to get users from"
 msgstr "ユーザを取得するためのボイスメールコンテキスト。"
 
 #: userman.i18n.php:8
-msgid "This Module manages all PBX users. It allows an Administrator to create a User Account that can be used by other applications for login or API purposes."
+msgid ""
+"This Module manages all PBX users. It allows an Administrator to create a "
+"User Account that can be used by other applications for login or API "
+"purposes."
 msgstr ""
 
-#: Userman.class.php:2313 Userman.class.php:2373
+#: Userman.class.php:2337 Userman.class.php:2397
 msgid "This authentication driver does not allow importing"
 msgstr "この認証ドライバではインポート機能が使えません。"
 
 #: install.php:299
-msgid "This group was created on install and is automatically assigned to new users. This can be disabled in User Manager Settings"
-msgstr "このグループはインストール時に作成されました。新しいユーザは自動的にこのグループに配属されますが、ユーザ管理の設定でこれを無効にすることができます。"
+msgid ""
+"This group was created on install and is automatically assigned to new "
+"users. This can be disabled in User Manager Settings"
+msgstr ""
+"このグループはインストール時に作成されました。新しいユーザは自動的にこのグ"
+"ループに配属されますが、ユーザ管理の設定でこれを無効にすることができます。"
 
 #: views/users.php:170
-msgid "This is the extension this user is linked to from the Extensions page. A single user can only be linked to one extension, and one extension can only be linked to a single user."
+msgid ""
+"This is the extension this user is linked to from the Extensions page. A "
+"single user can only be linked to one extension, and one extension can only "
+"be linked to a single user."
 msgstr ""
 
 #: views/users.php:66
 msgid "This is the name that the user will use when logging in."
 msgstr "ログインに使うユーザー名。"
 
-#: views/general.php:191
+#: views/general.php:220
 #, php-format
-msgid "This setting only applies to authentication engines other than the %s Internal Directory. For the %s Internal Directory this setting will be ignored."
+msgid ""
+"This setting only applies to authentication engines other than the %s "
+"Internal Directory. For the %s Internal Directory this setting will be "
+"ignored."
 msgstr ""
 
-#: views/groups.php:232 views/users.php:561
+#: views/groups.php:232 views/users.php:564
 msgid "Time Format"
 msgstr ""
 
@@ -833,7 +954,7 @@ msgstr ""
 msgid "Title"
 msgstr "肩書"
 
-#: Userman.class.php:1197
+#: Userman.class.php:1213
 msgid "UID was not numeric"
 msgstr "UIDには数字以外の文字が入っています"
 
@@ -918,7 +1039,7 @@ msgstr "ユーザー管理モジュール"
 msgid "User Manager"
 msgstr "ユーザ管理"
 
-#: Userman.class.php:2133 Userman.class.php:2134 views/quickCreate.php:36
+#: Userman.class.php:2157 Userman.class.php:2158 views/quickCreate.php:36
 msgid "User Manager Groups"
 msgstr "ユーザ管理のグループ"
 
@@ -926,7 +1047,7 @@ msgstr "ユーザ管理のグループ"
 msgid "User Manager Settings"
 msgstr "ユーザー管理の設定"
 
-#: Userman.class.php:2127 Userman.class.php:2128
+#: Userman.class.php:2151 Userman.class.php:2152
 msgid "User Manager Users"
 msgstr "ユーザ管理のユーザ"
 
@@ -942,7 +1063,7 @@ msgstr "ユーザーを削除しました"
 msgid "User Successfully Updated"
 msgstr "ユーザ情報を更新しました"
 
-#: Userman.class.php:2269
+#: Userman.class.php:2293
 msgid "User already exists"
 msgstr ""
 
@@ -960,7 +1081,7 @@ msgstr "ユーザー名"
 msgid "Username Can Not Be Blank!"
 msgstr "ユーザ名は必須項目です。"
 
-#: Userman.class.php:1111
+#: Userman.class.php:1127
 msgid "Username can not be blank"
 msgstr "ユーザ名は必須項目です。"
 
@@ -972,7 +1093,7 @@ msgstr "ユーザー名とパスワードは空にできません！"
 msgid "Users"
 msgstr "ユーザ"
 
-#: views/groups.php:307 views/users.php:639
+#: views/groups.php:307 views/users.php:642
 msgid "Visible Extension Range"
 msgstr "閲覧可能な内線レンジ"
 
@@ -984,9 +1105,17 @@ msgstr "ボイスメールは読み取り専用となっているため、追加
 msgid "What is User Manager"
 msgstr "ユーザー管理とは？"
 
+#: views/general.php:70
+msgid "Whether Email Body will send as HTML or plain text to the user."
+msgstr ""
+
 #: views/general.php:41
-msgid "Whether to send an email (using the template below) to new users when they are created externally (not directly through User Manager)"
-msgstr "以下のテンプレートを使って、外部から作成したユーザに送信するかどうか設定できます。※ユーザ管理から直接作ったユーザは対象になりません。"
+msgid ""
+"Whether to send an email (using the template below) to new users when they "
+"are created externally (not directly through User Manager)"
+msgstr ""
+"以下のテンプレートを使って、外部から作成したユーザに送信するかどうか設定でき"
+"ます。※ユーザ管理から直接作ったユーザは対象になりません。"
 
 #: views/quickCreate.php:90
 msgid "Which User Manager user this extension will link to"
@@ -1004,16 +1133,17 @@ msgstr "このグループに所属するユーザ。"
 msgid "Work Phone Number"
 msgstr "仕事の電話番号"
 
-#: views/general.php:30 views/groups.php:262 views/groups.php:287
-#: views/quickCreate.php:14 views/users.php:590 views/users.php:617
+#: views/general.php:30 views/general.php:59 views/groups.php:262
+#: views/groups.php:287 views/quickCreate.php:14 views/users.php:593
+#: views/users.php:620
 msgid "Yes"
 msgstr "はい"
 
-#: Userman.class.php:2043 views/general.php:79
+#: Userman.class.php:2063 views/general.php:108
 msgid "Your %brand% Account"
 msgstr "自分の %brand% アカウント"
 
-#: Userman.class.php:2245
+#: Userman.class.php:2269
 msgid "default_extension is required."
 msgstr "default_extensionは必須項目です。"
 
@@ -1025,7 +1155,7 @@ msgstr "グループ"
 msgid "group Successfully Added"
 msgstr "グループ 追加しました"
 
-#: Userman.class.php:2321
+#: Userman.class.php:2345
 msgid "groupname is required."
 msgstr "groupname は必須項目です"
 
@@ -1033,7 +1163,7 @@ msgstr "groupname は必須項目です"
 msgid "groups"
 msgstr "グループ"
 
-#: Userman.class.php:2287
+#: Userman.class.php:2311
 msgid "password is required."
 msgstr "passwordは必須項目です。"
 
@@ -1041,25 +1171,13 @@ msgstr "passwordは必須項目です。"
 msgid "user"
 msgstr "ユーザ"
 
-#: Userman.class.php:2242
+#: Userman.class.php:2266
 msgid "username is required."
 msgstr "usernameは必須項目です。"
 
 #: assets/js/userman.js:7
 msgid "users"
 msgstr "ユーザ"
-
-#: views/general.php:53
-msgid "Send Email as HTML"
-msgstr ""
-
-#: userman.i18n.php:8
-msgid "This Module manages all FreePBX users\t\tIt allows an Administrator to create a User Account that can be used by other applications for login or API purposes.\t\tModules like iSymphony, Rest API and User Control Panel and FreePBX itself use this module to manage their users."
-msgstr ""
-
-#: views/general.php:70
-msgid "Whether Email Body will send as HTML or plain text to the user."
-msgstr ""
 
 #~ msgid "Add & Send Email to User"
 #~ msgstr "追加してユーザーにメール送信"
@@ -1106,11 +1224,27 @@ msgstr ""
 #~ msgid "Save & resend email to all users"
 #~ msgstr "保存して全ユーザーにメールを再送"
 
-#~ msgid "Text to be used for the body of the welcome email. Useable variables are:<ul><li>fname: First name</li><li>lname: Last name</li><li>brand: %s</li><li>title: title</li><li>username: Username</li><li>password: Password</li></ul><br>Empty the box to reset this field"
-#~ msgstr "案内のメールで使用する本文のテキスト。次の変数が使えます: <ul><li>fname: 名</li><li>lname: 性</li><li>brand: %s</li><li>title: タイトル</li><li>username: ユーザー名</li><li>password: パスワード</li></ul><br> この枠をリセットするには空にしてください。"
+#~ msgid ""
+#~ "Text to be used for the body of the welcome email. Useable variables are:"
+#~ "<ul><li>fname: First name</li><li>lname: Last name</li><li>brand: %s</"
+#~ "li><li>title: title</li><li>username: Username</li><li>password: "
+#~ "Password</li></ul><br>Empty the box to reset this field"
+#~ msgstr ""
+#~ "案内のメールで使用する本文のテキスト。次の変数が使えます: <ul><li>fname: "
+#~ "名</li><li>lname: 性</li><li>brand: %s</li><li>title: タイトル</"
+#~ "li><li>username: ユーザー名</li><li>password: パスワード</li></ul><br> こ"
+#~ "の枠をリセットするには空にしてください。"
 
-#~ msgid "Text to be used for the subject of the welcome email. Useable variables are:<ul><li>fname: First name</li><li>lname: Last name</li><li>brand: %s</li><li>title: title</li><li>username: Username</li><li>password: Password</li></ul><br>Empty the box to reset this field"
-#~ msgstr "案内のメールで使用する件名のテキスト。次の変数が使えます: <ul><li>fname: 名</li><li>lname: 性</li><li>brand: %s</li><li>title: タイトル</li><li>username: ユーザー名</li><li>password: パスワード</li></ul><br> この枠をリセットするには空にしてください"
+#~ msgid ""
+#~ "Text to be used for the subject of the welcome email. Useable variables "
+#~ "are:<ul><li>fname: First name</li><li>lname: Last name</li><li>brand: %s</"
+#~ "li><li>title: title</li><li>username: Username</li><li>password: "
+#~ "Password</li></ul><br>Empty the box to reset this field"
+#~ msgstr ""
+#~ "案内のメールで使用する件名のテキスト。次の変数が使えます: <ul><li>fname: "
+#~ "名</li><li>lname: 性</li><li>brand: %s</li><li>title: タイトル</"
+#~ "li><li>username: ユーザー名</li><li>password: パスワード</li></ul><br> こ"
+#~ "の枠をリセットするには空にしてください"
 
 #~ msgid "The Password Can Not Be blank!"
 #~ msgstr "パスワードは空にできません！"
@@ -1124,20 +1258,43 @@ msgstr ""
 #~ msgid "The user's fax number."
 #~ msgstr "ユーザーのFAX番号。"
 
-#~ msgid "This Module manages all FreePBX users excluding Administrators (at this time).\t\tIt allows an Administrator to create a User Account that can be used by other applications for login or API purposes.\t\tModules like iSymphony, Rest API and User Control Panel use this module to manage their users."
-#~ msgstr "現時点では管理者以外の全てのFreePBXユーザーを管理します。\t\t管理者が、アプリケーションやAPIで使われるユーザーのアカウントを作成できます。\t\tiSymphonyやRest API、またはユーザーコントロールパネルはこのモジュールを通じてユーザーを管理します。"
+#~ msgid ""
+#~ "This Module manages all FreePBX users excluding Administrators (at this "
+#~ "time).\t\tIt allows an Administrator to create a User Account that can be "
+#~ "used by other applications for login or API purposes.\t\tModules like "
+#~ "iSymphony, Rest API and User Control Panel use this module to manage "
+#~ "their users."
+#~ msgstr ""
+#~ "現時点では管理者以外の全てのFreePBXユーザーを管理します。\t\t管理者が、ア"
+#~ "プリケーションやAPIで使われるユーザーのアカウントを作成できます。\t"
+#~ "\tiSymphonyやRest API、またはユーザーコントロールパネルはこのモジュールを"
+#~ "通じてユーザーを管理します。"
 
 #~ msgid ""
-#~ "This Module manages all FreePBX users excluding Administrators (at this time).\n"
-#~ "\t\tIt allows an Administrator to create a User Account that can be used by other applications for login or API purposes.\n"
-#~ "\t\tModules like iSymphony, Rest API and User Control Panel use this module to manage their users."
+#~ "This Module manages all FreePBX users excluding Administrators (at this "
+#~ "time).\n"
+#~ "\t\tIt allows an Administrator to create a User Account that can be used "
+#~ "by other applications for login or API purposes.\n"
+#~ "\t\tModules like iSymphony, Rest API and User Control Panel use this "
+#~ "module to manage their users."
 #~ msgstr ""
 #~ "現時点では管理者以外の全てのFreePBXユーザーを管理します。\n"
-#~ "\t\t管理者が、アプリケーションやAPIで使われるユーザーのアカウントを作成できます。\n"
-#~ "iSymphonyやRest API、またはユーザーコントロールパネルはこのモジュールを通じてユーザーを管理します。"
+#~ "\t\t管理者が、アプリケーションやAPIで使われるユーザーのアカウントを作成で"
+#~ "きます。\n"
+#~ "iSymphonyやRest API、またはユーザーコントロールパネルはこのモジュールを通"
+#~ "じてユーザーを管理します。"
 
-#~ msgid "This is the extension this user is linked to from the Extensions page. A single user can only be linked to one extension, and one extension can only be linked to a single user. If using Rest Apps on a phone, this is the extension that will be mapped to the API permissions set below for this user."
-#~ msgstr "このユーザーと連動する内線です。一人のユーザーは一つの内線としか連動できません。同じように一つの内線は一人のユーザーとしか連動できません。電話機でRestアプリを使う場合は、以下に設定するAPI権限にマッピングされる内線となります。"
+#~ msgid ""
+#~ "This is the extension this user is linked to from the Extensions page. A "
+#~ "single user can only be linked to one extension, and one extension can "
+#~ "only be linked to a single user. If using Rest Apps on a phone, this is "
+#~ "the extension that will be mapped to the API permissions set below for "
+#~ "this user."
+#~ msgstr ""
+#~ "このユーザーと連動する内線です。一人のユーザーは一つの内線としか連動できま"
+#~ "せん。同じように一つの内線は一人のユーザーとしか連動できません。電話機で"
+#~ "Restアプリを使う場合は、以下に設定するAPI権限にマッピングされる内線となり"
+#~ "ます。"
 
 #~ msgid "Update"
 #~ msgstr "更新"
