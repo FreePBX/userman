@@ -43,6 +43,35 @@
 				</div>
 			</div>
 			<!--END Email Subject-->
+			<!-- Email Html -->
+			<div class="element-container">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="row">
+							<div class="form-group">
+								<div class="col-md-3">
+									<label class="control-label" for="mailtype"><?php echo _("Send Email as HTML")?></label>
+									<i class="fa fa-question-circle fpbx-help-icon" data-for="mailtype"></i>
+								</div>
+								<div class="col-md-9">
+									<span class="radioset">
+										<input type="radio" id="mailtype-yes" name="mailtype" value="html" <?php echo $mailtype === "html" ? "checked" : ""?>>
+										<label for="mailtype-yes"><?php echo _("Yes")?></label>
+										<input type="radio" id="mailtype-no" name="mailtype" value="text" <?php echo $mailtype !== "html" ? "checked" : ""?>>
+										<label for="mailtype-no"><?php echo _("No")?></label>
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<span id="mailtype-help" class="help-block fpbx-help-block"><?php echo _("Whether Email Body will send as HTML or plain text to the user.")?></span>
+					</div>
+				</div>
+			</div>
+			<!-- END Email Html -->
 			<div class="element-container">
 				<div class="row">
 					<div class="col-md-12">

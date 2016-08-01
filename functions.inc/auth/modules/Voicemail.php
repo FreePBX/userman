@@ -238,7 +238,7 @@ class Voicemail extends Auth {
 			$d = $this->FreePBX->Voicemail->getVoicemail();
 		}
 		if(!empty($d[$config['context']][$username])) {
-			if($password == $d[$config['context']][$username]['pwd']) {
+			if($password === $d[$config['context']][$username]['pwd']) {
 				//Injecting breaks how FreePBX protects itself
 				//To fix this just force a refresh of modules
 				$this->FreePBX->Modules->active_modules = array();
