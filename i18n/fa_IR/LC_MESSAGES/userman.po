@@ -10,14 +10,14 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-01 11:19-0700\n"
-"PO-Revision-Date: 2016-05-20 11:30+0200\n"
+"PO-Revision-Date: 2016-08-07 06:51+0200\n"
 "Last-Translator: Media <mousavi.media@gmail.com>\n"
-"Language-Team: Persian (Iran) <http://weblate.freepbx.org/projects/freepbx/"
-"userman/fa_IR/>\n"
+"Language-Team: Persian (Iran) "
+"<http://weblate.freepbx.org/projects/freepbx/userman/fa_IR/>\n"
+"Language: fa_IR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fa_IR\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 2.4\n"
 
@@ -668,7 +668,7 @@ msgstr "ارسال ایمیل"
 
 #: views/general.php:53
 msgid "Send Email as HTML"
-msgstr ""
+msgstr "ارسال ایمیل به صورت HTML"
 
 #: views/general.php:24
 msgid "Send Email on External New User Creation"
@@ -1007,7 +1007,7 @@ msgstr "مدیریت کاربر چیست"
 
 #: views/general.php:70
 msgid "Whether Email Body will send as HTML or plain text to the user."
-msgstr ""
+msgstr "چه به صورت کد HTML ویا متن ساده برای کاربر ارسال شود."
 
 #: views/general.php:41
 msgid ""
