@@ -12,7 +12,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	private $groupTable = 'userman_groups';
 	private $groupSettingsTable = 'userman_groups_settings';
 	private $brand = 'FreePBX';
-	private $tokenExpiration = "5 minutes";
+	private $tokenExpiration = "1 day";
 	private $auth = null;
 	private $auths = array();
 
