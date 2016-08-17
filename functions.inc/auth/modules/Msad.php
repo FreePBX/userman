@@ -497,7 +497,7 @@ class Msad extends Auth {
 			$pid = pcntl_fork();
 
 			if (!$pid) {
-					$iid = getmypid();
+					$iid = getmypid().time();
 					\FreePBX::Database()->__construct();
 					$db = new \DB();
 					$this->connect(true);
@@ -541,6 +541,10 @@ class Msad extends Auth {
 			$gdata = file_get_contents($tpath."/".$child['gdata']);
 			unlink($tpath."/".$child['gdata']);
 			$group = unserialize($gdata);
+
+			if(empty($users) || empty($group)) {
+				throw new \Exception("Users or Groups are empty");
+			}
 
 			$this->out("\tFound ".$users['count']. " users in ".$group['cn'][0]);
 			unset($users['count']);
