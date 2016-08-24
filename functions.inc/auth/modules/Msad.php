@@ -57,8 +57,19 @@ class Msad extends Auth {
 	 * @var array
 	 */
 	private $gcache = array();
-
+	/**
+	 * Private Group Cache
+	 * cache requests throughout this class
+	 * @var array
+	 */
 	private $pucache = array();
+
+	/**
+	 * Results Limit.
+	 * Everything is paginated but we have to define a limit
+	 * @var integer
+	 */
+	private $limit = 900;
 
 	/**
 	 * The Adldap2 connector
@@ -260,9 +271,8 @@ class Msad extends Auth {
 			$this->updateAllGroups();
 			$this->out("Updating Primary Groups");
 			$this->updatePrimaryGroups();
-
-			//$this->out("Executing User Manager Hooks");
-			//$this->executeHooks();
+			$this->out("Executing User Manager Hooks");
+			$this->executeHooks();
 
 			unlink($lock);
 		} else {
@@ -451,14 +461,13 @@ class Msad extends Auth {
 		$groups = array();
 		foreach($this->gcache as $gsid => $group) {
 			$groups[$gsid] = $this->getGroupByAuthID($gsid);
-			//$groups[$gsid]['cache'] = $group;
 		}
 
 		$process = array();
 		foreach($this->pucache as $usid => $group) {
 			$u = $this->getUserByAuthID($usid);
 			$gsid = $group->getSid();
-			if(!empty($groups[$gsid])) {
+			if(!empty($u) && !empty($groups[$gsid])) {
 				$group = $groups[$gsid];
 				$this->out("\tAdding ".$u['username']." to ".$group['groupname']."...",false);
 				if(empty($process[$group['id']])) {
@@ -500,9 +509,10 @@ class Msad extends Auth {
 		$this->connect();
 
 		$search = $this->ad->search();
-		$results = $search->groups()->get();
+		$paginator = $search->groups()->paginate($this->limit, 1);
+		$results = $paginator->getResults();
 
-		$this->out("Got ".count($results). " groups");
+		$this->out("Found ".count($results). " groups");
 
 		$sql = "DROP TABLE IF EXISTS msad_procs_temp";
 		$sth = $this->FreePBX->Database->prepare($sql);
@@ -549,7 +559,7 @@ class Msad extends Auth {
 		}
 		\FreePBX::Database()->__construct();
 		$db = new \DB();
-		//$this->connect(true);
+		//$this->connect(true); //Do we have to reconnect?
 
 		$this->out("Child processes have finished");
 
@@ -573,18 +583,20 @@ class Msad extends Auth {
 				throw new \Exception("Users or Groups are empty");
 			}
 
-			$this->out("\tFound ".count($users). " users in ".$group->getName());
-
 			$members = array();
 			foreach($users as $user) {
 				$usid = $user->getSid();
 				$u = $this->getUserByAuthID($usid);
-				$members[] = $u['id'];
+				if(!empty($u)) {
+					$members[] = $u['id'];
+				}
 			}
 			$sid = $group->getSid();
 			$this->gcache[$sid] = $group;
 			$um = $this->linkGroup($group->getName(), 'msad', $sid);
 			if($um['status']) {
+				$this->out("\t".$group->getAccountName(). ": ".$um['message']);
+				$this->out("\t\tFound ".count($users). " users in ".$group->getName());
 				$description = !empty($group->getAttribute('description',0)) ? $group->getAttribute('description',0) : '';
 				$this->updateGroupData($um['id'], array(
 					"description" => $description,
@@ -622,9 +634,11 @@ class Msad extends Auth {
 		$this->connect();
 
 		$search = $this->ad->search();
-		$results = $search->users()->get();
 
-		$this->out("Got ".count($results). " users");
+		$paginator = $search->users()->paginate($this->limit, 1);
+		$results = $paginator->getResults();
+
+		$this->out("Found ".count($results). " users");
 
 		foreach($results as $result) {
 			$sid = $result->getSid();
@@ -634,6 +648,7 @@ class Msad extends Auth {
 
 			$um = $this->linkUser($result->getAccountName(), 'msad', $sid);
 			if($um['status']) {
+				$this->out("\t".$result->getAccountName(). ": ".$um['message']);
 				$data = array(
 					"description" => !empty($result->getAttribute('description',0)) ? $result->getAttribute('description',0) : '',
 					"primary_group" => !empty($result->getPrimaryGroupId()) ? $result->getPrimaryGroupId() : '',
