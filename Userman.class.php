@@ -4,6 +4,7 @@
 //	Copyright 2013 Schmooze Com Inc.
 //
 namespace FreePBX\modules;
+include __DIR__."/vendor/autoload.php";
 class Userman extends \FreePBX_Helpers implements \BMO {
 	private $registeredFunctions = array();
 	private $message = '';

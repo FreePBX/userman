@@ -473,11 +473,12 @@ abstract class Auth implements Base {
 	 * @return Boolean       True is success
 	 */
 	public function updateGroupData($gid, $data = array()) {
-		$sql = "UPDATE ".$this->groupTable." SET `description` = :description, `language` = :language, `timezone` = :timezone, `dateformat` = :dateformat, `timeformat` = :timeformat, `datetimeformat` = :datetimeformat WHERE `id` = :gid AND auth = :auth";
+		$sql = "UPDATE ".$this->groupTable." SET `description` = :description, `language` = :language, `timezone` = :timezone, `dateformat` = :dateformat, `timeformat` = :timeformat, `datetimeformat` = :datetimeformat, `users` = :users WHERE `id` = :gid AND auth = :auth";
 
 		$sth = $this->db->prepare($sql);
 		$defaults = $this->getGroupByGID($gid);
 		$description = isset($data['description']) ? $data['description'] : (!isset($data['description']) && !empty($defaults['description']) ? $defaults['description'] : null);
+		$users = isset($data['users']) ? $data['users'] : (!isset($data['users']) && !empty($defaults['users']) ? $defaults['users'] : null);
 		$language = isset($data['language']) ? $data['language'] : (!isset($data['language']) && !empty($defaults['language']) ? $defaults['language'] : null);
 		$timezone = isset($data['timezone']) ? $data['timezone'] : (!isset($data['timezone']) && !empty($defaults['timezone']) ? $defaults['timezone'] : null);
 		$datetimeformat = isset($data['datetimeformat']) ? $data['datetimeformat'] : (!isset($data['datetimeformat']) && !empty($defaults['datetimeformat']) ? $defaults['datetimeformat'] : null);
@@ -493,7 +494,8 @@ abstract class Auth implements Base {
 					':timezone' => $timezone,
 					':timeformat' => $timeformat,
 					':dateformat' => $dateformat,
-					':datetimeformat' => $datetimeformat
+					':datetimeformat' => $datetimeformat,
+					':users' => json_encode($users)
 				)
 			);
 		} catch (\Exception $e) {
