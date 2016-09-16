@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>13.0.73</version>
+	<version>13.0.73.1</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -12,6 +12,7 @@
 		Modules like iSymphony, Rest API and User Control Panel and FreePBX itself use this module to manage their users.
 	</description>
 	<changelog>
+		*13.0.73.1* FREEPBX-13164 limit number of forks based on CPU count
 		*13.0.73* FREEPBX-12953 check to make sure there is valid data
 		*13.0.72* Increase token timeout from 1 hour to 1 day
 		*13.0.71* FREEPBX-12804 Add HTML support for User Management emails
@@ -100,7 +101,7 @@
 	</menuitems>
 	<depends>
 		<phpversion>5.3.3</phpversion>
-		<version>13.0.103</version>
+		<version>13.0.188.4</version>
 		<module>core ge 13.0.84</module>
 	</depends>
 	<hooks>

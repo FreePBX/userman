@@ -49,6 +49,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * Return the active authentication object
 	 * @return object The authentication object
 	 */
+
 	public function getAuthObject() {
 		return $this->auth;
 	}
@@ -1024,7 +1025,10 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * @param  string $auth The authentication engine name, will default to freepbx
 	 */
 	private function switchAuth($auth = 'freepbx') {
-		$this->getAuths();
+		if(!in_array($auth,$this->getAuths())) {
+			throw new \Exception("Unallowed Auth Engine");
+		}
+
 		if(!empty($auth)) {
 			$class = 'FreePBX\modules\Userman\Auth\\'.$auth;
 			try {

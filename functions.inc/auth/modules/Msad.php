@@ -56,6 +56,8 @@ class Msad extends Auth {
 	 */
 	private $gcache = array();
 
+	private $active = 0;
+
 	private $userHooks = array(
 		'add' => array(),
 		'update' => array(),
@@ -198,7 +200,6 @@ class Msad extends Auth {
 	 * Sync users and groups to the local database
 	 */
 	public function sync($output=null) {
-
 		if(php_sapi_name() !== 'cli') {
 			$path = $this->FreePBX->Config->get("AMPSBIN");
 			exec($path."/fwconsole userman sync");
@@ -456,6 +457,18 @@ class Msad extends Auth {
 		}
 	}
 
+	public function sig_handler($signo) {
+		switch ($signo) {
+			case SIGCLD:
+				while(($pid = pcntl_wait($signo, WNOHANG)) > 0){
+					$signal = pcntl_wexitstatus ($signo);
+					$this->active -= 1;
+					echo "Fork ".$signal." has finished\n";
+				}
+			break;
+		}
+	}
+
 	/**
 	 * Update All Groups
 	 * Runs through the directory to update all settings (users and naming)
@@ -493,30 +506,40 @@ class Msad extends Auth {
 		if(!file_exists($tpath)) {
 			mkdir($tpath,0777,true);
 		}
+		declare(ticks = 1);
+		pcntl_signal(SIGCHLD, array($this,"sig_handler"));
+		$max = getCpuCount() * 7;
+		$this->active = 0;
+		$this->out("Forking out $max active children at a time");
 		foreach($groups as $i => $group) {
-			$pid = pcntl_fork();
 
+			while ($this->active >= $max) {
+				sleep(1);
+			}
+
+			$this->active++;
+			$pid = pcntl_fork();
 			if (!$pid) {
-					$iid = getmypid().time();
-					\FreePBX::Database()->__construct();
-					$db = new \DB();
-					$this->connect(true);
-					//http://www.rlmueller.net/CharactersEscaped.htm
-					$group['distinguishedname'][0] = ldap_escape($group['distinguishedname'][0]);
-					$this->out("\tGetting users from ".$group['cn'][0]."...");
-					$gs = ldap_search($this->ldap, $this->dn, "(&(objectCategory=Person)(sAMAccountName=*)(memberof=".$group['distinguishedname'][0]."))");
-					if($gs !== false) {
-						$users = ldap_get_entries($this->ldap, $gs);
-						$susers = serialize($users);
-						file_put_contents($tpath."/".$iid."-users",$susers);
-						$sgroup = serialize($group);
-						file_put_contents($tpath."/".$iid."-group",$sgroup);
-						$sql = "INSERT INTO msad_procs_temp (`pid`,`udata`,`gdata`) VALUES (?,?,?)";
-						$sth = $this->FreePBX->Database->prepare($sql);
-						$sth->execute(array($i,$iid."-users",$iid."-group"));
-					}
-					$this->out("\tFinished Getting users from ".$group['cn'][0]);
-					exit($i);
+				$iid = getmypid().time();
+				\FreePBX::Database()->__construct();
+				$db = new \DB();
+				$this->connect(true);
+				//http://www.rlmueller.net/CharactersEscaped.htm
+				$group['distinguishedname'][0] = ldap_escape($group['distinguishedname'][0]);
+				$this->out("\tFork $i getting users from ".$group['cn'][0]."...");
+				$gs = ldap_search($this->ldap, $this->dn, "(&(objectCategory=Person)(sAMAccountName=*)(memberof=".$group['distinguishedname'][0]."))");
+				if($gs !== false) {
+					$users = ldap_get_entries($this->ldap, $gs);
+					$susers = serialize($users);
+					file_put_contents($tpath."/".$iid."-users",$susers);
+					$sgroup = serialize($group);
+					file_put_contents($tpath."/".$iid."-group",$sgroup);
+					$sql = "INSERT INTO msad_procs_temp (`pid`,`udata`,`gdata`) VALUES (?,?,?)";
+					$sth = $this->FreePBX->Database->prepare($sql);
+					$sth->execute(array($i,$iid."-users",$iid."-group"));
+				}
+				$this->out("\tFork $i finished Getting users from ".$group['cn'][0]);
+				exit($i);
 			}
 		}
 		\FreePBX::Database()->__construct();
