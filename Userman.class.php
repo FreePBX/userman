@@ -1026,7 +1026,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 */
 	private function switchAuth($auth = 'freepbx') {
 		if(!in_array($auth,$this->getAuths())) {
-			throw new \Exception("Unallowed Auth Engine");
+			throw new \Exception("Unallowed Auth Engine [".$auth."]");
 		}
 
 		if(!empty($auth)) {
@@ -1057,8 +1057,8 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 			$name = basename($auth, ".php");
 			if(!class_exists('FreePBX\modules\Userman\Auth\\'.$name)) {
 				include(__DIR__."/functions.inc/auth/modules/".$name.".php");
-				$this->auths[] = $name;
 			}
+			$this->auths[] = $name;
 		}
 		return $this->auths;
 	}
