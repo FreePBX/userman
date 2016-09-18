@@ -1025,7 +1025,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * @param  string $auth The authentication engine name, will default to freepbx
 	 */
 	private function switchAuth($auth = 'Freepbx') {
-		$auth = ucfirst(strtolower($auth));
+		$auth = !empty($auth) ? ucfirst(strtolower($auth)) : 'Freepbx';
 		if(!in_array($auth,$this->getAuths())) {
 			throw new \Exception("Unallowed Auth Engine [".$auth."]");
 		}
