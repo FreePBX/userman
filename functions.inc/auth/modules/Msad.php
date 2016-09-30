@@ -57,6 +57,9 @@ class Msad extends Auth {
 	 * @var array
 	 */
 	private $gcache = array();
+
+	private $active = 0;
+
 	/**
 	 * Private Group Cache
 	 * cache requests throughout this class
@@ -530,9 +533,19 @@ class Msad extends Auth {
 		if(!file_exists($tpath)) {
 			mkdir($tpath,0777,true);
 		}
-
+		declare(ticks = 1);
+		pcntl_signal(SIGCHLD, array($this,"sig_handler"));
+		$max = getCpuCount() * 7;
+		$this->active = 0;
+		$this->out("Forking out $max active children at a time");
 		foreach($results as $i => $result) {
+
+			while ($this->active >= $max) {
+				sleep(1);
+			}
+
 			$ssid = $result->getObjectSid();
+			$this->active++;
 			$pid = pcntl_fork();
 			if (!$pid) {
 				$iid = getmypid().time();
@@ -550,7 +563,7 @@ class Msad extends Auth {
 				$sql = "INSERT INTO msad_procs_temp (`pid`,`udata`,`gdata`) VALUES (?,?,?)";
 				$sth = $this->FreePBX->Database->prepare($sql);
 				$sth->execute(array($i,$iid."-users",$iid."-group"));
-				$this->out("\tFinished Getting users from ".$result->getName());
+				$this->out("\tFork $i finished Getting users from ".$result->getName());
 				exit($i);
 			}
 		}
