@@ -3,12 +3,10 @@
 //	License for all code of this FreePBX module can be found in the license file inside the module directory
 //	Copyright 2013 Schmooze Com Inc.
 //
-//	https://msdn.microsoft.com/en-us/library/windows/desktop/ms677605(v=vs.85).aspx
 //
-//
-//  MSAD module modified for use with OpenLDAP-Directory
-//  Matthias Frei - www.frei.media
-//  2016/10/01
+//  MSActiveDirectory auth module copied and modified for use with OpenLDAP-Directory
+//  Modified by Matthias Frei - www.frei.media
+//  2016/01/10
 //  
 //
 //  Groups are identified by attribute 'objectClass'='posixGroup'
