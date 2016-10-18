@@ -2066,6 +2066,11 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		//Cleanup any linked extensions that aren't in the linked auth
 		$sql = 'UPDATE '.$this->userTable.' SET default_extension = "none" WHERE auth != ?';
 		$auth = $this->getConfig('auth');
+		if(empty($auth)) {
+			//make sure there is a valid auth
+			$this->setConfig('auth','Freepbx');
+			$auth = 'Freepbx';
+		}
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array($auth));
 
