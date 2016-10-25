@@ -44,6 +44,11 @@ class Openldap extends Auth {
 	 */
 	private $port = 389;
 	/**
+	 * LDAP TLS
+	 * @var boolean
+	 */
+	private $tls = true;
+	/**
 	 * LDAP Base DN
 	 * @var string
 	 */
@@ -111,6 +116,7 @@ class Openldap extends Auth {
 		$config = $userman->getConfig("authOpenLDAPSettings");
 		$this->host = $config['host'];
 		$this->port = !empty($config['port']) ? $config['port'] : 389;
+		$this->tls = isset($config['tls']) ? $config['tls'] : true;
 		$this->basedn = $config['basedn'];
 		$this->userdn = $config['userdn'];
 		$this->user = $config['username'];
@@ -183,6 +189,7 @@ class Openldap extends Auth {
 		$config = array(
 			"host" => $_REQUEST['openldap-host'],
 			"port" => $_REQUEST['openldap-port'],
+			"tls" => $_REQUEST['openldap-tls'] === 'yes',
 			"username" => $_REQUEST['openldap-username'],
 			"password" => $_REQUEST['openldap-password'],
 			"userdn" => $_REQUEST['openldap-userdn'],
@@ -218,6 +225,10 @@ class Openldap extends Auth {
 	public function connect($reconnect = false) {
 		if($reconnect || !$this->ldap) {
 			$this->ldap = ldap_connect($this->host,$this->port);
+
+			if ($this->tls)
+				ldap_start_tls($this->ldap);
+
 			if($this->ldap === false) {
 				$this->ldap = null;
 				throw new \Exception("Unable to Connect");
@@ -673,7 +684,6 @@ class Openldap extends Auth {
 		$this->connect();
 
 		$this->out("Retrieving all users...",false);
-
 		$sr = ldap_search($this->ldap, $this->basedn, "(&(objectClass=".$this->userObjectClass.")(uid=*))");
 		$users = ldap_get_entries($this->ldap, $sr);
 

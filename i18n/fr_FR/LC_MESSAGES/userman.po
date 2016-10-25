@@ -777,6 +777,10 @@ msgstr ""
 msgid "The OpenLDAP port"
 msgstr ""
 
+#: views/openldap.php:51
+msgid "Use TLS"
+msgstr ""
+
 #: views/openldap.php:63
 msgid "The OpenLDAP username"
 msgstr ""
