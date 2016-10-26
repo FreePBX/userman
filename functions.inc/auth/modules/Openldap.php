@@ -118,6 +118,7 @@ class Openldap extends Auth {
 		$this->port = !empty($config['port']) ? $config['port'] : 389;
 		$this->tls = isset($config['tls']) ? $config['tls'] : true;
 		$this->basedn = $config['basedn'];
+		$this->userident = isset($config['userident']) ? $config['userident'] : 'uid';
 		$this->userdn = $config['userdn'];
 		$this->user = $config['username'];
 		$this->password = $config['password'];
@@ -192,6 +193,7 @@ class Openldap extends Auth {
 			"tls" => $_REQUEST['openldap-tls'] === 'yes',
 			"username" => $_REQUEST['openldap-username'],
 			"password" => $_REQUEST['openldap-password'],
+			"userident" => $_REQUEST['openldap-userident'],
 			"userdn" => $_REQUEST['openldap-userdn'],
 			"basedn" => $_REQUEST['openldap-basedn'],
 			"la" => $_REQUEST['openldap-la'],

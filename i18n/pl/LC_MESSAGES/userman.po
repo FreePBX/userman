@@ -776,6 +776,10 @@ msgstr ""
 msgid "Use TLS"
 msgstr ""
 
+#: views/openldap.php:134
+msgid "The OpenLDAP User Identity. Usually is uid"
+msgstr ""
+
 #: views/openldap.php:63
 msgid "The OpenLDAP username"
 msgstr ""
