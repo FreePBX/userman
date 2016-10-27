@@ -738,6 +738,18 @@ class Msad extends Auth {
 		return $result;
 	}
 
+	public function sig_handler($signo) {
+		switch($signo) {
+			case SIGCLD:
+				while (($pid = pcntl_wait($signo, WNOHANG)) > 0) {
+					$signal = pcntl_wexitstatus($signo);
+					$this->active -= 1;
+				}
+
+				break;
+		}
+	}
+
 	/**
 	 * Debug messages
 	 * @param  string $message The message

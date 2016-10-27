@@ -228,8 +228,9 @@ class Openldap extends Auth {
 		if($reconnect || !$this->ldap) {
 			$this->ldap = ldap_connect($this->host,$this->port);
 
-			if ($this->tls)
+			if ($this->tls) {
 				ldap_start_tls($this->ldap);
+			}
 
 			if($this->ldap === false) {
 				$this->ldap = null;
