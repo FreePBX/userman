@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-18 12:26-0700\n"
+"POT-Creation-Date: 2016-10-28 18:55-0700\n"
 "PO-Revision-Date: 2016-08-07 06:51+0200\n"
 "Last-Translator: Media <mousavi.media@gmail.com>\n"
 "Language-Team: Persian (Iran) <http://weblate.freepbx.org/projects/freepbx/"
@@ -106,7 +106,7 @@ msgstr "مدیر"
 msgid "Administration Access"
 msgstr "دسترسی مدیریت"
 
-#: install.php:229
+#: install.php:244
 msgid "All Users"
 msgstr "تمام کاربران"
 
@@ -906,7 +906,7 @@ msgstr ""
 msgid "This authentication driver does not allow importing"
 msgstr "درایور احراز هویت اجازه ورود نمیدهد"
 
-#: install.php:229
+#: install.php:244
 msgid ""
 "This group was created on install and is automatically assigned to new "
 "users. This can be disabled in User Manager Settings"

@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-18 12:26-0700\n"
+"POT-Creation-Date: 2016-10-28 18:55-0700\n"
 "PO-Revision-Date: 2015-10-30 07:56+0200\n"
 "Last-Translator: Kevin <kevin@qloog.com>\n"
 "Language-Team: Japanese <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -116,7 +116,7 @@ msgstr "アドミン"
 msgid "Administration Access"
 msgstr "管理者アクセス"
 
-#: install.php:229
+#: install.php:244
 msgid "All Users"
 msgstr "全てのユーザ"
 
@@ -895,7 +895,7 @@ msgstr ""
 msgid "This authentication driver does not allow importing"
 msgstr "この認証ドライバではインポート機能が使えません。"
 
-#: install.php:229
+#: install.php:244
 msgid ""
 "This group was created on install and is automatically assigned to new "
 "users. This can be disabled in User Manager Settings"
