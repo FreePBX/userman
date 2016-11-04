@@ -845,6 +845,10 @@ msgid "The voicemail context to get users from"
 msgstr ""
 
 #: userman.i18n.php:8
+msgid "This Module manages all FreePBX users\t\tIt allows an Administrator to create a User Account that can be used by other applications for login or API purposes.\t\tModules like iSymphony, Rest API and User Control Panel and FreePBX itself use this module to manage their users."
+msgstr ""
+
+#: userman.i18n.php:8
 msgid "This Module manages all PBX users. It allows an Administrator to create a User Account that can be used by other applications for login or API purposes."
 msgstr ""
 
@@ -1112,8 +1116,12 @@ msgstr ""
 msgid "users"
 msgstr ""
 
-#: userman.i18n.php:8
-msgid "This Module manages all FreePBX users\t\tIt allows an Administrator to create a User Account that can be used by other applications for login or API purposes.\t\tModules like iSymphony, Rest API and User Control Panel and FreePBX itself use this module to manage their users."
+#: views/openldap.php:134
+msgid "The OpenLDAP User Identity. Usually is uid"
+msgstr ""
+
+#: views/openldap.php:51
+msgid "Use TLS"
 msgstr ""
 
 #~ msgid "Authentication Type"

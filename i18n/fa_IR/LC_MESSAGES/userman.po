@@ -1112,6 +1112,14 @@ msgstr "نام کاربری احتیاج است."
 msgid "users"
 msgstr "کاربران"
 
+#: views/openldap.php:134
+msgid "The OpenLDAP User Identity. Usually is uid"
+msgstr ""
+
+#: views/openldap.php:51
+msgid "Use TLS"
+msgstr ""
+
 #~ msgid "LDAP is in Read Only Mode. Deletion denied"
 #~ msgstr "LDAP در حالت فقط خواندنی است. حذف ممنوع است"
 
