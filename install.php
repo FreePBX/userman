@@ -284,7 +284,7 @@ FreePBX::Config()->define_conf_setting('AMPUSERMANEMAILFROM',$set,true);
 
 //Quick check to see if we are previously installed
 //this lets us know if we need to create a default group
-$sql = "SELECT * FROM userman_groups";
+$sql = "SELECT * FROM userman_groups WHERE auth = 'freepbx'";
 $sth = FreePBX::Database()->prepare($sql);
 try {
 	$sth->execute();
@@ -294,9 +294,24 @@ try {
 }
 
 if (empty($grps)) {
+	$users = array();
+	$sql = "SELECT * FROM userman_users WHERE auth = 'freepbx'";
+	$sth = FreePBX::Database()->prepare($sql);
+	try {
+		$sth->execute();
+		$us = $sth->fetchAll(PDO::FETCH_ASSOC);
+		$users = array();
+		foreach($us as $u) {
+			if(empty($u['id'])) {
+				continue;
+			}
+			$users[] = $u['id'];
+		}
+	} catch(\Exception $e) {}
+
 	$sql = "INSERT INTO userman_groups (`groupname`, `description`, `users`) VALUES (?, ?, ?)";
 	$sth = FreePBX::Database()->prepare($sql);
-	$sth->execute(array(_("All Users"),_("This group was created on install and is automatically assigned to new users. This can be disabled in User Manager Settings"),"[]"));
+	$sth->execute(array(_("All Users"),_("This group was created on install and is automatically assigned to new users. This can be disabled in User Manager Settings"),json_encode($users)));
 	$id = FreePBX::Database()->lastInsertId();
 	$config = array(
 		"default-groups" => array($id)
@@ -331,5 +346,45 @@ if (empty($grps)) {
 	FreePBX::Userman()->setModuleSettingByGID($id,'ucp|Voicemail','playback', true);
 	FreePBX::Userman()->setModuleSettingByGID($id,'ucp|Voicemail','settings', true);
 	FreePBX::Userman()->setModuleSettingByGID($id,'ucp|Voicemail','greetings', true);
+	FreePBX::Userman()->setModuleSettingByGID($id,'ucp|Voicemail','vmxlocater', true);
+	FreePBX::Userman()->setModuleSettingByGID($id,'ucp|Conferencespro','enable', true);
+	FreePBX::Userman()->setModuleSettingByGID($id,'ucp|Conferencespro','assigned', array("linked"));
+	FreePBX::Userman()->setModuleSettingByGID($id,'conferencespro','link', true);
+	FreePBX::Userman()->setModuleSettingByGID($id,'conferencespro','ivr', true);
+	FreePBX::Userman()->setModuleSettingByGID($id,'ucp|Sysadmin','vpn_enable', true);
+	$tfsettings = array(
+		"login",
+		"menuover",
+		"conference_enable",
+		"queue_enable",
+		"timecondition_enable",
+		"callflow_enable",
+		"contact_enable",
+		"voicemail_enable",
+		"presence_enable",
+		"parking_enable",
+		"fmfm_enable",
+		"dnd_enable",
+		"cf_enable",
+		"qa_enable",
+		"lilo_enable"
+	);
+	foreach($tfsettings as $setting) {
+		FreePBX::Userman()->setModuleSettingByGID($id,'restapps',$setting, true);
+	}
+	FreePBX::Userman()->setModuleSettingByGID($id,'restapps','conferences',array('linked'));
+	$asettings = array(
+		"queues",
+		"timeconditions",
+		"callflows",
+		"contacts"
+	);
+	foreach($asettings as $setting) {
+		FreePBX::Userman()->setModuleSettingByGID($id,'restapps',$setting,array('*'));
+	}
+	FreePBX::Userman()->setModuleSettingByGID($id,"contactmanager","showingroups",array("*"));
+	FreePBX::Userman()->setModuleSettingByGID($id,'contactmanager','groups',array("*"));
+	FreePBX::Userman()->setModuleSettingByGID($id,'sysadmin','vpn_link', true);
+	FreePBX::Userman()->setModuleSettingByGID($id,'zulu','enable', true);
 	FreePBX::Userman()->setConfig("autoGroup", $id);
 }
