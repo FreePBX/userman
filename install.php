@@ -279,6 +279,7 @@ if (empty($grps)) {
 	FreePBX::Userman()->setModuleSettingByGID($id,'ucp|Voicemail','vmxlocater', true);
 	FreePBX::Userman()->setModuleSettingByGID($id,'ucp|Conferencespro','enable', true);
 	FreePBX::Userman()->setModuleSettingByGID($id,'ucp|Endpoint','enable', true);
+	FreePBX::Userman()->setModuleSettingByGID($id,'ucp|Endpoint','assigned', array("self"));
 	FreePBX::Userman()->setModuleSettingByGID($id,'ucp|Conferencespro','assigned', array("linked"));
 	FreePBX::Userman()->setModuleSettingByGID($id,'conferencespro','link', true);
 	FreePBX::Userman()->setModuleSettingByGID($id,'conferencespro','ivr', true);

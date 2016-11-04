@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>13.0.75.1</version>
+	<version>13.0.75.2</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -12,6 +12,7 @@
 		Modules like iSymphony, Rest API and User Control Panel and FreePBX itself use this module to manage their users.
 	</description>
 	<changelog>
+		*13.0.75.2* One more addition
 		*13.0.75.1* Endpoint additions
 		*13.0.75* FREEPBX-13479 fix 12 to 13 migration problems
 		*13.0.74.1* FREEPBX-13386 Linked Extensions reset if not Auth mode is set
