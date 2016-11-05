@@ -2048,6 +2048,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$email->subject($subject);
 		$email->message($body);
 		$email->send();
+		return true;
 	}
 
 	/**
