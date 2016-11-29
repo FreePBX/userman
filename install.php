@@ -348,6 +348,8 @@ if (empty($grps)) {
 	FreePBX::Userman()->setModuleSettingByGID($id,'ucp|Voicemail','greetings', true);
 	FreePBX::Userman()->setModuleSettingByGID($id,'ucp|Voicemail','vmxlocater', true);
 	FreePBX::Userman()->setModuleSettingByGID($id,'ucp|Conferencespro','enable', true);
+	FreePBX::Userman()->setModuleSettingByGID($id,'ucp|Endpoint','enable', true);
+	FreePBX::Userman()->setModuleSettingByGID($id,'ucp|Endpoint','assigned', array("self"));
 	FreePBX::Userman()->setModuleSettingByGID($id,'ucp|Conferencespro','assigned', array("linked"));
 	FreePBX::Userman()->setModuleSettingByGID($id,'conferencespro','link', true);
 	FreePBX::Userman()->setModuleSettingByGID($id,'conferencespro','ivr', true);
@@ -386,5 +388,8 @@ if (empty($grps)) {
 	FreePBX::Userman()->setModuleSettingByGID($id,'contactmanager','groups',array("*"));
 	FreePBX::Userman()->setModuleSettingByGID($id,'sysadmin','vpn_link', true);
 	FreePBX::Userman()->setModuleSettingByGID($id,'zulu','enable', true);
+	FreePBX::Userman()->setModuleSettingByGID($id,'zulu','enable_fax', true);
+	FreePBX::Userman()->setModuleSettingByGID($id,'zulu','enable_sms', true);
+	FreePBX::Userman()->setModuleSettingByGID($id,'zulu','enable_phone', true);
 	FreePBX::Userman()->setConfig("autoGroup", $id);
 }
