@@ -785,6 +785,9 @@ msgstr ""
 msgid "The OpenLDAP User Identity. Usually is uid"
 msgstr ""
 
+msgid "The OpenLDAP Display Name. Usually is displayname"
+msgstr ""
+
 #: views/openldap.php:156
 msgid ""
 "The OpenLDAP User-DN. Usually in the format of OU=people,DC=example,DC=com)"
@@ -1085,6 +1088,9 @@ msgstr "Usuario No Existe"
 
 #: views/openldap.php:122
 msgid "User Identity"
+msgstr ""
+
+msgid "Display Name"
 msgstr ""
 
 #: userman.i18n.php:4 userman.i18n.php:10

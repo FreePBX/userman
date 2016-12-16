@@ -74,6 +74,11 @@ class Openldap extends Auth {
 	 */
 	private $userident = "uid";
 	/**
+	 * LDAP Display Name
+	 * @var string
+	 */
+	private $displayname = "displayname";
+	/**
 	 * LDAP Object Class of a user
 	 * @var string
 	 */
@@ -119,6 +124,7 @@ class Openldap extends Auth {
 		$this->tls = isset($config['tls']) ? $config['tls'] : true;
 		$this->basedn = $config['basedn'];
 		$this->userident = isset($config['userident']) ? $config['userident'] : 'uid';
+		$this->displayname = isset($config['displayname']) ? $config['displayname'] : 'displayname';
 		$this->userdn = $config['userdn'];
 		$this->user = $config['username'];
 		$this->password = $config['password'];
@@ -194,6 +200,7 @@ class Openldap extends Auth {
 			"username" => $_REQUEST['openldap-username'],
 			"password" => $_REQUEST['openldap-password'],
 			"userident" => $_REQUEST['openldap-userident'],
+			"displayname" => $_REQUEST['openldap-displayname'],
 			"userdn" => $_REQUEST['openldap-userdn'],
 			"basedn" => $_REQUEST['openldap-basedn'],
 			"la" => $_REQUEST['openldap-la'],
@@ -704,7 +711,7 @@ class Openldap extends Auth {
 					"primary_group" => !empty($user['gidnumber'][0]) ? $user['gidnumber'][0] : '',
 					"fname" => !empty($user['givenname'][0]) ? $user['givenname'][0] : '',
 					"lname" => !empty($user['sn'][0]) ? $user['sn'][0] : '',
-					"displayname" => !empty($user['displayname'][0]) ?$user['displayname'][0] : '',
+					"displayname" => !empty($user[$this->displayname][0]) ?$user[$this->displayname][0] : '',
 					"department" => !empty($user['department'][0]) ? $user['department'][0] : '',
 					"email" => !empty($user['mail'][0]) ? $user['mail'][0] : '',
 					"cell" => !empty($user['mobile'][0]) ? $user['mobile'][0] : '',
