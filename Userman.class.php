@@ -1321,7 +1321,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$sql = "SELECT a.val, a.type, a.key FROM ".$this->userSettingsTable." a, ".$this->userTable." b WHERE b.id = a.uid AND b.id = :id AND a.module = 'global'";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':id' => $uid));
-		$result = $sth->fetch(\PDO::FETCH_ASSOC);
+		$result = $sth->fetchAll(\PDO::FETCH_ASSOC);
 		if($result) {
 			$fout = array();
 			foreach($result as $res) {
@@ -1344,7 +1344,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$sql = "SELECT a.val, a.type, a.key FROM ".$this->groupSettingsTable." a, ".$this->groupTable." b WHERE b.id = a.gid AND b.id = :id AND a.module = 'global'";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':id' => $gid));
-		$result = $sth->fetch(\PDO::FETCH_ASSOC);
+		$result = $sth->fetchAll(\PDO::FETCH_ASSOC);
 		if($result) {
 			$fout = array();
 			foreach($result as $res) {

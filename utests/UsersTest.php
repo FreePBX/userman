@@ -13,7 +13,6 @@ class ModulesTest extends PHPUnit_Framework_TestCase {
 	protected static $randomUser;
 
 	public static function setUpBeforeClass() {
-		include 'setuptests.php';
 		self::$f = FreePBX::create();
 		self::$u = self::$f->Userman;
 	}
