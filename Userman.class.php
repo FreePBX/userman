@@ -1325,7 +1325,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		if($result) {
 			$fout = array();
 			foreach($result as $res) {
-				$fout[$res['key']] = ($result['type'] == 'json-arr' && $this->isJson($result['type'])) ? json_decode($result['type'],true) : $result;
+				$fout[$res['key']] = ($result['type'] == 'json-arr' && $this->isJson($result['val'])) ? json_decode($result['val'],true) : $result;
 			}
 			return $fout;
 		}
@@ -1348,7 +1348,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		if($result) {
 			$fout = array();
 			foreach($result as $res) {
-				$fout[$res['key']] = ($result['type'] == 'json-arr' && $this->isJson($result['type'])) ? json_decode($result['type'],true) : $result;
+				$fout[$res['key']] = ($result['type'] == 'json-arr' && $this->isJson($result['val'])) ? json_decode($result['val'],true) : $result;
 			}
 			return $fout;
 		}
@@ -1597,7 +1597,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		if($result) {
 			$fout = array();
 			foreach($result as $res) {
-				$fout[$res['key']] = ($res['type'] == 'json-arr' && $this->isJson($res['val'])) ? json_decode($re['val'],true) : $res['val'];
+				$fout[$res['key']] = ($res['type'] == 'json-arr' && $this->isJson($res['val'])) ? json_decode($res['val'],true) : $res['val'];
 			}
 			return $fout;
 		}
