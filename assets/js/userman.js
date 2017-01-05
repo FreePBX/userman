@@ -23,7 +23,7 @@ $(".btn-remove").click(function() {
 	var type = $(this).data("type"), btn = $(this), section = $(this).data("section");
 	var chosen = $("#table-"+section).bootstrapTable("getSelections");
 	$(chosen).each(function(){
-		deleteExts[type].push(this['id']);
+		deleteExts[type].push(this.id);
 	});
 	if(confirm(sprintf(_("Are you sure you wish to delete these %s?"),translations[type]))) {
 		btn.find("span").text(_("Deleting..."));
@@ -74,8 +74,8 @@ $("table").on("post-body.bs.table", function () {
 });
 $("table").on("page-change.bs.table", function () {
 	$(".btn-remove").prop("disabled", true);
-	deleteExts['users'] = [];
-	deleteExts['groups'] = [];
+	deleteExts.users = [];
+	deleteExts.groups = [];
 });
 $("table").on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
 	var toolbar = $(this).data("toolbar"),
@@ -136,18 +136,18 @@ function setLocales(callback) {
 var params={};window.location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi,function(str,key,value){params[key] = value;});
 //Tab and Button stuff
 $( document ).ready(function() {
-	var hash = (window.location.hash != "") ? window.location.hash : "users";
+	var hash = (window.location.hash !== "") ? window.location.hash : "users";
 	if(hash == '#settings'){
 		$('input[name="submit"]').removeClass('hidden');
 		$('input[name="submitsend"]').removeClass('hidden');
 		$('input[name="reset"]').removeClass('hidden');
 		$("#action-bar").removeClass("hidden");
-	} else if(params['action'] == 'adduser' || params['action'] == 'showuser'){
+	} else if(params.action == 'adduser' || params.action == 'showuser'){
 		$('input[name="submitsend"]').removeClass('hidden');
 		$('input[name="submit"]').removeClass('hidden');
 		$('input[name="reset"]').removeClass('hidden');
 		$('input[name="delete"]').removeClass('hidden');
-	}else if(params['action'] == 'addgroup' || params['action'] == 'showgroup') {
+	}else if(params.action == 'addgroup' || params.action == 'showgroup') {
 		$('input[name="submit"]').removeClass('hidden');
 		$('input[name="reset"]').removeClass('hidden');
 		$('input[name="delete"]').removeClass('hidden');
@@ -241,6 +241,30 @@ function groupActions(value, row, index) {
 		html += '<a class="clickable"><i class="fa fa-trash-o" data-section="groups" data-id="'+row.id+'"></i></a>';
 	}
 	return html;
+}
+
+function updateTimeDisplay() {
+	var userdtf = $("#datetimeformat").val();
+	userdtf = (userdtf !== "") ? userdtf : datetimeformat;
+	$("#datetimeformat-now").text(moment().tz(timezone).format(userdtf));
+
+	var usertf = $("#timeformat").val();
+	usertf = (usertf !== "") ? usertf : timeformat;
+	$("#timeformat-now").text(moment().tz(timezone).format(usertf));
+
+	var userdf = $("#dateformat").val();
+	userdf = (userdf !== "") ? userdf : dateformat;
+	$("#dateformat-now").text(moment().tz(timezone).format(userdf));
+}
+
+if($("#datetimeformat-now").length) {
+	updateTimeDisplay();
+	setInterval(function() {
+		updateTimeDisplay();
+	},1000);
+	$("#datetimeformat, #timeformat, #dateformat").keydown(function() {
+		updateTimeDisplay();
+	});
 }
 
 $("#user-side").on("click-row.bs.table", function(row, $element) {

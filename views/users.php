@@ -521,7 +521,10 @@ echo $heading;
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="datetimeformat"></i>
 												</div>
 												<div class="col-md-9">
-													<input type="text" class="form-control" id="datetimeformat" name="datetimeformat" value="<?php echo !empty($user['datetimeformat']) ? $user['datetimeformat'] : ''; ?>">
+													<div class="input-group">
+														<input type="text" class="form-control" id="datetimeformat" name="datetimeformat" placeholder="llll" value="<?php echo !empty($user['datetimeformat']) ? $user['datetimeformat'] : ''; ?>">
+														<span class="input-group-addon" id="datetimeformat-now"></span>
+													</div>
 												</div>
 											</div>
 										</div>
@@ -539,11 +542,14 @@ echo $heading;
 										<div class="row">
 											<div class="form-group">
 												<div class="col-md-3">
-													<label class="control-label" for="timeformat"><?php echo _("Date Format")?></label>
+													<label class="control-label" for="timeformat"><?php echo _("Time Format")?></label>
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="timeformat"></i>
 												</div>
 												<div class="col-md-9">
-													<input type="text" class="form-control" id="timeformat" name="timeformat" value="<?php echo !empty($user['timeformat']) ? $user['timeformat'] : ''; ?>">
+													<div class="input-group">
+														<input type="text" class="form-control" id="timeformat" name="timeformat" placeholder="LT" value="<?php echo !empty($user['timeformat']) ? $user['timeformat'] : ''; ?>">
+														<span class="input-group-addon" id="timeformat-now"></span>
+													</div>
 												</div>
 											</div>
 										</div>
@@ -551,7 +557,7 @@ echo $heading;
 								</div>
 								<div class="row">
 									<div class="col-md-12">
-										<span id="timeformat-help" class="help-block fpbx-help-block"><?php echo _('The format dates should display in. The default of "l" is locale aware. If left blank this will use the group/system format. For more formats please see: http://momentjs.com/docs/#/displaying/format/')?></span>
+										<span id="timeformat-help" class="help-block fpbx-help-block"><?php echo _('The format times should display in. The default of "LT" is locale aware. If left blank this will use the group/system format. For more formats please see: http://momentjs.com/docs/#/displaying/format/')?></span>
 									</div>
 								</div>
 							</div>
@@ -561,11 +567,14 @@ echo $heading;
 										<div class="row">
 											<div class="form-group">
 												<div class="col-md-3">
-													<label class="control-label" for="dateformat"><?php echo _("Time Format")?></label>
+													<label class="control-label" for="dateformat"><?php echo _("Date Format")?></label>
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="dateformat"></i>
 												</div>
 												<div class="col-md-9">
-													<input type="text" class="form-control" id="dateformat" name="dateformat" value="<?php echo !empty($user['dateformat']) ? $user['dateformat'] : ''; ?>">
+													<div class="input-group">
+														<input type="text" class="form-control" id="dateformat" name="dateformat" placeholder="l" value="<?php echo !empty($user['dateformat']) ? $user['dateformat'] : ''; ?>">
+														<span class="input-group-addon" id="dateformat-now"></span>
+													</div>
 												</div>
 											</div>
 										</div>
@@ -573,7 +582,7 @@ echo $heading;
 								</div>
 								<div class="row">
 									<div class="col-md-12">
-										<span id="dateformat-help" class="help-block fpbx-help-block"><?php echo _('The format times should display in. The default of "LT" is locale aware. If left blank this will use the group/system format. For more formats please see: http://momentjs.com/docs/#/displaying/format/')?></span>
+										<span id="dateformat-help" class="help-block fpbx-help-block"><?php echo _('The format dates should display in. The default of "l" is locale aware. If left blank this will use the group/system format. For more formats please see: http://momentjs.com/docs/#/displaying/format/')?></span>
 									</div>
 								</div>
 							</div>

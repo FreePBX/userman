@@ -530,13 +530,15 @@ abstract class Auth implements Base {
 		$fax = isset($data['fax']) ? $data['fax'] : (!isset($data['fax']) && !empty($defaults['fax']) ? $defaults['fax'] : null);
 		$displayname = isset($data['displayname']) ? $data['displayname'] : (!isset($data['displayname']) && !empty($defaults['displayname']) ? $defaults['displayname'] : null);
 		$department = isset($data['department']) ? $data['department'] : (!isset($data['department']) && !empty($defaults['department']) ? $defaults['department'] : null);
-		$language = isset($data['language']) ? $data['language'] : (!isset($data['language']) && !empty($defaults['language']) ? $defaults['language'] : null);
-		$timezone = isset($data['timezone']) ? $data['timezone'] : (!isset($data['timezone']) && !empty($defaults['timezone']) ? $defaults['timezone'] : null);
-		$datetimeformat = isset($data['datetimeformat']) ? $data['datetimeformat'] : (!isset($data['datetimeformat']) && !empty($defaults['datetimeformat']) ? $defaults['datetimeformat'] : null);
-		$timeformat = isset($data['timeformat']) ? $data['timeformat'] : (!isset($data['timeformat']) && !empty($defaults['timeformat']) ? $defaults['timeformat'] : null);
-		$dateformat = isset($data['dateformat']) ? $data['dateformat'] : (!isset($data['dateformat']) && !empty($defaults['dateformat']) ? $defaults['dateformat'] : null);
 		$description = isset($data['description']) ? $data['description'] : (!isset($data['description']) && !empty($defaults['description']) ? $defaults['description'] : null);
 		$primary_group = isset($data['primary_group']) ? $data['primary_group'] : (!isset($data['primary_group']) && !empty($defaults['primary_group']) ? $defaults['primary_group'] : null);
+
+		//special case
+		$language = (array_key_exists('language',$data) && !empty($data['language'])) ? $data['language'] : (!array_key_exists('language',$data) && !empty($defaults['language']) ? $defaults['language'] : null);
+		$timezone = (array_key_exists('timezone',$data) && !empty($data['timezone'])) ? $data['timezone'] : (!array_key_exists('timezone',$data) && !empty($defaults['timezone']) ? $defaults['timezone'] : null);
+		$datetimeformat = (array_key_exists('datetimeformat',$data) && !empty($data['datetimeformat'])) ? $data['datetimeformat'] : (!array_key_exists('datetimeformat',$data) && !empty($defaults['datetimeformat']) ? $defaults['datetimeformat'] : null);
+		$timeformat = (array_key_exists('timeformat',$data) && !empty($data['timeformat'])) ? $data['timeformat'] : (!array_key_exists('timeformat',$data) && !empty($defaults['timeformat']) ? $defaults['timeformat'] : null);
+		$dateformat = (array_key_exists('dateformat',$data) && !empty($data['dateformat'])) ? $data['dateformat'] : (!array_key_exists('dateformat',$data) && !empty($defaults['dateformat']) ? $defaults['dateformat'] : null);
 
 		try {
 			$sth->execute(
