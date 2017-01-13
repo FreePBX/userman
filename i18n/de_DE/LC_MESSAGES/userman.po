@@ -10,23 +10,26 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-05 10:55-0700\n"
-"PO-Revision-Date: 2016-11-05 10:55-0700\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2017-01-12 18:55+0200\n"
+"Last-Translator: Sven <spiderrs4@web.de>\n"
+"Language-Team: German "
+"<http://weblate.freepbx.org/projects/freepbx/userman/de_DE/>\n"
+"Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2.4\n"
 
 #: views/groups.php:28 views/users.php:28
 #, php-format
 msgid "%s Administration GUI"
-msgstr ""
+msgstr "%s Administrations Oberfläche"
 
 #: functions.inc/auth/modules/Freepbx.php:24
 #, php-format
 msgid "%s Internal Directory"
-msgstr ""
+msgstr "%s Internes Verzeichnis"
 
 #: views/welcome.php:15
 #, php-format
@@ -40,73 +43,73 @@ msgstr ""
 #: Userman.class.php:2188
 #, php-format
 msgid "%s records failed validation"
-msgstr ""
+msgstr "%s Überprüfung beim Eintrag fehlgeschlagen"
 
 #: views/general.php:210
 msgid "1 Day"
-msgstr ""
+msgstr "1 Tag"
 
 #: views/general.php:208
 msgid "1 Hour"
-msgstr ""
+msgstr "1 Stunde"
 
 #: views/general.php:207
 msgid "30 Minutes"
-msgstr ""
+msgstr "30 Minuten"
 
 #: views/general.php:209
 msgid "6 Hours"
-msgstr ""
+msgstr "6 Stunden"
 
 #: views/users.php:89
 msgid "A brief description for this user."
-msgstr ""
+msgstr "Eine kurze Beschreibung für diesen Benutzer."
 
 #: views/welcome.php:56 views/welcome.php:84
 msgid "Action"
-msgstr ""
+msgstr "Aktion"
 
 #: views/welcome.php:34 views/welcome.php:68
 msgid "Add"
-msgstr ""
+msgstr "Hinzufügen"
 
 #: Userman.class.php:693
 msgid "Add Device"
-msgstr ""
+msgstr "Gerät hinzufügen"
 
 #: Userman.class.php:693
 msgid "Add Extension"
-msgstr ""
+msgstr "Nebenstelle hinzufügen"
 
 #: views/groups.php:5 views/rnav.php:21
 msgid "Add Group"
-msgstr ""
+msgstr "Gruppe hinzufügen"
 
 #: views/rnav.php:6 views/users.php:5
 msgid "Add User"
-msgstr ""
+msgstr "Benutzer hinzufügen"
 
 #: functions.inc/auth/modules/Voicemail.php:77
 #, php-format
 msgid "Added Voicemail User %s"
-msgstr ""
+msgstr "Anrufbeantworter-Benutzer %s hinzugefügt."
 
 #: userman.i18n.php:6 userman.i18n.php:12
 msgid "Admin"
-msgstr ""
+msgstr "Administrator"
 
 #: views/groups.php:196 views/users.php:531
 msgid "Administration Access"
-msgstr ""
+msgstr "Administrationszugriff"
 
 #: install.php:244
 msgid "All Users"
-msgstr ""
+msgstr "Alle Benutzer"
 
 #: views/groups.php:124 views/users.php:455
 #, php-format
 msgid "Allow %s Administration Login"
-msgstr ""
+msgstr "%s Administrator Login erlauben"
 
 #: functions.inc/auth/modules/Freepbx.php:184
 msgid "An Unknown error occured while trying to update user data"
@@ -119,12 +122,12 @@ msgstr ""
 #: assets/js/userman.js:28
 #, perl-format
 msgid "Are you sure you wish to delete these %s?"
-msgstr ""
+msgstr "Wollen Sie diese %s wirklich löschen?"
 
 #: assets/js/userman.js:59
 #, perl-format
 msgid "Are you sure you wish to delete this %s?"
-msgstr ""
+msgstr "Wollen Sie diese %s wirklich löschen?"
 
 #: functions.inc/auth/modules/Voicemail.php:25
 msgid "Asterisk Voicemail"
