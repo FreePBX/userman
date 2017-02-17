@@ -9,15 +9,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-05 10:55-0700\n"
+"POT-Creation-Date: 2017-02-17 11:59-0800\n"
 "PO-Revision-Date: 2016-12-21 00:22+0200\n"
 "Last-Translator: Alexander <alexander.schley@paranagua.pr.gov.br>\n"
-"Language-Team: Portuguese (Brazil) "
-"<http://weblate.freepbx.org/projects/freepbx/userman/pt_BR/>\n"
-"Language: pt_BR\n"
+"Language-Team: Portuguese (Brazil) <http://weblate.freepbx.org/projects/"
+"freepbx/userman/pt_BR/>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: pt_BR\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 2.4\n"
 
@@ -98,7 +98,7 @@ msgstr "Adicionar Usuário"
 msgid "Added Voicemail User %s"
 msgstr "Adicionado Usuário de Correio de Voz %s"
 
-#: userman.i18n.php:6 userman.i18n.php:12
+#: userman.i18n.php:6
 msgid "Admin"
 msgstr "Administrador"
 
@@ -252,7 +252,7 @@ msgstr "Editar Grupo"
 msgid "Edit User"
 msgstr "Editar Usuário"
 
-#: userman.i18n.php:14
+#: userman.i18n.php:12
 msgid "Email "
 msgstr "E-mail "
 
@@ -339,7 +339,7 @@ msgstr "Descrição do Grupo"
 msgid "Group Details"
 msgstr "Detalhes de Grupo"
 
-#: functions.inc/auth/Auth.php:326
+#: functions.inc/auth/Auth.php:357
 msgid "Group Does Not Exist"
 msgstr "Grupo Não Existe"
 
@@ -363,11 +363,11 @@ msgstr ""
 msgid "Group Successfully Added"
 msgstr "Grupo Adicionado com Sucesso"
 
-#: functions.inc/auth/Auth.php:338
+#: functions.inc/auth/Auth.php:369
 msgid "Group Successfully Deleted"
 msgstr "Grupo Eliminado com Êxito"
 
-#: functions.inc/auth/Auth.php:456
+#: functions.inc/auth/Auth.php:487
 msgid "Group Successfully Updated"
 msgstr "Grupo Atualizado com Sucesso"
 
@@ -380,7 +380,7 @@ msgstr "Grupo já existe"
 msgid "Group updated"
 msgstr "Grupo atualizado"
 
-#: functions.inc/auth/Auth.php:427
+#: functions.inc/auth/Auth.php:458
 msgid "Groupname Can Not Be Blank!"
 msgstr "Nome do grupo não pode estar em branco!"
 
@@ -701,7 +701,8 @@ msgstr "Selecione as Seções Administrativas a que este grupo deve ter acesso."
 
 #: views/users.php:547
 msgid "Select the Admin Sections this user should have access to."
-msgstr "Selecione as Seções Administrativas a que este usuário deve ter acesso."
+msgstr ""
+"Selecione as Seções Administrativas a que este usuário deve ter acesso."
 
 #: views/freepbx.php:23
 msgid "Select which groups new users are added to when they are created"
@@ -758,8 +759,8 @@ msgid ""
 "li></ul>"
 msgstr ""
 "Texto a ser usado para o corpo do e-mail de boas-vindas. As variáveis úteis "
-"são: <ul><li> fname: Nome </li><li> lname: Sobrenome </li><li> <li> username:"
-" Nome de Usuário </li><li> password: Senha </li></ul>"
+"são: <ul><li> fname: Nome </li><li> lname: Sobrenome </li><li> <li> "
+"username: Nome de Usuário </li><li> password: Senha </li></ul>"
 
 #: views/general.php:116
 #, php-format
@@ -771,11 +772,11 @@ msgid ""
 msgstr ""
 "Texto a ser usado para o assunto do e-mail de boas-vindas. As variáveis "
 "úteis são: \n"
-"<ul><li> fname: Nome </li><li> lname: Sobrenome </li><li> brand: "
-"%s</li><li>title: Título</li><li>username: Nome de Usuário </li><li> "
-"password: Senha </li></ul>"
+"<ul><li> fname: Nome </li><li> lname: Sobrenome </li><li> brand: %s</"
+"li><li>title: Título</li><li>username: Nome de Usuário </li><li> password: "
+"Senha </li></ul>"
 
-#: userman.i18n.php:18
+#: userman.i18n.php:16
 msgid ""
 "The From: field for emails when using the user management email feature."
 msgstr ""
@@ -1010,7 +1011,7 @@ msgstr "DN do Usuário"
 msgid "User Details"
 msgstr "Detalhes do Usuário"
 
-#: functions.inc/auth/Auth.php:303
+#: functions.inc/auth/Auth.php:334
 msgid "User Does Not Exist"
 msgstr "Usuário Não Existe"
 
@@ -1018,7 +1019,7 @@ msgstr "Usuário Não Existe"
 msgid "User Management"
 msgstr "Gerenciador de Usuários"
 
-#: userman.i18n.php:16
+#: userman.i18n.php:14
 msgid "User Management Module"
 msgstr "Módulo de Gerenciador de Usuários"
 
@@ -1038,15 +1039,15 @@ msgstr "Configuração de Gerenciador de Usuários"
 msgid "User Manager Users"
 msgstr "Usuário do Gerenciador de Usuários"
 
-#: functions.inc/auth/Auth.php:401 functions.inc/auth/modules/Freepbx.php:122
+#: functions.inc/auth/Auth.php:432 functions.inc/auth/modules/Freepbx.php:122
 msgid "User Successfully Added"
 msgstr "Usuário Adicionado com Sucesso"
 
-#: functions.inc/auth/Auth.php:315
+#: functions.inc/auth/Auth.php:346
 msgid "User Successfully Deleted"
 msgstr "Usuário Excluído com Sucesso"
 
-#: functions.inc/auth/Auth.php:410
+#: functions.inc/auth/Auth.php:441
 msgid "User Successfully Updated"
 msgstr "Usuário Atualizado com Sucesso"
 
@@ -1066,7 +1067,7 @@ msgstr "Usuário atualizado"
 msgid "Username"
 msgstr "Nome de Usuário"
 
-#: functions.inc/auth/Auth.php:381
+#: functions.inc/auth/Auth.php:412
 msgid "Username Can Not Be Blank!"
 msgstr "O nome de usuário não pode ficar em branco!"
 
@@ -1142,7 +1143,7 @@ msgstr "default_extension é necessário."
 msgid "group"
 msgstr "grupo"
 
-#: functions.inc/auth/Auth.php:447
+#: functions.inc/auth/Auth.php:478
 msgid "group Successfully Added"
 msgstr "grupo Adicionado com Sucesso"
 

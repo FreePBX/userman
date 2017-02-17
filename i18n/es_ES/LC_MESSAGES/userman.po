@@ -9,15 +9,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-05 10:55-0700\n"
+"POT-Creation-Date: 2017-02-17 11:59-0800\n"
 "PO-Revision-Date: 2016-12-11 08:33+0200\n"
 "Last-Translator: Ernesto <ecasas@sangoma.com>\n"
-"Language-Team: Spanish "
-"<http://weblate.freepbx.org/projects/freepbx/userman/es_ES/>\n"
-"Language: es_ES\n"
+"Language-Team: Spanish <http://weblate.freepbx.org/projects/freepbx/userman/"
+"es_ES/>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: es_ES\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 2.4\n"
 
@@ -99,7 +99,7 @@ msgstr "Agregar Usuario"
 msgid "Added Voicemail User %s"
 msgstr "Agregado Voicemail usuario: %s"
 
-#: userman.i18n.php:6 userman.i18n.php:12
+#: userman.i18n.php:6
 msgid "Admin"
 msgstr "Administrador"
 
@@ -254,7 +254,7 @@ msgstr "Editar Grupo"
 msgid "Edit User"
 msgstr "Editar Usuario"
 
-#: userman.i18n.php:14
+#: userman.i18n.php:12
 msgid "Email "
 msgstr "Correo Electrónico "
 
@@ -341,7 +341,7 @@ msgstr "Descripción Grupo"
 msgid "Group Details"
 msgstr "Detalles de Grupo"
 
-#: functions.inc/auth/Auth.php:326
+#: functions.inc/auth/Auth.php:357
 msgid "Group Does Not Exist"
 msgstr "Grupo no existe"
 
@@ -365,11 +365,11 @@ msgstr ""
 msgid "Group Successfully Added"
 msgstr "Grupo añadido con éxito"
 
-#: functions.inc/auth/Auth.php:338
+#: functions.inc/auth/Auth.php:369
 msgid "Group Successfully Deleted"
 msgstr "Grupo eliminado correctamente"
 
-#: functions.inc/auth/Auth.php:456
+#: functions.inc/auth/Auth.php:487
 msgid "Group Successfully Updated"
 msgstr "Grupo actualizado correctamente"
 
@@ -382,7 +382,7 @@ msgstr "Grupo ya existe"
 msgid "Group updated"
 msgstr "Grupo actualizado"
 
-#: functions.inc/auth/Auth.php:427
+#: functions.inc/auth/Auth.php:458
 msgid "Groupname Can Not Be Blank!"
 msgstr "¡El nombre de grupo no puede estar en blanco!"
 
@@ -781,7 +781,7 @@ msgstr ""
 "</li><li>brand: %s</li><li>username: nombre de usuario </li><li>password: "
 "contraseña </li></ul>"
 
-#: userman.i18n.php:18
+#: userman.i18n.php:16
 msgid ""
 "The From: field for emails when using the user management email feature."
 msgstr ""
@@ -1018,7 +1018,7 @@ msgstr "DN de Usuario"
 msgid "User Details"
 msgstr "Detalles de Usuario"
 
-#: functions.inc/auth/Auth.php:303
+#: functions.inc/auth/Auth.php:334
 msgid "User Does Not Exist"
 msgstr "Usuario No Existe"
 
@@ -1026,7 +1026,7 @@ msgstr "Usuario No Existe"
 msgid "User Management"
 msgstr "Gestión de Usuario"
 
-#: userman.i18n.php:16
+#: userman.i18n.php:14
 msgid "User Management Module"
 msgstr "Modulo de Gestión de Usuario"
 
@@ -1046,15 +1046,15 @@ msgstr "Configuración de Gestión de Usuario"
 msgid "User Manager Users"
 msgstr "Usuarios del Administrador de usuarios"
 
-#: functions.inc/auth/Auth.php:401 functions.inc/auth/modules/Freepbx.php:122
+#: functions.inc/auth/Auth.php:432 functions.inc/auth/modules/Freepbx.php:122
 msgid "User Successfully Added"
 msgstr "Usuario añadido Satisfactoriamente"
 
-#: functions.inc/auth/Auth.php:315
+#: functions.inc/auth/Auth.php:346
 msgid "User Successfully Deleted"
 msgstr "Usuario Eliminado Satisfactoriamente"
 
-#: functions.inc/auth/Auth.php:410
+#: functions.inc/auth/Auth.php:441
 msgid "User Successfully Updated"
 msgstr "Usuario Actualizado satisfactoriamente"
 
@@ -1074,7 +1074,7 @@ msgstr "Usuario actualizado"
 msgid "Username"
 msgstr "Nombre Usuario"
 
-#: functions.inc/auth/Auth.php:381
+#: functions.inc/auth/Auth.php:412
 msgid "Username Can Not Be Blank!"
 msgstr "Username no puede estar en blanco!"
 
@@ -1150,7 +1150,7 @@ msgstr "default_extension es requerido."
 msgid "group"
 msgstr "grupo"
 
-#: functions.inc/auth/Auth.php:447
+#: functions.inc/auth/Auth.php:478
 msgid "group Successfully Added"
 msgstr "Grupo agregado correctamente"
 

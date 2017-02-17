@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-05 10:55-0700\n"
+"POT-Creation-Date: 2017-02-17 11:59-0800\n"
 "PO-Revision-Date: 2015-10-30 07:56+0200\n"
 "Last-Translator: Kevin <kevin@qloog.com>\n"
 "Language-Team: Japanese <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -108,7 +108,7 @@ msgstr "ユーザーを追加"
 msgid "Added Voicemail User %s"
 msgstr ""
 
-#: userman.i18n.php:6 userman.i18n.php:12
+#: userman.i18n.php:6
 msgid "Admin"
 msgstr "アドミン"
 
@@ -258,7 +258,7 @@ msgstr "グループを編集"
 msgid "Edit User"
 msgstr "ユーザーを編集"
 
-#: userman.i18n.php:14
+#: userman.i18n.php:12
 msgid "Email "
 msgstr "メール "
 
@@ -343,7 +343,7 @@ msgstr "グループの説明"
 msgid "Group Details"
 msgstr "グループの詳細"
 
-#: functions.inc/auth/Auth.php:326
+#: functions.inc/auth/Auth.php:357
 msgid "Group Does Not Exist"
 msgstr "グループは存在しません"
 
@@ -364,11 +364,11 @@ msgstr ""
 msgid "Group Successfully Added"
 msgstr "グループを追加しました"
 
-#: functions.inc/auth/Auth.php:338
+#: functions.inc/auth/Auth.php:369
 msgid "Group Successfully Deleted"
 msgstr "グループを削除しました"
 
-#: functions.inc/auth/Auth.php:456
+#: functions.inc/auth/Auth.php:487
 msgid "Group Successfully Updated"
 msgstr "グループを更新しました"
 
@@ -381,7 +381,7 @@ msgstr ""
 msgid "Group updated"
 msgstr "グループを更新しました"
 
-#: functions.inc/auth/Auth.php:427
+#: functions.inc/auth/Auth.php:458
 msgid "Groupname Can Not Be Blank!"
 msgstr "グループ名は必須項目です。"
 
@@ -758,7 +758,7 @@ msgstr ""
 "li><li>lname: 性</li><li>brand: %s</li><li>title: 役職</li><li>username: ユー"
 "ザ名</li><li>password: パスワード</li></ul>"
 
-#: userman.i18n.php:18
+#: userman.i18n.php:16
 msgid ""
 "The From: field for emails when using the user management email feature."
 msgstr ""
@@ -975,7 +975,7 @@ msgstr ""
 msgid "User Details"
 msgstr "ユーザの情報"
 
-#: functions.inc/auth/Auth.php:303
+#: functions.inc/auth/Auth.php:334
 msgid "User Does Not Exist"
 msgstr "ユーザーは存在しません"
 
@@ -983,7 +983,7 @@ msgstr "ユーザーは存在しません"
 msgid "User Management"
 msgstr "ユーザー管理"
 
-#: userman.i18n.php:16
+#: userman.i18n.php:14
 msgid "User Management Module"
 msgstr "ユーザー管理モジュール"
 
@@ -1003,15 +1003,15 @@ msgstr "ユーザー管理の設定"
 msgid "User Manager Users"
 msgstr "ユーザ管理のユーザ"
 
-#: functions.inc/auth/Auth.php:401 functions.inc/auth/modules/Freepbx.php:122
+#: functions.inc/auth/Auth.php:432 functions.inc/auth/modules/Freepbx.php:122
 msgid "User Successfully Added"
 msgstr "ユーザーを追加しました"
 
-#: functions.inc/auth/Auth.php:315
+#: functions.inc/auth/Auth.php:346
 msgid "User Successfully Deleted"
 msgstr "ユーザーを削除しました"
 
-#: functions.inc/auth/Auth.php:410
+#: functions.inc/auth/Auth.php:441
 msgid "User Successfully Updated"
 msgstr "ユーザ情報を更新しました"
 
@@ -1031,7 +1031,7 @@ msgstr "ユーザを更新しました"
 msgid "Username"
 msgstr "ユーザー名"
 
-#: functions.inc/auth/Auth.php:381
+#: functions.inc/auth/Auth.php:412
 msgid "Username Can Not Be Blank!"
 msgstr "ユーザ名は必須項目です。"
 
@@ -1105,7 +1105,7 @@ msgstr "default_extensionは必須項目です。"
 msgid "group"
 msgstr "グループ"
 
-#: functions.inc/auth/Auth.php:447
+#: functions.inc/auth/Auth.php:478
 msgid "group Successfully Added"
 msgstr "グループ 追加しました"
 

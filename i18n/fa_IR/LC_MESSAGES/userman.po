@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-05 10:55-0700\n"
+"POT-Creation-Date: 2017-02-17 11:59-0800\n"
 "PO-Revision-Date: 2016-08-07 06:51+0200\n"
 "Last-Translator: Media <mousavi.media@gmail.com>\n"
 "Language-Team: Persian (Iran) <http://weblate.freepbx.org/projects/freepbx/"
@@ -98,7 +98,7 @@ msgstr "افزودن کاربر"
 msgid "Added Voicemail User %s"
 msgstr "افزودن ایمیل صوتی کاربر %s"
 
-#: userman.i18n.php:6 userman.i18n.php:12
+#: userman.i18n.php:6
 msgid "Admin"
 msgstr "مدیر"
 
@@ -252,7 +252,7 @@ msgstr "ویرایش گروه"
 msgid "Edit User"
 msgstr "ویرایش کاربر"
 
-#: userman.i18n.php:14
+#: userman.i18n.php:12
 msgid "Email "
 msgstr "ایمیل "
 
@@ -338,7 +338,7 @@ msgstr "شرح گروه"
 msgid "Group Details"
 msgstr "جزییات گروه"
 
-#: functions.inc/auth/Auth.php:326
+#: functions.inc/auth/Auth.php:357
 msgid "Group Does Not Exist"
 msgstr "گروه موجود نیست"
 
@@ -362,11 +362,11 @@ msgstr ""
 msgid "Group Successfully Added"
 msgstr "گروه با موفقیت اضافه شد"
 
-#: functions.inc/auth/Auth.php:338
+#: functions.inc/auth/Auth.php:369
 msgid "Group Successfully Deleted"
 msgstr "گروه با موفقیت حذف شد"
 
-#: functions.inc/auth/Auth.php:456
+#: functions.inc/auth/Auth.php:487
 msgid "Group Successfully Updated"
 msgstr "گروه با موفقیت به روز شد"
 
@@ -379,7 +379,7 @@ msgstr "گرو موجود است"
 msgid "Group updated"
 msgstr "گروه به روز شده"
 
-#: functions.inc/auth/Auth.php:427
+#: functions.inc/auth/Auth.php:458
 msgid "Groupname Can Not Be Blank!"
 msgstr "نام گروه نمیتواند خالی باشد!"
 
@@ -762,7 +762,7 @@ msgstr ""
 "li><li>title: title</li><li>username: Username</li><li>password: Password</"
 "li></ul>"
 
-#: userman.i18n.php:18
+#: userman.i18n.php:16
 msgid ""
 "The From: field for emails when using the user management email feature."
 msgstr ""
@@ -990,7 +990,7 @@ msgstr ""
 msgid "User Details"
 msgstr "جزییات کاربر"
 
-#: functions.inc/auth/Auth.php:303
+#: functions.inc/auth/Auth.php:334
 msgid "User Does Not Exist"
 msgstr "کاربر وجود ندارد"
 
@@ -998,7 +998,7 @@ msgstr "کاربر وجود ندارد"
 msgid "User Management"
 msgstr "مدیریت کاربر"
 
-#: userman.i18n.php:16
+#: userman.i18n.php:14
 msgid "User Management Module"
 msgstr "ماژول مدیریت کاربر"
 
@@ -1018,15 +1018,15 @@ msgstr "تنظیمات مدیریت کاربر"
 msgid "User Manager Users"
 msgstr "کاربران مدیریت کاربر"
 
-#: functions.inc/auth/Auth.php:401 functions.inc/auth/modules/Freepbx.php:122
+#: functions.inc/auth/Auth.php:432 functions.inc/auth/modules/Freepbx.php:122
 msgid "User Successfully Added"
 msgstr "کاربر با موفقیت اضافه شد"
 
-#: functions.inc/auth/Auth.php:315
+#: functions.inc/auth/Auth.php:346
 msgid "User Successfully Deleted"
 msgstr "کاربر با موفقیت حذف شد"
 
-#: functions.inc/auth/Auth.php:410
+#: functions.inc/auth/Auth.php:441
 msgid "User Successfully Updated"
 msgstr "کاربربا موفقیت به روز شد"
 
@@ -1046,7 +1046,7 @@ msgstr "کاربر به روز شد"
 msgid "Username"
 msgstr "نام کاربری"
 
-#: functions.inc/auth/Auth.php:381
+#: functions.inc/auth/Auth.php:412
 msgid "Username Can Not Be Blank!"
 msgstr "نام کاربری نمیتواند خالی باشد!"
 
@@ -1120,7 +1120,7 @@ msgstr "داخلی پیشفرض احتیاج است."
 msgid "group"
 msgstr "گروه"
 
-#: functions.inc/auth/Auth.php:447
+#: functions.inc/auth/Auth.php:478
 msgid "group Successfully Added"
 msgstr "گروه با موفقیت اضافه شد"
 
