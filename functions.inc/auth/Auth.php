@@ -181,6 +181,24 @@ abstract class Auth implements Base {
 	}
 
 	/**
+	 * Get all active user ids
+	 * @method getAllUserIDs
+	 * @param  string        $auth The auth
+	 * @return array              Array of User IDs
+	 */
+	public function getAllUserIDs($auth='freepbx') {
+		$sql = "SELECT id FROM ".$this->userTable." WHERE auth = :auth";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':auth' => $auth));
+		$u = $sth->fetchAll(\PDO::FETCH_ASSOC);
+		$users = array();
+		foreach($u as $ud) {
+			$users[] = $ud['id'];
+		}
+		return $users;
+	}
+
+	/**
 	* Get All Groups
 	*
 	* Get a List of all User Manager users and their data
@@ -252,6 +270,19 @@ abstract class Auth implements Base {
 			$group['users'] = json_decode($group['users'],true);
 			$group['users'] = is_array($group['users']) ? $group['users'] : array();
 		}
+		$users = $this->getAllUserIDs($this->auth);
+		$final = array();
+		foreach($group['users'] as $u) {
+			if(in_array($u,$users)) {
+				$final[] = $u;
+			}
+		}
+		if($group['users'] != $final) {
+			$sql = "UPDATE ".$this->groupTable." SET users = :users WHERE id = :gid AND auth = :auth";
+			$sth = $this->db->prepare($sql);
+			$sth->execute(array(':gid' => $gid, ':auth' => $this->auth, ':users' => json_encode($final)));
+		}
+		$group['users'] = $final;
 		return $group;
 	}
 

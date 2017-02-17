@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>13.0.75.3</version>
+	<version>13.0.75.4</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -12,6 +12,7 @@
 		Modules like iSymphony, Rest API and User Control Panel and FreePBX itself use this module to manage their users.
 	</description>
 	<changelog>
+		*13.0.75.4* Issues releated to FREEPBX-14212 and quick create
 		*13.0.75.3* SendEmail function needs to return true if it completed
 		*13.0.75.2* One more addition
 		*13.0.75.1* Endpoint additions
@@ -110,7 +111,7 @@
 	<depends>
 		<phpversion>5.3.3</phpversion>
 		<version>13.0.188.4</version>
-		<module>core ge 13.0.84</module>
+		<module>core ge 13.0.118.9</module>
 	</depends>
 	<hooks>
 		<core class="Core" namespace="FreePBX\modules">
