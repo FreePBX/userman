@@ -3,18 +3,18 @@
 # For licensing information, please see the file named LICENSE located in the module directory
 #
 # FreePBX language template for userman
-# Copyright (C) 2008-2015 Sangoma, Inc.
+# Copyright (C) 2008-2016 Sangoma, Inc.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-05 10:55-0700\n"
-"PO-Revision-Date: 2016-12-11 08:33+0200\n"
-"Last-Translator: Ernesto <ecasas@sangoma.com>\n"
-"Language-Team: Spanish "
-"<http://weblate.freepbx.org/projects/freepbx/userman/es_ES/>\n"
-"Language: es_ES\n"
+"PO-Revision-Date: 2017-01-12 21:25+0200\n"
+"Last-Translator: Sven <spiderrs4@web.de>\n"
+"Language-Team: German "
+"<http://weblate.freepbx.org/projects/freepbx/userman/de_DE/>\n"
+"Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24,12 +24,12 @@ msgstr ""
 #: views/groups.php:28 views/users.php:28
 #, php-format
 msgid "%s Administration GUI"
-msgstr "%s GUI Administración"
+msgstr "%s Administrations Oberfläche"
 
 #: functions.inc/auth/modules/Freepbx.php:24
 #, php-format
 msgid "%s Internal Directory"
-msgstr "%s Directorio Interno"
+msgstr "%s Internes Verzeichnis"
 
 #: views/welcome.php:15
 #, php-format
@@ -39,130 +39,124 @@ msgid ""
 "iSymphony and RestAPI are examples of these type of modules. In %s 12, the "
 "new User Control Panel also uses User Manager."
 msgstr ""
-"%s Administrador de usuarios está tomando el lugar de varios módulos que han "
-"tratado de crear y administrar usuarios separados de las Extensiones. "
-"Módulos tales como iSymphony y RestAPI son ejemplos de este tipo de módulos. "
-"En %s 12, el nuevo Panel de Control también utiliza Administrador de "
-"usuarios."
 
 #: Userman.class.php:2188
 #, php-format
 msgid "%s records failed validation"
-msgstr "%s registros fallaron la validacion"
+msgstr "%s Überprüfung beim Eintrag fehlgeschlagen"
 
 #: views/general.php:210
 msgid "1 Day"
-msgstr "1 Día"
+msgstr "1 Tag"
 
 #: views/general.php:208
 msgid "1 Hour"
-msgstr "1 Hora"
+msgstr "1 Stunde"
 
 #: views/general.php:207
 msgid "30 Minutes"
-msgstr "30 Minutos"
+msgstr "30 Minuten"
 
 #: views/general.php:209
 msgid "6 Hours"
-msgstr "6 Horas"
+msgstr "6 Stunden"
 
 #: views/users.php:89
 msgid "A brief description for this user."
-msgstr "Una breve descripción de este usuario."
+msgstr "Eine kurze Beschreibung für diesen Benutzer."
 
 #: views/welcome.php:56 views/welcome.php:84
 msgid "Action"
-msgstr "Acción"
+msgstr "Aktion"
 
 #: views/welcome.php:34 views/welcome.php:68
 msgid "Add"
-msgstr "Agregar"
+msgstr "Hinzufügen"
 
 #: Userman.class.php:693
 msgid "Add Device"
-msgstr "Agregar Dispositivo"
+msgstr "Gerät hinzufügen"
 
 #: Userman.class.php:693
 msgid "Add Extension"
-msgstr "Agregar Extensión"
+msgstr "Nebenstelle hinzufügen"
 
 #: views/groups.php:5 views/rnav.php:21
 msgid "Add Group"
-msgstr "Agregar Grupo"
+msgstr "Gruppe hinzufügen"
 
 #: views/rnav.php:6 views/users.php:5
 msgid "Add User"
-msgstr "Agregar Usuario"
+msgstr "Benutzer hinzufügen"
 
 #: functions.inc/auth/modules/Voicemail.php:77
 #, php-format
 msgid "Added Voicemail User %s"
-msgstr "Agregado Voicemail usuario: %s"
+msgstr "Anrufbeantworter-Benutzer %s hinzugefügt."
 
 #: userman.i18n.php:6 userman.i18n.php:12
 msgid "Admin"
-msgstr "Administrador"
+msgstr "Administrator"
 
 #: views/groups.php:196 views/users.php:531
 msgid "Administration Access"
-msgstr "Acceso Administración"
+msgstr "Administrationszugriff"
 
 #: install.php:244
 msgid "All Users"
-msgstr "Todos los Usuarios"
+msgstr "Alle Benutzer"
 
 #: views/groups.php:124 views/users.php:455
 #, php-format
 msgid "Allow %s Administration Login"
-msgstr "Permitir %s Login Administrador"
+msgstr "%s Administrator Login erlauben"
 
 #: functions.inc/auth/modules/Freepbx.php:184
 msgid "An Unknown error occured while trying to update user data"
 msgstr ""
-"Un error desconocido ha ocurrido mientras se trataban de actualizar los datos"
 
 #: Userman.class.php:694
 msgid "Apply Changes Bar"
-msgstr "Barra Aplicar Cambios"
+msgstr ""
 
 #: assets/js/userman.js:28
 #, perl-format
 msgid "Are you sure you wish to delete these %s?"
-msgstr "¿Seguro que desea eliminar estos %s?"
+msgstr "Wollen Sie diese %s wirklich löschen?"
 
 #: assets/js/userman.js:59
 #, perl-format
 msgid "Are you sure you wish to delete this %s?"
-msgstr "¿Está seguro de que desea eliminar este %s?"
+msgstr "Wollen Sie diesen %s wirklich löschen?"
 
 #: functions.inc/auth/modules/Voicemail.php:25
 msgid "Asterisk Voicemail"
-msgstr "Voicemail Asterisk"
+msgstr "Asterisk Anrufbeantworter"
 
 #: views/general.php:153
 msgid "Authentication Engine"
-msgstr "Motor de autenticación"
+msgstr "Authentisierungsmaschine"
 
 #: views/general.php:10
 msgid "Authentication Settings"
-msgstr "Configuración de autenticación"
+msgstr "Authentisierungseinstellungen"
 
 #: Userman.class.php:164 functions.inc/guihooks.php:194
 #: functions.inc/guihooks.php:266
 msgid "Autogenerated user on new device creation"
-msgstr "Usuario Autgenerado durante la creación de Nuevo Dispositivo"
+msgstr "Automatisch generierter Benutzer zu neuem Nebenstellengerät"
 
 #: views/msad.php:117 views/openldap.php:117
 msgid "Base DN"
-msgstr "DN Base"
+msgstr ""
 
 #: views/users.php:354
 msgid "Cell Phone Number"
-msgstr "Número de Móvil"
+msgstr "Handynummer"
 
 #: views/passwordmodal.php:29
 msgid "Close"
-msgstr "Cerrar"
+msgstr "Schließen"
 
 #: views/general.php:191
 #, php-format
@@ -172,183 +166,177 @@ msgid ""
 "servers to authenicate against User Manager. Supplying no addresses disables "
 "this feature"
 msgstr ""
-"Lista de direcciones IP separadas por comas que pueden enviar una consulta "
-"POST a %s suministrando los parámetros de '%s' y '%s' que pueden utilizarse "
-"para que los servidores remotos autentiquen contra el Administrador de "
-"usuarios. El suministro de direcciones no deshabilita esta función"
 
 #: views/users.php:282
 msgid "Company"
-msgstr "Empresa"
+msgstr "Firma"
 
 #: functions.inc/auth/modules/Msad.php:122
 #: functions.inc/auth/modules/Openldap.php:157
 msgid "Connected"
-msgstr "Conectado"
+msgstr "Verbunden"
 
 #: views/voicemail.php:7
 msgid "Context"
-msgstr "Contexto"
+msgstr "Kontext"
 
 #: functions.inc/auth/modules/Voicemail.php:95
 msgid "Could not find the voicemail context"
-msgstr "No se puedo encontrar en contexto de voicemail"
+msgstr ""
 
 #: functions.inc/guihooks.php:84 functions.inc/guihooks.php:140
 msgid "Create New User"
-msgstr "Crear un Nuevo Usuario"
+msgstr "Neuen Benutzer erstellen"
 
 #: views/quickCreate.php:8
 msgid "Create User Manager User"
-msgstr "Crear usuario gestor de usuarios"
+msgstr "Benutzermanager Benutzer erstellen"
 
 #: install.php:28 install.php:35
 msgid "Database rename not completed"
-msgstr "Renombrado de Base de Datos no se completo"
+msgstr "Datenbankumbenennung nicht abgeschlossen"
 
 #: views/freepbx.php:7
 msgid "Default Groups"
-msgstr "Grupos predeterminados"
+msgstr "Standardgruppe"
 
 #: Userman.class.php:481 views/welcome.php:39 views/welcome.php:73
 #: assets/js/userman.js:33 assets/js/userman.js:39 assets/js/userman.js:67
 msgid "Delete"
-msgstr "Borrar"
+msgstr "Löschen"
 
 #: assets/js/userman.js:29
 msgid "Deleting..."
-msgstr "Borrando..."
+msgstr "Löschen..."
 
 #: views/users.php:306
 msgid "Department"
-msgstr "Departamento"
+msgstr "Abteilung"
 
 #: Userman.class.php:2134 Userman.class.php:2135 Userman.class.php:2160
 #: Userman.class.php:2161 views/rnav.php:12 views/rnav.php:27
 #: views/users.php:77 views/welcome.php:55 views/welcome.php:82
 msgid "Description"
-msgstr "Descripción"
+msgstr "Beschreibung"
 
 #: Userman.class.php:2146 Userman.class.php:2147 views/users.php:234
 #: views/welcome.php:51
 msgid "Display Name"
-msgstr "Nombre a Mostrar"
+msgstr "Anzeigename"
 
 #: views/users.php:246
 msgid ""
 "Display Name. Used in User Control Panel and Contact Manager to display a "
 "customized user name"
 msgstr ""
-"Nombre a Mostrar. Se utiliza en el Panel de Control de Usuario y "
-"Administrador de Contactos para mostrar un nombre de usuario personalizada"
 
 #: views/msad.php:95
 msgid "Domain"
-msgstr "Dominio"
+msgstr "Domäne"
 
 #: views/groups.php:3
 msgid "Edit Group"
-msgstr "Editar Grupo"
+msgstr "Gruppe bearbeiten"
 
 #: views/users.php:3
 msgid "Edit User"
-msgstr "Editar Usuario"
+msgstr "Benutzer bearbeiten"
 
 #: userman.i18n.php:14
 msgid "Email "
-msgstr "Correo Electrónico "
+msgstr "E-Mail "
 
 #: views/users.php:330
 msgid "Email Address"
-msgstr "Dirección de Correo"
+msgstr "E-Mail Adresse"
 
 #: views/general.php:128
 msgid "Email Body"
-msgstr "Cuerpo del Correo"
+msgstr "Inhalt"
 
 #: assets/js/userman.js:15
 msgid "Email Sent"
-msgstr "Correo enviado"
+msgstr "E-Mail gesendet"
 
 #: views/general.php:9 views/general.php:16
 msgid "Email Settings"
-msgstr "Configuración de Correo"
+msgstr "E-Mail Einstellungen"
 
 #: views/general.php:104
 msgid "Email Subject"
-msgstr "Asunto del Correo"
+msgstr "Betreff"
 
 #: views/quickCreate.php:25
 msgid "Enable User Manager for this extension"
-msgstr "Habilitar usuario gestor para esta extensión"
+msgstr ""
 
 #: Userman.class.php:796
 msgid "Error: No id provided"
-msgstr "Error: no se proveyó id"
+msgstr ""
 
 #: Userman.class.php:828
 msgid "Error: You should never see this"
-msgstr "Error: No debería ver esto nunca"
+msgstr ""
 
 #: views/msad.php:139 views/openldap.php:139
 msgid "Extension Link Attribute"
-msgstr "Atributo de enlace de extensión"
+msgstr ""
 
 #: views/users.php:426
 msgid "Fax Phone Number"
-msgstr "Numero de teléfono de Fax"
+msgstr "Faxnummer"
 
 #: Userman.class.php:2138 Userman.class.php:2139 views/users.php:186
 #: views/welcome.php:52
 msgid "First Name"
-msgstr "Primer Nombre"
+msgstr "Vorname"
 
 #: Userman.class.php:1010 Userman.class.php:1204
 msgid "GID was not numeric"
-msgstr "GID no fue numérico"
+msgstr "GID war nicht numerisch"
 
 #: views/groups.php:85
 msgid "Give the group a description"
-msgstr "Dele a grupo una descripción"
+msgstr "Geben Sie der Gruppe eine Beschreibung"
 
 #: views/groups.php:63
 msgid "Give the group a name"
-msgstr "Dele al grupo un nombre"
+msgstr "Geben Sie der Gruppe einen Namen"
 
 #: views/groups.php:149 views/users.php:482
 msgid "Grant Full Administration Rights"
-msgstr "Concede los derechos completos del administrador"
+msgstr "Administratorvollzugriff"
 
 #: views/groups.php:164 views/users.php:499
 msgid ""
 "Grant full administration rights regardless of extension range or module "
 "access."
 msgstr ""
-"Concede derechos de administración completos independientemente del rango de "
-"extensión o del acceso al módulo."
+"Gewährt volle Administratorrechte unabhängig von Erweiterungsbereich oder "
+"ausgewählten Administrationszugängen."
 
 #: functions.inc/auth/modules/Freepbx.php:200
 #: functions.inc/auth/modules/Voicemail.php:206
 #, php-format
 msgid "Group '%s' Does Not Exist"
-msgstr "Grupo '%s' No existe"
+msgstr "Gruppe '%s' existiert nicht"
 
 #: views/groups.php:73
 msgid "Group Description"
-msgstr "Descripción Grupo"
+msgstr "Beschreibung der Gruppe"
 
 #: views/groups.php:26
 msgid "Group Details"
-msgstr "Detalles de Grupo"
+msgstr "Gruppendetails"
 
 #: functions.inc/auth/Auth.php:326
 msgid "Group Does Not Exist"
-msgstr "Grupo no existe"
+msgstr "Gruppe existiert nicht"
 
 #: Userman.class.php:2156 Userman.class.php:2157 views/groups.php:51
 #: views/rnav.php:26 views/welcome.php:81
 msgid "Group Name"
-msgstr "Nombre del Grupo"
+msgstr "Gruppenname"
 
 #: views/welcome.php:64
 msgid ""
@@ -356,52 +344,47 @@ msgid ""
 "the order you'd like. Groups with a lower number for priority take priority "
 "(EG 0 is higher than 1)"
 msgstr ""
-"Las prioridades de grupo se pueden cambiar haciendo clic y arrastrando "
-"grupos en el orden que desee. Los grupos con un número menor tienen "
-"prioridad (0 es mayor en prioridad que 1)"
 
 #: functions.inc/auth/modules/Freepbx.php:136
 #: functions.inc/auth/modules/Voicemail.php:175
 msgid "Group Successfully Added"
-msgstr "Grupo añadido con éxito"
+msgstr "Gruppe erfolgreich hinzugefügt"
 
 #: functions.inc/auth/Auth.php:338
 msgid "Group Successfully Deleted"
-msgstr "Grupo eliminado correctamente"
+msgstr "Gruppe erfolgreich gelöscht"
 
 #: functions.inc/auth/Auth.php:456
 msgid "Group Successfully Updated"
-msgstr "Grupo actualizado correctamente"
+msgstr "Gruppe erfolgreich aktualisiert"
 
 #: Userman.class.php:2309
 msgid "Group already exists"
-msgstr "Grupo ya existe"
+msgstr "Gruppe existiert bereits"
 
 #: functions.inc/auth/modules/Msad.php:382
 #: functions.inc/auth/modules/Openldap.php:417
 msgid "Group updated"
-msgstr "Grupo actualizado"
+msgstr "Gruppe aktualisiert"
 
 #: functions.inc/auth/Auth.php:427
 msgid "Groupname Can Not Be Blank!"
-msgstr "¡El nombre de grupo no puede estar en blanco!"
+msgstr "Gruppenname darf nicht leer sein!"
 
 #: Userman.class.php:1122
 msgid "Groupname can not be blank"
-msgstr "El nombre de grupo no puede estar en blanco"
+msgstr "Gruppenname darf nicht leer sein!"
 
 #: functions.inc/guihooks.php:127 functions.inc/guihooks.php:165
 #: views/users.php:126 views/welcome.php:25
 msgid "Groups"
-msgstr "Grupos"
+msgstr "Gruppe"
 
 #: functions.inc/guihooks.php:127 functions.inc/guihooks.php:165
 msgid ""
 "Groups that this user is a part of. You can add and remove this user from "
 "groups in this view as well"
 msgstr ""
-"Grupos de los que este usuario es parte. También puede agregar y eliminar "
-"este usuario de los grupos en esta vista"
 
 #: views/general.php:146
 #, php-format
@@ -409,38 +392,36 @@ msgid ""
 "Hitting submit on this page will start manual syncronization for engines "
 "other than the %s Internal Directory"
 msgstr ""
-"Oprimiendo Enviar en esta página iniciará la sincronización manual para los "
-"motores que no sean %s Directorio Interno"
 
 #: views/users.php:402
 msgid "Home Phone Number"
-msgstr "Teléfono de Habitación"
+msgstr "Telefonnummer"
 
 #: views/msad.php:7 views/openldap.php:7
 msgid "Host"
-msgstr "Anfitrión"
+msgstr "Host"
 
 #: views/general.php:81
 msgid "Host Name"
-msgstr "Nombre Anfitrión"
+msgstr "Hostname"
 
 #: Userman.class.php:992
 msgid "ID was not numeric"
-msgstr "ID no fue numérico"
+msgstr "ID war nicht numerisch"
 
 #: functions.inc/guihooks.php:124 functions.inc/guihooks.php:161
 msgid ""
 "If Create New User is selected this will be the autogenerated users new "
 "password"
-msgstr "Si selecciona Crear Nuevo Usuario este será la contraseña autogenerada"
+msgstr "Neuen Benutzer erstellen' gewählt ist wird dieses Passwort benutzt."
 
 #: functions.inc/guihooks.php:123 functions.inc/guihooks.php:160
 msgid ""
 "If Create New User is selected this will be the username. If blank the "
 "username will be the same number as this device"
 msgstr ""
-"Si selecciona Crear Nuevo Usuario, este será el username. Si se deja en "
-"blanco, se usuaria el numero de este dispositivo"
+"Wenn 'Neuen Benutzer erstellen' gewählt ist können Sie hier einen Namen "
+"vergeben. Ist das Feld leer, wird die Nebenstellennummer eingetragen."
 
 #: views/msad.php:151
 msgid ""
@@ -449,10 +430,6 @@ msgid ""
 "is set it will overwrite any manually linked extensions where this attribute "
 "extists!!"
 msgstr ""
-"Si está configurado, el Administrador de usuarios utilizará el atributo "
-"definido del usuario del servidor de Active Directory como enlace de "
-"extensión. NOTA: Si se establece este campo, sobrescribirá las extensiones "
-"vinculadas manualmente donde extista este atributo !!"
 
 #: views/openldap.php:151
 msgid ""
@@ -461,11 +438,6 @@ msgid ""
 "it will overwrite any manually linked extensions where this attribute "
 "extists!! (Try lowercase if it is not working.)"
 msgstr ""
-"Si se establece esto, el Administrador de usuarios utilizará el atributo "
-"definido del usuario del servidor OpenLDAP como enlace de extensión. NOTA: "
-"Si se establece este campo, sobrescribirá las extensiones vinculadas "
-"manualmente donde extists este atributo !! (Prueba con minúsculas si no "
-"funciona.)"
 
 #: views/welcome.php:16
 #, php-format
@@ -475,83 +447,77 @@ msgid ""
 "example, a new user can be created that can log into User Control Panel and "
 "access the voicemail of 3 other accounts."
 msgstr ""
-"En %s Administrador de Usuarios puede crear los usuarios que tendrán acceso "
-"a Extensiones o modos de dispositivo/usuario y los ajustes asociados con "
-"esos dispositivos. Por ejemplo, un nuevo usuario se puede entrar al Panel de "
-"control de usuario y acceder al correo de voz de otras 3 cuentas."
 
 #: views/users.php:464 views/users.php:491
 msgid "Inherit"
-msgstr "Heredar"
+msgstr "Erben"
 
 #: Userman.class.php:791
 msgid "Invalid User"
-msgstr "Usuario Invalido"
+msgstr "Ungültiger Benutzer"
 
 #: functions.inc/auth/modules/Msad.php:331
 #: functions.inc/auth/modules/Msad.php:344
 #: functions.inc/auth/modules/Openldap.php:366
 #: functions.inc/auth/modules/Openldap.php:379
 msgid "LDAP is in Read Only Mode. Addition denied"
-msgstr "LDAP está en modo de sólo lectura. Adición negada"
+msgstr ""
 
 #: Userman.class.php:2142 Userman.class.php:2143 views/users.php:210
 #: views/welcome.php:53
 msgid "Last Name"
-msgstr "Apellido"
+msgstr "Nachname"
 
 #: views/quickCreate.php:74
 msgid "Link to User Manager User"
-msgstr "Enlace al usuario del Administrador de usuarios"
+msgstr "Link zu einem Benutzermanager Benutzer"
 
 #: functions.inc/guihooks.php:114 functions.inc/guihooks.php:158
 msgid "Link to a Default User"
-msgstr "Enlace al Usuario Predeterminado"
+msgstr "Link zu einem Standard Benutzer"
 
 #: functions.inc/guihooks.php:110
 msgid "Link to a Different Default User:"
-msgstr "Enlace a un Usuario Diferente por defecto:"
+msgstr ""
 
 #: functions.inc/guihooks.php:90
 msgid "Linked"
-msgstr "Enlazado"
+msgstr "Verlinkt"
 
 #: views/welcome.php:54
 msgid "Linked Extension"
-msgstr "Extensión Enlazada"
+msgstr "verlinkte Nebenstelle"
 
 #: functions.inc/guihooks.php:109
 #, php-format
 msgid "Linked to User %s"
-msgstr "Enlazada al Usuario %s"
+msgstr "Verlinkt zu Benutzer %s"
 
 #: views/rnav.php:20
 msgid "List Groups"
-msgstr "Listar Grupos"
+msgstr "Gruppenliste"
 
 #: views/rnav.php:5
 msgid "List Users"
-msgstr "Listar Usuarios"
+msgstr "Benutzerliste"
 
 #: views/users.php:25
 msgid "Login Details"
-msgstr "Detalles de Login"
+msgstr "Login Details"
 
 #: Userman.class.php:2120 Userman.class.php:2121 views/users.php:53
 msgid "Login Name"
-msgstr "Nombre de Inicio de Sesión"
+msgstr "Login Name"
 
 #: views/groups.php:139
 #, php-format
 msgid "May this group log in to the %s Administration Pages?"
 msgstr ""
-"¿Puede este grupo iniciar sesión en las Páginas de administración de %s?"
 
 #: views/users.php:472
 #, php-format
 msgid "May this user log in to the %s Administration Pages?"
 msgstr ""
-"¿Puede este usuario iniciar sesión en las páginas de administración de %s?"
 
 #: functions.inc/auth/modules/Msad.php:98
 msgid "Microsoft Active Directory"
@@ -559,125 +525,118 @@ msgstr "Microsoft Active Directory"
 
 #: Userman.class.php:1911
 msgid "Migrated user from voicemail"
-msgstr "Usuario Migrado desde Correo de Voz"
+msgstr ""
 
 #: Userman.class.php:515
 msgid "Module Core is disabled. Please enable it"
-msgstr "Modulo Core esta deshabilitado. Por favor habilítelo"
+msgstr ""
 
 #: views/general.php:32 views/general.php:61 views/groups.php:131
 #: views/groups.php:156 views/quickCreate.php:16 views/users.php:462
 #: views/users.php:489
 msgid "No"
-msgstr "No"
+msgstr "Nein"
 
 #: Userman.class.php:139 functions.inc/guihooks.php:78
 #: functions.inc/guihooks.php:134
 msgid "None"
-msgstr "ninguno"
+msgstr "keine"
 
 #: functions.inc/auth/modules/Msad.php:113
 #: functions.inc/auth/modules/Openldap.php:148
 msgid "Not Connected"
-msgstr "No Conectado"
+msgstr "nicht Verbunden"
 
 #: functions.inc/auth/modules/Msad.php:135
 #: functions.inc/auth/modules/Openldap.php:170
 msgid "Not all of the connection parameters have been filled out"
-msgstr "No todos los parámetros de conexión se han rellenado"
+msgstr ""
 
 #: Userman.class.php:1959
 msgid "Obfuscated. To reset use the reset link in this email"
-msgstr "Ofuscado. Para reiniciar use el vinculo de reinicio en este correo"
+msgstr ""
 
 #: functions.inc/auth/modules/Openldap.php:133
 msgid "OpenLDAP Directory"
-msgstr "Directorio OpenLDAP"
+msgstr "OpenLDAP Directory"
 
 #: views/users.php:33
 msgid "Other Settings"
-msgstr "Otros ajustes"
+msgstr "Andere Einstellungen"
 
 #: Userman.class.php:2125 views/msad.php:73 views/openldap.php:73
 #: views/passwordmodal.php:16 views/users.php:102
 msgid "Password"
-msgstr "Contraseña"
+msgstr "Passwort"
 
 #: Userman.class.php:2126
 msgid "Password - plaintext"
-msgstr "Contraseña - texto sin formato"
+msgstr "Passwort - Klartext"
 
 #: functions.inc/guihooks.php:124 functions.inc/guihooks.php:161
 msgid "Password For New User"
-msgstr "Contraseña para Nuevo Usuario"
+msgstr "Passwort für neue Benutzer"
 
 #: Userman.class.php:1109
 msgid "Password can not be blank"
-msgstr "La contraseña no puede estar en blanco"
+msgstr "Passwort darf nicht leer sein"
 
 #: functions.inc/guihooks.php:123 functions.inc/guihooks.php:160
 msgid "Please select a valid username for New User Creation"
-msgstr ""
-"Por favor seleccione un nombre de usuario valido para la Creación de Nuevo "
-"Usuario"
+msgstr "Bitte wählen Sie einen gültigen Benutzernamen für den neuen Benutzer."
 
 #: views/msad.php:29 views/openldap.php:29
 msgid "Port"
-msgstr "Puerto"
+msgstr "Port"
 
 #: Userman.class.php:1207
 msgid "Previous Groupname can not be blank"
-msgstr "El nombre de grupo anterior no puede estar en blanco"
+msgstr "Vorheriger Gruppenname darf nicht leer sein."
 
 #: Userman.class.php:1177
 msgid "Previous Username can not be blank"
-msgstr "El usuario anterior no puede estar en blanco"
+msgstr "Vorheriger Benutzername darf nicht leer sein."
 
 #: Userman.class.php:2130
 msgid "Primary Extension"
-msgstr "Extensión Primaria"
+msgstr "Primäre Nebenstelle"
 
 #: Userman.class.php:2131 views/users.php:153
 msgid "Primary Linked Extension"
-msgstr "Extensión Primaria Enlazada"
+msgstr "Primäre verlinkte Nebenstelle"
 
 #: views/welcome.php:83
 msgid "Priority"
-msgstr "Prioridad"
+msgstr "Priorität"
 
 #: views/general.php:179
 msgid "Remote Authentication IP Addresses"
-msgstr "Direcciones IP de autenticación remota"
+msgstr ""
 
 #: functions.inc/auth/modules/Voicemail.php:90
 #, php-format
 msgid "Removed Voicemail User %s"
-msgstr "Usuario de correo de voz eliminado %s"
+msgstr ""
 
 #: Userman.class.php:487
 msgid "Reset"
-msgstr "Reinicio"
+msgstr "Zurücksetzen"
 
 #: views/groups.php:186
 msgid ""
 "Restrict this groups's view to only Extensions, Ring Groups, and Queues "
 "within this range."
 msgstr ""
-"Restringir la vista de este grupo a sólo Extensiones, Grupos de timbrado y "
-"Colas dentro de este rango."
 
 #: views/users.php:521
 msgid ""
 "Restrict this user's view to only Extensions, Ring Groups, and Queues within "
 "this range."
 msgstr ""
-"Restringir la vista de este usuario a sólo Extensiones, Grupos de timbrado y "
-"Colas dentro de este rango.\n"
-"."
 
 #: Userman.class.php:376
 msgid "Saved"
-msgstr "Guardado"
+msgstr "Gespeichert"
 
 #: functions.inc/guihooks.php:110 functions.inc/guihooks.php:114
 msgid ""
@@ -685,75 +644,66 @@ msgid ""
 "select Create New User to have User Manager autogenerate a new user that "
 "will be linked to this extension"
 msgstr ""
-"Seleccione un usuario al que esta extensión  debería estar vinculado en el "
-"Administrador de Usuarios, si no, seleccione Crear nuevo usuario para que el "
-"Administrador de usuarios genere un nuevo usuario que se vincula a esta "
-"extensión"
 
 #: functions.inc/guihooks.php:158
 msgid ""
 "Select a user that this extension should be linked to in User Manager, else "
 "select None to have no association to a user"
 msgstr ""
-"Seleccione un usuario al que esta extensión  debería estar vinculado en el "
-"Administrador de Usuarios, si no, seleccione Ninguno para no tener "
-"asociación a un usuario"
 
 #: views/groups.php:212
 msgid "Select the Admin Sections this group should have access to."
 msgstr ""
-"Seleccione las secciones de administración a las que este grupo debe tener "
-"acceso."
 
 #: views/users.php:547
 msgid "Select the Admin Sections this user should have access to."
 msgstr ""
-"Seleccione las secciones de administración a las que este usuario debe tener "
-"acceso."
 
 #: views/freepbx.php:23
 msgid "Select which groups new users are added to when they are created"
-msgstr "Seleccionar a qué grupos se agregan nuevos usuarios cuando se crean"
+msgstr ""
+"Wählen Sie aus, zu welchen Gruppen neue Benutzer hinzugefügt werden sollen, "
+"wenn sie erstellt wurden."
 
 #: views/welcome.php:43
 msgid "Send Email"
-msgstr "Enviar Email"
+msgstr "E-Mail senden"
 
 #: views/general.php:53
 msgid "Send Email as HTML"
-msgstr "Enviar Email como HTML"
+msgstr ""
 
 #: views/general.php:24
 msgid "Send Email on External New User Creation"
-msgstr "Enviar correo electrónico en la creación de nuevos usuarios externos"
+msgstr "Eine E-Mail an neuen externe Benutzer senden."
 
 #: views/passwordmodal.php:7
 msgid "Set Password"
-msgstr "Configurar Contraseña"
+msgstr "Passwort festlegen"
 
 #: Userman.class.php:1957
 msgid "Set by your administrator"
-msgstr "Establecido por su administrador"
+msgstr "Durch Administrator festgelegt"
 
 #: views/welcome.php:26
 msgid "Settings"
-msgstr "Configuración"
+msgstr "Einstellungen"
 
 #: views/msad.php:161 views/openldap.php:161
 msgid "Status"
-msgstr "Estado"
+msgstr "Status"
 
 #: Userman.class.php:475
 msgid "Submit"
-msgstr "Enviar"
+msgstr "Bestätigen"
 
 #: Userman.class.php:469
 msgid "Submit & Send Email to User"
-msgstr "Enviar y mandar Email al Usuario"
+msgstr "Bestätigen und E-Mail an Benutzer senden"
 
 #: views/general.php:201
 msgid "Synchronize"
-msgstr "Sincronizar"
+msgstr "Synchronisation"
 
 #: views/general.php:140
 #, php-format
@@ -763,10 +713,10 @@ msgid ""
 "li><li>title: title</li><li>username: Username</li><li>password: Password</"
 "li></ul>"
 msgstr ""
-"Texto que se utilizará para el cuerpo del correo electrónico de bienvenida. "
-"Las variables utilizables son: <ul><li> fname: Nombre </li><li> lname: "
-"Apellido </li><li>brand: %s</li><li>title: Titulo</li><li>Username: nombre "
-"de usuario </li><li> password: contraseña </li></ul>"
+"Folgende Variablen können für den Inhalt der Willkommen E-mail verwendet "
+"werden:<ul><li>fname: Vorname</li><li>lname: Nachname</li><li>brand: "
+"%s</li><li>title: Titel</li><li>username: Benutzername</li><li>password: "
+"Passwort</li></ul>"
 
 #: views/general.php:116
 #, php-format
@@ -776,90 +726,83 @@ msgid ""
 "li><li>title: title</li><li>username: Username</li><li>password: Password</"
 "li></ul>"
 msgstr ""
-"Texto que se utilizará para el asunto del correo electrónico de bienvenida. "
-"Las variables utilizables son: <ul><li>fname: Nombre</li><li>lname: Apellido "
-"</li><li>brand: %s</li><li>username: nombre de usuario </li><li>password: "
-"contraseña </li></ul>"
+"Folgende Variablen können für den Inhalt der Willkommen E-mail verwendet "
+"werden:<ul><li>fname: Vorname</li><li>lname: Nachname</li><li>brand: "
+"%s</li><li>title: Titel</li><li>username: Benutzername</li><li>password: "
+"Passwort</li></ul>"
 
 #: userman.i18n.php:18
 msgid ""
 "The From: field for emails when using the user management email feature."
 msgstr ""
-"El Campo \"De:\" para los correos cuando se esta usando la función de correo "
-"de la gestión de usuario."
 
 #: views/openldap.php:129
 msgid "The OpenLDAP Base-DN. Usually in the format of DC=example,DC=com"
 msgstr ""
-"El Base-DN de OpenLDAP. Normalmente en el formato DC = ejemplo, DC = com"
 
 #: views/openldap.php:107
 msgid ""
 "The OpenLDAP User-DN. Usually in the format of OU=people,DC=example,DC=com)"
 msgstr ""
-"El User-DN  de OpenLDAP. Normalmente en el formato de OU = personas, DC = "
-"ejemplo, DC = com)"
 
 #: views/openldap.php:19
 msgid "The OpenLDAP host"
-msgstr "Anfitrión OpenLDAP"
+msgstr ""
 
 #: views/openldap.php:85
 msgid "The OpenLDAP password"
-msgstr "Contraseña OpenLDAP"
+msgstr ""
 
 #: views/openldap.php:41
 msgid "The OpenLDAP port"
-msgstr "Puerto OpenLDAP"
+msgstr ""
 
 #: views/openldap.php:63
 msgid "The OpenLDAP username"
-msgstr "usuario OpenLDAP"
+msgstr ""
 
 #: views/msad.php:107
 msgid "The active directory domain"
-msgstr "Dominio del Active Directory"
+msgstr ""
 
 #: views/msad.php:19
 msgid "The active directory host"
-msgstr "Anfitrión del Active Directory"
+msgstr ""
 
 #: views/msad.php:85
 msgid "The active directory password"
-msgstr "Contraseña del Active Directory"
+msgstr ""
 
 #: views/msad.php:41
 msgid "The active directory port"
-msgstr "Puerto del Active Directory"
+msgstr ""
 
 #: views/msad.php:63
 msgid "The active directory username"
-msgstr "usuario del Active Directory"
+msgstr ""
 
 #: views/general.php:169
 #, php-format
 msgid "The authentication engine to use"
-msgstr "El motor de autenticación a utilizar"
+msgstr ""
 
 #: views/msad.php:129
 msgid "The base DN. Usually in the format of CN=Users,DC=domain,DC=local"
-msgstr "El DN Base. Usualmente en el formato de CN=Users,DC=domain,DC=local"
+msgstr ""
 
 #: views/msad.php:173
 msgid "The connection status of the Active Directory Server"
-msgstr "El estado de la conexión de Active Directory Server"
+msgstr ""
 
 #: views/openldap.php:173
 msgid "The connection status of the OpenLDAP Server"
-msgstr "El estado de la conexión del servidor OpenLDAP"
+msgstr ""
 
 #: views/users.php:342
 msgid ""
 "The email address to associate with this user. Multiple email address need "
 "to be separated with a comma."
 msgstr ""
-"La dirección de correo electrónico para asociarse con este usuario. Para "
-"dirección de correo electrónico múltiple debe separarse con una coma."
 
 #: views/general.php:93
 #, php-format
@@ -867,52 +810,50 @@ msgid ""
 "The hostname used for email. If left blank the default value of '%s' will be "
 "used"
 msgstr ""
-"El nombre de anfitrión utilizado para el correo electrónico. Si se deja en "
-"blanco se utilizará el valor por defecto de '%s'"
 
 #: views/users.php:366
 msgid "The user's cell (mobile) phone number."
-msgstr "Número del Móvil (Celular) del usuario."
+msgstr ""
 
 #: views/users.php:294
 msgid "The user's company."
-msgstr "Empresa del Usuario."
+msgstr ""
 
 #: views/users.php:318
 msgid "The user's department."
-msgstr "Departamento del usuario."
+msgstr ""
 
 #: views/users.php:438
 msgid "The user's fax phone number."
-msgstr "Numero de fax del usuario."
+msgstr ""
 
 #: views/users.php:198
 msgid "The user's first name."
-msgstr "Primer Nombre del usuario."
+msgstr ""
 
 #: views/users.php:414
 msgid "The user's home phone number."
-msgstr "Número de teléfono de habitación del usuario."
+msgstr ""
 
 #: views/users.php:222
 msgid "The user's last name."
-msgstr "Apellido del usuario."
+msgstr ""
 
 #: views/users.php:114
 msgid "The user's password."
-msgstr "Contraseña del usuario."
+msgstr ""
 
 #: views/users.php:270
 msgid "The user's title."
-msgstr "Titulo del usuario."
+msgstr ""
 
 #: views/users.php:390
 msgid "The user's work phone number."
-msgstr "Número de teléfono del Trabajo del usuario."
+msgstr ""
 
 #: views/voicemail.php:19
 msgid "The voicemail context to get users from"
-msgstr "El contexto del buzón de voz los usuarios"
+msgstr ""
 
 #: userman.i18n.php:8
 msgid ""
@@ -921,24 +862,16 @@ msgid ""
 "API purposes.\t\tModules like iSymphony, Rest API and User Control Panel and "
 "FreePBX itself use this module to manage their users."
 msgstr ""
-"Este módulo gestiona todos los usuarios de FreePBX. \t\t\tPermite a un "
-"administrador crear una cuenta de usuario que puede ser utilizada por otras "
-"aplicaciones para fines de inicio de sesión o API. \t\tLos módulos como "
-"iSymphony, Rest API y el Panel de control de usuario y FreePBX utilizan este "
-"módulo para administrar a sus usuarios."
 
 #: Userman.class.php:2282 Userman.class.php:2342
 msgid "This authentication driver does not allow importing"
-msgstr "Este controlador de autenticación no permite la importación"
+msgstr ""
 
 #: install.php:244
 msgid ""
 "This group was created on install and is automatically assigned to new "
 "users. This can be disabled in User Manager Settings"
 msgstr ""
-"Este grupo se creó en la instalación y se asigna automáticamente a los "
-"nuevos usuarios. Esto puede desactivarse en la configuración del "
-"Administrador de usuarios"
 
 #: views/users.php:169
 msgid ""
@@ -946,13 +879,10 @@ msgid ""
 "single user can only be linked to one extension, and one extension can only "
 "be linked to a single user."
 msgstr ""
-"Esta es la extensión a la que está vinculado este usuario desde la página "
-"Extensiones. Un solo usuario sólo puede enlazarse a una extensión, y una "
-"extensión sólo puede estar vinculada a un solo usuario."
 
 #: views/users.php:65
 msgid "This is the name that the user will use when logging in."
-msgstr "Este es el nombre que el usuario va a usar para iniciar una sesión."
+msgstr ""
 
 #: views/general.php:219
 #, php-format
@@ -961,343 +891,212 @@ msgid ""
 "Internal Directory. For the %s Internal Directory this setting will be "
 "ignored."
 msgstr ""
-"Esta configuración sólo se aplica a los motores de autenticación que no sean "
-"el directorio interno %s. Para el Directorio Interno %s, este parámetro será "
-"ignorado."
 
 #: views/users.php:258
 msgid "Title"
-msgstr "Titulo"
+msgstr ""
 
 #: Userman.class.php:1174
 msgid "UID was not numeric"
-msgstr "UID no fue numérico"
+msgstr ""
 
 #: views/passwordmodal.php:30 assets/js/userman.js:158
 msgid "Update Password"
-msgstr "Actualizar Contraseña"
+msgstr ""
 
 #: functions.inc/auth/modules/Freepbx.php:209
 #: functions.inc/auth/modules/Voicemail.php:215
 msgid "Updated Group"
-msgstr "Grupo actualizado"
+msgstr ""
 
 #: functions.inc/auth/modules/Freepbx.php:181
 msgid "Updated User"
-msgstr "Actualizar Usuario"
+msgstr ""
 
 #: functions.inc/auth/modules/Voicemail.php:80
 #, php-format
 msgid "Updated Voicemail User %s"
-msgstr "Actualizado Voicemail de usuario: %s"
+msgstr ""
 
 #: assets/js/userman.js:162
 msgid "Updating"
-msgstr "Actualizando"
+msgstr ""
 
 #: functions.inc/guihooks.php:123 functions.inc/guihooks.php:160
 msgid "Use Custom Username"
-msgstr "Use Nombre Personalizado del Usuario"
+msgstr ""
 
 #: functions.inc/auth/modules/Freepbx.php:108
 #: functions.inc/auth/modules/Freepbx.php:171
 #, php-format
 msgid "User '%s' Already Exists"
-msgstr "Usuario '%s' Ya Existe"
+msgstr ""
 
 #: functions.inc/auth/modules/Freepbx.php:159
 #, php-format
 msgid "User '%s' Does Not Exist"
-msgstr "Usuario '%s' No Existe"
+msgstr ""
 
 #: views/openldap.php:95
 msgid "User DN"
-msgstr "DN de Usuario"
+msgstr ""
 
 #: views/users.php:26
 msgid "User Details"
-msgstr "Detalles de Usuario"
+msgstr ""
 
 #: functions.inc/auth/Auth.php:303
 msgid "User Does Not Exist"
-msgstr "Usuario No Existe"
+msgstr ""
 
 #: userman.i18n.php:4 userman.i18n.php:10
 msgid "User Management"
-msgstr "Gestión de Usuario"
+msgstr ""
 
 #: userman.i18n.php:16
 msgid "User Management Module"
-msgstr "Modulo de Gestión de Usuario"
+msgstr ""
 
 #: Console/Userman.class.php:18 views/welcome.php:6
 msgid "User Manager"
-msgstr "Gestor de Usuario"
+msgstr ""
 
 #: Userman.class.php:2102 Userman.class.php:2103 views/quickCreate.php:36
 msgid "User Manager Groups"
-msgstr "Grupos de gestores de usuarios"
+msgstr ""
 
 #: functions.inc/guihooks.php:62
 msgid "User Manager Settings"
-msgstr "Configuración de Gestión de Usuario"
+msgstr ""
 
 #: Userman.class.php:2096 Userman.class.php:2097
 msgid "User Manager Users"
-msgstr "Usuarios del Administrador de usuarios"
+msgstr ""
 
 #: functions.inc/auth/Auth.php:401 functions.inc/auth/modules/Freepbx.php:122
 msgid "User Successfully Added"
-msgstr "Usuario añadido Satisfactoriamente"
+msgstr ""
 
 #: functions.inc/auth/Auth.php:315
 msgid "User Successfully Deleted"
-msgstr "Usuario Eliminado Satisfactoriamente"
+msgstr ""
 
 #: functions.inc/auth/Auth.php:410
 msgid "User Successfully Updated"
-msgstr "Usuario Actualizado satisfactoriamente"
+msgstr ""
 
 #: Userman.class.php:2238
 msgid "User already exists"
-msgstr "Usuario ya existe"
+msgstr ""
 
 #: functions.inc/auth/modules/Msad.php:369
 #: functions.inc/auth/modules/Openldap.php:404
 #: functions.inc/auth/modules/Voicemail.php:193
 msgid "User updated"
-msgstr "Usuario actualizado"
+msgstr ""
 
 #: functions.inc/guihooks.php:123 functions.inc/guihooks.php:160
 #: views/msad.php:51 views/openldap.php:51 views/rnav.php:11
 #: views/welcome.php:50
 msgid "Username"
-msgstr "Nombre Usuario"
+msgstr ""
 
 #: functions.inc/auth/Auth.php:381
 msgid "Username Can Not Be Blank!"
-msgstr "Username no puede estar en blanco!"
+msgstr ""
 
 #: Userman.class.php:1106
 msgid "Username can not be blank"
-msgstr "Username no puede ser blanco"
+msgstr ""
 
 #: functions.inc/auth/modules/Freepbx.php:105
 msgid "Username/Password Can Not Be Blank!"
-msgstr "Nombre Usuario/Contraseña no pueden estar en Blanco!"
+msgstr ""
 
 #: views/groups.php:95 views/welcome.php:24
 msgid "Users"
-msgstr "Usuarios"
+msgstr ""
 
 #: views/groups.php:174 views/users.php:509
 msgid "Visible Extension Range"
-msgstr "Rango de Extensiones Visible"
+msgstr ""
 
 #: functions.inc/auth/modules/Voicemail.php:152
 msgid "Voicemail is in Read Only Mode. Addition denied"
-msgstr "El correo de voz está en modo de sólo lectura. Adición negada"
+msgstr ""
 
 #: views/welcome.php:10
 msgid "What is User Manager"
-msgstr "Que es Gestor de Usuario"
+msgstr ""
 
 #: views/general.php:70
 msgid "Whether Email Body will send as HTML or plain text to the user."
-msgstr "Si Email Body se enviará como HTML o texto sin formato al usuario."
+msgstr ""
 
 #: views/general.php:41
 msgid ""
 "Whether to send an email (using the template below) to new users when they "
 "are created externally (not directly through User Manager)"
 msgstr ""
-"Si desea enviar un correo electrónico (utilizando la plantilla a "
-"continuación) a los nuevos usuarios cuando se crean externamente (no "
-"directamente a través del Administrador de usuarios)"
 
 #: views/quickCreate.php:90
 msgid "Which User Manager user this extension will link to"
 msgstr ""
-"Con qué usuario del Administrador de usuarios se conectará esta extensión"
 
 #: views/quickCreate.php:52 views/users.php:142
 msgid "Which groups this user is in"
-msgstr "En qué grupos está este usuario"
+msgstr ""
 
 #: views/groups.php:111
 msgid "Which users are in this group"
-msgstr "Qué usuarios están en este grupo"
+msgstr ""
 
 #: views/users.php:378
 msgid "Work Phone Number"
-msgstr "Numero de teléfono del Trabajo"
+msgstr ""
 
 #: views/general.php:30 views/general.php:59 views/groups.php:129
 #: views/groups.php:154 views/quickCreate.php:14 views/users.php:460
 #: views/users.php:487
 msgid "Yes"
-msgstr "Si"
+msgstr ""
 
 #: Userman.class.php:2002 views/general.php:108
 msgid "Your %brand% Account"
-msgstr "Su Cuenta %Brand%"
+msgstr ""
 
 #: Userman.class.php:2214
 msgid "default_extension is required."
-msgstr "default_extension es requerido."
+msgstr ""
 
 #: assets/js/userman.js:8
 msgid "group"
-msgstr "grupo"
+msgstr ""
 
 #: functions.inc/auth/Auth.php:447
 msgid "group Successfully Added"
-msgstr "Grupo agregado correctamente"
+msgstr ""
 
 #: Userman.class.php:2290
 msgid "groupname is required."
-msgstr "groupname es requerido."
+msgstr ""
 
 #: assets/js/userman.js:9
 msgid "groups"
-msgstr "grupos"
+msgstr ""
 
 #: Userman.class.php:2256
 msgid "password is required."
-msgstr "contraseña es requerida."
+msgstr ""
 
 #: assets/js/userman.js:6
 msgid "user"
-msgstr "usuario"
+msgstr ""
 
 #: Userman.class.php:2211
 msgid "username is required."
-msgstr "username es requerido."
+msgstr ""
 
 #: assets/js/userman.js:7
 msgid "users"
-msgstr "usuarios"
-
-#~ msgid "The email address to associate with this user."
-#~ msgstr "Correo Electrónico a ser asociado con este usuario."
-
-#~ msgid "User List"
-#~ msgstr "Lista de Usuario"
-
-#~ msgid "Link to a Default User:"
-#~ msgstr "Enlace a un Usuario por defecto:"
-
-#~ msgid "The Password Can Not Be blank!"
-#~ msgstr "La Contraseña no puede estar en blanco!"
-
-#~ msgid ""
-#~ "This is the extension this user is linked to from the Extensions page. A "
-#~ "single user can only be linked to one extension, and one extension can "
-#~ "only be linked to a single user. If using Rest Apps on a phone, this is "
-#~ "the extension that will be mapped to the API permissions set below for "
-#~ "this user."
-#~ msgstr ""
-#~ "Esta es la extensión que este usuario ha vinculado a la página "
-#~ "Extensiones. Un usuario sólo puede estar vinculado a una extensión, y una "
-#~ "extensión sólo puede estar vinculado a un solo usuario. Si utiliza Rest "
-#~ "Apps en un teléfono, esta es la extensión que se va a mapear a los "
-#~ "permisos establecidos API indicados abajo."
-
-#~ msgid "User Settings"
-#~ msgstr "Configuración de Usuario"
-
-#~ msgid "Username Can Not Be Blank"
-#~ msgstr "Nombre Usuario no puede estar en blanco"
-
-#~ msgid "Add & Send Email to User"
-#~ msgstr "Agregar y enviar un correo al Usuario"
-
-#~ msgid "Add New User"
-#~ msgstr "Agregar Nuevo Usuario"
-
-#~ msgid "Additional Assigned Extensions"
-#~ msgstr "Extensiones Adicionales Asignadas"
-
-#~ msgid "Additional Extensions over which this user will have control."
-#~ msgstr "Extensiones Adicionales sobre las que el Usuario tiene control."
-
-#~ msgid "Delete User %s"
-#~ msgstr "Eliminar Usuario %s"
-
-#~ msgid "Fax Number"
-#~ msgstr "Número  de Fax"
-
-#~ msgid "General"
-#~ msgstr "General"
-
-#~ msgid "General Settings"
-#~ msgstr "Configuración General"
-
-#~ msgid "Save"
-#~ msgstr "Guardar"
-
-#~ msgid "Save & resend email to all users"
-#~ msgstr "Guardar y enviar correo a todos los usuarios"
-
-#~ msgid ""
-#~ "Text to be used for the body of the welcome email. Useable variables are:"
-#~ "<ul><li>fname: First name</li><li>lname: Last name</li><li>brand: %s</"
-#~ "li><li>title: title</li><li>username: Username</li><li>password: "
-#~ "Password</li></ul><br>Empty the box to reset this field"
-#~ msgstr ""
-#~ "Texto a ser usado para el cuerpo del correo electrónico de bienvenida. "
-#~ "Las variables utilizables son: </li><li>fname: Primer Nombre</"
-#~ "li><li>lname: Apellido</li><li>brand:%s</li><li>title: Título</"
-#~ "li><li>username: Nombre de usuario</li><li>password: Contraseña</li></"
-#~ "ul><br> Vacíe la caja para restablecer este campo"
-
-#~ msgid ""
-#~ "Text to be used for the subject of the welcome email. Useable variables "
-#~ "are:<ul><li>fname: First name</li><li>lname: Last name</li><li>brand: %s</"
-#~ "li><li>title: title</li><li>username: Username</li><li>password: "
-#~ "Password</li></ul><br>Empty the box to reset this field"
-#~ msgstr ""
-#~ "Texto a ser usado para el asunto del correo electrónico de bienvenida. "
-#~ "Las variables utilizables son: </li><li>fname: Primer Nombre</"
-#~ "li><li>lname: Apellido</li><li>brand:%s</li><li>title: Título</"
-#~ "li><li>username: Nombre de usuario</li><li>password: Contraseña</li></"
-#~ "ul><br> Vacíe la caja para restablecer este campo"
-
-#~ msgid "The user's fax number."
-#~ msgstr "Número de Fax del usuario."
-
-#~ msgid ""
-#~ "This Module manages all FreePBX users excluding Administrators (at this "
-#~ "time).\t\tIt allows an Administrator to create a User Account that can be "
-#~ "used by other applications for login or API purposes.\t\tModules like "
-#~ "iSymphony, Rest API and User Control Panel use this module to manage "
-#~ "their users."
-#~ msgstr ""
-#~ "Este módulo gestiona todos los usuarios de FreePBX excluidos los "
-#~ "Administradores (en este momento). →→ Permite al administrador crear una "
-#~ "cuenta de usuario que puede ser utilizado por otras aplicaciones para "
-#~ "establecer sesiones  o para propósitos de API. →→ módulos como iSymphony, "
-#~ "RestAPI y de Panel deControl de Usuario utilizan este módulo para "
-#~ "gestionar usuarios."
-
-#~ msgid ""
-#~ "This Module manages all FreePBX users excluding Administrators (at this "
-#~ "time).\n"
-#~ "\t\tIt allows an Administrator to create a User Account that can be used "
-#~ "by other applications for login or API purposes.\n"
-#~ "\t\tModules like iSymphony, Rest API and User Control Panel use this "
-#~ "module to manage their users."
-#~ msgstr ""
-#~ "Este módulo gestiona todos los usuarios de FreePBX excluidos los "
-#~ "Administradores (en este momento).\n"
-#~ " →→ Permite al administrador crear una cuenta de usuario que puede ser "
-#~ "utilizado por otras aplicaciones para establecer sesiones  o para "
-#~ "propósitos de API.\n"
-#~ " →→ módulos como iSymphony, RestAPI y de Panel de Control de Usuario "
-#~ "utilizan este módulo para gestionar usuarios."
-
-#~ msgid "Update"
-#~ msgstr "Actualizar"
-
-#~ msgid "Update & Send Email to User"
-#~ msgstr "Actualizar y enviar correo al Usuario"
+msgstr ""
