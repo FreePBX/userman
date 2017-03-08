@@ -1496,6 +1496,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 			$grp = ($groupid >= 0) ? $this->getGroupByGID($groupid) : array('groupname' => 'user');
 			return array(
 				"val" => $output,
+				"null" => is_null($output),
 				"group" => $groupid,
 				"setting" => $setting,
 				"module" => $module,
