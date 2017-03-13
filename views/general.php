@@ -188,7 +188,7 @@
 				</div>
 				<div class="row">
 					<div class="col-md-12">
-						<span id="remoteips-help" class="help-block fpbx-help-block"><?php echo sprintf(_("Comma separated list of IP addresses that can send a POST query to %s supplying the parameters of '%s' and '%s' which can be used for remote servers to authenicate against User Manager. Supplying no addresses disables this feature"),$_SERVER['HTTP_HOST']."/admin/ajax.php?module=userman&command=auth","userman","password")?></span>
+						<span id="remoteips-help" class="help-block fpbx-help-block"><?php echo sprintf(_("Comma separated list of IP addresses that can send a POST query to %s supplying the parameters of '%s' and '%s' which can be used for remote servers to authenticate against User Manager. Supplying no addresses disables this feature"),$_SERVER['HTTP_HOST']."/admin/ajax.php?module=userman&command=auth","userman","password")?></span>
 					</div>
 				</div>
 			</div>
