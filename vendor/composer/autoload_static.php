@@ -39,6 +39,13 @@ class ComposerStaticInit268a4c9e6f4d2a15cc37d250ad62db1f
     );
 
     public static $prefixesPsr0 = array (
+        'H' => 
+        array (
+            'Hautelook' => 
+            array (
+                0 => __DIR__ . '/..' . '/hautelook/phpass/src',
+            ),
+        ),
         'D' => 
         array (
             'Doctrine\\Common\\Inflector\\' => 

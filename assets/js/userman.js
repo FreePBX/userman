@@ -217,6 +217,9 @@ $("#pwsub").on("click", function(){
 			console.dir(xhr);
 			console.log(status);
 			console.log(e);
+		},
+		always: function() {
+			button.attr("disabled", false);
 		}
 	});
 });
