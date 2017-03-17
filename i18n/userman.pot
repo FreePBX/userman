@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-17 12:00-0700\n"
+"POT-Creation-Date: 2017-03-17 15:23-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,7 +24,7 @@ msgstr ""
 msgid "%s Administration GUI"
 msgstr ""
 
-#: functions.inc/auth/modules/Freepbx.php:24
+#: functions.inc/auth/modules/Freepbx.php:25
 #, php-format
 msgid "%s Internal Directory"
 msgstr ""
@@ -120,8 +120,8 @@ msgstr ""
 msgid "Allow %s Administration Login"
 msgstr ""
 
-#: functions.inc/auth/modules/Freepbx.php:185
-#: functions.inc/auth/modules/Freepbx.php:211
+#: functions.inc/auth/modules/Freepbx.php:193
+#: functions.inc/auth/modules/Freepbx.php:219
 msgid "An Unknown error occured while trying to update user data"
 msgstr ""
 
@@ -352,7 +352,7 @@ msgid ""
 "access."
 msgstr ""
 
-#: functions.inc/auth/modules/Freepbx.php:201
+#: functions.inc/auth/modules/Freepbx.php:209
 #: functions.inc/auth/modules/Voicemail.php:206
 #, php-format
 msgid "Group '%s' Does Not Exist"
@@ -385,7 +385,7 @@ msgid ""
 "(EG 0 is higher than 1)"
 msgstr ""
 
-#: functions.inc/auth/modules/Freepbx.php:137
+#: functions.inc/auth/modules/Freepbx.php:143
 #: functions.inc/auth/modules/Voicemail.php:175
 msgid "Group Successfully Added"
 msgstr ""
@@ -798,11 +798,11 @@ msgid ""
 "li></ul>"
 msgstr ""
 
-#: assets/js/userman.js:282
+#: assets/js/userman.js:285
 msgid "The Browser Language could not be determined"
 msgstr ""
 
-#: assets/js/userman.js:302
+#: assets/js/userman.js:305
 msgid "The Browser Timezone could not be determined"
 msgstr ""
 
@@ -844,11 +844,11 @@ msgstr ""
 msgid "The OpenLDAP username"
 msgstr ""
 
-#: assets/js/userman.js:292
+#: assets/js/userman.js:295
 msgid "The PBX Language is not set"
 msgstr ""
 
-#: assets/js/userman.js:312
+#: assets/js/userman.js:315
 msgid "The PBX Timezone is not set"
 msgstr ""
 
@@ -1053,12 +1053,12 @@ msgstr ""
 msgid "Update Password"
 msgstr ""
 
-#: functions.inc/auth/modules/Freepbx.php:213
+#: functions.inc/auth/modules/Freepbx.php:221
 #: functions.inc/auth/modules/Voicemail.php:215
 msgid "Updated Group"
 msgstr ""
 
-#: functions.inc/auth/modules/Freepbx.php:182
+#: functions.inc/auth/modules/Freepbx.php:190
 msgid "Updated User"
 msgstr ""
 
@@ -1109,13 +1109,13 @@ msgstr ""
 msgid "Use TLS"
 msgstr ""
 
-#: functions.inc/auth/modules/Freepbx.php:108
-#: functions.inc/auth/modules/Freepbx.php:172
+#: functions.inc/auth/modules/Freepbx.php:109
+#: functions.inc/auth/modules/Freepbx.php:180
 #, php-format
 msgid "User '%s' Already Exists"
 msgstr ""
 
-#: functions.inc/auth/modules/Freepbx.php:160
+#: functions.inc/auth/modules/Freepbx.php:166
 #, php-format
 msgid "User '%s' Does Not Exist"
 msgstr ""
@@ -1166,7 +1166,7 @@ msgid "User Manager Users"
 msgstr ""
 
 #: functions.inc/auth/Auth.php:441
-#: functions.inc/auth/modules/Freepbx.php:122
+#: functions.inc/auth/modules/Freepbx.php:128
 msgid "User Successfully Added"
 msgstr ""
 
@@ -1205,7 +1205,7 @@ msgstr ""
 msgid "Username can not be blank"
 msgstr ""
 
-#: functions.inc/auth/modules/Freepbx.php:105
+#: functions.inc/auth/modules/Freepbx.php:106
 msgid "Username/Password Can Not Be Blank!"
 msgstr ""
 

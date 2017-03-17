@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-17 12:00-0700\n"
+"POT-Creation-Date: 2017-03-17 15:23-0700\n"
 "PO-Revision-Date: 2016-12-21 00:22+0200\n"
 "Last-Translator: Alexander <alexander.schley@paranagua.pr.gov.br>\n"
 "Language-Team: Portuguese (Brazil) <http://weblate.freepbx.org/projects/"
@@ -26,7 +26,7 @@ msgstr ""
 msgid "%s Administration GUI"
 msgstr "%s Administração GUI"
 
-#: functions.inc/auth/modules/Freepbx.php:24
+#: functions.inc/auth/modules/Freepbx.php:25
 #, php-format
 msgid "%s Internal Directory"
 msgstr "%s Diretório Interno"
@@ -119,8 +119,8 @@ msgstr "Todos os Usuários"
 msgid "Allow %s Administration Login"
 msgstr "Permitir %s Login Administrador"
 
-#: functions.inc/auth/modules/Freepbx.php:185
-#: functions.inc/auth/modules/Freepbx.php:211
+#: functions.inc/auth/modules/Freepbx.php:193
+#: functions.inc/auth/modules/Freepbx.php:219
 msgid "An Unknown error occured while trying to update user data"
 msgstr "Ocorreu um erro desconhecido ao tentar atualizar dados do usuário"
 
@@ -330,7 +330,7 @@ msgstr ""
 "Concede direitos de administração completos, independentemente do intervalo "
 "de ramal ou do acesso ao módulo."
 
-#: functions.inc/auth/modules/Freepbx.php:201
+#: functions.inc/auth/modules/Freepbx.php:209
 #: functions.inc/auth/modules/Voicemail.php:206
 #, php-format
 msgid "Group '%s' Does Not Exist"
@@ -363,7 +363,7 @@ msgstr ""
 "pela ordem desejada. Os grupos com um número mais baixo têm prioridade (Ex: "
 "0 é superior a 1)"
 
-#: functions.inc/auth/modules/Freepbx.php:137
+#: functions.inc/auth/modules/Freepbx.php:143
 #: functions.inc/auth/modules/Voicemail.php:175
 msgid "Group Successfully Added"
 msgstr "Grupo Adicionado com Sucesso"
@@ -790,11 +790,11 @@ msgstr ""
 "li><li>title: Título</li><li>username: Nome de Usuário </li><li> password: "
 "Senha </li></ul>"
 
-#: assets/js/userman.js:282
+#: assets/js/userman.js:285
 msgid "The Browser Language could not be determined"
 msgstr ""
 
-#: assets/js/userman.js:302
+#: assets/js/userman.js:305
 msgid "The Browser Timezone could not be determined"
 msgstr ""
 
@@ -839,11 +839,11 @@ msgstr "Porta OpenLDAP"
 msgid "The OpenLDAP username"
 msgstr "Nome de Usuário OpenLDAP"
 
-#: assets/js/userman.js:292
+#: assets/js/userman.js:295
 msgid "The PBX Language is not set"
 msgstr ""
 
-#: assets/js/userman.js:312
+#: assets/js/userman.js:315
 msgid "The PBX Timezone is not set"
 msgstr ""
 
@@ -1056,12 +1056,12 @@ msgstr "O UID não era numérico"
 msgid "Update Password"
 msgstr "Atualizar Senha"
 
-#: functions.inc/auth/modules/Freepbx.php:213
+#: functions.inc/auth/modules/Freepbx.php:221
 #: functions.inc/auth/modules/Voicemail.php:215
 msgid "Updated Group"
 msgstr "Grupo Atualizado"
 
-#: functions.inc/auth/modules/Freepbx.php:182
+#: functions.inc/auth/modules/Freepbx.php:190
 msgid "Updated User"
 msgstr "Usuário Atualizado"
 
@@ -1106,13 +1106,13 @@ msgstr ""
 msgid "Use TLS"
 msgstr ""
 
-#: functions.inc/auth/modules/Freepbx.php:108
-#: functions.inc/auth/modules/Freepbx.php:172
+#: functions.inc/auth/modules/Freepbx.php:109
+#: functions.inc/auth/modules/Freepbx.php:180
 #, php-format
 msgid "User '%s' Already Exists"
 msgstr "O Usuário '%s' Já Existe"
 
-#: functions.inc/auth/modules/Freepbx.php:160
+#: functions.inc/auth/modules/Freepbx.php:166
 #, php-format
 msgid "User '%s' Does Not Exist"
 msgstr "O Usuário '%s' Não Existe"
@@ -1157,7 +1157,7 @@ msgstr "Configuração de Gerenciador de Usuários"
 msgid "User Manager Users"
 msgstr "Usuário do Gerenciador de Usuários"
 
-#: functions.inc/auth/Auth.php:441 functions.inc/auth/modules/Freepbx.php:122
+#: functions.inc/auth/Auth.php:441 functions.inc/auth/modules/Freepbx.php:128
 msgid "User Successfully Added"
 msgstr "Usuário Adicionado com Sucesso"
 
@@ -1193,7 +1193,7 @@ msgstr "O nome de usuário não pode ficar em branco!"
 msgid "Username can not be blank"
 msgstr "O nome de usuário não pode ficar em branco"
 
-#: functions.inc/auth/modules/Freepbx.php:105
+#: functions.inc/auth/modules/Freepbx.php:106
 msgid "Username/Password Can Not Be Blank!"
 msgstr "O Nome de Usuário/Senha não pode ficar em branco!"
 
