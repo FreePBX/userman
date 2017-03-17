@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-08 10:11-0800\n"
+"POT-Creation-Date: 2017-03-17 12:00-0700\n"
 "PO-Revision-Date: 2016-12-21 00:22+0200\n"
 "Last-Translator: Alexander <alexander.schley@paranagua.pr.gov.br>\n"
 "Language-Team: Portuguese (Brazil) <http://weblate.freepbx.org/projects/"
@@ -110,7 +110,7 @@ msgstr "Acesso Administração"
 msgid "Advanced"
 msgstr ""
 
-#: install.php:314
+#: install.php:50
 msgid "All Users"
 msgstr "Todos os Usuários"
 
@@ -172,13 +172,9 @@ msgstr "Fechar"
 msgid ""
 "Comma separated list of IP addresses that can send a POST query to %s "
 "supplying the parameters of '%s' and '%s' which can be used for remote "
-"servers to authenicate against User Manager. Supplying no addresses disables "
-"this feature"
+"servers to authenticate against User Manager. Supplying no addresses "
+"disables this feature"
 msgstr ""
-"Lista de endereços IP separados por vírgulas que podem enviar uma consulta "
-"POST para %s fornecendo os parâmetros de '%s' e '%s' que podem ser usados "
-"por servidores remotos para autenticar no Gerenciador de Usuários. O "
-"fornecimento de endereços não desativa esse recurso"
 
 #: views/users.php:283
 msgid "Company"
@@ -204,10 +200,6 @@ msgstr "Criar Novo Usuário"
 #: views/quickCreate.php:8
 msgid "Create User Manager User"
 msgstr "Criar Usuário do Gerenciador de Usuários"
-
-#: install.php:28 install.php:35
-msgid "Database rename not completed"
-msgstr "Renomeação do banco de dados não concluída"
 
 #: views/groups.php:210 views/users.php:570
 msgid "Date Format"
@@ -1006,7 +998,7 @@ msgstr ""
 msgid "This authentication driver does not allow importing"
 msgstr "Esse controlador de autenticação não permite a importação"
 
-#: install.php:314
+#: install.php:50
 msgid ""
 "This group was created on install and is automatically assigned to new "
 "users. This can be disabled in User Manager Settings"
@@ -1296,6 +1288,20 @@ msgstr "nome de usuário é necessário."
 #: assets/js/userman.js:7
 msgid "users"
 msgstr "usuários"
+
+#~ msgid ""
+#~ "Comma separated list of IP addresses that can send a POST query to %s "
+#~ "supplying the parameters of '%s' and '%s' which can be used for remote "
+#~ "servers to authenicate against User Manager. Supplying no addresses "
+#~ "disables this feature"
+#~ msgstr ""
+#~ "Lista de endereços IP separados por vírgulas que podem enviar uma "
+#~ "consulta POST para %s fornecendo os parâmetros de '%s' e '%s' que podem "
+#~ "ser usados por servidores remotos para autenticar no Gerenciador de "
+#~ "Usuários. O fornecimento de endereços não desativa esse recurso"
+
+#~ msgid "Database rename not completed"
+#~ msgstr "Renomeação do banco de dados não concluída"
 
 #~ msgid ""
 #~ "This Module manages all FreePBX users\t\tIt allows an Administrator to "

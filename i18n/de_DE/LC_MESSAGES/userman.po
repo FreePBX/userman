@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-08 10:11-0800\n"
+"POT-Creation-Date: 2017-03-17 12:00-0700\n"
 "PO-Revision-Date: 2017-03-06 03:14+0200\n"
 "Last-Translator: hammer125 <auswertung@aon.at>\n"
 "Language-Team: German <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -106,7 +106,7 @@ msgstr "Administrationszugriff"
 msgid "Advanced"
 msgstr ""
 
-#: install.php:314
+#: install.php:50
 msgid "All Users"
 msgstr "Alle Benutzer"
 
@@ -168,8 +168,8 @@ msgstr "Schließen"
 msgid ""
 "Comma separated list of IP addresses that can send a POST query to %s "
 "supplying the parameters of '%s' and '%s' which can be used for remote "
-"servers to authenicate against User Manager. Supplying no addresses disables "
-"this feature"
+"servers to authenticate against User Manager. Supplying no addresses "
+"disables this feature"
 msgstr ""
 
 #: views/users.php:283
@@ -196,10 +196,6 @@ msgstr "Neuen Benutzer erstellen"
 #: views/quickCreate.php:8
 msgid "Create User Manager User"
 msgstr "Benutzermanager Benutzer erstellen"
-
-#: install.php:28 install.php:35
-msgid "Database rename not completed"
-msgstr "Datenbankumbenennung nicht abgeschlossen"
 
 #: views/groups.php:210 views/users.php:570
 msgid "Date Format"
@@ -954,7 +950,7 @@ msgstr ""
 msgid "This authentication driver does not allow importing"
 msgstr ""
 
-#: install.php:314
+#: install.php:50
 msgid ""
 "This group was created on install and is automatically assigned to new "
 "users. This can be disabled in User Manager Settings"
@@ -1231,3 +1227,6 @@ msgstr "Benutzername erforderlich."
 #: assets/js/userman.js:7
 msgid "users"
 msgstr "Benutzer"
+
+#~ msgid "Database rename not completed"
+#~ msgstr "Datenbankumbenennung nicht abgeschlossen"

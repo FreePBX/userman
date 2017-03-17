@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-08 10:11-0800\n"
+"POT-Creation-Date: 2017-03-17 12:00-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -110,7 +110,7 @@ msgstr ""
 msgid "Advanced"
 msgstr ""
 
-#: install.php:314
+#: install.php:50
 msgid "All Users"
 msgstr ""
 
@@ -175,8 +175,8 @@ msgstr ""
 msgid ""
 "Comma separated list of IP addresses that can send a POST query to %s "
 "supplying the parameters of '%s' and '%s' which can be used for remote "
-"servers to authenicate against User Manager. Supplying no addresses disables "
-"this feature"
+"servers to authenticate against User Manager. Supplying no addresses "
+"disables this feature"
 msgstr ""
 
 #: views/users.php:283
@@ -203,11 +203,6 @@ msgstr ""
 
 #: views/quickCreate.php:8
 msgid "Create User Manager User"
-msgstr ""
-
-#: install.php:28
-#: install.php:35
-msgid "Database rename not completed"
 msgstr ""
 
 #: views/groups.php:210
@@ -1005,7 +1000,7 @@ msgstr ""
 msgid "This authentication driver does not allow importing"
 msgstr ""
 
-#: install.php:314
+#: install.php:50
 msgid ""
 "This group was created on install and is automatically assigned to new "
 "users. This can be disabled in User Manager Settings"
