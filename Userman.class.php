@@ -589,10 +589,12 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 					$assigned = $this->getGlobalSettingByID($request['user'],'assigned');
 					$assigned = !(empty($assigned)) ? $assigned : array();
 					$default = $user['default_extension'];
+					$usage_html = \FreePBX::View()->destinationUsage("ext-fax,$request[user],1");
 				} else {
 					$user = array();
 					$assigned = array();
 					$default = null;
+					$usage_html = '';
 				}
 				$extrauserdetails = $this->getExtraUserDetailsDisplay($user);
 				$fpbxusers = array();
@@ -638,7 +640,8 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 						"user" => $user,
 						"message" => $this->message,
 						"permissions" => $permissions,
-						"extrauserdetails" => $extrauserdetails
+						"extrauserdetails" => $extrauserdetails,
+						"usage_html" => $usage_html,
 					)
 				);
 			break;
