@@ -67,17 +67,17 @@ class Openldap extends Auth {
 	 * LDAP User identifier
 	 * @var string
 	 */
-	private $userident = "uid";
+	private $userident = "";
 	/**
 	 * LDAP Object Class of a user
 	 * @var string
 	 */
-	private $userObjectClass = "person";
+	private $userObjectClass = "";
 	/**
 	 * LDAP Object Class of a group
 	 * @var string
 	 */
-	private $groupObjectClass = "posixGroup";
+	private $groupObjectClass = "";
 	/**
 	 * User cache
 	 * cache requests throughout this class
@@ -90,6 +90,14 @@ class Openldap extends Auth {
 	 * @var array
 	 */
 	private $gcache = array();
+	/**
+	 * Ula= User link attribute
+	 */
+	private $ula='';
+	/**
+	 * ala= AuthID link attribute
+	 */
+	private $ala='';
 
 	private $active = 0;
 
@@ -114,6 +122,11 @@ class Openldap extends Auth {
 		$this->basedn = $config['basedn'];
 		$this->userdn = $config['userdn'];
 		$this->user = $config['username'];
+		$this->password = $config['password'];
+		$this->userident = $config['userident'];
+		$this->userObjectClass = $config['userObjectClass'];
+		$this->ala = $config['ala'];
+		$this->ula = $config['ula'];
 		$this->password = $config['password'];
 		$this->linkAttr = isset($config['la']) ? strtolower($config['la']) : '';
 		$this->output = null;
@@ -188,7 +201,12 @@ class Openldap extends Auth {
 			"userdn" => $_REQUEST['openldap-userdn'],
 			"basedn" => $_REQUEST['openldap-basedn'],
 			"la" => $_REQUEST['openldap-la'],
-			"sync" => $_REQUEST['sync']
+			"sync" => $_REQUEST['sync'],
+			"userident" => $_REQUEST['openldap-userident'],
+			"userObjectClass" => $_REQUEST['openldap-userObjectClass'],
+			"groupObjectClass" => $_REQUEST['openldap-groupObjectClass'],
+			"ula" => $_REQUEST['openldap-ula'],
+			"ala" => $_REQUEST['openldap-ala']
 		);
 		$userman->setConfig("authOpenLDAPSettings", $config);
 		if(!empty($config['host']) && !empty($config['username']) && !empty($config['password']) && !empty($config['userdn'])) {
@@ -433,11 +451,21 @@ class Openldap extends Auth {
 		if(strpos($username,",") === false) {
 			$res = @ldap_bind($ldap, $this->userident."=".$username.",".$this->userdn, $password);
 		} else {
-			$res = @ldap_bind($ldap, $this->userident."=".$username.$this->userdn, $password);
+			//FREEPBX-14623 LDAP integration compatibility issue with user management module
+			//check ifend of the username has "," if not add it (possible logins -> [username],[username,ou=sangoma],[username,ou=sangoma,]
+			if(substr($username, -1) == ',') {// rare case -> mostly user will not make this mistake
+				$res = @ldap_bind($ldap, $this->userident."=".$username.$this->userdn, $password);
+			}else{
+				// when the user login from UCP or ZULU with [username,ou=sangoma]
+				$res = @ldap_bind($ldap, $this->userident."=".$username.",".$this->userdn, $password);
+			}
+			// if the username comes with ',' then we need to explode and get the username to get getUserByUsername
+			$dbusername = explode(",",$username);
+			$username = $dbusername[0];
 		}
-
 		if($res) {
 			$user = $this->getUserByUsername($username);
+
 		}
 		return !empty($user['id']) ? $user['id'] : false;
 	}
@@ -630,7 +658,7 @@ class Openldap extends Auth {
 			unset($users['count']);
 			$members = array();
 			foreach($users as $user) {
-				$usid = $this->binToStrSid($user['uidnumber'][0]);
+				$usid = $this->binToStrSid($user[$this->ala][0]);
 				$u = $this->getUserByAuthID($usid);
 				$members[] = $u['id'];
 			}
@@ -682,9 +710,9 @@ class Openldap extends Auth {
 		unset($users['count']);
 		//add and update users
 		foreach($users as $user) {
-			$sid = $this->binToStrSid($user['uidnumber'][0]);
+			$sid = $this->binToStrSid($user[$this->ala][0]);
 			$this->ucache[$sid] = $user;
-			$um = $this->linkUser($user['uid'][0], 'openldap', $sid);
+			$um = $this->linkUser($user[$this->ula][0], 'openldap', $sid);
 			if($um['status']) {
 				$data = array(
 					"description" => !empty($user['description'][0]) ? $user['description'][0] : '',

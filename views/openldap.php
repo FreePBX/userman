@@ -136,6 +136,116 @@
 			<div class="row">
 				<div class="form-group">
 					<div class="col-md-3">
+						<label class="control-label" for="openldap-userident"><?php echo _("User identifier")?></label>
+						<i class="fa fa-question-circle fpbx-help-icon" data-for="openldap-userident"></i>
+					</div>
+					<div class="col-md-9">
+						<input id="openldap-userident" name="openldap-userident" type="text" class="form-control" value="<?php echo isset($config['userident']) ? $config['userident'] : 'uid'?>">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<span id="openldap-userident-help" class="help-block fpbx-help-block"><?php echo _("LDAP User identifier.")?></span>
+		</div>
+	</div>
+</div>
+<div class="element-container">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="row">
+				<div class="form-group">
+					<div class="col-md-3">
+						<label class="control-label" for="openldap-userObjectClass"><?php echo _("Object Class of a user")?></label>
+						<i class="fa fa-question-circle fpbx-help-icon" data-for="openldap-userObjectClass"></i>
+					</div>
+					<div class="col-md-9">
+						<input id="openldap-userObjectClass" name="openldap-userObjectClass" type="text" class="form-control" value="<?php echo isset($config['userObjectClass']) ? $config['userObjectClass'] : 'person'?>">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<span id="openldap-userObjectClass-help" class="help-block fpbx-help-block"><?php echo _("LDAP Object Class of a user")?></span>
+		</div>
+	</div>
+</div>
+<div class="element-container">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="row">
+				<div class="form-group">
+					<div class="col-md-3">
+						<label class="control-label" for="openldap-groupObjectClass"><?php echo _("Object Class of a group")?></label>
+						<i class="fa fa-question-circle fpbx-help-icon" data-for="openldap-groupObjectClass"></i>
+					</div>
+					<div class="col-md-9">
+						<input id="openldap-groupObjectClass" name="openldap-groupObjectClass" type="text" class="form-control" value="<?php echo isset($config['groupObjectClass']) ? $config['groupObjectClass'] : 'posixGroup'?>">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<span id="openldap-groupObjectClass-help" class="help-block fpbx-help-block"><?php echo _("LDAP Object Class of a group")?></span>
+		</div>
+	</div>
+</div>
+<div class="element-container">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="row">
+				<div class="form-group">
+					<div class="col-md-3">
+						<label class="control-label" for="openldap-ula"><?php echo _("User Link Attribute")?></label>
+						<i class="fa fa-question-circle fpbx-help-icon" data-for="openldap-ula"></i>
+					</div>
+					<div class="col-md-9">
+						<input id="openldap-ula" name="openldap-ula" type="text" class="form-control" value="<?php echo isset($config['ula']) ? $config['ula'] : 'uid'?>">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<span id="openldap-ula-help" class="help-block fpbx-help-block"><?php echo _("LDAP User Link Attribute")?></span>
+		</div>
+	</div>
+</div>
+<div class="element-container">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="row">
+				<div class="form-group">
+					<div class="col-md-3">
+						<label class="control-label" for="openldap-ala"><?php echo _("Authid Link Attribute")?></label>
+						<i class="fa fa-question-circle fpbx-help-icon" data-for="openldap-ala"></i>
+					</div>
+					<div class="col-md-9">
+						<input id="openldap-ala" name="openldap-ala" type="text" class="form-control" value="<?php echo isset($config['ala']) ? $config['ala'] : 'uidnumber'?>">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<span id="openldap-ala-help" class="help-block fpbx-help-block"><?php echo _("LDAP AuthID link attribute")?></span>
+		</div>
+	</div>
+</div>
+<div class="element-container">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="row">
+				<div class="form-group">
+					<div class="col-md-3">
 						<label class="control-label" for="openldap-la"><?php echo _("Extension Link Attribute")?></label>
 						<i class="fa fa-question-circle fpbx-help-icon" data-for="openldap-la"></i>
 					</div>
