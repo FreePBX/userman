@@ -23,7 +23,7 @@ $(".btn-remove").click(function() {
 	var type = $(this).data("type"), btn = $(this), section = $(this).data("section");
 	var chosen = $("#table-"+section).bootstrapTable("getSelections");
 	$(chosen).each(function(){
-		deleteExts[type].push(this['id']);
+		deleteExts[type].push(this.id);
 	});
 	if(confirm(sprintf(_("Are you sure you wish to delete these %s?"),translations[type]))) {
 		btn.find("span").text(_("Deleting..."));
@@ -74,8 +74,8 @@ $("table").on("post-body.bs.table", function () {
 });
 $("table").on("page-change.bs.table", function () {
 	$(".btn-remove").prop("disabled", true);
-	deleteExts['users'] = [];
-	deleteExts['groups'] = [];
+	deleteExts.users = [];
+	deleteExts.groups = [];
 });
 $("table").on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
 	var toolbar = $(this).data("toolbar"),
@@ -101,18 +101,18 @@ $("#submitsend").click(function(e) {
 var params={};window.location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi,function(str,key,value){params[key] = value;});
 //Tab and Button stuff
 $( document ).ready(function() {
-	var hash = (window.location.hash != "") ? window.location.hash : "users";
+	var hash = (window.location.hash !== "") ? window.location.hash : "users";
 	if(hash == '#settings'){
 		$('input[name="submit"]').removeClass('hidden');
 		$('input[name="submitsend"]').removeClass('hidden');
 		$('input[name="reset"]').removeClass('hidden');
 		$("#action-bar").removeClass("hidden");
-	} else if(params['action'] == 'adduser' || params['action'] == 'showuser'){
+	} else if(params.action == 'adduser' || params.action == 'showuser'){
 		$('input[name="submitsend"]').removeClass('hidden');
 		$('input[name="submit"]').removeClass('hidden');
 		$('input[name="reset"]').removeClass('hidden');
 		$('input[name="delete"]').removeClass('hidden');
-	}else if(params['action'] == 'addgroup' || params['action'] == 'showgroup') {
+	}else if(params.action == 'addgroup' || params.action == 'showgroup') {
 		$('input[name="submit"]').removeClass('hidden');
 		$('input[name="reset"]').removeClass('hidden');
 		$('input[name="delete"]').removeClass('hidden');
@@ -122,7 +122,24 @@ $( document ).ready(function() {
 
 	$(".nav-tabs a[href="+hash+"]").tab('show');
 	//we should be at the user tab by default so we will show add user.
-});
+
+	$("#reset").on("click", function(e){
+		e.preventDefault();
+		e.stopPropagation();
+		 // stops the form from resetting after this function
+
+		 $(".fpbx-submit")[0].reset();
+		 // resets the form before continuing the function
+
+		 $(".fpbx-submit input").each(function() {
+			 var val = $(this).data("default");
+			 if(typeof val !== "undefined") {
+				 val = (val === null) ? 'null' : val;
+				 $(this).val(val);
+			 }
+		 });
+	 });
+ });
 //this fires when you change tabs
 $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
 	//Button Related

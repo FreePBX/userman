@@ -399,8 +399,6 @@ abstract class Auth implements Base {
 	/**
 	 * Link user from external auth system into Usermanager
 	 * @param string $username    The username of the user
-	 * @param string $default     the default extension to assign
-	 * @param string $description The description
 	 * @param string $auth        The auth type (class)
 	 * @param string $authid      The authID
 	 */
