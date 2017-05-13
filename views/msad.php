@@ -10,7 +10,7 @@
 					<div class="col-md-9">
 						<select id="msad-connection" data-default="<?php echo $defaults['connection']?>" name="msad-connection" class="form-control">
 							<option <?php $config['connection'] == '' ? 'selected' : ''?>><?php echo _("None")?></option>
-							<option <?php $config['connection'] == 'tls' ? 'selected' : ''?>>TLS</option>
+							<option <?php $config['connection'] == 'tls' ? 'selected' : ''?>>Start TLS</option>
 							<option <?php $config['connection'] == 'ssl' ? 'selected' : ''?>>SSL</option>
 						</select>
 					</div>
@@ -34,7 +34,7 @@
 						<i class="fa fa-question-circle fpbx-help-icon" data-for="msad-host"></i>
 					</div>
 					<div class="col-md-9">
-						<input id="msad-host" name="msad-host" type="text" class="form-control" value="<?php echo isset($config['host']) ? $config['host'] : ''?>">
+						<input id="msad-host" name="msad-host" data-default="<?php echo $defaults['host']?>" type="text" class="form-control" value="<?php echo isset($config['host']) ? $config['host'] : $defaults['host']?>">
 					</div>
 				</div>
 			</div>
@@ -56,7 +56,7 @@
 						<i class="fa fa-question-circle fpbx-help-icon" data-for="msad-port"></i>
 					</div>
 					<div class="col-md-9">
-						<input id="msad-port" name="msad-port" type="text" class="form-control" placeholder="389" value="<?php echo isset($config['port']) ? $config['port'] : ''?>">
+						<input id="msad-port" data-default="<?php echo $defaults['port']?>" name="msad-port" type="text" class="form-control" value="<?php echo isset($config['port']) ? $config['port'] : $defaults['port']?>">
 					</div>
 				</div>
 			</div>
@@ -78,7 +78,7 @@
 						<i class="fa fa-question-circle fpbx-help-icon" data-for="msad-username"></i>
 					</div>
 					<div class="col-md-9">
-						<input id="msad-username" name="msad-username" type="text" class="form-control" value="<?php echo isset($config['username']) ? $config['username'] : ''?>">
+						<input id="msad-username" data-default="<?php echo $defaults['username']?>" name="msad-username" type="text" class="form-control" value="<?php echo isset($config['username']) ? $config['username'] : $defaults['username']?>">
 					</div>
 				</div>
 			</div>
@@ -100,7 +100,7 @@
 						<i class="fa fa-question-circle fpbx-help-icon" data-for="msad-password"></i>
 					</div>
 					<div class="col-md-9">
-						<input id="msad-password" name="msad-password" type="text" class="form-control" value="<?php echo isset($config['password']) ? $config['password'] : ''?>">
+						<input id="msad-password" data-default="<?php echo $defaults['password']?>" name="msad-password" type="text" class="form-control" value="<?php echo isset($config['password']) ? $config['password'] : $defaults['password']?>">
 					</div>
 				</div>
 			</div>
@@ -122,7 +122,7 @@
 						<i class="fa fa-question-circle fpbx-help-icon" data-for="msad-domain"></i>
 					</div>
 					<div class="col-md-9">
-						<input id="msad-domain" name="msad-domain" type="text" class="form-control" value="<?php echo isset($config['domain']) ? $config['domain'] : ''?>">
+						<input id="msad-domain" data-default="<?php echo $defaults['domain']?>" name="msad-domain" type="text" class="form-control" value="<?php echo isset($config['domain']) ? $config['domain'] : $defaults['domain']?>">
 					</div>
 				</div>
 			</div>
@@ -144,7 +144,7 @@
 						<i class="fa fa-question-circle fpbx-help-icon" data-for="msad-dn"></i>
 					</div>
 					<div class="col-md-9">
-						<input id="msad-dn" name="msad-dn" type="text" class="form-control" value="<?php echo isset($config['dn']) ? $config['dn'] : ''?>">
+						<input id="msad-dn" data-default="<?php echo $defaults['dn']?>" name="msad-dn" type="text" class="form-control" value="<?php echo isset($config['dn']) ? $config['dn'] : $defaults['dn']?>">
 					</div>
 				</div>
 			</div>
@@ -264,7 +264,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<span id="msad-usernameattr-help" class="help-block fpbx-help-block"><?php echo _("The filter to use when searching user objects.")?></span>
+				<span id="msad-usernameattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use on the user object (eg. cn, sAMAccountName)")?></span>
 			</div>
 		</div>
 	</div>
@@ -310,7 +310,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<span id="msad-givenname-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user first name.")?></span>
+				<span id="msad-userfirstnameattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user first name.")?></span>
 			</div>
 		</div>
 	</div>
@@ -386,28 +386,6 @@
 				<div class="row">
 					<div class="form-group">
 						<div class="col-md-3">
-							<label class="control-label" for="msad-userpasswordattr"><?php echo _("User password attribute")?></label>
-							<i class="fa fa-question-circle fpbx-help-icon" data-for="msad-userpasswordattr"></i>
-						</div>
-						<div class="col-md-9">
-							<input id="msad-userpasswordattr" data-default="<?php echo $defaults['userpasswordattr']?>" name="msad-userpasswordattr" type="text" class="form-control" value="<?php echo isset($config['userpasswordattr']) ? $config['userpasswordattr'] : $defaults['userpasswordattr']?>" required>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-12">
-				<span id="msad-userpasswordattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when manipulating a user password.")?></span>
-			</div>
-		</div>
-	</div>
-	<div class="element-container">
-		<div class="row">
-			<div class="col-md-12">
-				<div class="row">
-					<div class="form-group">
-						<div class="col-md-3">
 							<label class="control-label" for="msad-userexternalidattr"><?php echo _("User unique identifier attribute")?></label>
 							<i class="fa fa-question-circle fpbx-help-icon" data-for="msad-userexternalidattr"></i>
 						</div>
@@ -464,7 +442,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<span id="msad-userdescriptionattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user full name.")?></span>
+				<span id="msad-userdescriptionattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user description.")?></span>
 			</div>
 		</div>
 	</div>
@@ -486,7 +464,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<span id="msad-usertitleattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user full name.")?></span>
+				<span id="msad-usertitleattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user title.")?></span>
 			</div>
 		</div>
 	</div>
@@ -508,7 +486,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<span id="msad-usercompanyattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user full name.")?></span>
+				<span id="msad-usercompanyattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user company.")?></span>
 			</div>
 		</div>
 	</div>
@@ -530,7 +508,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<span id="msad-userdepartmentattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user full name.")?></span>
+				<span id="msad-userdepartmentattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user department.")?></span>
 			</div>
 		</div>
 	</div>
@@ -552,7 +530,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<span id="msad-userhomephoneattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user full name.")?></span>
+				<span id="msad-userhomephoneattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user home phone.")?></span>
 			</div>
 		</div>
 	</div>
@@ -574,7 +552,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<span id="msad-userworkphoneattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user full name.")?></span>
+				<span id="msad-userworkphoneattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user work phone.")?></span>
 			</div>
 		</div>
 	</div>
@@ -596,7 +574,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<span id="msad-usercellphoneattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user full name.")?></span>
+				<span id="msad-usercellphoneattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user cell phone.")?></span>
 			</div>
 		</div>
 	</div>
@@ -618,7 +596,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<span id="msad-userfaxphoneattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user full name.")?></span>
+				<span id="msad-userfaxphoneattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user fax.")?></span>
 			</div>
 		</div>
 	</div>

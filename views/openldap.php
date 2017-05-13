@@ -10,7 +10,7 @@
 					<div class="col-md-9">
 						<select id="openldap-connection" data-default="<?php echo $defaults['connection']?>" name="openldap-connection" class="form-control">
 							<option <?php $config['connection'] == '' ? 'selected' : ''?>><?php echo _("None")?></option>
-							<option <?php $config['connection'] == 'tls' ? 'selected' : ''?>>TLS</option>
+							<option <?php $config['connection'] == 'tls' ? 'selected' : ''?>>Start TLS</option>
 							<option <?php $config['connection'] == 'ssl' ? 'selected' : ''?>>SSL</option>
 						</select>
 					</div>
@@ -242,7 +242,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<span id="openldap-usernameattr-help" class="help-block fpbx-help-block"><?php echo _("The filter to use when searching user objects.")?></span>
+				<span id="openldap-usernameattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use on the user object (eg. cn, sAMAccountName)")?></span>
 			</div>
 		</div>
 	</div>
@@ -288,7 +288,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<span id="openldap-givenname-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user first name.")?></span>
+				<span id="openldap-userfirstnameattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user first name.")?></span>
 			</div>
 		</div>
 	</div>
@@ -364,28 +364,6 @@
 				<div class="row">
 					<div class="form-group">
 						<div class="col-md-3">
-							<label class="control-label" for="openldap-userpasswordattr"><?php echo _("User password attribute")?></label>
-							<i class="fa fa-question-circle fpbx-help-icon" data-for="openldap-userpasswordattr"></i>
-						</div>
-						<div class="col-md-9">
-							<input id="openldap-userpasswordattr" data-default="<?php echo $defaults['userpasswordattr']?>" name="openldap-userpasswordattr" type="text" class="form-control" value="<?php echo isset($config['userpasswordattr']) ? $config['userpasswordattr'] : $defaults['userpasswordattr']?>" required>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-12">
-				<span id="openldap-userpasswordattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when manipulating a user password.")?></span>
-			</div>
-		</div>
-	</div>
-	<div class="element-container">
-		<div class="row">
-			<div class="col-md-12">
-				<div class="row">
-					<div class="form-group">
-						<div class="col-md-3">
 							<label class="control-label" for="openldap-userexternalidattr"><?php echo _("User unique identifier attribute")?></label>
 							<i class="fa fa-question-circle fpbx-help-icon" data-for="openldap-userexternalidattr"></i>
 						</div>
@@ -442,7 +420,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<span id="openldap-userdescriptionattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user full name.")?></span>
+				<span id="openldap-userdescriptionattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user description.")?></span>
 			</div>
 		</div>
 	</div>
@@ -464,7 +442,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<span id="openldap-userdescriptionattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user full name.")?></span>
+				<span id="openldap-userdescriptionattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user title.")?></span>
 			</div>
 		</div>
 	</div>
@@ -486,7 +464,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<span id="openldap-userdescriptionattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user full name.")?></span>
+				<span id="openldap-userdescriptionattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user company.")?></span>
 			</div>
 		</div>
 	</div>
@@ -508,7 +486,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<span id="openldap-userdescriptionattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user full name.")?></span>
+				<span id="openldap-userdescriptionattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user department.")?></span>
 			</div>
 		</div>
 	</div>
@@ -530,7 +508,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<span id="openldap-userdescriptionattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user full name.")?></span>
+				<span id="openldap-userdescriptionattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user home phone.")?></span>
 			</div>
 		</div>
 	</div>
@@ -552,7 +530,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<span id="openldap-userdescriptionattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user full name.")?></span>
+				<span id="openldap-userdescriptionattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user work phone.")?></span>
 			</div>
 		</div>
 	</div>
@@ -574,7 +552,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<span id="openldap-userdescriptionattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user full name.")?></span>
+				<span id="openldap-userdescriptionattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user cell phone.")?></span>
 			</div>
 		</div>
 	</div>
@@ -596,7 +574,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<span id="openldap-userdescriptionattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user full name.")?></span>
+				<span id="openldap-userdescriptionattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user fax.")?></span>
 			</div>
 		</div>
 	</div>

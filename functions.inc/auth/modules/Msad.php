@@ -14,35 +14,10 @@ class Msad extends Auth {
 	 */
 	private $ldap = null;
 	/**
-	 * LDAP Host
-	 * @var string
-	 */
-	private $host = '';
-	/**
-	 * LDAP Port
+	 * Socket Timeout
 	 * @var integer
 	 */
-	private $port = 389;
-	/**
-	 * LDAP Base DN
-	 * @var string
-	 */
-	private $dn = "";
-	/**
-	 * LDAP Domain
-	 * @var string
-	 */
-	private $domain = "";
-	/**
-	 * LDAP User
-	 * @var string
-	 */
-	private $user = "";
-	/**
-	 * LDAP Password
-	 * @var string
-	 */
-	private $password = "";
+	private $timeout = 3;
 	/**
 	 * User cache
 	 * cache requests throughout this class
@@ -55,18 +30,33 @@ class Msad extends Auth {
 	 * @var array
 	 */
 	private $gcache = array();
-
-	private $active = 0;
-
+	/**
+	 * Server Time
+	 * @var string
+	 */
+	private $currentTime;
+	/**
+	 * Config Array
+	 * @var array
+	 */
+	private $config = array();
+	/**
+	 * Server Defaults
+	 * @var array
+	 */
 	private static $serverDefaults = array(
 		'host' => '',
 		'port' => '389',
 		'dn' => '',
 		'username' => '',
 		'domain' => '',
-		'password' => ''
+		'password' => '',
+		'connection' => ''
 	);
-
+	/**
+	 * User Defaults
+	 * @var array
+	 */
 	private static $userDefaults = array(
 		'userdn' => '',
 		'userobjectclass' => 'user',
@@ -91,7 +81,10 @@ class Msad extends Auth {
 		'usermodifytimestampattr' => 'modifyTimestamp',
 		'la' => 'ipphone'
 	);
-
+	/**
+	 * Group Defaults
+	 * @var array
+	 */
 	private static $groupDefaults = array(
 		'groupdnaddition' => '',
 		'groupobjectclass' => 'group',
@@ -99,7 +92,7 @@ class Msad extends Auth {
 		'groupnameattr' => 'cn',
 		'groupdescriptionattr' => 'description',
 		'groupmemberattr' => 'member',
-		'groupgidnumberattr' => 'gidNumber',
+		'groupgidnumberattr' => 'primaryGroupToken',
 		'groupexternalidattr' => 'objectGUID',
 		'groupmodifytimestampattr' => 'modifyTimestamp',
 	);
@@ -116,6 +109,7 @@ class Msad extends Auth {
 		'remove' => array()
 	);
 
+
 	public function __construct($userman, $freepbx) {
 		parent::__construct($userman, $freepbx);
 		$this->FreePBX = $freepbx;
@@ -131,8 +125,6 @@ class Msad extends Auth {
 				$this->config[$key] = (isset($config[$key])) ? $config[$key] : '';
 			}
 		}
-		$date = new \DateTime("now",new \DateTimeZone("UTC"));
-		$this->time = $date->format('YmdHis\Z');
 	}
 
 	/**
@@ -206,6 +198,15 @@ class Msad extends Auth {
 			}
 		}
 		$userman->setConfig("authMSADSettings", $config);
+		if(!empty($config['host']) && !empty($config['username']) && !empty($config['password']) && !empty($config['domain'])) {
+			$msad = new static($userman, $freepbx);
+			try {
+				$msad->connect();
+				$msad->sync();
+			} catch(\Exception $e) {
+				return false;
+			}
+		}
 		return true;
 	}
 
@@ -223,20 +224,28 @@ class Msad extends Auth {
 	 */
 	public function connect($reconnect = false) {
 		if($reconnect || !$this->ldap) {
-			$this->ldap = ldap_connect('ldap://'.$this->config['host'].":".$this->config['port']);
+			if(!$this->serviceping($this->config['host'], $this->config['port'], $this->timeout)) {
+				throw new \Exception("Unable to Connect to host!");
+			}
+			$protocol = ($this->config['connection'] == 'ssl') ? 'ldaps' : 'ldap';
+			$this->ldap = ldap_connect($protocol.'://'.$this->config['host'].":".$this->config['port']);
 			if($this->ldap === false) {
 				$this->ldap = null;
 				throw new \Exception("Unable to Connect");
 			}
+			if($this->config['connection'] == 'tls') {
+				ldap_start_tls($this->ldap);
+			}
+
 			ldap_set_option($this->ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
 
 			if(!@ldap_bind($this->ldap, $this->config['username']."@".$this->config['domain'], $this->config['password'])) {
 				$this->ldap = null;
 				throw new \Exception("Unable to Auth");
 			}
-			//$resp = ldap_read($this->ldap, '', 'objectclass=*');
-			//print_r(ldap_get_entries($this->ldap, $resp));
-			//die();
+			$resp = ldap_read($this->ldap, '', 'objectclass=*');
+			$settings = ldap_get_entries($this->ldap, $resp);
+			$this->currentTime = $settings['currentTime'][0];
 		}
 	}
 
@@ -286,38 +295,38 @@ class Msad extends Auth {
 	/**
 	 * Execute all User Manager hooks. After processing
 	 */
-	public function executeHooks() {
-		foreach($this->userHooks['add'] as $user) {
-			$this->out("\tAdding User ".$user[1]."...",false);
-			call_user_func_array(array($this,"addUserHook"),$user);
-			$this->out("done");
-		}
-		foreach($this->userHooks['update'] as $user) {
-			$this->out("\tUpdating User ".$user[1]."...",false);
-			call_user_func_array(array($this,"updateUserHook"),$user);
-			$this->out("done");
-		}
-		foreach($this->userHooks['remove'] as $user) {
-			$this->out("\tRemoving User ".$user[1]."...",false);
-			call_user_func_array(array($this,"delUserHook"),$user);
-			$this->out("done");
-		}
-		foreach($this->groupHooks['add'] as $group) {
-			$this->out("\tAdding Group ".$group[1]."...",false);
-			call_user_func_array(array($this,"addGroupHook"),$group);
-			$this->out("done");
-		}
-		foreach($this->groupHooks['update'] as $group) {
-			$this->out("\tUpdating Group ".$group[1]."...",false);
-			call_user_func_array(array($this,"updateGroupHook"),$group);
-			$this->out("done");
-		}
-		foreach($this->groupHooks['remove'] as $group) {
-			$this->out("\tRemoving Group ".$group[1]."...",false);
-			call_user_func_array(array($this,"delGroupHook"),$group);
-			$this->out("done");
-		}
-	}
+	 public function executeHooks() {
+ 		foreach($this->userHooks['add'] as $user) {
+ 			$this->out("\tAdding User ".$user[1]."...",false);
+ 			call_user_func_array(array($this,"addUserHook"),$user);
+ 			$this->out("done");
+ 		}
+ 		foreach($this->userHooks['update'] as $user) {
+ 			$this->out("\tUpdating User ".$user[2]."...",false);
+ 			call_user_func_array(array($this,"updateUserHook"),$user);
+ 			$this->out("done");
+ 		}
+ 		foreach($this->userHooks['remove'] as $user) {
+ 			$this->out("\tRemoving User ".$user[1]['username']."...",false);
+ 			call_user_func_array(array($this,"delUserHook"),$user);
+ 			$this->out("done");
+ 		}
+ 		foreach($this->groupHooks['add'] as $group) {
+ 			$this->out("\tAdding Group ".$group[1]."...",false);
+ 			call_user_func_array(array($this,"addGroupHook"),$group);
+ 			$this->out("done");
+ 		}
+ 		foreach($this->groupHooks['update'] as $group) {
+ 			$this->out("\tUpdating Group ".$group[2]."...",false);
+ 			call_user_func_array(array($this,"updateGroupHook"),$group);
+ 			$this->out("done");
+ 		}
+ 		foreach($this->groupHooks['remove'] as $group) {
+ 			$this->out("\tRemoving Group ".$group[1]['groupname']."...",false);
+ 			call_user_func_array(array($this,"delGroupHook"),$group);
+ 			$this->out("done");
+ 		}
+ 	}
 
 	/**
 	 * Return an array of permissions for this adaptor
@@ -433,16 +442,11 @@ class Msad extends Auth {
 	 */
 	public function checkCredentials($username, $password) {
 		$this->connect();
-		$ldap = ldap_connect($this->host,$this->port);
-		if($ldap === false) {
-			return false;
-		}
-		ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
 
 		if(strpos($username,"@") === false) {
-			$res = @ldap_bind($ldap, $username."@".$this->domain, $password);
+			$res = @ldap_bind($this->ldap, $username."@".$this->config['domain'], $password);
 		} else {
-			$res = @ldap_bind($ldap, $username, $password);
+			$res = @ldap_bind($this->ldap, $username, $password);
 		}
 		if($res) {
 			$user = $this->getUserByUsername($username);
@@ -469,7 +473,7 @@ class Msad extends Auth {
 		foreach($this->ucache as $usid => $user) {
 			$u = $this->getUserByAuthID($usid);
 			foreach($groups as $gsid => $group) {
-				if(!empty($group) && !empty($u) && ($group['cache']['primarygrouptoken'][0] == $user['primarygroupid'][0])) {
+				if(!empty($group) && !empty($u) && ($group['cache'][$this->config['groupgidnumberattr']][0] == $user['primarygroupid'][0])) {
 					if(!in_array($u['id'], $group['users'])) {
 						$this->out("\tAdding ".$u['username']." to ".$group['groupname']."...",false);
 						if(empty($process[$group['id']])) {
@@ -501,17 +505,6 @@ class Msad extends Auth {
 		}
 	}
 
-	public function sig_handler($signo) {
-		switch ($signo) {
-			case SIGCLD:
-				while(($pid = pcntl_wait($signo, WNOHANG)) > 0){
-					$signal = pcntl_wexitstatus ($signo);
-					$this->active -= 1;
-					echo "Fork ".$signal." has finished\n";
-				}
-			break;
-		}
-	}
 
 	/**
 	 * Update All Groups
@@ -527,10 +520,10 @@ class Msad extends Auth {
 		$this->connect();
 		$userdn = !empty($this->config['userdn']) ? $this->config['userdn'].",".$this->config['dn'] : $this->config['dn'];
 		$groupdn = !empty($this->config['groupdnaddition']) ? $this->config['groupdnaddition'].",".$this->config['dn'] : $this->config['dn'];
-		$this->out("\t".'ldapsearch -w '.$this->config['password'].' -h '.$this->config['host'].' -p '.$this->config['port'].'  "'.$this->config['username'].'" -b "'.$groupdn.'" -s sub "'.$this->config['groupobjectfilter'].'"');
+		$this->out("\t".'ldapsearch -w '.$this->config['password'].' -h '.$this->config['host'].' -p '.$this->config['port'].'  -D "'.$this->config['username'].'@'.$this->config['domain'].'" -b "'.$groupdn.'" -s sub "(&'.$this->config['groupobjectfilter'].'(objectclass='.$this->config['groupobjectclass'].'))"');
 		$this->out("\tRetrieving all groups...");
 		//(".$this->config['usermodifytimestampattr'].">=20010301000000Z)
-		$sr = ldap_search($this->ldap, $groupdn, "(&".$this->config['groupobjectfilter']."(objectclass=".$this->config['groupobjectclass']."))", array("*","distinguishedname","primarygrouptoken","objectsid","description","cn",$this->config['groupgidnumberattr'],$this->config['groupdescriptionattr'],$this->config['groupnameattr'], $this->config['groupexternalidattr'], $this->config['groupmemberattr']));
+		$sr = ldap_search($this->ldap, $groupdn, "(&".$this->config['groupobjectfilter']."(objectclass=".$this->config['groupobjectclass']."))", array("*",$this->config['groupgidnumberattr']));
 		if($sr === false) {
 			return false;
 		}
@@ -603,10 +596,10 @@ class Msad extends Auth {
 		$this->connect();
 
 		$userdn = !empty($this->config['userdn']) ? $this->config['userdn'].",".$this->config['dn'] : $this->config['dn'];
-		$this->out("\t".'ldapsearch -w '.$this->config['password'].' -h '.$this->config['host'].' -p '.$this->config['port'].'  "'.$this->config['username'].'@'.$this->config['domain'].'" -b "'.$userdn.'" -s sub "'.$this->config['userobjectfilter'].'" "'.$this->config['userexternalidattr'].'=*" '.$this->config['userexternalidattr']);
+		$this->out("\t".'ldapsearch -w '.$this->config['password'].' -h '.$this->config['host'].' -p '.$this->config['port'].' -D "'.$this->config['username'].'@'.$this->config['domain'].'" -b "'.$userdn.'" -s sub "(&'.$this->config['userobjectfilter'].'(objectclass='.$this->config['userobjectclass'].'))"');
 		$this->out("\tRetrieving all users...");
 
-		$sr = ldap_search($this->ldap, $userdn, "(&".$this->config['userobjectfilter']."(objectclass=".$this->config['userobjectclass']."))", array('*',$this->config['userexternalidattr'],$this->config['userprimarygroupattr'],$this->config['usergroupmemberattr']));
+		$sr = ldap_search($this->ldap, $userdn, "(&".$this->config['userobjectfilter']."(objectclass=".$this->config['userobjectclass']."))", array('*'));
 		$users = ldap_get_entries($this->ldap, $sr);
 
 		if($users['count'] == 0) {
@@ -725,5 +718,15 @@ class Msad extends Auth {
 		} elseif(!is_object($this->output)) {
 			dbug($message);
 		}
+	}
+
+	private function serviceping($host, $port=389, $timeout=1) {
+		$op = fsockopen($host, $port, $errno, $errstr, $timeout);
+		if (!$op) {
+			return 0; //DC is N/A
+		} else {
+			fclose($op); //explicitly close open socket connection
+		}
+		return 1; //DC is up & running, we can safely connect with ldap_connect
 	}
 }

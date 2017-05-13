@@ -126,20 +126,25 @@ $( document ).ready(function() {
 	$("#reset").on("click", function(e){
 		e.preventDefault();
 		e.stopPropagation();
-		 // stops the form from resetting after this function
+		// stops the form from resetting after this function
 
-		 $(".fpbx-submit")[0].reset();
-		 // resets the form before continuing the function
+		$(".fpbx-submit")[0].reset();
+		// resets the form before continuing the function
 
-		 $(".fpbx-submit input").each(function() {
-			 var val = $(this).data("default");
-			 if(typeof val !== "undefined") {
-				 val = (val === null) ? 'null' : val;
-				 $(this).val(val);
-			 }
-		 });
-	 });
- });
+		$(".fpbx-submit input").each(function() {
+			if(!$(this).is(":visible")) {
+				$(this).prop("readonly",true);
+			} else {
+				$(this).prop("readonly",false);
+			}
+			var val = $(this).data("default");
+			if(typeof val !== "undefined") {
+				val = (val === null) ? 'null' : val;
+				$(this).val(val);
+			}
+		});
+	});
+});
 //this fires when you change tabs
 $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
 	//Button Related

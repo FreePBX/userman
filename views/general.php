@@ -237,6 +237,25 @@
 		var val = $(this).val();
 		$(".auth-settings").addClass("hidden");
 		$("#" + val + "-auth-settings").removeClass("hidden");
+		$(".fpbx-submit input").each(function() {
+			if(!$(this).is(":visible")) {
+				$(this).prop("readonly",true);
+			} else {
+				$(this).prop("readonly",false);
+			}
+		});
+	});
+	$('form[name="general"] a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+		var target = $(e.target).attr("href") // activated tab
+		if(target == "tab2") {
+			$(".fpbx-submit input").each(function() {
+				if(!$(this).is(":visible")) {
+					$(this).prop("readonly",true);
+				} else {
+					$(this).prop("readonly",false);
+				}
+			});
+		}
 	});
 </script>
 <style>

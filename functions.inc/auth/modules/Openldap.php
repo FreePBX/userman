@@ -34,6 +34,11 @@ class Openldap extends Auth {
 	 */
 	private $ldap = null;
 	/**
+	 * Socket Timeout
+	 * @var integer
+	 */
+	private $timeout = 3;
+	/**
 	 * User cache
 	 * cache requests throughout this class
 	 * @var array
@@ -45,13 +50,15 @@ class Openldap extends Auth {
 	 * @var array
 	 */
 	private $gcache = array();
-
-	private $groupMapping = array();
-
-	private $active = 0;
-
+	/**
+	 * Config Array
+	 * @var array
+	 */
 	private $config = array();
-
+	/**
+	 * Server Time
+	 * @var string
+	 */
 	private $time = null;
 
 	private static $serverDefaults = array(
@@ -59,7 +66,8 @@ class Openldap extends Auth {
 		'port' => '389',
 		'basedn' => '',
 		'username' => '',
-		'password' => ''
+		'password' => '',
+		'connection' => ''
 	);
 
 	private static $userDefaults = array(
@@ -199,6 +207,15 @@ class Openldap extends Auth {
 			}
 		}
 		$userman->setConfig("authOpenLDAPSettings", $config);
+		if(!empty($config['host']) && !empty($config['username']) && !empty($config['password']) && !empty($config['domain'])) {
+			$openldap = new static($userman, $freepbx);
+			try {
+				$openldap->connect();
+				$openldap->sync();
+			} catch(\Exception $e) {
+				return false;
+			}
+		}
 		return true;
 	}
 
@@ -216,11 +233,19 @@ class Openldap extends Auth {
 	 */
 	public function connect($reconnect = false) {
 		if($reconnect || !$this->ldap) {
-			$this->ldap = ldap_connect('ldap://'.$this->config['host'].":".$this->config['port']);
+			if(!$this->serviceping($this->config['host'], $this->config['port'], $this->timeout)) {
+				throw new \Exception("Unable to Connect to host!");
+			}
+			$protocol = ($this->config['connection'] == 'ssl') ? 'ldaps' : 'ldap';
+			$this->ldap = ldap_connect($protocol.'://'.$this->config['host'].":".$this->config['port']);
 			if($this->ldap === false) {
 				$this->ldap = null;
 				throw new \Exception("Unable to Connect");
 			}
+			if($this->config['connection'] == 'tls') {
+				ldap_start_tls($this->ldap);
+			}
+
 			ldap_set_option($this->ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
 
 			if(!@ldap_bind($this->ldap, $this->config['username'], $this->config['password'])) {
@@ -283,12 +308,12 @@ class Openldap extends Auth {
 			$this->out("done");
 		}
 		foreach($this->userHooks['update'] as $user) {
-			$this->out("\tUpdating User ".$user[1]."...",false);
+			$this->out("\tUpdating User ".$user[2]."...",false);
 			call_user_func_array(array($this,"updateUserHook"),$user);
 			$this->out("done");
 		}
 		foreach($this->userHooks['remove'] as $user) {
-			$this->out("\tRemoving User ".$user[1]."...",false);
+			$this->out("\tRemoving User ".$user[1]['username']."...",false);
 			call_user_func_array(array($this,"delUserHook"),$user);
 			$this->out("done");
 		}
@@ -298,12 +323,12 @@ class Openldap extends Auth {
 			$this->out("done");
 		}
 		foreach($this->groupHooks['update'] as $group) {
-			$this->out("\tUpdating Group ".$group[1]."...",false);
+			$this->out("\tUpdating Group ".$group[2]."...",false);
 			call_user_func_array(array($this,"updateGroupHook"),$group);
 			$this->out("done");
 		}
 		foreach($this->groupHooks['remove'] as $group) {
-			$this->out("\tRemoving Group ".$group[1]."...",false);
+			$this->out("\tRemoving Group ".$group[1]['groupname']."...",false);
 			call_user_func_array(array($this,"delGroupHook"),$group);
 			$this->out("done");
 		}
@@ -423,14 +448,9 @@ class Openldap extends Auth {
 	 */
 	public function checkCredentials($username, $password) {
 		$this->connect();
-		$ldap = ldap_connect($this->host,$this->port);
-		if($ldap === false) {
-			return false;
-		}
-		ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
 
 		$userdn = !empty($this->config['userdn']) ? $this->config['userdn'].",".$this->config['basedn'] : $this->config['basedn'];
-		$res = @ldap_bind($ldap, $this->config['usernameattr']."=".$username.",".$userdn, $password);
+		$res = @ldap_bind($this->ldap, $this->config['usernameattr']."=".$username.",".$userdn, $password);
 
 		if($res) {
 			$user = $this->getUserByUsername($username);
@@ -678,5 +698,15 @@ class Openldap extends Auth {
 		} elseif(!is_object($this->output)) {
 			dbug($message);
 		}
+	}
+
+	private function serviceping($host, $port=389, $timeout=1) {
+		$op = fsockopen($host, $port, $errno, $errstr, $timeout);
+		if (!$op) {
+			return 0; //DC is N/A
+		} else {
+			fclose($op); //explicitly close open socket connection
+		}
+		return 1; //DC is up & running, we can safely connect with ldap_connect
 	}
 }
