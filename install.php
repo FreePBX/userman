@@ -41,7 +41,7 @@ $sqls = array();
 $sqls[] = "CREATE TABLE IF NOT EXISTS `userman_users` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`auth` varchar(150) DEFAULT 'freepbx',
-	`authid` varchar(255) DEFAULT NULL,
+	`authid` varchar(500) DEFAULT NULL,
 	`username` varchar(150) DEFAULT NULL,
 	`description` varchar(255) DEFAULT NULL,
 	`password` varchar(255) DEFAULT NULL,
@@ -75,7 +75,7 @@ $sqls[] = "CREATE TABLE IF NOT EXISTS `userman_users_settings` (
 $sqls[] = "CREATE TABLE IF NOT EXISTS `userman_groups` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`auth` varchar(150) DEFAULT 'freepbx',
-	`authid` varchar(255) DEFAULT NULL,
+	`authid` varchar(500) DEFAULT NULL,
 	`groupname` varchar(150) DEFAULT NULL,
 	`description` varchar(255) DEFAULT NULL,
 	`priority` int(11) NOT NULL DEFAULT 5,
@@ -194,6 +194,28 @@ if($res['Type'] != "varchar(150)") {
 	CHANGE COLUMN `auth` `auth` VARCHAR(150) NULL DEFAULT 'freepbx' ,
 	CHANGE COLUMN `groupname` `groupname` VARCHAR(150) NULL DEFAULT NULL ,
 	ADD UNIQUE INDEX `groupname_UNIQUE` (`auth` ASC, `groupname` ASC);";
+	$sth = FreePBX::Database()->prepare($sql);
+	$sth->execute();
+}
+
+$sql = 'SHOW COLUMNS FROM userman_users WHERE FIELD = "authid"';
+$sth = FreePBX::Database()->prepare($sql);
+$sth->execute();
+$res = $sth->fetch(\PDO::FETCH_ASSOC);
+if($res['Type'] != "varchar(750)") {
+	$sql = "ALTER TABLE userman_users
+	CHANGE COLUMN `authid` `authid` VARCHAR(750) NULL DEFAULT 'freepbx'";
+	$sth = FreePBX::Database()->prepare($sql);
+	$sth->execute();
+}
+
+$sql = 'SHOW COLUMNS FROM userman_groups WHERE FIELD = "authid"';
+$sth = FreePBX::Database()->prepare($sql);
+$sth->execute();
+$res = $sth->fetch(\PDO::FETCH_ASSOC);
+if($res['Type'] != "varchar(750)") {
+	$sql = "ALTER TABLE `userman_groups`
+	CHANGE COLUMN `authid` `authid` VARCHAR(750) NULL DEFAULT 'freepbx'";
 	$sth = FreePBX::Database()->prepare($sql);
 	$sth->execute();
 }

@@ -58,6 +58,52 @@ class Msad extends Auth {
 
 	private $active = 0;
 
+	private static $serverDefaults = array(
+		'host' => '',
+		'port' => '389',
+		'dn' => '',
+		'username' => '',
+		'domain' => '',
+		'password' => ''
+	);
+
+	private static $userDefaults = array(
+		'userdn' => '',
+		'userobjectclass' => 'user',
+		'userobjectfilter' => '(&(objectCategory=Person)(sAMAccountName=*))',
+		'usernameattr' => 'sAMAccountName',
+		'usernamerdnattr' => 'cn',
+		'userfirstnameattr' => 'givenName',
+		'userlastnameattr' => 'sn',
+		'userdisplaynameattr' => 'displayName',
+		'userdescriptionattr' => 'description',
+		'usertitleattr' => '',
+		'usercompanyattr' => '',
+		'usercellphoneattr' => 'mobile',
+		'userworkphoneattr' => 'telephoneNumber',
+		'userhomephoneattr' => 'homephone',
+		'userfaxphoneattr' => 'facsimileTelephoneNumber',
+		'usermailattr' => 'mail',
+		'usergroupmemberattr' => 'memberOf',
+		'userpasswordattr' => 'unicodePwd',
+		'userexternalidattr' => 'objectGUID',
+		'userprimarygroupattr' => 'primarygroupid',
+		'usermodifytimestampattr' => 'modifyTimestamp',
+		'la' => 'ipphone'
+	);
+
+	private static $groupDefaults = array(
+		'groupdnaddition' => '',
+		'groupobjectclass' => 'group',
+		'groupobjectfilter' => '(objectCategory=Group)',
+		'groupnameattr' => 'cn',
+		'groupdescriptionattr' => 'description',
+		'groupmemberattr' => 'member',
+		'groupgidnumberattr' => 'gidNumber',
+		'groupexternalidattr' => 'objectGUID',
+		'groupmodifytimestampattr' => 'modifyTimestamp',
+	);
+
 	private $userHooks = array(
 		'add' => array(),
 		'update' => array(),
@@ -74,14 +120,19 @@ class Msad extends Auth {
 		parent::__construct($userman, $freepbx);
 		$this->FreePBX = $freepbx;
 		$config = $userman->getConfig("authMSADSettings");
-		$this->host = $config['host'];
-		$this->port = !empty($config['port']) ? $config['port'] : 389;
-		$this->dn = $config['dn'];
-		$this->domain = $config['domain'];
-		$this->user = $config['username'];
-		$this->password = $config['password'];
-		$this->linkAttr = isset($config['la']) ? strtolower($config['la']) : '';
 		$this->output = null;
+
+		$validKeys = array_merge(self::$serverDefaults,self::$userDefaults,self::$groupDefaults);
+		$this->config = array();
+		foreach($validKeys as $key => $value) {
+			if($key != "password") {
+				$this->config[$key] = (isset($config[$key])) ? strtolower($config[$key]) : strtolower($value);
+			} else {
+				$this->config[$key] = (isset($config[$key])) ? $config[$key] : '';
+			}
+		}
+		$date = new \DateTime("now",new \DateTimeZone("UTC"));
+		$this->time = $date->format('YmdHis\Z');
 	}
 
 	/**
@@ -135,7 +186,8 @@ class Msad extends Auth {
 				"message" => _("Not all of the connection parameters have been filled out")
 			);
 		}
-		return load_view(dirname(dirname(dirname(__DIR__)))."/views/msad.php", array("config" => $config, "status" => $status));
+		$defaults = array_merge(self::$serverDefaults,self::$userDefaults,self::$groupDefaults);
+		return load_view(dirname(dirname(dirname(__DIR__)))."/views/msad.php", array("config" => $config, "status" => $status, "defaults" => $defaults));
 	}
 
 	/**
@@ -145,26 +197,15 @@ class Msad extends Auth {
 	 * @return mixed          Return true if valid. Otherwise return error string
 	 */
 	public static function saveConfig($userman, $freepbx) {
-		$config = array(
-			"host" => $_REQUEST['msad-host'],
-			"port" => $_REQUEST['msad-port'],
-			"username" => $_REQUEST['msad-username'],
-			"password" => $_REQUEST['msad-password'],
-			"domain" => $_REQUEST['msad-domain'],
-			"dn" => $_REQUEST['msad-dn'],
-			"la" => $_REQUEST['msad-la'],
-			"sync" => $_REQUEST['sync']
-		);
-		$userman->setConfig("authMSADSettings", $config);
-		if(!empty($config['host']) && !empty($config['username']) && !empty($config['password']) && !empty($config['domain'])) {
-			$msad = new static($userman, $freepbx);
-			try {
-				$msad->connect();
-				$msad->sync();
-			} catch(\Exception $e) {
-				return false;
+		$validKeys = array();
+		$validKeys = array_merge($validKeys,array_keys(self::$serverDefaults),array_keys(self::$userDefaults),array_keys(self::$groupDefaults));
+		$config = array();
+		foreach($validKeys as $key) {
+			if(isset($_POST['msad-'.$key])) {
+				$config[$key] = $_POST['msad-'.$key];
 			}
 		}
+		$userman->setConfig("authMSADSettings", $config);
 		return true;
 	}
 
@@ -182,17 +223,20 @@ class Msad extends Auth {
 	 */
 	public function connect($reconnect = false) {
 		if($reconnect || !$this->ldap) {
-			$this->ldap = ldap_connect($this->host,$this->port);
+			$this->ldap = ldap_connect('ldap://'.$this->config['host'].":".$this->config['port']);
 			if($this->ldap === false) {
 				$this->ldap = null;
 				throw new \Exception("Unable to Connect");
 			}
 			ldap_set_option($this->ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
 
-			if(!@ldap_bind($this->ldap, $this->user."@".$this->domain, $this->password)) {
+			if(!@ldap_bind($this->ldap, $this->config['username']."@".$this->config['domain'], $this->config['password'])) {
 				$this->ldap = null;
 				throw new \Exception("Unable to Auth");
 			}
+			//$resp = ldap_read($this->ldap, '', 'objectclass=*');
+			//print_r(ldap_get_entries($this->ldap, $resp));
+			//die();
 		}
 	}
 
@@ -481,128 +525,71 @@ class Msad extends Auth {
 			throw new \Exception("Can only update groups over CLI");
 		}
 		$this->connect();
-		$this->out("Retrieving all groups...",false);
-		$sr = ldap_search($this->ldap, $this->dn, "(objectCategory=Group)",array("distinguishedname","primarygrouptoken","objectsid","description","cn"));
+		$userdn = !empty($this->config['userdn']) ? $this->config['userdn'].",".$this->config['dn'] : $this->config['dn'];
+		$groupdn = !empty($this->config['groupdnaddition']) ? $this->config['groupdnaddition'].",".$this->config['dn'] : $this->config['dn'];
+		$this->out("\t".'ldapsearch -w '.$this->config['password'].' -h '.$this->config['host'].' -p '.$this->config['port'].'  "'.$this->config['username'].'" -b "'.$groupdn.'" -s sub "'.$this->config['groupobjectfilter'].'"');
+		$this->out("\tRetrieving all groups...");
+		//(".$this->config['usermodifytimestampattr'].">=20010301000000Z)
+		$sr = ldap_search($this->ldap, $groupdn, "(&".$this->config['groupobjectfilter']."(objectclass=".$this->config['groupobjectclass']."))", array("*","distinguishedname","primarygrouptoken","objectsid","description","cn",$this->config['groupgidnumberattr'],$this->config['groupdescriptionattr'],$this->config['groupnameattr'], $this->config['groupexternalidattr'], $this->config['groupmemberattr']));
 		if($sr === false) {
 			return false;
 		}
 		$groups = ldap_get_entries($this->ldap, $sr);
-		$this->out("Got ".$groups['count']. " groups");
+		if($groups['count'] == 0) {
+			$this->out("\tNo groups found! Perhaps your query is wrong?");
+			return;
+		}
+		$this->out("\tGot ".$groups['count']. " groups");
 		unset($groups['count']);
 
-		$sql = "DROP TABLE IF EXISTS msad_procs_temp";
-		$sth = $this->FreePBX->Database->prepare($sql);
-		$sth->execute();
-		$tempsql = "CREATE TABLE msad_procs_temp (
-			`pid` int NOT NULL,
-			`udata` varchar(255),
-			`gdata` varchar(255),
-			PRIMARY KEY(pid)
-		) ENGINE = MEMORY";
-		$sth = $this->FreePBX->Database->prepare($tempsql);
-		$sth->execute();
-		$this->out("Forking child processes");
-		$tpath = __DIR__."/tmp";
-		if(!file_exists($tpath)) {
-			mkdir($tpath,0777,true);
-		}
-		declare(ticks = 1);
-		pcntl_signal(SIGCHLD, array($this,"sig_handler"));
-		$max = getCpuCount() * 7;
-		$this->active = 0;
-		$this->out("Forking out $max active children at a time");
-		foreach($groups as $i => $group) {
-
-			while ($this->active >= $max) {
-				sleep(1);
-			}
-
-			$this->active++;
-			$pid = pcntl_fork();
-			if (!$pid) {
-				$iid = getmypid().time();
-				\FreePBX::Database()->__construct();
-				$db = new \DB();
-				$this->connect(true);
-				//http://www.rlmueller.net/CharactersEscaped.htm
-				$group['distinguishedname'][0] = ldap_escape($group['distinguishedname'][0]);
-				$this->out("\tFork $i getting users from ".$group['cn'][0]."...");
-				$gs = ldap_search($this->ldap, $this->dn, "(&(objectCategory=Person)(sAMAccountName=*)(memberof=".$group['distinguishedname'][0]."))");
-				if($gs !== false) {
-					$users = ldap_get_entries($this->ldap, $gs);
-					$susers = serialize($users);
-					file_put_contents($tpath."/".$iid."-users",$susers);
-					$sgroup = serialize($group);
-					file_put_contents($tpath."/".$iid."-group",$sgroup);
-					$sql = "INSERT INTO msad_procs_temp (`pid`,`udata`,`gdata`) VALUES (?,?,?)";
-					$sth = $this->FreePBX->Database->prepare($sql);
-					$sth->execute(array($i,$iid."-users",$iid."-group"));
-				}
-				$this->out("\tFork $i finished Getting users from ".$group['cn'][0]);
-				exit($i);
-			}
-		}
-		\FreePBX::Database()->__construct();
-		$db = new \DB();
-
-		while (pcntl_waitpid(0, $status) != -1) {
-				$status = pcntl_wexitstatus($status);
-		}
-		$this->out("Child processes have finished");
-		$sql = "SELECT * FROM msad_procs_temp";
-		$sth = $this->FreePBX->Database->prepare($sql);
-		$sth->execute();
-		$children = $sth->fetchAll(\PDO::FETCH_ASSOC);
-		$this->out("Adding Users from non-primary groups...");
-		foreach($children as $child) {
-			if(!file_exists($tpath."/".$child['udata']) || !file_exists($tpath."/".$child['gdata'])) {
+		foreach($groups as $group) {
+			if(!isset($group[$this->config['groupexternalidattr']])) {
+				$this->out("\t\tERROR group is missing ".$this->config['groupexternalidattr']." attribute! Cant continue!!");
 				continue;
 			}
-			$udata = file_get_contents($tpath."/".$child['udata']);
-			unlink($tpath."/".$child['udata']);
-			$users = unserialize($udata);
-			$gdata = file_get_contents($tpath."/".$child['gdata']);
-			unlink($tpath."/".$child['gdata']);
-			$group = unserialize($gdata);
-
-			if(empty($users) || empty($group)) {
-				throw new \Exception("Users or Groups are empty");
-			}
-
-			$this->out("\tFound ".$users['count']. " users in ".$group['cn'][0]);
-			unset($users['count']);
-			$members = array();
-			foreach($users as $user) {
-				$usid = $this->binToStrSid($user['objectsid'][0]);
-				$u = $this->getUserByAuthID($usid);
-				$members[] = $u['id'];
-			}
-			$sid = $this->binToStrSid($group['objectsid'][0]);
+			$sid = $this->binToStrSid($group[$this->config['groupexternalidattr']][0]);
 			$this->gcache[$sid] = $group;
-			$um = $this->linkGroup($group['cn'][0], 'msad', $sid);
+			$groupname = $group[$this->config['groupnameattr']][0];
+			$um = $this->linkGroup($groupname, 'msad', $sid);
+			$description = (!empty($this->config['groupdescriptionattr']) && !empty($group[$this->config['groupdescriptionattr']][0])) ? $group[$this->config['groupdescriptionattr']][0] : '';
+			$members = array();
+			$this->out("\tWorking on ".$groupname);
+			foreach($this->ucache as $usid => $user) {
+				if(!empty($user['memberof'])) {
+					unset($user['memberof']['count']);
+					foreach($user['memberof'] as $gdn) {
+						if($gdn == $group['dn']) {
+							$m = $this->getUserByid($user['userman'][0]);
+							$this->out("\t\t\tAdding ".$m['username']." to group");
+							$members[] = $user['userman'][0];
+						}
+					}
+				}
+			}
 			if($um['status']) {
 				$this->updateGroupData($um['id'], array(
-					"description" => !empty($group['description'][0]) ? $group['description'][0] : '',
+					"description" => $description,
 					"users" => $members
 				));
 				if($um['new']) {
-					$this->groupHooks['add'][$um['id']] = array($um['id'], $group['cn'][0], (!empty($group['description'][0]) ? $group['description'][0] : ''), $members);
+					$this->out("\t\tAdding ".$groupname);
+					$this->groupHooks['add'][$um['id']] = array($um['id'], $groupname, $description, $members);
 				} else {
-					$this->groupHooks['update'][$um['id']] = array($um['id'], $um['prevGroupname'], $group['cn'][0], (!empty($group['description'][0]) ? $group['description'][0] : ''), $members);
+					$this->out("\t\tUpdating ".$groupname);
+					$this->groupHooks['update'][$um['id']] = array($um['id'], $um['prevGroupname'], $groupname, $description, $members);
 				}
 			}
 		}
+
 		//remove users
 		$fgroups = $this->getAllGroups();
 		foreach($fgroups as $group) {
 			if(!isset($this->gcache[$group['authid']])) {
+				$this->out("\t\tDeleting ".$group['groupname']);
 				$this->deleteGroupByGID($group['id'], false);
 				$this->groupHooks['remove'][$group['id']] = array($group['id'], $group);
 			}
 		}
-		$sql = "DROP TABLE msad_procs_temp";
-		$sth = $this->FreePBX->Database->prepare($sql);
-		$sth->execute();
 		$this->out("Finished adding users from non-primary groups");
 	}
 
@@ -615,54 +602,74 @@ class Msad extends Auth {
 		}
 		$this->connect();
 
-		$this->out("Retrieving all users...",false);
+		$userdn = !empty($this->config['userdn']) ? $this->config['userdn'].",".$this->config['dn'] : $this->config['dn'];
+		$this->out("\t".'ldapsearch -w '.$this->config['password'].' -h '.$this->config['host'].' -p '.$this->config['port'].'  "'.$this->config['username'].'@'.$this->config['domain'].'" -b "'.$userdn.'" -s sub "'.$this->config['userobjectfilter'].'" "'.$this->config['userexternalidattr'].'=*" '.$this->config['userexternalidattr']);
+		$this->out("\tRetrieving all users...");
 
-		$sr = ldap_search($this->ldap, $this->dn, "(&(objectCategory=Person)(sAMAccountName=*))");
+		$sr = ldap_search($this->ldap, $userdn, "(&".$this->config['userobjectfilter']."(objectclass=".$this->config['userobjectclass']."))", array('*',$this->config['userexternalidattr'],$this->config['userprimarygroupattr'],$this->config['usergroupmemberattr']));
 		$users = ldap_get_entries($this->ldap, $sr);
 
-		$this->out("Got ".$users['count']. " users");
+		if($users['count'] == 0) {
+			$this->out("\tNo users found! Perhaps your query is wrong?");
+			return;
+		}
+
+		$this->out("\tGot ".$users['count']. " users");
 
 		unset($users['count']);
 		//add and update users
 		foreach($users as $user) {
-			$sid = $this->binToStrSid($user['objectsid'][0]);
+			if(!isset($user[$this->config['userexternalidattr']])) {
+				$this->out("\t\tERROR user is missing ".$this->config['userexternalidattr']." attribute! Cant continue!!");
+				continue;
+			}
+			$sid = $this->binToStrSid($user[$this->config['userexternalidattr']][0]);
+			$username = $user[$this->config['usernameattr']][0];
 			$this->ucache[$sid] = $user;
-			$um = $this->linkUser($user['samaccountname'][0], 'msad', $sid);
+			$um = $this->linkUser($username, 'msad', $sid);
 			if($um['status']) {
 				$data = array(
-					"description" => !empty($user['description'][0]) ? $user['description'][0] : '',
-					"primary_group" => !empty($user['primarygroupid'][0]) ? $user['primarygroupid'][0] : '',
-					"fname" => !empty($user['givenname'][0]) ? $user['givenname'][0] : '',
-					"lname" => !empty($user['sn'][0]) ? $user['sn'][0] : '',
-					"displayname" => !empty($user['displayname'][0]) ?$user['displayname'][0] : '',
-					"department" => !empty($user['department'][0]) ? $user['department'][0] : '',
-					"email" => !empty($user['mail'][0]) ? $user['mail'][0] : '',
-					"cell" => !empty($user['mobile'][0]) ? $user['mobile'][0] : '',
-					"work" => !empty($user['telephonenumber'][0]) ? $user['telephonenumber'][0] : '',
+					"description" => (!empty($this->config['userdescriptionattr']) && !empty($user[$this->config['userdescriptionattr']][0])) ? $user['description'][0] : '',
+					"primary_group" => (!empty($this->config['userprimarygroupattr']) && !empty($user[$this->config['userprimarygroupattr']][0])) ? $user[$this->config['userprimarygroupattr']][0] : '',
+					"fname" => (!empty($this->config['userfirstnameattr']) && !empty($user[$this->config['userfirstnameattr']][0])) ? $user[$this->config['userfirstnameattr']][0] : '',
+					"lname" => (!empty($this->config['userlastnameattr']) && !empty($user[$this->config['userlastnameattr']][0])) ? $user[$this->config['userlastnameattr']][0] : '',
+					"displayname" => (!empty($this->config['userdisplaynameattr']) && !empty($user[$this->config['userdisplaynameattr']][0])) ? $user[$this->config['userdisplaynameattr']][0] : '',
+					"department" => (!empty($this->config['userdepartmentattr']) && !empty($user[$this->config['userdepartmentattr']][0])) ? $user[$this->config['userdepartmentattr']][0] : '',
+					"title" => (!empty($this->config['usertitleattr']) && !empty($user[$this->config['usertitleattr']][0])) ? $user[$this->config['usertitleattr']][0] : '',
+					"email" => (!empty($this->config['usermailattr']) && !empty($user[$this->config['usermailattr']][0])) ? $user[$this->config['usermailattr']][0] : '',
+					"cell" => (!empty($this->config['usercellphoneattr']) && !empty($user[$this->config['usercellphoneattr']][0])) ? $user[$this->config['usercellphoneattr']][0] : '',
+					"work" => (!empty($this->config['userworkphoneattr']) && !empty($user[$this->config['userworkphoneattr']][0])) ? $user[$this->config['userworkphoneattr']][0] : '',
+					"fax" => (!empty($this->config['userfaxphoneattr']) && !empty($user[$this->config['userfaxphoneattr']][0])) ? $user[$this->config['userfaxphoneattr']][0] : '',
+					"home" => (!empty($this->config['userhomephoneattr']) && !empty($user[$this->config['userhomephoneattr']][0])) ? $user[$this->config['userhomephoneattr']][0] : '',
 				);
-				if(!empty($this->linkAttr) && !empty($user[$this->linkAttr][0])) {
-					$d = $this->FreePBX->Core->getUser((string)$user[$this->linkAttr][0]);
+				if(!empty($this->config['la']) && !empty($user[$this->config['la']][0])) {
+					$la = $user[$this->config['la']][0];
+					$d = $this->FreePBX->Core->getUser($la);
 					if(!empty($d)) {
-						$data["default_extension"] = !empty($user[$this->linkAttr][0]) ? $user[$this->linkAttr][0] : '';
+						$data["default_extension"] = $la;
 					} else {
 						//TODO: Technically we could create an extension here..
-						dbug("Extension ".$user[$this->linkAttr][0] . " does not exist, skipping link");
+						dbug("Extension ". $la . " does not exist, skipping link");
 					}
-				} elseif(!empty($this->linkAttr) && empty($user[$this->linkAttr][0])) {
+				} elseif(!empty($this->config['la']) && empty($user[$this->config['la']][0])) {
 					$data["default_extension"] = 'none';
 				}
 				$this->updateUserData($um['id'], $data);
 				if($um['new']) {
-					$this->userHooks['add'][$um['id']] = array($um['id'], $user['samaccountname'][0], (!empty($user['description'][0]) ? $user['description'][0] : ''), null, false, $data);
+					$this->out("\t\tAdding ".$username);
+					$this->userHooks['add'][$um['id']] = array($um['id'], $username, $data['description'], null, false, $data);
 				} else {
-					$this->userHooks['update'][$um['id']] = array($um['id'], $um['prevUsername'], $user['samaccountname'][0], (!empty($user['description'][0]) ? $user['description'][0] : ''), null, $data);
+					$this->out("\t\tUpdating ".$username);
+					$this->userHooks['update'][$um['id']] = array($um['id'], $um['prevUsername'], $username, $data['description'], null, $data);
 				}
+				$this->ucache[$sid]['userman'][0] = $um['id'];
 			}
 		}
 		//remove users
 		$fusers = $this->getAllUsers();
 		foreach($fusers as $user) {
 			if(!isset($this->ucache[$user['authid']])) {
+				$this->out("\t\tDeleting ".$user['username']);
 				$this->deleteUserByID($user['id'], false);
 				$this->userHooks['remove'][$user['id']] = array($user['id'],$user);
 			}

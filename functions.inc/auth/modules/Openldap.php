@@ -118,7 +118,11 @@ class Openldap extends Auth {
 		$validKeys = array_merge(self::$serverDefaults,self::$userDefaults,self::$groupDefaults);
 		$this->config = array();
 		foreach($validKeys as $key => $value) {
-			$this->config[$key] = (isset($c[$key])) ? strtolower($c[$key]) : strtolower($value);
+			if($key != "password") {
+				$this->config[$key] = (isset($c[$key])) ? strtolower($c[$key]) : strtolower($value);
+			} else {
+				$this->config[$key] = (isset($c[$key])) ? $c[$key] : '';
+			}
 		}
 		$date = new \DateTime("now",new \DateTimeZone("UTC"));
 		$this->time = $date->format('YmdHis\Z');
@@ -260,10 +264,8 @@ class Openldap extends Auth {
 			$this->updateAllGroups();
 			$this->out("Updating Primary Groups");
 			$this->updatePrimaryGroups();
-			/*
 			$this->out("Executing User Manager Hooks");
 			$this->executeHooks();
-			*/
 			unlink($lock);
 		} else {
 			print_r("User Manager is already syncing (Process: ".$pid.")");
@@ -506,8 +508,8 @@ class Openldap extends Auth {
 		$this->connect();
 		$userdn = !empty($this->config['userdn']) ? $this->config['userdn'].",".$this->config['basedn'] : $this->config['basedn'];
 		$groupdn = !empty($this->config['groupdnaddition']) ? $this->config['groupdnaddition'].",".$this->config['basedn'] : $this->config['basedn'];
-		$this->out("\t".'ldapsearch -w '.$this->config['password'].' -h '.$this->config['host'].' -D "'.$this->config['username'].'" -b "'.$groupdn.'" -s sub "'.$this->config['groupobjectfilter'].'"');
-		$this->out("\tRetrieving all groups...",false);
+		$this->out("\t".'ldapsearch -w '.$this->config['password'].' -h '.$this->config['host'].' -p '.$this->config['port'].'  "'.$this->config['username'].'" -b "'.$groupdn.'" -s sub "'.$this->config['groupobjectfilter'].'"');
+		$this->out("\tRetrieving all groups...");
 		//(".$this->config['usermodifytimestampattr'].">=20010301000000Z)
 		$sr = ldap_search($this->ldap, $groupdn, "(&".$this->config['groupobjectfilter']."(objectclass=".$this->config['groupobjectclass']."))", array("*",$this->config['groupgidnumberattr'],$this->config['groupdescriptionattr'],$this->config['groupnameattr'], $this->config['groupexternalidattr'], $this->config['groupmemberattr']));
 		if($sr === false) {
@@ -518,7 +520,7 @@ class Openldap extends Auth {
 			$this->out("\tNo groups found! Perhaps your query is wrong?");
 			return;
 		}
-		$this->out("Got ".$groups['count']. " groups");
+		$this->out("\tGot ".$groups['count']. " groups");
 		unset($groups['count']);
 
 		foreach($groups as $group) {
@@ -530,7 +532,7 @@ class Openldap extends Auth {
 			$this->gcache[$sid] = $group;
 			$groupname = $group[$this->config['groupnameattr']][0];
 			$um = $this->linkGroup($groupname, 'openldap', $sid);
-			$description = (!empty($this->config['groupdescriptionattr']) && !empty($this->config['groupdescriptionattr'])) ? $this->config['groupdescriptionattr'] : '';
+			$description = (!empty($this->config['groupdescriptionattr']) && !empty($group[$this->config['groupdescriptionattr']][0])) ? $group[$this->config['groupdescriptionattr']][0] : '';
 			$members = array();
 			$this->out("\tWorking on ".$groupname);
 			if(empty($group[$this->config['groupmemberattr']])) {
@@ -587,8 +589,8 @@ class Openldap extends Auth {
 		$this->connect();
 
 		$userdn = !empty($this->config['userdn']) ? $this->config['userdn'].",".$this->config['basedn'] : $this->config['basedn'];
-		$this->out("\t".'ldapsearch -w '.$this->config['password'].' -h '.$this->config['host'].' -D "'.$this->config['username'].'" -b "'.$userdn.'" -s sub "'.$this->config['userobjectfilter'].'" "'.$this->config['userexternalidattr'].'=*" '.$this->config['userexternalidattr']);
-		$this->out("\tRetrieving all users...",false);
+		$this->out("\t".'ldapsearch -w '.$this->config['password'].' -h '.$this->config['host'].' -p '.$this->config['port'].'  "'.$this->config['username'].'" -b "'.$userdn.'" -s sub "'.$this->config['userobjectfilter'].'" "'.$this->config['userexternalidattr'].'=*" '.$this->config['userexternalidattr']);
+		$this->out("\tRetrieving all users...");
 		//(".$this->config['groupmodifytimestampattr'].">=20010301000000Z)
 		$sr = ldap_search($this->ldap, $userdn, "(&".$this->config['userobjectfilter']."(objectclass=".$this->config['userobjectclass']."))", array('*',$this->config['userexternalidattr']));
 		$users = ldap_get_entries($this->ldap, $sr);
@@ -598,7 +600,7 @@ class Openldap extends Auth {
 			return;
 		}
 
-		$this->out("Got ".$users['count']. " users");
+		$this->out("\tGot ".$users['count']. " users");
 
 		unset($users['count']);
 		//add and update users
