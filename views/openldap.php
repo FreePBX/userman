@@ -246,6 +246,7 @@
 			</div>
 		</div>
 	</div>
+	<!--
 	<div class="element-container">
 		<div class="row">
 			<div class="col-md-12">
@@ -268,6 +269,7 @@
 			</div>
 		</div>
 	</div>
+	-->
 	<div class="element-container">
 		<div class="row">
 			<div class="col-md-12">
@@ -340,28 +342,6 @@
 				<div class="row">
 					<div class="form-group">
 						<div class="col-md-3">
-							<label class="control-label" for="openldap-usermailattr"><?php echo _("User email attribute")?></label>
-							<i class="fa fa-question-circle fpbx-help-icon" data-for="openldap-usermailattr"></i>
-						</div>
-						<div class="col-md-9">
-							<input id="openldap-usermailattr" data-default="<?php echo $defaults['usermailattr']?>" name="openldap-usermailattr" type="text" class="form-control" value="<?php echo isset($config['usermailattr']) ? $config['usermailattr'] : $defaults['usermailattr']?>" required>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-12">
-				<span id="openldap-usermailattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user email.")?></span>
-			</div>
-		</div>
-	</div>
-	<div class="element-container">
-		<div class="row">
-			<div class="col-md-12">
-				<div class="row">
-					<div class="form-group">
-						<div class="col-md-3">
 							<label class="control-label" for="openldap-usergroupmemberattr"><?php echo _("User group attribute")?></label>
 							<i class="fa fa-question-circle fpbx-help-icon" data-for="openldap-usergroupmemberattr"></i>
 						</div>
@@ -410,7 +390,7 @@
 							<i class="fa fa-question-circle fpbx-help-icon" data-for="openldap-userexternalidattr"></i>
 						</div>
 						<div class="col-md-9">
-							<input id="openldap-userexternalidattr" data-default="<?php echo $defaults['userexternalidattr']?>" name="openldapuserexternalidattr" type="text" class="form-control" value="<?php echo isset($config['userexternalidattr']) ? $config['userexternalidattr'] : $defaults['userexternalidattr']?>" required>
+							<input id="openldap-userexternalidattr" data-default="<?php echo $defaults['userexternalidattr']?>" name="openldap-userexternalidattr" type="text" class="form-control" value="<?php echo isset($config['userexternalidattr']) ? $config['userexternalidattr'] : $defaults['userexternalidattr']?>" required>
 						</div>
 					</div>
 				</div>
@@ -428,11 +408,33 @@
 				<div class="row">
 					<div class="form-group">
 						<div class="col-md-3">
-							<label class="control-label" for="openldap-userdescriptionattr"><?php echo _("User description attribute")?></label>
+							<label class="control-label" for="openldap-usermailattr"><?php echo _("User email attribute")?></label>
+							<i class="fa fa-question-circle fpbx-help-icon" data-for="openldap-usermailattr"></i>
+						</div>
+						<div class="col-md-9">
+							<input id="openldap-usermailattr" data-default="<?php echo $defaults['usermailattr']?>" name="openldap-usermailattr" type="text" class="form-control" value="<?php echo isset($config['usermailattr']) ? $config['usermailattr'] : $defaults['usermailattr']?>">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<span id="openldap-usermailattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user email.")?></span>
+			</div>
+		</div>
+	</div>
+	<div class="element-container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="row">
+					<div class="form-group">
+						<div class="col-md-3">
+							<label class="control-label" for="openldap-userdescriptionattr"><?php echo _("User Description attribute")?></label>
 							<i class="fa fa-question-circle fpbx-help-icon" data-for="openldap-userdescriptionattr"></i>
 						</div>
 						<div class="col-md-9">
-							<input id="openldap-userdescriptionattr" data-default="<?php echo $defaults['userdescriptionattr']?>" name="openldap-userdescriptionattr" type="text" class="form-control" value="<?php echo isset($config['userdescriptionattr']) ? $config['userdescriptionattr'] : $defaults['userdescriptionattr']?>" required>
+							<input id="openldap-userdescriptionattr" data-default="<?php echo $defaults['userdescriptionattr']?>" name="openldap-userdescriptionattr" type="text" class="form-control" value="<?php echo isset($config['userdescriptionattr']) ? $config['userdescriptionattr'] : $defaults['userdescriptionattr']?>">
 						</div>
 					</div>
 				</div>
@@ -454,7 +456,7 @@
 							<i class="fa fa-question-circle fpbx-help-icon" data-for="openldap-userdescriptionattr"></i>
 						</div>
 						<div class="col-md-9">
-							<input id="openldap-userdescriptionattr" data-default="<?php echo $defaults['userdescriptionattr']?>" name="openldap-userdescriptionattr" type="text" class="form-control" value="<?php echo isset($config['userdescriptionattr']) ? $config['userdescriptionattr'] : $defaults['userdescriptionattr']?>" required>
+							<input id="openldap-userdescriptionattr" data-default="<?php echo $defaults['userdescriptionattr']?>" name="openldap-userdescriptionattr" type="text" class="form-control" value="<?php echo isset($config['userdescriptionattr']) ? $config['userdescriptionattr'] : $defaults['userdescriptionattr']?>">
 						</div>
 					</div>
 				</div>
@@ -476,7 +478,7 @@
 							<i class="fa fa-question-circle fpbx-help-icon" data-for="openldap-userdescriptionattr"></i>
 						</div>
 						<div class="col-md-9">
-							<input id="openldap-userdescriptionattr" data-default="<?php echo $defaults['userdescriptionattr']?>" name="openldap-userdescriptionattr" type="text" class="form-control" value="<?php echo isset($config['userdescriptionattr']) ? $config['userdescriptionattr'] : $defaults['userdescriptionattr']?>" required>
+							<input id="openldap-userdescriptionattr" data-default="<?php echo $defaults['userdescriptionattr']?>" name="openldap-userdescriptionattr" type="text" class="form-control" value="<?php echo isset($config['userdescriptionattr']) ? $config['userdescriptionattr'] : $defaults['userdescriptionattr']?>">
 						</div>
 					</div>
 				</div>
@@ -498,7 +500,7 @@
 							<i class="fa fa-question-circle fpbx-help-icon" data-for="openldap-userdescriptionattr"></i>
 						</div>
 						<div class="col-md-9">
-							<input id="openldap-userdescriptionattr" data-default="<?php echo $defaults['userdescriptionattr']?>" name="openldap-userdescriptionattr" type="text" class="form-control" value="<?php echo isset($config['userdescriptionattr']) ? $config['userdescriptionattr'] : $defaults['userdescriptionattr']?>" required>
+							<input id="openldap-userdescriptionattr" data-default="<?php echo $defaults['userdescriptionattr']?>" name="openldap-userdescriptionattr" type="text" class="form-control" value="<?php echo isset($config['userdescriptionattr']) ? $config['userdescriptionattr'] : $defaults['userdescriptionattr']?>">
 						</div>
 					</div>
 				</div>
@@ -520,7 +522,7 @@
 							<i class="fa fa-question-circle fpbx-help-icon" data-for="openldap-userdescriptionattr"></i>
 						</div>
 						<div class="col-md-9">
-							<input id="openldap-userdescriptionattr" data-default="<?php echo $defaults['userdescriptionattr']?>" name="openldap-userdescriptionattr" type="text" class="form-control" value="<?php echo isset($config['userdescriptionattr']) ? $config['userdescriptionattr'] : $defaults['userdescriptionattr']?>" required>
+							<input id="openldap-userdescriptionattr" data-default="<?php echo $defaults['userdescriptionattr']?>" name="openldap-userdescriptionattr" type="text" class="form-control" value="<?php echo isset($config['userdescriptionattr']) ? $config['userdescriptionattr'] : $defaults['userdescriptionattr']?>">
 						</div>
 					</div>
 				</div>
@@ -542,7 +544,7 @@
 							<i class="fa fa-question-circle fpbx-help-icon" data-for="openldap-userdescriptionattr"></i>
 						</div>
 						<div class="col-md-9">
-							<input id="openldap-userdescriptionattr" data-default="<?php echo $defaults['userdescriptionattr']?>" name="openldap-userdescriptionattr" type="text" class="form-control" value="<?php echo isset($config['userdescriptionattr']) ? $config['userdescriptionattr'] : $defaults['userdescriptionattr']?>" required>
+							<input id="openldap-userdescriptionattr" data-default="<?php echo $defaults['userdescriptionattr']?>" name="openldap-userdescriptionattr" type="text" class="form-control" value="<?php echo isset($config['userdescriptionattr']) ? $config['userdescriptionattr'] : $defaults['userdescriptionattr']?>">
 						</div>
 					</div>
 				</div>
@@ -564,7 +566,7 @@
 							<i class="fa fa-question-circle fpbx-help-icon" data-for="openldap-userdescriptionattr"></i>
 						</div>
 						<div class="col-md-9">
-							<input id="openldap-userdescriptionattr" data-default="<?php echo $defaults['userdescriptionattr']?>" name="openldap-userdescriptionattr" type="text" class="form-control" value="<?php echo isset($config['userdescriptionattr']) ? $config['userdescriptionattr'] : $defaults['userdescriptionattr']?>" required>
+							<input id="openldap-userdescriptionattr" data-default="<?php echo $defaults['userdescriptionattr']?>" name="openldap-userdescriptionattr" type="text" class="form-control" value="<?php echo isset($config['userdescriptionattr']) ? $config['userdescriptionattr'] : $defaults['userdescriptionattr']?>">
 						</div>
 					</div>
 				</div>
@@ -586,7 +588,7 @@
 							<i class="fa fa-question-circle fpbx-help-icon" data-for="openldap-userdescriptionattr"></i>
 						</div>
 						<div class="col-md-9">
-							<input id="openldap-userdescriptionattr" data-default="<?php echo $defaults['userdescriptionattr']?>" name="openldap-userdescriptionattr" type="text" class="form-control" value="<?php echo isset($config['userdescriptionattr']) ? $config['userdescriptionattr'] : $defaults['userdescriptionattr']?>" required>
+							<input id="openldap-userdescriptionattr" data-default="<?php echo $defaults['userdescriptionattr']?>" name="openldap-userdescriptionattr" type="text" class="form-control" value="<?php echo isset($config['userdescriptionattr']) ? $config['userdescriptionattr'] : $defaults['userdescriptionattr']?>">
 						</div>
 					</div>
 				</div>
@@ -752,6 +754,28 @@
 		<div class="row">
 			<div class="col-md-12">
 				<span id="openldap-groupmemberattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the group members.")?></span>
+			</div>
+		</div>
+	</div>
+	<div class="element-container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="row">
+					<div class="form-group">
+						<div class="col-md-3">
+							<label class="control-label" for="openldap-groupexternalidattr"><?php echo _("Group unique identifier attribute")?></label>
+							<i class="fa fa-question-circle fpbx-help-icon" data-for="openldap-groupexternalidattr"></i>
+						</div>
+						<div class="col-md-9">
+							<input id="openldap-groupexternalidattr" data-default="<?php echo $defaults['groupexternalidattr']?>" name="openldap-groupexternalidattr" type="text" class="form-control" value="<?php echo isset($config['groupexternalidattr']) ? $config['groupexternalidattr'] : $defaults['groupexternalidattr']?>" required>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<span id="openldap-groupexternalidattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use for tracking group identity across group renames.")?></span>
 			</div>
 		</div>
 	</div>
