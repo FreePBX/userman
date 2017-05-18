@@ -7,9 +7,8 @@ namespace FreePBX\modules\Userman\Auth;
 
 class Freepbx extends Auth {
 
-	public function __construct($userman, $freepbx) {
-		parent::__construct($userman, $freepbx);
-		$config = $userman->getConfig("authFREEPBXSettings");
+	public function __construct($userman, $freepbx, $config) {
+		parent::__construct($userman, $freepbx, $config);
 	}
 
 	/**
@@ -37,12 +36,11 @@ class Freepbx extends Auth {
 	 * @param  Object $freepbx The freepbx Object
 	 * @return string          html to show to the page
 	 */
-	public static function getConfig($userman, $freepbx) {
-		$config = $userman->getConfig("authFREEPBXSettings");
+	public static function getConfig($userman, $freepbx, $config) {
 		$sgroups = !empty($config['default-groups']) ? $config['default-groups'] : array();
-		$sql = "SELECT * FROM userman_groups WHERE auth = 'freepbx' ORDER BY priority";
+		$sql = "SELECT * FROM userman_groups WHERE auth = ? ORDER BY priority";
 		$sth = $freepbx->Database->prepare($sql);
-		$sth->execute();
+		$sth->execute(array($config['id']));
 		$groups = $sth->fetchAll(\PDO::FETCH_ASSOC);
 		foreach($groups as &$group) {
 			$group['users'] = json_decode($group['users'],true);
@@ -59,7 +57,7 @@ class Freepbx extends Auth {
 		$config = array(
 			"default-groups" => $_POST['freepbx-default-groups']
 		);
-		$userman->setConfig("authFREEPBXSettings", $config);
+		return $config;
 	}
 
 	/**
@@ -70,7 +68,7 @@ class Freepbx extends Auth {
 	* @return array
 	*/
 	public function getAllUsers() {
-		return parent::getAllUsers('freepbx');
+		return parent::getAllUsers();
 	}
 
 	/**
@@ -81,7 +79,7 @@ class Freepbx extends Auth {
 	* @return array
 	*/
 	public function getAllGroups() {
-		return parent::getAllGroups('freepbx');
+		return parent::getAllGroups();
 	}
 
 	/**
@@ -107,11 +105,11 @@ class Freepbx extends Auth {
 		if($this->getUserByUsername($username)) {
 			return array("status" => false, "type" => "danger", "message" => sprintf(_("User '%s' Already Exists"),$username));
 		}
-		$sql = "INSERT INTO ".$this->userTable." (`username`,`auth`,`password`,`description`,`default_extension`) VALUES (:username,'freepbx',:password,:description,:default_extension)";
+		$sql = "INSERT INTO ".$this->userTable." (`username`,`auth`,`password`,`description`,`default_extension`) VALUES (:username,:directory,:password,:description,:default_extension)";
 		$sth = $this->db->prepare($sql);
 		$password = ($encrypt) ? sha1($password) : $password;
 		try {
-			$sth->execute(array(':username' => $username, ':password' => $password, ':description' => $description, ':default_extension' => $default));
+			$sth->execute(array(':directory' => $this->config['id'], ':username' => $username, ':password' => $password, ':description' => $description, ':default_extension' => $default));
 		} catch (\Exception $e) {
 			return array("status" => false, "type" => "danger", "message" => $e->getMessage());
 		}
@@ -123,10 +121,10 @@ class Freepbx extends Auth {
 	}
 
 	public function addGroup($groupname, $description=null, $users=array()) {
-		$sql = "INSERT INTO ".$this->groupTable." (`groupname`,`description`,`users`) VALUES (:groupname,:description,:users)";
+		$sql = "INSERT INTO ".$this->groupTable." (`groupname`,`description`,`users`, `auth`) VALUES (:groupname,:description,:users,:directory)";
 		$sth = $this->db->prepare($sql);
 		try {
-			$sth->execute(array(':groupname' => $groupname, ':description' => $description, ':users' => json_encode($users)));
+			$sth->execute(array(':directory' => $this->config['id'],':groupname' => $groupname, ':description' => $description, ':users' => json_encode($users)));
 		} catch (\Exception $e) {
 			return array("status" => false, "type" => "danger", "message" => $e->getMessage());
 		}
@@ -217,9 +215,9 @@ class Freepbx extends Auth {
 	* @param {string} $password_sha1 The sha
 	*/
 	public function checkCredentials($username, $password) {
-		$sql = "SELECT id, password FROM ".$this->userTable." WHERE username = :username";
+		$sql = "SELECT id, password FROM ".$this->userTable." WHERE username = :username AND auth = :directory";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':username' => $username));
+		$sth->execute(array(':username' => $username, ':directory' => $this->config['id']));
 		$result = $sth->fetch(\PDO::FETCH_ASSOC);
 		if(!empty($result) && (sha1($password) === $result['password'])) {
 			return $result['id'];

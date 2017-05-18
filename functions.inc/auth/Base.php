@@ -20,7 +20,7 @@ interface Base {
 	 * @param  object $freepbx The FreePBX BMO object
 	 * @return string          html display data
 	 */
-	public static function getConfig($userman, $freepbx);
+	public static function getConfig($userman, $freepbx, $config);
 
 	/**
 	 * Save the configuration about the authentication driver

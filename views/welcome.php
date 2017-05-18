@@ -23,30 +23,34 @@
 						<ul class="nav nav-tabs" role="tablist">
 							<li role="presentation" class="active"><a href="#users" aria-controls="users" role="tab" data-toggle="tab"><?php echo _("Users"); ?></a></li>
 							<li role="presentation"><a href="#groups" aria-controls="groups" role="tab" data-toggle="tab"><?php echo _("Groups"); ?></a></li>
+							<li role="presentation"><a href="#directories" aria-controls="directories" role="tab" data-toggle="tab"><?php echo _("Directories"); ?></a></li>
 							<li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab"><?php echo _("Settings"); ?></a></li>
 						</ul>
 						<div class="tab-content">
 							<div role="tabpanel" id="users" class="tab-pane display active">
 								<div class="table-responsive">
 									<div id="toolbar-users">
-										<?php if($permissions['addUser']) {?>
-										<a href="config.php?display=userman&amp;action=adduser" id="add-users" class="btn btn-add" data-type="users" data-section="users">
+										<a href="config.php?display=userman&amp;action=adduser" id="add-users" class="btn btn-add hidden" data-type="users" data-section="users">
 											<i class="fa fa-user-plus"></i> <span><?php echo _('Add')?></span>
 										</a>
-										<?php } ?>
-										<?php if($permissions['removeUser']) {?>
-										<button id="remove-users" class="btn btn-danger btn-remove" data-type="users" disabled data-section="users">
+										<button id="remove-users" class="btn btn-danger btn-remove hidden" data-type="users" disabled data-section="users">
 											<i class="fa fa-user-times"></i> <span><?php echo _('Delete')?></span>
 										</button>
-										<?php } ?>
 										<button id="email-users" class="btn btn-info btn-send" data-type="users" disabled data-section="users">
 											<i class="fa fa-envelope-o"></i> <span><?php echo _('Send Email')?></span>
 										</button>
+										<select id="directory-users" class="form-control" style="display: inline-block;width: inherit;">
+											<option value=""><?php echo _("All Directories")?></option>
+											<?php foreach($directories as $directory) {?>
+												<option value="<?php echo $directory['id']?>"><?php echo $directory['name']?></option>
+											<?php } ?>
+										</select>
 									</div>
 									<table data-toolbar="#toolbar-users" data-url="ajax.php?module=userman&amp;command=getUsers" data-cache="false" data-toggle="table" data-maintain-selected="true" data-show-columns="true" data-pagination="true" data-search="true" class="table table-striped" id="table-users" data-type="users">
 										<thead>
 											<tr>
 												<th data-checkbox="true"></th>
+												<th data-sortable="true" data-field="auth" data-formatter="directoryMap"><?php echo _("Directory") ?></th>
 												<th data-sortable="true" data-field="username"><?php echo _("Username") ?></th>
 												<th data-sortable="true" data-field="displayname"><?php echo _("Display Name") ?></th>
 												<th data-sortable="true" data-field="fname"><?php echo _("First Name") ?></th>
@@ -63,25 +67,52 @@
 								<div class="table-responsive">
 									<div class="alert alert-info"><?php echo _("Group Priorities can be changed by clicking and dragging groups around in the order you'd like. Groups with a lower number for priority take priority (EG 0 is higher than 1)")?></div>
 									<div id="toolbar-groups">
-										<?php if($permissions['addGroup']) {?>
-										<a href="config.php?display=userman&amp;action=addgroup" id="add-groups" class="btn btn-add" data-type="groupss" data-section="groups">
+										<a href="config.php?display=userman&amp;action=addgroup" id="add-groups" class="btn btn-add hidden" data-type="groupss" data-section="groups">
 											<i class="fa fa-user-plus"></i> <span><?php echo _('Add')?></span>
 										</a>
-										<?php } ?>
-										<?php if($permissions['removeGroup']) {?>
-										<button id="remove-groups" class="btn btn-danger btn-remove" data-type="groups" disabled data-section="groups">
+										<button id="remove-groups" class="btn btn-danger btn-remove hidden" data-type="groups" disabled data-section="groups">
 											<i class="fa fa-user-times"></i> <span><?php echo _('Delete')?></span>
 										</button>
-										<?php } ?>
+										<select id="directory-groups" class="form-control" style="display: inline-block;width: inherit;">
+											<option value=""><?php echo _("All Directories")?></option>
+											<?php foreach($directories as $directory) {?>
+												<option value="<?php echo $directory['id']?>"><?php echo $directory['name']?></option>
+											<?php } ?>
+										</select>
 									</div>
-									<table data-reorderable-rows="true" data-use-row-attr-func="true" data-toolbar="#toolbar-groups" data-url="ajax.php?module=userman&amp;command=getGroups" data-sort-name="priority" data-cache="false" data-toggle="table" data-pagination="false" data-search="true" class="table table-striped" id="table-groups" data-type="groups">
+									<table data-reorderable-rows="true" data-use-row-attr-func="true" data-sort-name="priority" data-toolbar="#toolbar-groups" data-url="ajax.php?module=userman&amp;command=getGroups" data-cache="false" data-toggle="table" data-pagination="false" data-search="true" class="table table-striped" id="table-groups" data-type="groups">
 										<thead>
 											<tr>
 												<th data-checkbox="true"></th>
+												<th data-sortable="true" data-field="auth" data-formatter="directoryMap"><?php echo _("Directory") ?></th>
 												<th data-field="groupname"><?php echo _("Group Name") ?></th>
 												<th data-field="description"><?php echo _("Description") ?></th>
 												<th data-field="priority"><?php echo _("Priority") ?></th>
 												<th data-formatter="groupActions"><?php echo _("Action") ?></th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+							</div>
+							<div role="tabpanel" id="directories" class="tab-pane display">
+								<div class="table-responsive">
+									<div class="alert alert-info"><?php echo _("Directory order can be changed by clicking and dragging directories around in the order you'd like. User logins will match based on the first directory then if no match was found waterfall down the list in the order chosen below")?></div>
+									<div id="toolbar-directories">
+										<a href="?display=userman&amp;action=adddirectory" id="add-directories" class="btn btn-add" data-type="directories" data-section="directories">
+											<i class="fa fa-sitemap"></i> <span><?php echo _('Add')?></span>
+										</a>
+										<button id="remove-directories" class="btn btn-danger btn-remove" data-type="directories" disabled data-section="directories">
+											<i class="fa fa-sitemap"></i> <span><?php echo _('Delete')?></span>
+										</button>
+									</div>
+									<table data-reorderable-rows="true" data-use-row-attr-func="true" data-sort-name="order" data-toolbar="#toolbar-directories" data-url="ajax.php?module=userman&amp;command=getDirectories" data-cache="false" data-toggle="table" data-maintain-selected="true" data-show-columns="true" data-pagination="true" data-search="true" class="table table-striped" id="table-directories" data-type="directories">
+										<thead>
+											<tr>
+												<th data-checkbox="true"></th>
+												<th data-sortable="true" data-field="name"><?php echo _("Name") ?></th>
+												<th data-sortable="true" data-formatter="directoryActive" data-field="active"><?php echo _("Active") ?></th>
+												<th data-sortable="true" data-formatter="directoryType" data-field="type"><?php echo _("Type") ?></th>
+												<th data-formatter="directoryActions"><?php echo _("Action") ?></th>
 											</tr>
 										</thead>
 									</table>
@@ -100,4 +131,7 @@
 		</div>
 	</div>
 </div>
-<script>var permissions = <?php echo json_encode($permissions);?>;</script>
+<script>
+	var drivers = <?php echo json_encode($auths)?>;
+	var directoryMapValues = <?php echo json_encode($directoryMap)?>;
+	</script>

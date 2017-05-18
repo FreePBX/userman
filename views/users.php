@@ -123,15 +123,49 @@ echo $heading;
 									<div class="row">
 										<div class="form-group">
 											<div class="col-md-3">
-												<label class="control-label" for="group_users"><?php echo _('Groups')?></label>
+												<label class="control-label" for="group_primary"><?php echo _('Primary Group')?></label>
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="group_users"></i>
 											</div>
 											<div class="col-md-9">
-												<select id="group_users" data-placeholder="Groups" class="form-control chosenmultiselect" name="groups[]" multiple="multiple" <?php echo !$permissions['modifyGroup'] ? 'disabled' : ''?>>
+												<select id="group_primary" data-placeholder="Groups" class="form-control" name="primary_group" <?php echo !$permissions['modifyGroup'] ? 'disabled' : ''?>>
 													<?php foreach($groups as $group) {?>
 														<option value="<?php echo $group['id']?>" <?php echo (!empty($user['id']) && in_array($user['id'], $group['users'])) || (empty($user['id']) && in_array($group['id'], $dgroups)) ? 'selected' : '' ?>><?php echo $group['groupname']?></option>
 													<?php } ?>
 												</select>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-12">
+									<span id="group_primary-help" class="help-block fpbx-help-block"><?php echo _("Which groups this user is in")?></span>
+								</div>
+							</div>
+						</div>
+						<div class="element-container">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="row">
+										<div class="form-group">
+											<div class="col-md-3">
+												<label class="control-label" for="group_users"><?php echo _('Groups')?></label>
+												<i class="fa fa-question-circle fpbx-help-icon" data-for="group_users"></i>
+											</div>
+											<div class="col-md-9">
+												<?php if($permissions['modifyGroup']) {?>
+													<select id="group_users" data-placeholder="Groups" class="form-control" name="groups[]" multiple="multiple">
+														<?php foreach($groups as $group) {?>
+															<option value="<?php echo $group['id']?>" <?php echo (!empty($user['id']) && in_array($user['id'], $group['users'])) || (empty($user['id']) && in_array($group['id'], $dgroups)) ? 'selected' : '' ?>><?php echo $group['groupname']?></option>
+														<?php } ?>
+													</select>
+												<?php } else {?>
+													<select class="form-control chosenmultiselect" name="groups[]" multiple="multiple" <?php echo !$permissions['modifyGroup'] ? 'disabled' : ''?>>
+														<?php foreach($groups as $group) {?>
+															<option value="<?php echo $group['id']?>" <?php echo (!empty($user['id']) && in_array($user['id'], $group['users'])) || (empty($user['id']) && in_array($group['id'], $dgroups)) ? 'selected' : '' ?>><?php echo $group['groupname']?></option>
+														<?php } ?>
+													</select>
+												<?php } ?>
 											</div>
 										</div>
 									</div>

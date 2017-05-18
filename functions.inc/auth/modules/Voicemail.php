@@ -8,8 +8,8 @@ namespace FreePBX\modules\Userman\Auth;
 
 class Voicemail extends Auth {
 
-	public function __construct($userman, $freepbx) {
-		parent::__construct($userman, $freepbx);
+	public function __construct($userman, $freepbx, $config) {
+		parent::__construct($userman, $freepbx, $config);
 		$this->FreePBX = $freepbx;
 		$this->userman = $userman;
 	}
@@ -32,8 +32,7 @@ class Voicemail extends Auth {
 	 * @param  object $freepbx The FreePBX BMO object
 	 * @return string          html display data
 	 */
-	public static function getConfig($userman, $freepbx) {
-		$config = $userman->getConfig("authVoicemailSettings");
+	public static function getConfig($userman, $freepbx, $config) {
 		$config['context'] = !empty($config['context']) ? $config['context'] : 'default';
 		return load_view(dirname(dirname(dirname(__DIR__)))."/views/voicemail.php", array("config" => $config));
 	}
@@ -48,12 +47,11 @@ class Voicemail extends Auth {
 		$config = array(
 			"context" => $_REQUEST['voicemail-context']
 		);
-		$userman->setConfig("authVoicemailSettings", $config);
 		$vm = new static($userman, $freepbx);
 		try {
 			$vm->sync();
 		} catch(\Exception $e) {}
-		return true;
+		return $config;
 	}
 
 	public function sync($output=null) {
@@ -64,7 +62,7 @@ class Voicemail extends Auth {
 			$this->out("");
 			$valid = array();
 			foreach($d[$config['context']] as $username => $d) {
-				$um = $this->linkUser($username, 'voicemail', $username);
+				$um = $this->linkUser($username, $username);
 				if($um['status']) {
 					$data = array(
 						"description" => $d['name'],
@@ -99,7 +97,7 @@ class Voicemail extends Auth {
 	/**
 	 * Return an array of permissions for this adaptor
 	 */
-	public function getPermissions() {
+	public static function getPermissions() {
 		return array(
 			"addGroup" => true,
 			"addUser" => false,
@@ -121,7 +119,7 @@ class Voicemail extends Auth {
 	 * @return array
 	 */
 	public function getAllUsers() {
-		return parent::getAllUsers('voicemail');
+		return parent::getAllUsers();
 	}
 
 	/**
@@ -132,7 +130,7 @@ class Voicemail extends Auth {
 	* @return array
 	*/
 	public function getAllGroups() {
-		return parent::getAllGroups('voicemail');
+		return parent::getAllGroups();
 	}
 
 	/**

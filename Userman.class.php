@@ -11,10 +11,11 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	private $userSettingsTable = 'userman_users_settings';
 	private $groupTable = 'userman_groups';
 	private $groupSettingsTable = 'userman_groups_settings';
+	private $directoryTable = 'userman_directories';
 	private $brand = 'FreePBX';
 	private $tokenExpiration = "1 day";
-	private $auth = null;
-	private $auths = array();
+	private $directories = array();
+	private $globalDirectory = null;
 
 	private $moduleGroupSettingsCache = array();
 	private $moduleUserSettingsCache = array();
@@ -34,24 +35,10 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 			include(__DIR__."/functions.inc/auth/Auth.php");
 		}
 
-		$this->switchAuth($this->getConfig('auth'));
-	}
-
-	/**
-	 * Get the name of the Auth Object
-	 * @return string The auth object basename
-	 */
-	public function getAuthName() {
-		return str_replace('FreePBX\modules\Userman\Auth\\','',get_class($this->auth));
-	}
-
-	/**
-	 * Return the active authentication object
-	 * @return object The authentication object
-	 */
-
-	public function getAuthObject() {
-		return $this->auth;
+		$this->loadActiveDirectories();
+		//TODO: load this config... whatever it is
+		//$this->getConfig('auth')
+		//$this->setConfig("auth-settings",$settings,$id);
 	}
 
 	/**
@@ -75,7 +62,6 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	}
 
 	public function getRightNav($request) {
-		$dir = basename($request['display']);
 		if(isset($request['action'])) {
 			return load_view(__DIR__."/views/rnav.php",array("action" => $request['action']));
 		} else {
@@ -129,9 +115,11 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * @return array The array of the display
 	 */
 	public function getQuickCreateDisplay() {
-		$groups = $this->getAllGroups();
-		$permissions = $this->getAuthAllPermissions();
-		$dgroups = $this->auth->getDefaultGroups();
+		//TODO: figure out what our default directory is?
+		$directory = 1;
+		$groups = $this->getAllGroups($directory);
+		$permissions = $this->getAuthAllPermissions($directory);
+		$dgroups = $this->getDefaultGroups($directory);
 		$usersC = array();  // Initialize the array.
 		foreach($this->FreePBX->Core->getAllUsers() as $user) {
 			$usersC[] = $user['extension'];
@@ -226,6 +214,23 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		}
 		if(isset($_POST['submittype'])) {
 			switch($_POST['type']) {
+				case 'directory':
+					$auths = array();
+					foreach($this->getDirectoryDrivers() as $auth) {
+						if($auth == $_POST['authtype']) {
+							$class = 'FreePBX\modules\Userman\Auth\\'.$auth;
+							$config = $class::saveConfig($this, $this->FreePBX);
+							//if($ret !== true) {
+								//error
+							//}
+						}
+					}
+					if(!empty($_POST['id'])) {
+						$this->updateDirectory($_POST['id'], $_POST['name'], $_POST['enable'], $config);
+					} else {
+						$this->addDirectory($_POST['authtype'], $_POST['name'], $_POST['enable'], $config);
+					}
+				break;
 				case 'group':
 					$groupname = !empty($request['name']) ? $request['name'] : '';
 					$description = !empty($request['description']) ? $request['description'] : '';
@@ -379,23 +384,8 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 					if(isset($_POST['sendemailtoall'])) {
 						$this->sendWelcomeEmailToAll();
 					}
-					$auths = array();
-					foreach($this->getAuths() as $auth) {
-						if($auth == $_POST['authtype']) {
-							$class = 'FreePBX\modules\Userman\Auth\\'.$auth;
-							$ret = $class::saveConfig($this, $this->FreePBX);
-							if($ret !== true) {
-								//error
-							}
-						}
-					}
 
-					$remoteips = isset($_POST['remoteips']) ? $_POST['remoteips'] : array();
-					if(!empty($remoteips)) {
-						$remoteips = explode(",", $remoteips);
-					}
-					$this->setConfig('remoteips', $remoteips);
-
+					//TODO MOVE PLEASE
 					$sync = $_POST['cronsync'];
 					$this->setConfig('sync', $sync);
 					$this->setConfig('auth', $_POST['authtype']);
@@ -438,16 +428,16 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	/**
 	 * Get All Permissions that the Auth Type allows
 	 */
-	public function getAuthAllPermissions() {
-		return $this->auth->getPermissions();
+	public function getAuthAllPermissions($directory) {
+		return $this->directories[$directory['id']]->getPermissions();
 	}
 
 	/**
 	 * Get a Single Permisison that the Auth Type allows
 	 * @param [type] $permission [description]
 	 */
-	public function getAuthPermission($permission) {
-		$settings = $this->auth->getPermissions();
+	public function getAuthPermission($directory, $permission) {
+		$settings = $this->directories[$directory['id']]->getPermissions();
 		return isset($settings[$permission]) ? $settings[$permission] : null;
 	}
 
@@ -457,7 +447,6 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 */
 	public function getActionBar($request){
 		$buttons = array();
-		$permissions = $this->auth->getPermissions();
 		$request['action'] = !empty($request['action']) ? $request['action'] : '';
 		$request['display'] = !empty($request['display']) ? $request['display'] : '';
 		switch($request['display']) {
@@ -493,6 +482,16 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 					unset($buttons['delete']);
 				}
 
+				if($request['action'] == 'showuser' || $request['action'] == 'showgroup') {
+					if(!empty($request['user'])) {
+						$user = $this->getUserByID($request['user']);
+						$directory = $user['auth'];
+						$permissions = $this->getAuthAllPermissions($user['auth']);
+					} else {
+						$permissions = $this->getAuthAllPermissions($request['directory']);
+					}
+				}
+
 				if($request['action'] == 'showuser' && !$permissions['removeUser']) {
 					unset($buttons['delete']);
 				}
@@ -500,6 +499,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 				if($request['action'] == 'showgroup' && !$permissions['removeGroup']) {
 					unset($buttons['delete']);
 				}
+
 				if(empty($request['action'])){
 					unset($buttons['submitsend']);
 				}
@@ -550,19 +550,52 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$action = !empty($request['action']) ? $request['action'] : '';
 		$html = '';
 
-		$users = $this->getAllUsers();
-		$groups = $this->getAllGroups();
-		$permissions = $this->auth->getPermissions();
-
 		switch($action) {
+			case 'adddirectory':
+			case 'showdirectory':
+				if($action == "showdirectory") {
+					$directory = $this->getDirectoryByID($request['directory']);
+					$class = 'FreePBX\modules\Userman\Auth\\'.$directory['driver'];
+					$a = $class::getInfo($this, $this->FreePBX);
+					$auth = $directory['driver'];
+					if(!empty($a)) {
+						$auths[$auth] = $a;
+						$auths[$auth]['html'] = $class::getConfig($this, $this->FreePBX, $directory['config']);
+					}
+				} else {
+					$directory = array(
+						'active' => true
+					);
+					$auths = array();
+					foreach($this->getDirectoryDrivers() as $auth) {
+						$class = 'FreePBX\modules\Userman\Auth\\'.$auth;
+						$a = $class::getInfo($this, $this->FreePBX);
+						if(!empty($a)) {
+							$auths[$auth] = $a;
+							$auths[$auth]['html'] = $class::getConfig($this, $this->FreePBX, array());
+						}
+					}
+				}
+
+				$html .= load_view(
+					dirname(__FILE__).'/views/directories.php',
+					array(
+						'auths' => $auths,
+						'config' => $directory
+					)
+				);
+			break;
 			case 'addgroup':
 			case 'showgroup':
 				$module_list = $this->getModuleList();
 				if($action == "showgroup") {
 					$group = $this->getGroupByGID($request['group']);
+					$directory = $group['auth'];
 				} else {
 					$group = array();
+					$directory = $_GET['directory'];
 				}
+				$groups = $this->getAllGroups();
 				$mods = $this->getGlobalSettingByGID($request['group'],'pbx_modules');
 				$html .= load_view(
 					dirname(__FILE__).'/views/groups.php',
@@ -578,7 +611,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 						"modules" => $module_list,
 						"sections" => $sections,
 						"message" => $this->message,
-						"permissions" => $permissions
+						"permissions" => $this->getAuthAllPermissions($directory)
 					)
 				);
 			break;
@@ -589,11 +622,14 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 					$assigned = $this->getGlobalSettingByID($request['user'],'assigned');
 					$assigned = !(empty($assigned)) ? $assigned : array();
 					$default = $user['default_extension'];
+					$directory = $user['auth'];
 				} else {
 					$user = array();
 					$assigned = array();
 					$default = null;
+					$directory = $_GET['directory'];
 				}
+				$groups = $this->getAllGroups($directory);
 				$extrauserdetails = $this->getExtraUserDetailsDisplay($user);
 				$fpbxusers = array();
 				$dfpbxusers = array();
@@ -618,13 +654,12 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 					}
 					$dfpbxusers[] = array("ext" => $e, "name" => $u['name'], "selected" => ($e == $default));
 				}
-				$ao = $this->auth;
 				$html .= load_view(
 					dirname(__FILE__).'/views/users.php',
 					array(
 						"users" => $users,
 						"groups" => $groups,
-						"dgroups" => $ao->getDefaultGroups(),
+						"dgroups" => $this->getDefaultGroups($directory),
 						"sections" => $sections,
 						"pbx_modules" => empty($request['user']) ? array() : $this->getGlobalSettingByID($request['user'],'pbx_modules'),
 						"pbx_low" => empty($request['user']) ? '' : $this->getGlobalSettingByID($request['user'],'pbx_low'),
@@ -637,22 +672,30 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 						"fpbxusers" => $fpbxusers,
 						"user" => $user,
 						"message" => $this->message,
-						"permissions" => $permissions,
+						"permissions" => $this->getAuthAllPermissions($directory),
 						"extrauserdetails" => $extrauserdetails
 					)
 				);
 			break;
 			default:
+				$users = $this->getAllUsers();
+				$groups = $this->getAllGroups();
 				$auths = array();
-				foreach($this->getAuths() as $auth) {
+				foreach($this->getDirectoryDrivers() as $auth) {
 					$class = 'FreePBX\modules\Userman\Auth\\'.$auth;
 					$a = $class::getInfo($this, $this->FreePBX);
 					if(!empty($a)) {
 						$auths[$auth] = $a;
-						$auths[$auth]['html'] = $class::getConfig($this, $this->FreePBX);
+						$auths[$auth]['html'] = $class::getConfig($this, $this->FreePBX, array());
+						$auths[$auth]['permissions'] = $class::getPermissions();
 					}
 				}
-
+				$directories = $this->getAllDirectories();
+				$directoryMap = array();
+				foreach($directories as $directory) {
+					$directoryMap[$directory['id']]['name'] = $directory['name'];
+					$directoryMap[$directory['id']]['driver'] = $directory['driver'];
+				}
 				$mailtype = $this->getGlobalsetting('mailtype');
 				$mailtype = $mailtype === 'html' ? 'html' : 'text';
 				$emailbody = $this->getGlobalsetting('emailbody');
@@ -664,8 +707,29 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 				$remoteips = is_array($remoteips) ? implode(",", $remoteips) : "";
 				$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https" : "http";
 				$host = $protocol.'://'.$_SERVER["SERVER_NAME"];
-				$html .= load_view(dirname(__FILE__).'/views/welcome.php',array("hostname" => $hostname, "host" => $host, "autoEmail" => $autoEmail, "remoteips" => $remoteips, "sync" => $this->getConfig("sync"), "authtype" => $this->getConfig("auth"), "auths" => $auths, "brand" => $this->brand, "permissions" => $permissions, "groups" => $groups, "users" => $users, "sections" => $sections,
-				 																																"message" => $this->message, "emailbody" => $emailbody, "emailsubject" => $emailsubject, "mailtype" => $mailtype));
+				$html .= load_view(
+					dirname(__FILE__).'/views/welcome.php',
+					array(
+						"directoryMap" => $directoryMap,
+						"directories" => $directories,
+						"auths" => $auths,
+						"hostname" => $hostname,
+						"host" => $host,
+						"autoEmail" => $autoEmail,
+						"remoteips" => $remoteips,
+						"sync" => $this->getConfig("sync"),
+						"authtype" => $this->getConfig("auth"),
+						"auths" => $auths,
+						"brand" => $this->brand,
+						"groups" => $groups,
+						"users" => $users,
+						"sections" => $sections,
+						"message" => $this->message,
+						"emailbody" => $emailbody,
+						"emailsubject" => $emailsubject,
+						"mailtype" => $mailtype
+					)
+				);
 			break;
 		}
 
@@ -731,10 +795,12 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 */
 	public function ajaxRequest($req, &$setting){
 		switch($req){
+			case "getDirectories":
 			case "getUsers":
 			case "getGroups":
 			case "getuserfields":
-			case "updateSort":
+			case "updateGroupSort":
+			case "updateDirectorySort":
 			case "updatePassword":
 			case "delete":
 			case "email":
@@ -761,6 +827,9 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	public function ajaxHandler(){
 		$request = $_REQUEST;
 		switch($request['command']){
+			case "getDirectories":
+				return $this->getAllDirectories();
+			break;
 			case "auth":
 				$out = $this->checkCredentials($_POST["username"],$_POST["password"]);
 				if($out) {
@@ -769,18 +838,29 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 					return array("status" => false);
 				}
 			break;
-			case "updateSort":
+			case "updateDirectorySort":
 				$sort = json_decode($_POST['sort'],true);
+				$sql = "UPDATE ".$this->directoryTable." SET `order` = ? WHERE `id` = ?";
+				$sth = $this->db->prepare($sql);
+				dbug($sort);
 				foreach($sort as $order => $gid) {
-					$sql = "UPDATE ".$this->groupTable." SET priority = ? where id = ?";
-					$sth = $this->db->prepare($sql);
 					$sth->execute(array($order,$gid));
 				}
-				return $_REQUEST;
+				return array("status" => true);
+			case "updateGroupSort":
+				$sort = json_decode($_POST['sort'],true);
+				$sql = "UPDATE ".$this->groupTable." SET `priority` = ? WHERE `id` = ?";
+				$sth = $this->db->prepare($sql);
+				foreach($sort as $order => $gid) {
+					$sth->execute(array($order,$gid));
+				}
+				return array("status" => true);
 			case "getUsers":
-				return $this->getAllUsers();
+				$directory = !empty($_GET['directory']) ? $_GET['directory'] : '';
+				return $this->getAllUsers($directory);
 			case "getGroups":
-				return $this->getAllGroups();
+				$directory = !empty($_GET['directory']) ? $_GET['directory'] : '';
+				return $this->getAllGroups($directory);
 			case "email":
 				foreach($_REQUEST['extensions'] as $ext){
 					$user = $this->getUserbyID($ext);
@@ -822,6 +902,13 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 						}
 						return array('status' => true, 'message' => $ret);
 					break;
+					case 'directories':
+						$ret = array();
+						foreach($_REQUEST['extensions'] as $ext){
+							$ret[$ext] = $this->deleteDirectoryByID($ext);
+						}
+						return array('status' => true, 'message' => $ret);
+					break;
 				}
 			break;
 			default:
@@ -843,6 +930,33 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		return true;
 	}
 
+	private function loadActiveDirectories() {
+		$directories = $this->getAllDirectories();
+		foreach($directories as $directory) {
+			if(file_exists(__DIR__."/functions.inc/auth/modules/".$directory['driver'].".php")) {
+				$class = 'FreePBX\modules\Userman\Auth\\'.$directory['driver'];
+				if(!class_exists($class)) {
+					include(__DIR__."/functions.inc/auth/modules/".$directory['driver'].".php");
+				}
+				$o = $this->getDirectoryByID($directory['id']);
+				$o['config']['id'] = $directory['id'];
+				$this->directories[$directory['id']] = new $class($this, $this->FreePBX, $o['config']);
+			}
+		}
+		$class = 'FreePBX\modules\Userman\Auth\GlobalAuth';
+		if(!class_exists($class)) {
+			include(__DIR__."/functions.inc/auth/Global.php");
+		}
+		$this->globalDirectory = new $class($this, $this->FreePBX);
+	}
+
+	public function getAllDirectories() {
+		$sql = "SELECT * FROM ".$this->directoryTable." ORDER BY `order`";
+		$sth = $this->db->prepare($sql);
+		$sth->execute();
+		return $sth->fetchAll(\PDO::FETCH_ASSOC);
+	}
+
 	/**
 	 * Get All Users
 	 *
@@ -850,8 +964,13 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 *
 	 * @return array
 	 */
-	public function getAllUsers() {
-		return $this->auth->getAllUsers();
+	public function getAllUsers($directory=null) {
+		if(!empty($directory)) {
+			$users = $this->directories[$directory]->getAllUsers();
+		} else {
+			$users = $this->globalDirectory->getAllUsers();
+		}
+		return $users;
 	}
 
 	/**
@@ -861,8 +980,13 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	*
 	* @return array
 	*/
-	public function getAllGroups() {
-		return $this->auth->getAllGroups();
+	public function getAllGroups($directory=null) {
+		if(!empty($directory)) {
+			$groups = $this->directories[$directory]->getAllGroups();
+		} else {
+			$groups = $this->globalDirectory->getAllGroups();
+		}
+		return $groups;
 	}
 
 	/** Get Default Groups
@@ -871,8 +995,13 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 *
 	 * @return array
 	 */
-	public function getDefaultGroups() {
-		return $this->auth->getDefaultGroups();
+	public function getDefaultGroups($directory=null) {
+		if(!empty($directory)) {
+			$groups = $this->directories[$directory]->getDefaultGroups();
+		} else {
+			$groups = $this->globalDirectory->getDefaultGroups();
+		}
+		return $groups;
 	}
 
 	/**
@@ -880,8 +1009,13 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 *
 	 * @return array
 	 */
-	public function getAllContactInfo() {
-		return $this->auth->getAllContactInfo();
+	public function getAllContactInfo($directory=null) {
+		if(!empty($directory)) {
+			$users = $this->directories[$directory]->getAllContactInfo();
+		} else {
+			$users = $this->globalDirectory->getAllContactInfo();
+		}
+		return $users;
 	}
 
 	/**
@@ -906,8 +1040,13 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * @param string $extension The User (from Device/User Mode) or Extension to which this User is attached
 	 * @return bool
 	 */
-	public function getUserByDefaultExtension($extension) {
-		return $this->auth->getUserByDefaultExtension($extension);
+	public function getUserByDefaultExtension($extension, $directory=null) {
+		if(!empty($directory)) {
+			$user = $this->directories[$directory]->getUserByDefaultExtension($extension);
+		} else {
+			$user = $this->globalDirectory->getUserByDefaultExtension($extension);
+		}
+		return $user;
 	}
 
 	/**
@@ -918,8 +1057,13 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * @param string $username The User Manager Username
 	 * @return bool
 	 */
-	public function getUserByUsername($username) {
-		return $this->auth->getUserByUsername($username);
+	public function getUserByUsername($username, $directory=null) {
+		if(!empty($directory)) {
+			$user = $this->directories[$directory]->getUserByUsername($username);
+		} else {
+			$user = $this->globalDirectory->getUserByUsername($username);
+		}
+		return $user;
 	}
 
 	/**
@@ -930,8 +1074,13 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	* @param string $username The User Manager Username
 	* @return bool
 	*/
-	public function getGroupByUsername($groupname) {
-		return $this->auth->getGroupByUsername($groupname);
+	public function getGroupByUsername($groupname, $directory=null) {
+		if(!empty($directory)) {
+			$user = $this->directories[$directory]->getGroupByUsername($groupname);
+		} else {
+			$user = $this->globalDirectory->getGroupByUsername($groupname);
+		}
+		return $user;
 	}
 
 	/**
@@ -942,8 +1091,13 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	* @param string $email The User Manager Email Address
 	* @return bool
 	*/
-	public function getUserByEmail($email) {
-		return $this->auth->getUserByEmail($email);
+	public function getUserByEmail($email, $directory=null) {
+		if(!empty($directory)) {
+			$user = $this->directories[$directory]->getUserByEmail($email);
+		} else {
+			$user = $this->globalDirectory->getUserByEmail($email);
+		}
+		return $user;
 	}
 
 	/**
@@ -955,7 +1109,8 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * @return bool
 	 */
 	public function getUserByID($id) {
-		return $this->auth->getUserByID($id);
+		$user = $this->globalDirectory->getUserByID($id);
+		return $user;
 	}
 
 	/**
@@ -967,7 +1122,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	* @return bool
 	*/
 	public function getGroupByGID($gid) {
-		return $this->auth->getGroupByGID($gid);
+		return $this->globalDirectory->getGroupByGID($gid);
 	}
 
 	/**
@@ -975,7 +1130,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * @param int $uid The User ID
 	 */
 	public function getGroupsByID($uid) {
-		return $this->auth->getGroupsByID($uid);
+		return $this->globalDirectory->getGroupsByID($uid);
 	}
 
 	/**
@@ -992,7 +1147,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 			throw new \Exception(_("ID was not numeric"));
 		}
 		set_time_limit(0);
-		$status = $this->auth->deleteUserByID($id);
+		$status = $this->globalDirectory->deleteUserByID($id);
 		if(!$status['status']) {
 			return $status;
 		}
@@ -1011,7 +1166,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		}
 		set_time_limit(0);
 		$data = $this->getGroupByGID($gid);
-		$status = $this->auth->deleteGroupByGID($gid);
+		$status = $this->globalDirectory->deleteGroupByGID($gid);
 		if(!$status['status']) {
 			return $status;
 		}
@@ -1021,47 +1176,105 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	}
 
 	/**
-	 * Switch the authentication engine
-	 * @param  string $auth The authentication engine name, will default to freepbx
+	 * Get all Direvtory Drivers
+	 * @return array Array of valid directory engines
 	 */
-	private function switchAuth($auth = 'Freepbx') {
-		$auth = !empty($auth) ? ucfirst(strtolower($auth)) : 'Freepbx';
-		if(!in_array($auth,$this->getAuths())) {
-			throw new \Exception("Unallowed Auth Engine [".$auth."]");
-		}
-
-		if(!empty($auth)) {
-			$class = 'FreePBX\modules\Userman\Auth\\'.$auth;
-			try {
-				$this->auth = new $class($this, $this->FreePBX);
-			} catch (\Exception $e) {
-				//there was an error. Report it but set everything back
-				dbug($e->getMessage());
-				$this->setConfig('auth', 'freepbx');
-				$this->auth = new Userman\Auth\Freepbx($this, $this->FreePBX);
-			}
-		} else {
-			$this->setConfig('auth', 'freepbx');
-			$this->auth = new Userman\Auth\Freepbx($this, $this->FreePBX);
-		}
-	}
-
-	/**
-	 * Get all Authenication engines
-	 * @return array Array of valid authentication engines
-	 */
-	private function getAuths() {
-		if(!empty($this->auths)) {
-			return $this->auths;
-		}
+	private function getDirectoryDrivers() {
+		$auths = array();
 		foreach(glob(__DIR__."/functions.inc/auth/modules/*.php") as $auth) {
 			$name = basename($auth, ".php");
 			if(!class_exists('FreePBX\modules\Userman\Auth\\'.$name)) {
 				include(__DIR__."/functions.inc/auth/modules/".$name.".php");
 			}
-			$this->auths[] = $name;
+			$auths[] = $name;
 		}
-		return $this->auths;
+		return $auths;
+	}
+
+	public function getDirectoryObjectByID($id) {
+		return $this->directories[$id];
+	}
+
+	/**
+	 * Delete directory by ID
+	 * @method deleteDirectoryByID
+	 * @param  int           $id The directory id
+	 * @return boolean                  True if deleted
+	 */
+	private function deleteDirectoryByID($id) {
+		$sql = "DELETE FROM ".$this->directoryTable." WHERE `id` = ?";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array($id));
+
+		$sql = "SELECT * FROM userman_users WHERE `auth` = ?";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array($id));
+		$users = $sth->fetchAll(\PDO::FETCH_ASSOC);
+		foreach($users as $user){
+			$this->deleteUserByID($user['id']);
+		}
+
+		$sql = "SELECT * FROM userman_groups WHERE `auth` = ?";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array($id));
+		$groups = $sth->fetchAll(\PDO::FETCH_ASSOC);
+		foreach($groups as $group){
+			$this->deleteGroupByGID($group['id']);
+		}
+		return true;
+	}
+
+	/**
+	 * Get directory by id
+	 * @method getDirectoryByID
+	 * @param  int           $id The directory id
+	 * @return mixed               Array if found, false if not
+	 */
+	private function getDirectoryByID($id) {
+		$sql = "SELECT * FROM ".$this->directoryTable." WHERE `id` = ?";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array($id));
+		$settings = $this->getConfig("auth-settings",$id);
+		$settings = is_array($settings) ? $settings : array();
+		$out = $sth->fetch(\PDO::FETCH_ASSOC);
+		if(empty($out)) {
+			return false;
+		}
+		$out['config'] = $settings;
+		return $out;
+	}
+
+	/**
+	 * Add Directory
+	 * @method addDirectory
+	 * @param  string       $driver   The driver name
+	 * @param  string       $name     The directory name
+	 * @param  array          $settings Array of diretory settings
+	 * @return integer                    The directory ID
+	 */
+	private function addDirectory($driver, $name, $enable, $settings) {
+		$sql = "INSERT INTO ".$this->directoryTable." (`name`,`driver`,`active`) VALUES (?,?,?)";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array($name,$driver,$enable));
+		$id = $this->db->lastInsertId();
+		$this->setConfig("auth-settings",$settings,$id);
+		return $id;
+	}
+
+	/**
+	 * Update Directory
+	 * @method updateDirectory
+	 * @param  integer          $id       The directory ID
+	 * @param  string          $name     The directory name
+	 * @param  array          $settings Array of diretory settings
+	 * @return integer                    The directory ID
+	 */
+	private function updateDirectory($id, $name, $enable, $settings) {
+		$sql = "UPDATE ".$this->directoryTable." SET `name` = ?, `active` = ? WHERE `id` = ?";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array($name,$enable,$id));
+		$this->setConfig("auth-settings",$settings,$id);
+		return $id;
 	}
 
 	/**
@@ -1088,6 +1301,10 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$display = !empty($request['display']) ? $request['display'] : "";
 	}
 
+	public function setPrimaryGroup($uid,$gid=null) {
+
+	}
+
 	/**
 	 * Add a user to User Manager
 	 *
@@ -1101,7 +1318,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * @param bool $encrypt Whether to encrypt the password or not. If this is false the system will still assume its hashed as sha1, so this is only useful if importing accounts with previous sha1 passwords
 	 * @return array
 	 */
-	public function addUser($username, $password, $default='none', $description=null, $extraData=array(), $encrypt = true) {
+	public function addUser($directory, $username, $password, $default='none', $description=null, $extraData=array(), $encrypt = true) {
 		if(empty($username)) {
 			throw new \Exception(_("Username can not be blank"));
 		}
@@ -1110,14 +1327,14 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		}
 		set_time_limit(0);
 		$display = !empty($_REQUEST['display']) ? $_REQUEST['display'] : "";
-		$status = $this->auth->addUser($username, $password, $default, $description, $extraData, $encrypt);
+		$status = $this->directories[$directory]->addUser($username, $password, $default, $description, $extraData, $encrypt);
 		if(!$status['status']) {
 			return $status;
 		}
 		return $status;
 	}
 
-	public function addGroup($groupname, $description=null, $users=array()) {
+	public function addGroup($directory, $groupname, $description=null, $users=array()) {
 		if(empty($groupname)) {
 			throw new \Exception(_("Groupname can not be blank"));
 		}
@@ -1130,7 +1347,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 				$fusers[] = $u;
 			}
 		}
-		$status = $this->auth->addGroup($groupname, $description, $fusers);
+		$status = $this->directories[$directory]->addGroup($groupname, $description, $fusers);
 		if(!$status['status']) {
 			return $status;
 		}
@@ -1183,7 +1400,8 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		if(empty($username)) {
 			$username = $prevUsername;
 		}
-		$status = $this->auth->updateUser($uid, $prevUsername, $username, $default, $description, $extraData, $password, $nodisplay);
+		$u = $this->getUserByID($uid);
+		$status = $this->directories[$u['auth']]->updateUser($uid, $prevUsername, $username, $default, $description, $extraData, $password, $nodisplay);
 		if(!$status['status']) {
 			return $status;
 		}
@@ -1221,7 +1439,8 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 				$fusers[] = $u;
 			}
 		}
-		$status = $this->auth->updateGroup($gid, $prevGroupname, $groupname, $description, $fusers, $nodisplay);
+		$g = $this->getGroupByGID($gid);
+		$status = $this->directories[$g['auth']]->updateGroup($gid, $prevGroupname, $groupname, $description, $fusers, $nodisplay);
 		if(!$status['status']) {
 			return $status;
 		}
@@ -1234,7 +1453,15 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * @param {string} $password The sha
 	 */
 	public function checkCredentials($username, $password) {
-		return $this->auth->checkCredentials($username, $password);
+		$user = $this->getUserByUsername($username);
+		if(empty($user)) {
+			return false;
+		}
+		$directory = $this->getDirectoryByID($user['auth']);
+		if(empty($directory) || !$directory['active']) {
+			return false;
+		}
+		return $this->directories[$user['auth']]->checkCredentials($username, $password);
 	}
 
 	/**
@@ -1261,7 +1488,6 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 */
 	public function setAssignedDevices($id,$devices=array()) {
 		return true;
-		//return $this->setGlobalSettingByID($id,'assigned',$devices);
 	}
 
 	/**

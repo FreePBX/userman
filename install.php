@@ -198,6 +198,28 @@ if($res['Type'] != "varchar(150)") {
 	$sth->execute();
 }
 
+$sql = 'SHOW COLUMNS FROM userman_users WHERE FIELD = "authid"';
+$sth = FreePBX::Database()->prepare($sql);
+$sth->execute();
+$res = $sth->fetch(\PDO::FETCH_ASSOC);
+if($res['Type'] != "varchar(750)") {
+	$sql = "ALTER TABLE userman_users
+	CHANGE COLUMN `authid` `authid` VARCHAR(750) NULL DEFAULT 'freepbx'";
+	$sth = FreePBX::Database()->prepare($sql);
+	$sth->execute();
+}
+
+$sql = 'SHOW COLUMNS FROM userman_groups WHERE FIELD = "authid"';
+$sth = FreePBX::Database()->prepare($sql);
+$sth->execute();
+$res = $sth->fetch(\PDO::FETCH_ASSOC);
+if($res['Type'] != "varchar(750)") {
+	$sql = "ALTER TABLE `userman_groups`
+	CHANGE COLUMN `authid` `authid` VARCHAR(750) NULL DEFAULT 'freepbx'";
+	$sth = FreePBX::Database()->prepare($sql);
+	$sth->execute();
+}
+
 $set = array();
 $set['value'] = '';
 $set['defaultval'] =& $set['value'];
