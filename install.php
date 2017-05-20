@@ -81,6 +81,7 @@ $sqls[] = "CREATE TABLE IF NOT EXISTS `userman_groups` (
 	`priority` int(11) NOT NULL DEFAULT 5,
 	`users` BLOB,
 	`permissions` BLOB,
+	`local` tinyint(4) NOT NULL DEFAULT 0,
 	PRIMARY KEY (`id`),
 	UNIQUE KEY `groupname_UNIQUE` (`groupname`,`auth`)
 )";
@@ -131,6 +132,12 @@ if (!$db->getAll('SHOW COLUMNS FROM `userman_groups` WHERE FIELD = "priority"'))
 	out("Adding default extension column");
 		$sql = "ALTER TABLE `userman_groups` ADD COLUMN `priority` int(11) NOT NULL DEFAULT 5 AFTER `description`";
 		$result = $db->query($sql);
+}
+
+if (!$db->getAll('SHOW COLUMNS FROM `userman_groups` WHERE FIELD = "local"')) {
+        out("Adding default local column");
+                $sql = "ALTER TABLE `userman_groups` ADD COLUMN `local` tinyint(4) NOT NULL DEFAULT 0 AFTER `permissions`";
+                $result = $db->query($sql);
 }
 
 if (!$db->getAll('SHOW COLUMNS FROM `userman_users` WHERE FIELD = "default_extension"')) {
