@@ -17,7 +17,7 @@
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="authtype"></i>
 											</div>
 											<div class="col-md-9">
-												<?php if(empty($config)) { ?>
+												<?php if(empty($config['driver'])) { ?>
 													<select id="authtype" name="authtype" class="form-control">
 														<?php foreach($auths as $rawname => $auth) {?>
 															<option value="<?php echo $rawname?>"><?php echo $auth['name']?></option>
