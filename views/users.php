@@ -15,6 +15,9 @@ echo $heading;
 				<?php if(!empty($message)){ ?>
 					<div class="alert alert-<?php echo $message['type']?>"><?php echo $message['message']?></div>
 				<?php } ?>
+				<?php if($locked){ ?>
+					<div class="alert alert-info"><?php echo _("The directory for this user is currently locked while updates are being run")?></div>
+				<?php } ?>
 				<div class="display no-border">
 					<div role="tabpanel">
 						<div class="nav-container">
@@ -37,6 +40,7 @@ echo $heading;
 					</div>
 					<form class="fpbx-submit" autocomplete="off" name="editM" id="editM" action="<?php echo $formaction ?>" method="post" <?php if(!empty($user['id'])) {?>data-fpbx-delete="config.php?display=userman&amp;action=deluser&amp;user=<?php echo $user['id']?>"<?php } ?> onsubmit="return true;">
 						<input type="hidden" name="type" value="user">
+						<input type="hidden" name="directory" value="<?php echo $directory ?>">
 						<input type="hidden" name="prevUsername" value="<?php echo !empty($user['username']) ? $user['username'] : ''; ?>">
 						<input type="hidden" name="user" value="<?php echo !empty($user['id']) ? $user['id'] : ''; ?>">
 						<input type="hidden" name="submittype" value="gui">
@@ -116,7 +120,7 @@ echo $heading;
 								</div>
 							</div>
 						<?php } ?>
-						<!--END Password-->
+						<!--
 						<div class="element-container">
 							<div class="row">
 								<div class="col-md-12">
@@ -143,6 +147,7 @@ echo $heading;
 								</div>
 							</div>
 						</div>
+						-->
 						<div class="element-container">
 							<div class="row">
 								<div class="col-md-12">

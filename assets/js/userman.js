@@ -30,14 +30,15 @@ $("#directory-users").change(function() {
 		$("#remove-users").addClass("hidden");
 		$("#add-users").addClass("hidden");
 	} else {
+		$("#add-groups").attr("href","?display=userman&action=addgroup&directory="+val);
 		$("#table-users").bootstrapTable('refresh',{url: 'ajax.php?module=userman&command=getUsers&directory='+$(this).val()});
 		$("#table-users").bootstrapTable('hideColumn','auth');
-		if(drivers[directoryMapValues[val].driver].permissions.addUser) {
+		if(directoryMapValues[val].permissions.addUser) {
 			$("#add-users").removeClass("hidden");
 		} else {
 			$("#add-users").addClass("hidden");
 		}
-		if(drivers[directoryMapValues[val].driver].permissions.removeUser) {
+		if(directoryMapValues[val].permissions.removeUser) {
 			$("#remove-users").removeClass("hidden");
 		} else {
 			$("#remove-users").addClass("hidden");
@@ -52,14 +53,15 @@ $("#directory-groups").change(function() {
 		$("#remove-groups").addClass("hidden");
 		$("#add-groups").addClass("hidden");
 	} else {
+		$("#add-groups").attr("href","?display=userman&action=addgroup&directory="+val);
 		$("#table-groups").bootstrapTable('refresh',{url: 'ajax.php?module=userman&command=getGroups&directory='+$(this).val()});
 		$("#table-groups").bootstrapTable('hideColumn','auth');
-		if(drivers[directoryMapValues[val].driver].permissions.addGroup) {
+		if(directoryMapValues[val].permissions.addGroup) {
 			$("#add-groups").removeClass("hidden");
 		} else {
 			$("#add-groups").addClass("hidden");
 		}
-		if(drivers[directoryMapValues[val].driver].permissions.removeGroup) {
+		if(directoryMapValues[val].permissions.removeGroup) {
 			$("#remove-groups").removeClass("hidden");
 		} else {
 			$("#remove-groups").addClass("hidden");
@@ -182,6 +184,11 @@ $( document ).ready(function() {
 $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
 	//Button Related
 	switch(e.target.hash){
+		case "#directories":
+			$("#action-bar").addClass("hidden");
+			$('input[name="submit"]').addClass('hidden');
+			$('input[name="reset"]').addClass('hidden');
+		break;
 		case "#settings":
 			$("#action-bar").removeClass("hidden");
 			$('input[name="submit"]').removeClass('hidden');
@@ -280,11 +287,11 @@ function directoryActive(value, row, index) {
 function userActions(value, row, index) {
 	var html = '<a href="?display=userman&amp;action=showuser&amp;user='+row.id+'"><i class="fa fa-edit"></i></a>';
 
-	if(drivers[directoryMapValues[row.auth].driver].permissions.changePassword) {
+	if(directoryMapValues[row.auth].permissions.changePassword) {
 		html += '<a data-toggle="modal" data-pwuid="'+row.id+'" data-target="#setpw" id="pwmlink'+row.id+'" class="clickable"><i class="fa fa-key"></i></a>';
 	}
 
-	if(drivers[directoryMapValues[row.auth].driver].permissions.removeUser) {
+	if(directoryMapValues[row.auth].permissions.removeUser) {
 		html += '<a class="clickable"><i class="fa fa-trash-o" data-section="users" data-type="user"  data-id="'+row.id+'"></i></a>';
 	}
 	return html;
@@ -293,7 +300,7 @@ function userActions(value, row, index) {
 function groupActions(value, row, index) {
 	var html = '<a href="?display=userman&amp;action=showgroup&amp;group='+row.id+'"><i class="fa fa-edit"></i></a>';
 
-	if(drivers[directoryMapValues[row.auth].driver].permissions.removeGroup) {
+	if(row.local == "1" || directoryMapValues[row.auth].permissions.removeGroup) {
 		html += '<a class="clickable"><i class="fa fa-trash-o" data-section="groups" data-type="group"  data-id="'+row.id+'"></i></a>';
 	}
 	return html;

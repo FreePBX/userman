@@ -46,7 +46,9 @@ class Msad2 extends Auth {
 		'username' => '',
 		'domain' => '',
 		'password' => '',
-		'connection' => ''
+		'connection' => '',
+		'localgroups' => 0,
+		'createextensions' => ''
 	);
 	/**
 	 * User Defaults
@@ -173,7 +175,8 @@ class Msad2 extends Auth {
 			);
 		}
 		$defaults = array_merge(self::$serverDefaults,self::$userDefaults,self::$groupDefaults);
-		return load_view(dirname(dirname(dirname(__DIR__)))."/views/msad2.php", array("config" => $config, "status" => $status, "defaults" => $defaults));
+		$techs = $freepbx->Core->getAllDriversInfo();
+		return load_view(dirname(dirname(dirname(__DIR__)))."/views/msad2.php", array("techs" => $techs, "config" => $config, "status" => $status, "defaults" => $defaults));
 	}
 
 	/**
@@ -231,6 +234,7 @@ class Msad2 extends Auth {
 			}
 
 			ldap_set_option($this->ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
+			ldap_set_option($this->ldap, LDAP_OPT_REFERRALS, 0);
 
 			if(!@ldap_bind($this->ldap, $this->config['username']."@".$this->config['domain'], $this->config['password'])) {
 				$this->ldap = null;
@@ -324,9 +328,9 @@ class Msad2 extends Auth {
 	/**
 	 * Return an array of permissions for this adaptor
 	 */
-	public static function getPermissions() {
+	public function getPermissions() {
 		return array(
-			"addGroup" => false,
+			"addGroup" => $this->config['localgroups'],
 			"addUser" => false,
 			"modifyGroup" => false,
 			"modifyUser" => false,
@@ -387,7 +391,21 @@ class Msad2 extends Auth {
 	 * @param array  $users       users to add to said group (by ID)
 	 */
 	public function addGroup($groupname, $description=null, $users=array()) {
-		return array("status" => false, "type" => "danger", "message" => _("LDAP is in Read Only Mode. Addition denied"));
+		if($this->config['localgroups']) {
+			$sql = "INSERT INTO ".$this->groupTable." (`groupname`,`description`,`users`, `auth`, `local`) VALUES (:groupname,:description,:users,:directory,1)";
+			$sth = $this->db->prepare($sql);
+			try {
+				$sth->execute(array(':directory' => $this->config['id'],':groupname' => $groupname, ':description' => $description, ':users' => json_encode($users)));
+			} catch (\Exception $e) {
+				return array("status" => false, "type" => "danger", "message" => $e->getMessage());
+			}
+
+			$id = $this->db->lastInsertId();
+			$this->addGroupHook($id, $groupname, $description, $users);
+			return array("status" => true, "type" => "success", "message" => _("Group Successfully Added"), "id" => $id);
+		} else {
+			return array("status" => false, "type" => "danger", "message" => _("LDAP is in Read Only Mode. Addition denied"));
+		}
 	}
 
 	/**
@@ -570,6 +588,10 @@ class Msad2 extends Auth {
 		//remove users
 		$fgroups = $this->getAllGroups();
 		foreach($fgroups as $group) {
+			if($group['local']) {
+				$this->out("\tSkipping local group '".$group['groupname']."'");
+				continue;
+			}
 			if(!isset($this->gcache[$group['authid']])) {
 				$this->out("\t\tDeleting ".$group['groupname']);
 				$this->deleteGroupByGID($group['id'], false);
@@ -614,6 +636,11 @@ class Msad2 extends Auth {
 			$this->ucache[$sid] = $user;
 			$um = $this->linkUser($username, $sid);
 			if($um['status']) {
+				if($um['new']) {
+					$this->out("\t\tAdding ".$username);
+				} else {
+					$this->out("\t\tUpdating ".$username);
+				}
 				$data = array(
 					"description" => (!empty($this->config['userdescriptionattr']) && !empty($user[$this->config['userdescriptionattr']][0])) ? $user['description'][0] : '',
 					"primary_group" => (!empty($this->config['userprimarygroupattr']) && !empty($user[$this->config['userprimarygroupattr']][0])) ? $user[$this->config['userprimarygroupattr']][0] : '',
@@ -629,23 +656,46 @@ class Msad2 extends Auth {
 					"home" => (!empty($this->config['userhomephoneattr']) && !empty($user[$this->config['userhomephoneattr']][0])) ? $user[$this->config['userhomephoneattr']][0] : '',
 				);
 				if(!empty($this->config['la']) && !empty($user[$this->config['la']][0])) {
-					$la = $user[$this->config['la']][0];
-					$d = $this->FreePBX->Core->getUser($la);
+					$extension = $user[$this->config['la']][0];
+					$d = $this->FreePBX->Core->getUser($extension);
 					if(!empty($d)) {
-						$data["default_extension"] = $la;
+						$this->out("\t\t\tLinking Extension ".$extension." to ".$username);
+						$data["default_extension"] = $extension;
 					} else {
-						//TODO: Technically we could create an extension here..
-						dbug("Extension ". $la . " does not exist, skipping link");
+						$dn = !empty($data['displayname']) ? $data['displayname'] : $data['fname'] ." ".$data['lname'];
+						if(!empty($this->config['createextensions'])) {
+							$tech = $this->config['createextensions'];
+							$this->out("\t\t\tCreating ".$tech." Extension ".$extension);
+							$settings = $this->FreePBX->Core->generateDefaultDeviceSettings($tech,$extension,$dn);
+							if($this->FreePBX->Core->addDevice($extension,$tech,$settings)) {
+								$settings = $this->FreePBX->Core->generateDefaultUserSettings($tech,$dn);
+								$settings['outboundcid'] = $data['outboundcid'];
+								try {
+									if(!$this->FreePBX->Core->addUser($extension, $settings)) {
+										//cleanup
+										$this->FreePBX->Core->delDevice($extension);
+										$this->out("\t\t\tThere was an unknown error creating this extension");
+									}
+									$this->out("\t\t\tLinking Extension ".$extension." to ".$username);
+									$data["default_extension"] = $extension;
+								} catch(\Exception $e) {
+									//cleanup
+									$this->delDevice($extension);
+								}
+							} else {
+								$this->out("\t\t\tDevice ".$extension." was not added!");
+							}
+						} else {
+							$this->out("\t\t\tExtension ". $extension . " does not exist, skipping link");
+						}
 					}
 				} elseif(!empty($this->config['la']) && empty($user[$this->config['la']][0])) {
 					$data["default_extension"] = 'none';
 				}
 				$this->updateUserData($um['id'], $data);
 				if($um['new']) {
-					$this->out("\t\tAdding ".$username);
 					$this->userHooks['add'][$um['id']] = array($um['id'], $username, $data['description'], null, false, $data);
 				} else {
-					$this->out("\t\tUpdating ".$username);
 					$this->userHooks['update'][$um['id']] = array($um['id'], $um['prevUsername'], $username, $data['description'], null, $data);
 				}
 				$this->ucache[$sid]['userman'][0] = $um['id'];

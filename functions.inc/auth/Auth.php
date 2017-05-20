@@ -91,7 +91,7 @@ abstract class Auth {
 	/**
 	 * Return an array of permissions for this adaptor
 	 */
-	public static function getPermissions() {
+	public function getPermissions() {
 		return array(
 			"addGroup" => true,
 			"addUser" => true,
@@ -324,17 +324,21 @@ abstract class Auth {
 			$sql = "SELECT * FROM ".$this->groupTable." WHERE id = :gid AND auth = :auth LIMIT 1";
 			$sth = $this->db->prepare($sql);
 			$sth->execute(array(':gid' => $gid, ':auth' => $this->config['id']));
+			$group = $sth->fetch(\PDO::FETCH_ASSOC);
 		} else {
 			$sql = "SELECT * FROM ".$this->groupTable." WHERE id = :gid LIMIT 1";
 			$sth = $this->db->prepare($sql);
 			$sth->execute(array(':gid' => $gid));
+			$group = $sth->fetch(\PDO::FETCH_ASSOC);
 		}
-		$group = $sth->fetch(\PDO::FETCH_ASSOC);
-		if(!empty($group)) {
-			$group['users'] = json_decode($group['users'],true);
-			$group['users'] = is_array($group['users']) ? $group['users'] : array();
+		if(empty($group)) {
+			return false;
 		}
-		$users = $this->getAllUserIDs($this->config['id']);
+
+		$group['users'] = json_decode($group['users'],true);
+		$group['users'] = is_array($group['users']) ? $group['users'] : array();
+
+		$users = $this->getAllUserIDs($group['auth']);
 		$final = array();
 		foreach($group['users'] as $u) {
 			if(in_array($u,$users)) {

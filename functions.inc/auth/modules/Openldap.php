@@ -310,7 +310,7 @@ class Openldap extends Auth {
 	/**
 	 * Return an array of permissions for this adaptor
 	 */
-	public static function getPermissions() {
+	public function getPermissions() {
 		return array(
 			"addGroup" => false,
 			"addUser" => false,

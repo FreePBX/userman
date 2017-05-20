@@ -157,6 +157,61 @@
 	</div>
 </div>
 <fieldset>
+	<legend><?php echo _("Operational Settings")?></legend>
+	<div class="element-container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="row">
+					<div class="form-group">
+						<div class="col-md-3">
+							<label class="control-label" for="openldap2-createextensions"><?php echo _("Create Missing Extensions")?></label>
+							<i class="fa fa-question-circle fpbx-help-icon" data-for="openldap2-createextensions"></i>
+						</div>
+						<div class="col-md-9">
+							<select class="form-control" id="openldap2-createextensions" name="openldap2-createextensions">
+								<option value=""><?php echo _("Don't Create")?></option>
+								<?php foreach($techs as $tech) { ?>
+									<option value="<?php echo $tech['rawName']?>"><?php echo $tech['shortName']?></option>
+								<?php } ?>
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<span id="openldap2-createextensions-help" class="help-block fpbx-help-block"><?php echo _("If enabled and the 'User extension Link attribute' is set, a new extension will be created and linked to this user if one does not exist previously")?></span>
+			</div>
+		</div>
+	</div>
+	<div class="element-container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="row">
+					<div class="form-group">
+						<div class="col-md-3">
+							<label class="control-label" for="openldap2-localgroups"><?php echo _("Manage groups locally")?></label>
+							<i class="fa fa-question-circle fpbx-help-icon" data-for="openldap2-localgroups"></i>
+						</div>
+						<div class="col-md-9 radioset">
+							<input type="radio" id="openldap2-localgroups1" name="openldap2-localgroups" value="1" <?php echo !empty($config['localgroups']) ? 'checked' : ''?>>
+							<label for="openldap2-localgroups1"><?php echo _("Yes")?></label>
+							<input type="radio" id="openldap2-localgroups2" name="openldap2-localgroups" value="0" <?php echo !empty($config['localgroups']) ? '' : 'checked'?>>
+							<label for="openldap2-localgroups2"><?php echo _("No")?></label>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<span id="openldap2-localgroups-help" class="help-block fpbx-help-block"><?php echo _("New groups created in this directory will be local and not saved to the LDAP directory. Groups synchronised from the remote directory will be read-only.")?></span>
+			</div>
+		</div>
+	</div>
+</fieldset>
+<fieldset>
 	<legend>User configuration</legend>
 	<div class="element-container">
 		<div class="row">

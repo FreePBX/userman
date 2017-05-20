@@ -97,7 +97,7 @@ class Voicemail extends Auth {
 	/**
 	 * Return an array of permissions for this adaptor
 	 */
-	public static function getPermissions() {
+	public function getPermissions() {
 		return array(
 			"addGroup" => true,
 			"addUser" => false,

@@ -85,22 +85,22 @@
 								</div>
 							</div>
 						</div>
-						<div class="element-container" id="cronsync-container">
+						<div class="element-container" id="sync-container">
 							<div class="row">
 								<div class="col-md-12">
 									<div class="row">
 										<div class="form-group">
 											<div class="col-md-3">
-												<label class="control-label" for="cronsync"><?php echo _("Synchronize")?></label>
-												<i class="fa fa-question-circle fpbx-help-icon" data-for="cronsync"></i>
+												<label class="control-label" for="sync"><?php echo _("Synchronize")?></label>
+												<i class="fa fa-question-circle fpbx-help-icon" data-for="sync"></i>
 											</div>
 											<div class="col-md-9">
-												<select name="cronsync" id="cronsync" class="form-control">
-													<option value="">Never</option>
-													<option value="*/30 * * * *" <?php echo isset($sync) && $sync == '*/30 * * * *' ? 'selected' : ''?>><?php echo _("30 Minutes")?></option>
-													<option value="0 * * * *" <?php echo !isset($sync) || (isset($sync) && $sync == '0 * * * *') ? 'selected' : ''?>><?php echo _("1 Hour")?></option>
-													<option value="0 */6 * * *" <?php echo isset($sync) && $sync == '0 */6 * * *' ? 'selected' : ''?>><?php echo _("6 Hours")?></option>
-													<option value="0 0 * * *" <?php echo isset($sync) && $sync == '0 0 * * *' ? 'selected' : ''?>><?php echo _("1 Day")?></option>
+												<select name="sync" id="sync" class="form-control">
+													<option value=""><?php echo _("Never")?></option>
+													<option value="*/30 * * * *" <?php echo isset($config['config']['sync']) && $config['config']['sync'] == '*/30 * * * *' ? 'selected' : ''?>><?php echo _("30 Minutes")?></option>
+													<option value="0 * * * *" <?php echo !isset($config['config']['sync']) || (isset($config['config']['sync']) && $config['config']['sync'] == '0 * * * *') ? 'selected' : ''?>><?php echo _("1 Hour")?></option>
+													<option value="0 */6 * * *" <?php echo isset($config['config']['sync']) && $config['config']['sync'] == '0 */6 * * *' ? 'selected' : ''?>><?php echo _("6 Hours")?></option>
+													<option value="0 0 * * *" <?php echo isset($config['config']['sync']) && $config['config']['sync'] == '0 0 * * *' ? 'selected' : ''?>><?php echo _("1 Day")?></option>
 												</select>
 											</div>
 										</div>
@@ -109,7 +109,7 @@
 							</div>
 							<div class="row">
 								<div class="col-md-12">
-									<span id="cronsync-help" class="help-block fpbx-help-block"><?php echo sprintf(_("This setting only applies to authentication engines other than the %s Internal Directory. For the %s Internal Directory this setting will be ignored."),$brand,$brand)?></span>
+									<span id="sync-help" class="help-block fpbx-help-block"><?php echo sprintf(_("This setting only applies to authentication engines other than the %s Internal Directory. For the %s Internal Directory this setting will be ignored."),$brand,$brand)?></span>
 								</div>
 							</div>
 						</div>
@@ -131,17 +131,17 @@
 	var val = $("#authtype").val();
 	$("#" + val + "-auth-settings").removeClass("hidden");
 	if(val == "Freepbx") {
-		$("#cronsync-container").addClass("hidden");
+		$("#sync-container").addClass("hidden");
 	} else {
-		$("#cronsync-container").removeClass("hidden");
+		$("#sync-container").removeClass("hidden");
 	}
 
 	$("#authtype").change(function() {
 		var val = $(this).val();
 		if(val == "Freepbx") {
-			$("#cronsync-container").addClass("hidden");
+			$("#sync-container").addClass("hidden");
 		} else {
-			$("#cronsync-container").removeClass("hidden");
+			$("#sync-container").removeClass("hidden");
 		}
 		$(".auth-settings").addClass("hidden");
 		$("#" + val + "-auth-settings").removeClass("hidden");
