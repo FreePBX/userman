@@ -127,7 +127,21 @@ $("table").on("post-body.bs.table", function () {
 			});
 		}
 	});
-
+});
+$("#table-directories").on("post-body.bs.table", function () {
+	$(".default-check").click(function() {
+		var $this = this;
+		if(confirm(_("Are you sure you want to make this directory the system default?"))) {
+			$.post("ajax.php?module=userman&command=makeDefault", {id: $(this).data("id")}, function( data ) {
+				if(data.status) {
+					$(".default-check").removeClass("check");
+					$($this).addClass("check");
+				} else {
+					alert(data.message);
+				}
+			});
+		}
+	});
 });
 $("table").on("page-change.bs.table", function () {
 	$(".btn-remove").prop("disabled", true);
@@ -304,6 +318,10 @@ function groupActions(value, row, index) {
 		html += '<a class="clickable"><i class="fa fa-trash-o" data-section="groups" data-type="group"  data-id="'+row.id+'"></i></a>';
 	}
 	return html;
+}
+
+function defaultSelector(value, row, index) {
+	return '<div class="default-check '+(row.default == "1" ? 'check' : '')+'" data-id="'+row.id+'"><i class="fa fa-check" aria-hidden="true"></i></div>';
 }
 
 $("#user-side").on("click-row.bs.table", function(row, $element) {

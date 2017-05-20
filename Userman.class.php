@@ -797,6 +797,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 */
 	public function ajaxRequest($req, &$setting){
 		switch($req){
+			case "makeDefault":
 			case "getDirectories":
 			case "getUsers":
 			case "getGroups":
@@ -829,6 +830,10 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	public function ajaxHandler(){
 		$request = $_REQUEST;
 		switch($request['command']){
+			case "makeDefault":
+				$this->setDefaultDirectory($_POST['id']);
+				return array("status" => true);
+			break;
 			case "getDirectories":
 				return $this->getAllDirectories();
 			break;

@@ -112,6 +112,7 @@
 												<th data-sortable="true" data-field="name"><?php echo _("Name") ?></th>
 												<th data-sortable="true" data-formatter="directoryActive" data-field="active"><?php echo _("Active") ?></th>
 												<th data-sortable="true" data-formatter="directoryType" data-field="type"><?php echo _("Type") ?></th>
+												<th data-formatter="defaultSelector" data-field="type"><?php echo _("Default") ?></th>
 												<th data-formatter="directoryActions"><?php echo _("Action") ?></th>
 											</tr>
 										</thead>
