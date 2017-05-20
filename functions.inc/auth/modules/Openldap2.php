@@ -205,7 +205,7 @@ class Openldap2 extends Auth {
 			}
 		}
 		if(!empty($config['host']) && !empty($config['username']) && !empty($config['password']) && !empty($config['domain'])) {
-			$openldap2 = new static($userman, $freepbx);
+			$openldap2 = new static($userman, $freepbx, $config);
 			try {
 				$openldap2->connect();
 				$openldap2->sync();

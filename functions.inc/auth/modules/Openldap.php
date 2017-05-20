@@ -189,7 +189,7 @@ class Openldap extends Auth {
 			"sync" => $_REQUEST['sync']
 		);
 		if(!empty($config['host']) && !empty($config['username']) && !empty($config['password']) && !empty($config['userdn'])) {
-			$openldap = new static($userman, $freepbx);
+			$openldap = new static($userman, $freepbx, $config);
 			try {
 				$openldap->connect();
 				$openldap->sync();

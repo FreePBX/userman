@@ -195,10 +195,10 @@ class Msad2 extends Auth {
 			}
 		}
 		if(!empty($config['host']) && !empty($config['username']) && !empty($config['password']) && !empty($config['domain'])) {
-			//$msad2 = new static($userman, $freepbx, $config);
+			$msad2 = new static($userman, $freepbx, $config);
 			try {
-				//$msad2->connect();
-				//$msad2->sync();
+				$msad2->connect();
+				$msad2->sync();
 			} catch(\Exception $e) {
 				return false;
 			}
