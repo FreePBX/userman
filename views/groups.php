@@ -1,7 +1,7 @@
 <?php
 if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'showgroup'){
 	$heading = '<h1>' . _("Edit Group") . '</h1>';
-	$permissions['modifyGroup'] = $group['local'];
+	$permissions['modifyGroup'] = !$permissions['modifyGroup'] ? $group['local'] : $permissions['modifyGroup'];
 }else{
 	$heading = '<h1>' . _("Add Group") . '</h1>';
 	$permissions['modifyGroup'] = $permissions['addGroup'];

@@ -223,17 +223,29 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 			switch($_POST['type']) {
 				case 'directory':
 					$auths = array();
+					$config = false;
 					foreach($this->getDirectoryDrivers() as $auth) {
 						if($auth == $_POST['authtype']) {
 							$class = 'FreePBX\modules\Userman\Auth\\'.$auth;
 							$config = $class::saveConfig($this, $this->FreePBX);
+							break;
 						}
+					}
+					if($config === false) {
+						$this->message = array(
+							'message' => _("There was an error saving the configuration"),
+							'type' => 'danger'
+						);
+						return false;
 					}
 					$config['sync'] = !empty($_POST['sync']) ? $_POST['sync'] : '';
 					if(!empty($_POST['id'])) {
-						$this->updateDirectory($_POST['id'], $_POST['name'], $_POST['enable'], $config);
+						$id = $this->updateDirectory($_POST['id'], $_POST['name'], $_POST['enable'], $config);
 					} else {
-						$this->addDirectory($_POST['authtype'], $_POST['name'], $_POST['enable'], $config);
+						$id = $this->addDirectory($_POST['authtype'], $_POST['name'], $_POST['enable'], $config);
+					}
+					if(method_exists($this->directories[$id],'sync')) {
+						$this->directories[$id]->sync();
 					}
 				break;
 				case 'group':

@@ -204,15 +204,6 @@ class Openldap2 extends Auth {
 				$config[$key] = $_POST['openldap2-'.$key];
 			}
 		}
-		if(!empty($config['host']) && !empty($config['username']) && !empty($config['password']) && !empty($config['domain'])) {
-			$openldap2 = new static($userman, $freepbx, $config);
-			try {
-				$openldap2->connect();
-				$openldap2->sync();
-			} catch(\Exception $e) {
-				return false;
-			}
-		}
 		return $config;
 	}
 
@@ -259,7 +250,7 @@ class Openldap2 extends Auth {
 	public function sync($output=null) {
 		if(php_sapi_name() !== 'cli') {
 			$path = $this->FreePBX->Config->get("AMPSBIN");
-			exec($path."/fwconsole userman sync");
+			exec($path."/fwconsole userman --sync ".escapeshellarg($this->config['id']));
 			return;
 		}
 
@@ -449,6 +440,15 @@ class Openldap2 extends Auth {
 	 */
 	public function updateGroup($gid, $prevGroupname, $groupname, $description=null, $users=array(), $nodisplay=false) {
 		$group = $this->getGroupByUsername($prevGroupname);
+		if($this->config['localgroups'] && $group['local']) {
+			$sql = "UPDATE ".$this->groupTable." SET `groupname` = :groupname, `description` = :description, `users` = :users WHERE `id` = :gid";
+			$sth = $this->db->prepare($sql);
+			try {
+				$sth->execute(array(':groupname' => $groupname, ':gid' => $gid, ':description' => $description, ':users' => json_encode($users)));
+			} catch (\Exception $e) {
+				return array("status" => false, "type" => "danger", "message" => $e->getMessage());
+			}
+		}
 		$this->updateGroupHook($gid, $prevGroupname, $groupname, $description, $group['users'],$nodisplay);
 		return array("status" => true, "type" => "success", "message" => _("Group updated"), "id" => $gid);
 	}

@@ -194,15 +194,6 @@ class Msad2 extends Auth {
 				$config[$key] = $_POST['msad2-'.$key];
 			}
 		}
-		if(!empty($config['host']) && !empty($config['username']) && !empty($config['password']) && !empty($config['domain'])) {
-			$msad2 = new static($userman, $freepbx, $config);
-			try {
-				$msad2->connect();
-				$msad2->sync();
-			} catch(\Exception $e) {
-				return false;
-			}
-		}
 		return $config;
 	}
 
@@ -252,7 +243,7 @@ class Msad2 extends Auth {
 	public function sync($output=null) {
 		if(php_sapi_name() !== 'cli') {
 			$path = $this->FreePBX->Config->get("AMPSBIN");
-			exec($path."/fwconsole userman sync");
+			exec($path."/fwconsole userman --sync ".escapeshellarg($this->config['id']));
 			return;
 		}
 
@@ -442,6 +433,15 @@ class Msad2 extends Auth {
 	 */
 	public function updateGroup($gid, $prevGroupname, $groupname, $description=null, $users=array(), $nodisplay=false) {
 		$group = $this->getGroupByUsername($prevGroupname);
+		if($this->config['localgroups'] && $group['local']) {
+			$sql = "UPDATE ".$this->groupTable." SET `groupname` = :groupname, `description` = :description, `users` = :users WHERE `id` = :gid";
+			$sth = $this->db->prepare($sql);
+			try {
+				$sth->execute(array(':groupname' => $groupname, ':gid' => $gid, ':description' => $description, ':users' => json_encode($users)));
+			} catch (\Exception $e) {
+				return array("status" => false, "type" => "danger", "message" => $e->getMessage());
+			}
+		}
 		$this->updateGroupHook($gid, $prevGroupname, $groupname, $description, $group['users'],$nodisplay);
 		return array("status" => true, "type" => "success", "message" => _("Group updated"), "id" => $gid);
 	}
@@ -633,6 +633,10 @@ class Msad2 extends Auth {
 			}
 			$sid = $this->binToStrSid($user[$this->config['userexternalidattr']][0]);
 			$username = $user[$this->config['usernameattr']][0];
+			if(empty($username)) {
+				$this->out("\t\tUsername is blank! Skipping unknown user");
+				continue;
+			}
 			$this->ucache[$sid] = $user;
 			$um = $this->linkUser($username, $sid);
 			if($um['status']) {
@@ -699,6 +703,8 @@ class Msad2 extends Auth {
 					$this->userHooks['update'][$um['id']] = array($um['id'], $um['prevUsername'], $username, $data['description'], null, $data);
 				}
 				$this->ucache[$sid]['userman'][0] = $um['id'];
+			} else {
+				$this->out("\t\t\tThere was an error linking '".$username."'. Error was '".$um['message']."'");
 			}
 		}
 		//remove users

@@ -153,15 +153,6 @@ class Msad extends Auth {
 			"la" => $_REQUEST['msad-la'],
 			"sync" => $_REQUEST['sync']
 		);
-		if(!empty($config['host']) && !empty($config['username']) && !empty($config['password']) && !empty($config['domain'])) {
-			$msad = new static($userman, $freepbx, $config);
-			try {
-				$msad->connect();
-				$msad->sync();
-			} catch(\Exception $e) {
-				return false;
-			}
-		}
 		return $config;
 	}
 
@@ -199,7 +190,7 @@ class Msad extends Auth {
 	public function sync($output=null) {
 		if(php_sapi_name() !== 'cli') {
 			$path = $this->FreePBX->Config->get("AMPSBIN");
-			exec($path."/fwconsole userman sync");
+			exec($path."/fwconsole userman --sync ".escapeshellarg($this->config['id']));
 			return;
 		}
 

@@ -47,15 +47,16 @@ class Voicemail extends Auth {
 		$config = array(
 			"context" => $_REQUEST['voicemail-context']
 		);
-		$vm = new static($userman, $freepbx);
-		try {
-			$vm->sync();
-		} catch(\Exception $e) {}
 		return $config;
 	}
 
 	public function sync($output=null) {
-		$this->output = $output;
+		if(php_sapi_name() !== 'cli') {
+			$path = $this->FreePBX->Config->get("AMPSBIN");
+			exec($path."/fwconsole userman --sync ".escapeshellarg($this->config['id']));
+			return;
+		}
+
 		$config = $this->userman->getConfig("authVoicemailSettings");
 		$d = $this->FreePBX->Voicemail->getVoicemail(false);
 		if(!empty($d[$config['context']])) {

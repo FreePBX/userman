@@ -188,15 +188,6 @@ class Openldap extends Auth {
 			"la" => $_REQUEST['openldap-la'],
 			"sync" => $_REQUEST['sync']
 		);
-		if(!empty($config['host']) && !empty($config['username']) && !empty($config['password']) && !empty($config['userdn'])) {
-			$openldap = new static($userman, $freepbx, $config);
-			try {
-				$openldap->connect();
-				$openldap->sync();
-			} catch(\Exception $e) {
-				return false;
-			}
-		}
 		return $config;
 	}
 
@@ -234,7 +225,7 @@ class Openldap extends Auth {
 	public function sync($output=null) {
 		if(php_sapi_name() !== 'cli') {
 			$path = $this->FreePBX->Config->get("AMPSBIN");
-			exec($path."/fwconsole userman sync");
+			exec($path."/fwconsole userman --sync ".escapeshellarg($this->config['id']));
 			return;
 		}
 
