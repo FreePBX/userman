@@ -260,8 +260,6 @@ $check = array(
 	"authVoicemailSettings" => 'voicemail'
 );
 
-$checkDefaultGroup = false;
-
 foreach($check as $key => $driver) {
 	$settings = FreePBX::Userman()->getConfig($key);
 	if(!empty($settings)) {
@@ -284,98 +282,13 @@ if(!empty($auth)) {
 	FreePBX::Userman()->setConfig('auth',false);
 }
 
+$directories = FreePBX::Userman()->getAllDirectories();
+if(empty($directories)) {
+	$id = FreePBX::Userman()->addDirectory('Freepbx', _("PBX Internal Directory"), true, array());
+	FreePBX::Userman()->setDefaultDirectory($id);
+}
+
 $dir = FreePBX::Userman()->getDefaultDirectory();
 if($dir['driver'] == 'Freepbx') {
-	$obj = FreePBX::Userman()->getDirectoryObjectByID($dir['id']);
-	$groups = $obj->getAllGroups();
-	if(empty($groups)) {
-		$users = $obj->getAllUsers();
-		$allUsers = array();
-		foreach($users as $u) {
-			$allUsers[] = $u['id'];
-		}
-		$g = $obj->addGroup(_("All Users"),_("This group was created on install and is automatically assigned to new users. This can be disabled in User Manager Settings"),$allUsers);
-		if(!$g['status']) {
-			out(_("Unable to create default group"));
-			return false;
-		}
-		$config = array(
-			"default-groups" => array($g['id'])
-		);
-		FreePBX::Userman()->updateDirectory($dir['id'], $dir['name'], 1, $config);
-		//Default New Group Settings
-		FreePBX::Userman()->setModuleSettingByGID($gid,'contactmanager','show', true);
-		FreePBX::Userman()->setModuleSettingByGID($gid,'contactmanager','groups',array($gid));
-		FreePBX::Userman()->setModuleSettingByGID($gid,'fax','enabled',true);
-		FreePBX::Userman()->setModuleSettingByGID($gid,'fax','attachformat',"pdf");
-		FreePBX::Userman()->setModuleSettingByGID($gid,'faxpro','localstore',"true");
-		//FreePBX::Userman()->setModuleSettingByGID($gid,'restapi','restapi_token_status', true);
-		//FreePBX::Userman()->setModuleSettingByGID($gid,'restapi','restapi_users',array("self"));
-		//FreePBX::Userman()->setModuleSettingByGID($gid,'restapi','restapi_modules',array("*"));
-		//FreePBX::Userman()->setModuleSettingByGID($gid,'restapi','restapi_rate',"1000");
-		FreePBX::Userman()->setModuleSettingByGID($gid,'xmpp','enable', true);
-		FreePBX::Userman()->setModuleSettingByGID($gid,'ucp|Global','allowLogin',true);
-		FreePBX::Userman()->setModuleSettingByGID($gid,'ucp|Global','originate', true);
-		FreePBX::Userman()->setModuleSettingByGID($gid,'ucp|Settings','assigned', array("self"));
-		FreePBX::Userman()->setModuleSettingByGID($gid,'ucp|Cdr','enable', true);
-		FreePBX::Userman()->setModuleSettingByGID($gid,'ucp|Cdr','assigned', array("self"));
-		FreePBX::Userman()->setModuleSettingByGID($gid,'ucp|Cdr','download', true);
-		FreePBX::Userman()->setModuleSettingByGID($gid,'ucp|Cdr','playback', true);
-		FreePBX::Userman()->setModuleSettingByGID($gid,'ucp|Cel','enable', true);
-		FreePBX::Userman()->setModuleSettingByGID($gid,'ucp|Cel','assigned', array("self"));
-		FreePBX::Userman()->setModuleSettingByGID($gid,'ucp|Cel','download', true);
-		FreePBX::Userman()->setModuleSettingByGID($gid,'ucp|Cel','playback', true);
-		FreePBX::Userman()->setModuleSettingByGID($gid,'ucp|Presencestate','enabled',true);
-		FreePBX::Userman()->setModuleSettingByGID($gid,'ucp|Voicemail','enable', true);
-		FreePBX::Userman()->setModuleSettingByGID($gid,'ucp|Voicemail','assigned', array("self"));
-		FreePBX::Userman()->setModuleSettingByGID($gid,'ucp|Voicemail','download', true);
-		FreePBX::Userman()->setModuleSettingByGID($gid,'ucp|Voicemail','playback', true);
-		FreePBX::Userman()->setModuleSettingByGID($gid,'ucp|Voicemail','settings', true);
-		FreePBX::Userman()->setModuleSettingByGID($gid,'ucp|Voicemail','greetings', true);
-		FreePBX::Userman()->setModuleSettingByGID($gid,'ucp|Voicemail','vmxlocater', true);
-		FreePBX::Userman()->setModuleSettingByGID($gid,'ucp|Conferencespro','enable', true);
-		FreePBX::Userman()->setModuleSettingByGID($gid,'ucp|Endpoint','enable', true);
-		FreePBX::Userman()->setModuleSettingByGID($gid,'ucp|Endpoint','assigned', array("self"));
-		FreePBX::Userman()->setModuleSettingByGID($gid,'ucp|Conferencespro','assigned', array("linked"));
-		FreePBX::Userman()->setModuleSettingByGID($gid,'conferencespro','link', true);
-		FreePBX::Userman()->setModuleSettingByGID($gid,'conferencespro','ivr', true);
-		FreePBX::Userman()->setModuleSettingByGID($gid,'ucp|Sysadmin','vpn_enable', true);
-		$tfsettings = array(
-			"login",
-			"menuover",
-			"conference_enable",
-			"queue_enable",
-			"timecondition_enable",
-			"callflow_enable",
-			"contact_enable",
-			"voicemail_enable",
-			"presence_enable",
-			"parking_enable",
-			"fmfm_enable",
-			"dnd_enable",
-			"cf_enable",
-			"qa_enable",
-			"lilo_enable"
-		);
-		foreach($tfsettings as $setting) {
-			FreePBX::Userman()->setModuleSettingByGID($gid,'restapps',$setting, true);
-		}
-		FreePBX::Userman()->setModuleSettingByGID($gid,'restapps','conferences',array('linked'));
-		$asettings = array(
-			"queues",
-			"timeconditions",
-			"callflows",
-			"contacts"
-		);
-		foreach($asettings as $setting) {
-			FreePBX::Userman()->setModuleSettingByGID($gid,'restapps',$setting,array('*'));
-		}
-		FreePBX::Userman()->setModuleSettingByGID($gid,"contactmanager","showingroups",array("*"));
-		FreePBX::Userman()->setModuleSettingByGID($gid,'contactmanager','groups',array("*"));
-		FreePBX::Userman()->setModuleSettingByGID($gid,'sysadmin','vpn_link', true);
-		FreePBX::Userman()->setModuleSettingByGID($gid,'zulu','enable', true);
-		FreePBX::Userman()->setModuleSettingByGID($gid,'zulu','enable_fax', true);
-		FreePBX::Userman()->setModuleSettingByGID($gid,'zulu','enable_sms', true);
-		FreePBX::Userman()->setModuleSettingByGID($gid,'zulu','enable_phone', true);
-	}
+	FreePBX::Userman()->addDefaultGroupToDirectory($dir['id']);
 }

@@ -411,9 +411,9 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	/**
 	 * Get All Permissions that the Auth Type allows
 	 */
-	public function getAuthAllPermissions($directory) {
+	public function getAuthAllPermissions($directory='') {
 		if(empty($directory)) {
-			return array();
+			$directory = $this->getDefaultDirectory();
 		}
 		return $this->directories[$directory['id']]->getPermissions();
 	}
@@ -422,9 +422,10 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * Get a Single Permisison that the Auth Type allows
 	 * @param [type] $permission [description]
 	 */
-	public function getAuthPermission($directory, $permission) {
-		if(empty($directory) || empty($permission)) {
-			return null;
+	public function getAuthPermission($directory, $permission=null) {
+		if(is_null($permission)) {
+			$permission = $directory;
+			$directory = $this->getDefaultDirectory();
 		}
 		$settings = $this->directories[$directory['id']]->getPermissions();
 		return isset($settings[$permission]) ? $settings[$permission] : null;
@@ -1229,7 +1230,116 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$sth = $this->db->prepare($sql);
 		$sth->execute();
 		$dir = $sth->fetch(\PDO::FETCH_ASSOC);
+		if(empty($dir)) {
+			$sql = "SELECT id FROM ".$this->directoryTable." WHERE `driver` = 'Freepbx' ORDER BY `order` LIMIT 1";
+			$sth = $this->db->prepare($sql);
+			$sth->execute();
+			$dir = $sth->fetch(\PDO::FETCH_ASSOC);
+			if(empty($dir)) {
+				$dir = array(
+					"id" => $this->addDirectory('Freepbx', _("PBX Internal Directory"), true, array())
+				);
+				$this->addDefaultGroupToDirectory($dir['id']);
+			} else {
+				$this->setDefaultDirectory($dir['id']);
+			}
+		}
 		return !empty($dir['id']) ? $this->getDirectoryByID($dir['id']) : false;
+	}
+
+	public function addDefaultGroupToDirectory($dirid) {
+		$obj = $this->getDirectoryObjectByID($dirid);
+		$groups = $obj->getAllGroups();
+		if(empty($groups)) {
+			$users = $obj->getAllUsers();
+			$allUsers = array();
+			foreach($users as $u) {
+				$allUsers[] = $u['id'];
+			}
+			$g = $obj->addGroup(_("All Users"),_("This group was created on install and is automatically assigned to new users. This can be disabled in User Manager Settings"),$allUsers);
+			if(!$g['status']) {
+				out(_("Unable to create default group"));
+				return false;
+			}
+			$config = array(
+				"default-groups" => array($g['id'])
+			);
+			$this->updateDirectory($dirid, $dir['name'], 1, $config);
+			//Default New Group Settings
+			$this->setModuleSettingByGID($gid,'contactmanager','show', true);
+			$this->setModuleSettingByGID($gid,'contactmanager','groups',array($gid));
+			$this->setModuleSettingByGID($gid,'fax','enabled',true);
+			$this->setModuleSettingByGID($gid,'fax','attachformat',"pdf");
+			$this->setModuleSettingByGID($gid,'faxpro','localstore',"true");
+			//$this->setModuleSettingByGID($gid,'restapi','restapi_token_status', true);
+			//$this->setModuleSettingByGID($gid,'restapi','restapi_users',array("self"));
+			//$this->setModuleSettingByGID($gid,'restapi','restapi_modules',array("*"));
+			//$this->setModuleSettingByGID($gid,'restapi','restapi_rate',"1000");
+			$this->setModuleSettingByGID($gid,'xmpp','enable', true);
+			$this->setModuleSettingByGID($gid,'ucp|Global','allowLogin',true);
+			$this->setModuleSettingByGID($gid,'ucp|Global','originate', true);
+			$this->setModuleSettingByGID($gid,'ucp|Settings','assigned', array("self"));
+			$this->setModuleSettingByGID($gid,'ucp|Cdr','enable', true);
+			$this->setModuleSettingByGID($gid,'ucp|Cdr','assigned', array("self"));
+			$this->setModuleSettingByGID($gid,'ucp|Cdr','download', true);
+			$this->setModuleSettingByGID($gid,'ucp|Cdr','playback', true);
+			$this->setModuleSettingByGID($gid,'ucp|Cel','enable', true);
+			$this->setModuleSettingByGID($gid,'ucp|Cel','assigned', array("self"));
+			$this->setModuleSettingByGID($gid,'ucp|Cel','download', true);
+			$this->setModuleSettingByGID($gid,'ucp|Cel','playback', true);
+			$this->setModuleSettingByGID($gid,'ucp|Presencestate','enabled',true);
+			$this->setModuleSettingByGID($gid,'ucp|Voicemail','enable', true);
+			$this->setModuleSettingByGID($gid,'ucp|Voicemail','assigned', array("self"));
+			$this->setModuleSettingByGID($gid,'ucp|Voicemail','download', true);
+			$this->setModuleSettingByGID($gid,'ucp|Voicemail','playback', true);
+			$this->setModuleSettingByGID($gid,'ucp|Voicemail','settings', true);
+			$this->setModuleSettingByGID($gid,'ucp|Voicemail','greetings', true);
+			$this->setModuleSettingByGID($gid,'ucp|Voicemail','vmxlocater', true);
+			$this->setModuleSettingByGID($gid,'ucp|Conferencespro','enable', true);
+			$this->setModuleSettingByGID($gid,'ucp|Endpoint','enable', true);
+			$this->setModuleSettingByGID($gid,'ucp|Endpoint','assigned', array("self"));
+			$this->setModuleSettingByGID($gid,'ucp|Conferencespro','assigned', array("linked"));
+			$this->setModuleSettingByGID($gid,'conferencespro','link', true);
+			$this->setModuleSettingByGID($gid,'conferencespro','ivr', true);
+			$this->setModuleSettingByGID($gid,'ucp|Sysadmin','vpn_enable', true);
+			$tfsettings = array(
+				"login",
+				"menuover",
+				"conference_enable",
+				"queue_enable",
+				"timecondition_enable",
+				"callflow_enable",
+				"contact_enable",
+				"voicemail_enable",
+				"presence_enable",
+				"parking_enable",
+				"fmfm_enable",
+				"dnd_enable",
+				"cf_enable",
+				"qa_enable",
+				"lilo_enable"
+			);
+			foreach($tfsettings as $setting) {
+				$this->setModuleSettingByGID($gid,'restapps',$setting, true);
+			}
+			$this->setModuleSettingByGID($gid,'restapps','conferences',array('linked'));
+			$asettings = array(
+				"queues",
+				"timeconditions",
+				"callflows",
+				"contacts"
+			);
+			foreach($asettings as $setting) {
+				$this->setModuleSettingByGID($gid,'restapps',$setting,array('*'));
+			}
+			$this->setModuleSettingByGID($gid,"contactmanager","showingroups",array("*"));
+			$this->setModuleSettingByGID($gid,'contactmanager','groups',array("*"));
+			$this->setModuleSettingByGID($gid,'sysadmin','vpn_link', true);
+			$this->setModuleSettingByGID($gid,'zulu','enable', true);
+			$this->setModuleSettingByGID($gid,'zulu','enable_fax', true);
+			$this->setModuleSettingByGID($gid,'zulu','enable_sms', true);
+			$this->setModuleSettingByGID($gid,'zulu','enable_phone', true);
+		}
 	}
 
 	/**
@@ -1312,7 +1422,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * @param  array          $settings Array of diretory settings
 	 * @return integer                    The directory ID
 	 */
-	public function addDirectory($driver, $name, $enable, $settings) {
+	public function addDirectory($driver, $name, $enable, $settings=array()) {
 		$sql = "INSERT INTO ".$this->directoryTable." (`name`,`driver`,`active`) VALUES (?,?,?)";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array($name,ucfirst(strtolower($driver)),($enable ? 1 : 0)));
@@ -1330,7 +1440,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * @param  array          $settings Array of diretory settings
 	 * @return integer                    The directory ID
 	 */
-	public function updateDirectory($id, $name, $enable, $settings) {
+	public function updateDirectory($id, $name, $enable, $settings=array()) {
 		$sql = "UPDATE ".$this->directoryTable." SET `name` = ?, `active` = ? WHERE `id` = ?";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array($name,($enable ? 1 : 0),$id));
@@ -2453,14 +2563,18 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	}
 
 	public function bulkhandlerGetTypes() {
+		$directory = $this->getDefaultDirectory();
+		if(empty($directory)) {
+			return array();
+		}
 		$final = array();
-		if($this->getAuthPermission('addUser')) {
+		if($this->getAuthPermission($directory['id'],'addUser')) {
 			$final['usermanusers'] = array(
 				'name' => _('User Manager Users'),
 				'description' => _('User Manager Users')
 			);
 		}
-		if($this->getAuthPermission('addGroup')) {
+		if($this->getAuthPermission($directory['id'],'addGroup')) {
 			$final['usermangroups'] = array(
 				'name' => _('User Manager Groups'),
 				'description' => _('User Manager Groups')
@@ -2565,147 +2679,154 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 */
 	public function bulkhandlerImport($type, $rawData, $replaceExisting = false) {
 		$ret = NULL;
-
 		switch ($type) {
-		case 'usermanusers':
-			if($this->getAuthPermission('addUser')) {
-				foreach ($rawData as $data) {
-					if (empty($data['username'])) {
-						return array("status" => false, "message" => _("username is required."));
-					}
-					if (empty($data['default_extension'])) {
-						return array("status" => false, "message" => _("default_extension is required."));
-					}
-
-					$username = $data['username'];
-					$password = $data['password'];
-					$default_extension = $data['default_extension'];
-					$description = !empty($data['description']) ? $data['description'] : null;
-
-					$extraData = array(
-						'fname' => isset($data['fname']) ? $data['fname'] : null,
-						'lname' => isset($data['lname']) ? $data['lname'] : null,
-						'displayname' => isset($data['displayname']) ? $data['displayname'] : null,
-						'title' => isset($data['title']) ? $data['title'] : null,
-						'company' => isset($data['company']) ? $data['company'] : null,
-						'department' => isset($data['department']) ? $data['department'] : null,
-						'email' => isset($data['email']) ? $data['email'] : null,
-						'cell' => isset($data['cell']) ? $data['cell'] : null,
-						'work' => isset($data['work']) ? $data['work'] : null,
-						'home' => isset($data['home']) ? $data['home'] : null,
-						'fax' => isset($data['fax']) ? $data['fax'] : null,
-					);
-
-					$existing = $this->getUserByUsername($username);
-					if(!$replaceExisting && $existing) {
-						return array("status" => false, "message" => _("User already exists"));
-					}
-					if ($existing) {
-						try {
-							$password = !empty($password) ? $password : null;
-							$status = $this->updateUser($existing['id'], $username, $username, $default_extension, $description, $extraData, $password);
-						} catch (\Exception $e) {
-							return array("status" => false, "message" => $e->getMessage());
-						}
-						if (!$status['status']) {
-							$ret = array(
-								'status' => false,
-								'message' => $status['message'],
-							);
-							return $ret;
-						}
-					} else {
-						if (empty($data['password'])) {
-							return array("status" => false, "message" => _("password is required."));
-						}
-						try {
-							$status = $this->addUser($username, $password, $default_extension, $description, $extraData, true);
-						} catch (\Exception $e) {
-							return array("status" => false, "message" => $e->getMessage());
-						}
-						if (!$status['status']) {
-							$ret = array(
-								'status' => false,
-								'message' => $status['message'],
-							);
-							return $ret;
-						}
-					}
-
-					break;
+			case 'usermanusers':
+				$directory = $this->getDefaultDirectory();
+				if(empty($directory)) {
+					return array("status" => false, "message" => _("Please set a default directory in User Manager"));
 				}
+				if($this->getAuthPermission($directory['id'], 'addUser')) {
+					foreach ($rawData as $data) {
+						if (empty($data['username'])) {
+							return array("status" => false, "message" => _("username is required."));
+						}
+						if (empty($data['default_extension'])) {
+							return array("status" => false, "message" => _("default_extension is required."));
+						}
 
-				needreload();
-				$ret = array(
-					'status' => true,
-				);
-			} else {
-				$ret = array(
-					'status' => false,
-					'message' => _("This authentication driver does not allow importing"),
-				);
-			}
-		break;
-		case 'usermangroups':
-			if($this->getAuthPermission('addGroup')) {
-				foreach ($rawData as $data) {
-					if (empty($data['groupname'])) {
-						return array("status" => false, "message" => _("groupname is required."));
+						$username = $data['username'];
+						$password = $data['password'];
+						$default_extension = $data['default_extension'];
+						$description = !empty($data['description']) ? $data['description'] : null;
+
+						$extraData = array(
+							'fname' => isset($data['fname']) ? $data['fname'] : null,
+							'lname' => isset($data['lname']) ? $data['lname'] : null,
+							'displayname' => isset($data['displayname']) ? $data['displayname'] : null,
+							'title' => isset($data['title']) ? $data['title'] : null,
+							'company' => isset($data['company']) ? $data['company'] : null,
+							'department' => isset($data['department']) ? $data['department'] : null,
+							'email' => isset($data['email']) ? $data['email'] : null,
+							'cell' => isset($data['cell']) ? $data['cell'] : null,
+							'work' => isset($data['work']) ? $data['work'] : null,
+							'home' => isset($data['home']) ? $data['home'] : null,
+							'fax' => isset($data['fax']) ? $data['fax'] : null,
+						);
+
+						$existing = $this->getUserByUsername($username);
+						if(!$replaceExisting && $existing) {
+							return array("status" => false, "message" => _("User already exists"));
+						}
+						if ($existing) {
+							try {
+								$password = !empty($password) ? $password : null;
+								$status = $this->updateUser($existing['id'], $username, $username, $default_extension, $description, $extraData, $password);
+							} catch (\Exception $e) {
+								return array("status" => false, "message" => $e->getMessage());
+							}
+							if (!$status['status']) {
+								$ret = array(
+									'status' => false,
+									'message' => $status['message'],
+								);
+								return $ret;
+							}
+						} else {
+							if (empty($data['password'])) {
+								return array("status" => false, "message" => _("password is required."));
+							}
+							try {
+								$status = $this->addUser($username, $password, $default_extension, $description, $extraData, true);
+							} catch (\Exception $e) {
+								return array("status" => false, "message" => $e->getMessage());
+							}
+							if (!$status['status']) {
+								$ret = array(
+									'status' => false,
+									'message' => $status['message'],
+								);
+								return $ret;
+							}
+						}
+
+						break;
 					}
 
-					$groupname = $data['groupname'];
-					$description = !empty($data['description']) ? $data['description'] : null;
+					needreload();
+					$ret = array(
+						'status' => true,
+					);
+				} else {
+					$ret = array(
+						'status' => false,
+						'message' => _("This authentication driver does not allow importing"),
+					);
+				}
+			break;
+			case 'usermangroups':
+				$directory = $this->getDefaultDirectory();
+				if(empty($directory)) {
+					return array("status" => false, "message" => _("Please set a default directory in User Manager"));
+				}
+				if($this->getAuthPermission($directory['id'], 'addGroup')) {
+					foreach ($rawData as $data) {
+						if (empty($data['groupname'])) {
+							return array("status" => false, "message" => _("groupname is required."));
+						}
 
-					$users = array();
-					if (!empty($data['users'])) {
-						$usernames = explode(',', $data['users']);
-						foreach ($usernames as $username) {
-							$user = $this->getUserByUsername($username);
-							if ($user) {
-								$users[] = $user['id'];
+						$groupname = $data['groupname'];
+						$description = !empty($data['description']) ? $data['description'] : null;
+
+						$users = array();
+						if (!empty($data['users'])) {
+							$usernames = explode(',', $data['users']);
+							foreach ($usernames as $username) {
+								$user = $this->getUserByUsername($username);
+								if ($user) {
+									$users[] = $user['id'];
+								}
+							}
+						}
+
+						$existing = $this->getGroupByUsername($groupname);
+						if(!$replaceExisting && $existing) {
+							return array("status" => false, "message" => _("Group already exists"));
+						}
+						if ($existing) {
+							try {
+								$status = $this->updateGroup($existing['id'], $groupname, $groupname, $description, $users);
+							} catch (\Exception $e) {
+								return array("status" => false, "message" => $e->getMessage());
+							}
+							if (!$status['status']) {
+								$ret = array(
+									'status' => false,
+									'message' => $status['message'],
+								);
+								return $ret;
+							}
+						} else {
+							try {
+								$status = $this->addGroup($groupname, $description, $users);
+							} catch (\Exception $e) {
+								return array("status" => false, "message" => $e->getMessage());
+							}
+							if (!$status['status']) {
+								$ret = array(
+									'status' => false,
+									'message' => $status['message'],
+								);
+								return $ret;
 							}
 						}
 					}
-
-					$existing = $this->getGroupByUsername($groupname);
-					if(!$replaceExisting && $existing) {
-						return array("status" => false, "message" => _("Group already exists"));
-					}
-					if ($existing) {
-						try {
-							$status = $this->updateGroup($existing['id'], $groupname, $groupname, $description, $users);
-						} catch (\Exception $e) {
-							return array("status" => false, "message" => $e->getMessage());
-						}
-						if (!$status['status']) {
-							$ret = array(
-								'status' => false,
-								'message' => $status['message'],
-							);
-							return $ret;
-						}
-					} else {
-						try {
-							$status = $this->addGroup($groupname, $description, $users);
-						} catch (\Exception $e) {
-							return array("status" => false, "message" => $e->getMessage());
-						}
-						if (!$status['status']) {
-							$ret = array(
-								'status' => false,
-								'message' => $status['message'],
-							);
-							return $ret;
-						}
-					}
+				} else {
+					$ret = array(
+						'status' => false,
+						'message' => _("This authentication driver does not allow importing"),
+					);
 				}
-			} else {
-				$ret = array(
-					'status' => false,
-					'message' => _("This authentication driver does not allow importing"),
-				);
-			}
-		break;
+			break;
 		}
 
 		return $ret;
