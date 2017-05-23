@@ -17,16 +17,6 @@ class ModulesTest extends PHPUnit_Framework_TestCase {
 		self::$u = self::$f->Userman;
 	}
 
-	public function testCreate() {
-		$obj = self::$u->create();
-		$this->assertTrue(is_object($obj), "Did not get a FreePBX Userman object");
-	}
-
-	public function testAuthObject() {
-		$obj = self::$u->getAuthObject();
-		$this->assertTrue(is_object($obj), "Did not get a valid authentication object");
-	}
-
 	public function testAutoGroup() {
 		$r = self::$u->getAutoGroup();
 		$this->assertTrue(!empty($r), "No auto group defined");
