@@ -70,10 +70,9 @@ class Msad extends Auth {
 		'remove' => array()
 	);
 
-	public function __construct($userman, $freepbx) {
-		parent::__construct($userman, $freepbx);
+	public function __construct($userman, $freepbx, $config=array()) {
+		parent::__construct($userman, $freepbx, $config);
 		$this->FreePBX = $freepbx;
-		$config = $userman->getConfig("authMSADSettings");
 		$this->host = $config['host'];
 		$this->port = !empty($config['port']) ? $config['port'] : 389;
 		$this->dn = $config['dn'];
@@ -95,7 +94,7 @@ class Msad extends Auth {
 			return array();
 		}
 		return array(
-			"name" => _("Microsoft Active Directory")
+			"name" => _("Microsoft Active Directory (Legacy)")
 		);
 	}
 
@@ -105,15 +104,14 @@ class Msad extends Auth {
 	 * @param  object $freepbx The FreePBX BMO object
 	 * @return string          html display data
 	 */
-	public static function getConfig($userman, $freepbx) {
-		$config = $userman->getConfig("authMSADSettings");
+	public static function getConfig($userman, $freepbx, $config) {
 		$status = array(
 			"connected" => false,
 			"type" => "info",
 			"message" => _("Not Connected")
 		);
 		if(!empty($config['host']) && !empty($config['username']) && !empty($config['password']) && !empty($config['domain'])) {
-			$msad = new static($userman, $freepbx);
+			$msad = new static($userman, $freepbx, $config);
 			try {
 				$msad->connect();
 				$status = array(
@@ -155,17 +153,7 @@ class Msad extends Auth {
 			"la" => $_REQUEST['msad-la'],
 			"sync" => $_REQUEST['sync']
 		);
-		$userman->setConfig("authMSADSettings", $config);
-		if(!empty($config['host']) && !empty($config['username']) && !empty($config['password']) && !empty($config['domain'])) {
-			$msad = new static($userman, $freepbx);
-			try {
-				$msad->connect();
-				$msad->sync();
-			} catch(\Exception $e) {
-				return false;
-			}
-		}
-		return true;
+		return $config;
 	}
 
 	/**
@@ -202,7 +190,7 @@ class Msad extends Auth {
 	public function sync($output=null) {
 		if(php_sapi_name() !== 'cli') {
 			$path = $this->FreePBX->Config->get("AMPSBIN");
-			exec($path."/fwconsole userman sync");
+			exec($path."/fwconsole userman --sync ".escapeshellarg($this->config['id']));
 			return;
 		}
 
@@ -300,7 +288,7 @@ class Msad extends Auth {
 	 * @return array
 	 */
 	public function getAllUsers() {
-		return parent::getAllUsers('msad');
+		return parent::getAllUsers();
 	}
 
 	/**
@@ -311,7 +299,7 @@ class Msad extends Auth {
 	* @return array
 	*/
 	public function getAllGroups() {
-		return parent::getAllGroups('msad');
+		return parent::getAllGroups();
 	}
 
 	/**
@@ -579,7 +567,7 @@ class Msad extends Auth {
 			}
 			$sid = $this->binToStrSid($group['objectsid'][0]);
 			$this->gcache[$sid] = $group;
-			$um = $this->linkGroup($group['cn'][0], 'msad', $sid);
+			$um = $this->linkGroup($group['cn'][0], $sid);
 			if($um['status']) {
 				$this->updateGroupData($um['id'], array(
 					"description" => !empty($group['description'][0]) ? $group['description'][0] : '',
@@ -627,7 +615,7 @@ class Msad extends Auth {
 		foreach($users as $user) {
 			$sid = $this->binToStrSid($user['objectsid'][0]);
 			$this->ucache[$sid] = $user;
-			$um = $this->linkUser($user['samaccountname'][0], 'msad', $sid);
+			$um = $this->linkUser($user['samaccountname'][0], $sid);
 			if($um['status']) {
 				$data = array(
 					"description" => !empty($user['description'][0]) ? $user['description'][0] : '',

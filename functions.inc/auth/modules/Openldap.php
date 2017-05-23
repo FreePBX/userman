@@ -7,7 +7,7 @@
 //  MSActiveDirectory auth module copied and modified for use with OpenLDAP-Directory
 //  Modified by Matthias Frei - www.frei.media
 //  2016/01/10
-//  
+//
 //
 //  Groups are identified by attribute 'objectClass'='posixGroup'
 //  User are identified by attribute 'objectClass'='person'
@@ -105,10 +105,9 @@ class Openldap extends Auth {
 		'remove' => array()
 	);
 
-	public function __construct($userman, $freepbx) {
-		parent::__construct($userman, $freepbx);
+	public function __construct($userman, $freepbx, $config) {
+		parent::__construct($userman, $freepbx, $config);
 		$this->FreePBX = $freepbx;
-		$config = $userman->getConfig("authOpenLDAPSettings");
 		$this->host = $config['host'];
 		$this->port = !empty($config['port']) ? $config['port'] : 389;
 		$this->basedn = $config['basedn'];
@@ -130,7 +129,7 @@ class Openldap extends Auth {
 			return array();
 		}
 		return array(
-			"name" => _("OpenLDAP Directory")
+			"name" => _("OpenLDAP Directory (Legacy)")
 		);
 	}
 
@@ -140,15 +139,14 @@ class Openldap extends Auth {
 	 * @param  object $freepbx The FreePBX BMO object
 	 * @return string          html display data
 	 */
-	public static function getConfig($userman, $freepbx) {
-		$config = $userman->getConfig("authOpenLDAPSettings");
+	public static function getConfig($userman, $freepbx, $config) {
 		$status = array(
 			"connected" => false,
 			"type" => "info",
 			"message" => _("Not Connected")
 		);
 		if(!empty($config['host']) && !empty($config['username']) && !empty($config['password']) && !empty($config['userdn'])) {
-			$openldap = new static($userman, $freepbx);
+			$openldap = new static($userman, $freepbx, $config);
 			try {
 				$openldap->connect();
 				$status = array(
@@ -190,17 +188,7 @@ class Openldap extends Auth {
 			"la" => $_REQUEST['openldap-la'],
 			"sync" => $_REQUEST['sync']
 		);
-		$userman->setConfig("authOpenLDAPSettings", $config);
-		if(!empty($config['host']) && !empty($config['username']) && !empty($config['password']) && !empty($config['userdn'])) {
-			$openldap = new static($userman, $freepbx);
-			try {
-				$openldap->connect();
-				$openldap->sync();
-			} catch(\Exception $e) {
-				return false;
-			}
-		}
-		return true;
+		return $config;
 	}
 
 	/**
@@ -237,7 +225,7 @@ class Openldap extends Auth {
 	public function sync($output=null) {
 		if(php_sapi_name() !== 'cli') {
 			$path = $this->FreePBX->Config->get("AMPSBIN");
-			exec($path."/fwconsole userman sync");
+			exec($path."/fwconsole userman --sync ".escapeshellarg($this->config['id']));
 			return;
 		}
 
@@ -335,7 +323,7 @@ class Openldap extends Auth {
 	 * @return array
 	 */
 	public function getAllUsers() {
-		return parent::getAllUsers('openldap');
+		return parent::getAllUsers();
 	}
 
 	/**
@@ -346,7 +334,7 @@ class Openldap extends Auth {
 	* @return array
 	*/
 	public function getAllGroups() {
-		return parent::getAllGroups('openldap');
+		return parent::getAllGroups();
 	}
 
 	/**
@@ -579,11 +567,11 @@ class Openldap extends Auth {
 					}
 					else {
 						$us = array_merge($us, $us_entries);
-					}			
+					}
 				}
 				$us['count'] = count($us);
 
-				
+
 				// Temporary save results
 				if($us !== false) {
 					$users = $us;
@@ -636,7 +624,7 @@ class Openldap extends Auth {
 			}
 			$sid = $this->binToStrSid($group['gidnumber'][0]);
 			$this->gcache[$sid] = $group;
-			$um = $this->linkGroup($group['cn'][0], 'openldap', $sid);
+			$um = $this->linkGroup($group['cn'][0], $sid);
 			if($um['status']) {
 				$this->updateGroupData($um['id'], array(
 					"description" => !empty($group['description'][0]) ? $group['description'][0] : '',
@@ -684,7 +672,7 @@ class Openldap extends Auth {
 		foreach($users as $user) {
 			$sid = $this->binToStrSid($user['uidnumber'][0]);
 			$this->ucache[$sid] = $user;
-			$um = $this->linkUser($user['uid'][0], 'openldap', $sid);
+			$um = $this->linkUser($user['uid'][0], $sid);
 			if($um['status']) {
 				$data = array(
 					"description" => !empty($user['description'][0]) ? $user['description'][0] : '',
