@@ -7,6 +7,7 @@ if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'showuser'){
 $formaction = 'config.php?display=userman#users';
 
 echo $heading;
+echo $usage_html;
 ?>
 <div class="container-fluid">
 	<div class="row">

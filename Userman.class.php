@@ -638,11 +638,13 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 					$assigned = !(empty($assigned)) ? $assigned : array();
 					$default = $user['default_extension'];
 					$directory = $user['auth'];
+					$usage_html = \FreePBX::View()->destinationUsage("ext-fax,$request[user],1");
 				} else {
 					$user = array();
 					$assigned = array();
 					$default = null;
 					$directory = $_GET['directory'];
+					$usage_html = '';
 				}
 				$dir = $this->getDirectoryByID($directory);
 				$groups = $this->getAllGroups($directory);
@@ -691,7 +693,8 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 						"permissions" => $this->getAuthAllPermissions($directory),
 						"extrauserdetails" => $extrauserdetails,
 						"locked" => $dir['locked'],
-						"directory" => $directory
+						"directory" => $directory,
+						"usage_html" => $usage_html
 					)
 				);
 			break;
