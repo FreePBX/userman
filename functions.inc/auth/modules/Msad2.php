@@ -321,7 +321,7 @@ class Msad2 extends Auth {
 	 */
 	public function getPermissions() {
 		return array(
-			"addGroup" => $this->config['localgroups'],
+			"addGroup" => ($this->config['localgroups'] ? true : false),
 			"addUser" => false,
 			"modifyGroup" => false,
 			"modifyUser" => false,

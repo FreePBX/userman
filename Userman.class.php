@@ -164,7 +164,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 				if($autoEmail) {
 					$this->sendWelcomeEmail($extension, $pass);
 				}
-				$permissions = $this->getAuthAllPermissions();
+				$permissions = $this->getAuthAllPermissions($directory['id']);
 				if($permissions['modifyGroup']) {
 					if(!empty($data['um-groups'])) {
 						$groups = $this->getAllGroups();
@@ -411,23 +411,25 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	/**
 	 * Get All Permissions that the Auth Type allows
 	 */
-	public function getAuthAllPermissions($directory='') {
-		if(empty($directory)) {
+	public function getAuthAllPermissions($id='') {
+		if(empty($id)) {
 			$directory = $this->getDefaultDirectory();
+			$id = $directory['id'];
 		}
-		return $this->directories[$directory['id']]->getPermissions();
+		return $this->directories[$id]->getPermissions();
 	}
 
 	/**
 	 * Get a Single Permisison that the Auth Type allows
 	 * @param [type] $permission [description]
 	 */
-	public function getAuthPermission($directory, $permission=null) {
+	public function getAuthPermission($id, $permission=null) {
 		if(is_null($permission)) {
-			$permission = $directory;
+			$permission = $id;
 			$directory = $this->getDefaultDirectory();
+			$id = $directory['id'];
 		}
-		$settings = $this->directories[$directory['id']]->getPermissions();
+		$settings = $this->directories[$id]->getPermissions();
 		return isset($settings[$permission]) ? $settings[$permission] : null;
 	}
 
@@ -810,6 +812,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 */
 	public function ajaxRequest($req, &$setting){
 		switch($req){
+			case "getGuihookInfo":
 			case "makeDefault":
 			case "getDirectories":
 			case "getUsers":
@@ -843,6 +846,18 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	public function ajaxHandler(){
 		$request = $_REQUEST;
 		switch($request['command']){
+			case "getGuihookInfo":
+				$directory = $this->getDirectoryByID($_POST['directory']);
+				$users = $this->getAllUsers($directory['id']);
+				$groups = $this->getAllGroups($directory['id']);
+				$permissions = $this->getAuthAllPermissions($directory['id']);
+				return array(
+					"status" => true,
+					"users" => $users,
+					"groups" => $groups,
+					"permissions" => $permissions
+				);
+			break;
 			case "makeDefault":
 				$this->setDefaultDirectory($_POST['id']);
 				return array("status" => true);
@@ -1537,7 +1552,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 			return array("status" => false, "message" => _("Directory is locked. Can not add user"));
 		}
 		$display = !empty($_REQUEST['display']) ? $_REQUEST['display'] : "";
-		$status = $this->directories[$directory]->addUser($username, $password, $default, $description, $extraData, $encrypt);
+		$status = $this->directories[$dir['id']]->addUser($username, $password, $default, $description, $extraData, $encrypt);
 		if(!$status['status']) {
 			return $status;
 		}
@@ -1598,7 +1613,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 				$fusers[] = $u;
 			}
 		}
-		$status = $this->directories[$directory]->addGroup($groupname, $description, $fusers);
+		$status = $this->directories[$dir['id']]->addGroup($groupname, $description, $fusers);
 		if(!$status['status']) {
 			return $status;
 		}
