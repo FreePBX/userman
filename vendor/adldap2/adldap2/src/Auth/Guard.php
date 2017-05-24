@@ -2,12 +2,8 @@
 
 namespace Adldap\Auth;
 
-use Adldap\Connections\Configuration;
-use Adldap\Contracts\Auth\GuardInterface;
-use Adldap\Contracts\Connections\ConnectionInterface;
-use Adldap\Exceptions\Auth\BindException;
-use Adldap\Exceptions\Auth\PasswordRequiredException;
-use Adldap\Exceptions\Auth\UsernameRequiredException;
+use Adldap\Connections\ConnectionInterface;
+use Adldap\Configuration\DomainConfiguration;
 
 class Guard implements GuardInterface
 {
@@ -17,14 +13,14 @@ class Guard implements GuardInterface
     protected $connection;
 
     /**
-     * @var Configuration
+     * @var DomainConfiguration
      */
     protected $configuration;
 
     /**
      * {@inheritdoc}
      */
-    public function __construct(ConnectionInterface $connection, Configuration $configuration)
+    public function __construct(ConnectionInterface $connection, DomainConfiguration $configuration)
     {
         $this->connection = $connection;
         $this->configuration = $configuration;
@@ -42,7 +38,7 @@ class Guard implements GuardInterface
         } catch (BindException $e) {
             // We'll catch the BindException here to return false
             // to allow developers to use a simple if / else
-            // using the authenticate method.
+            // using the attempt method.
             return false;
         }
 
@@ -63,21 +59,19 @@ class Guard implements GuardInterface
      */
     public function bind($username, $password, $prefix = null, $suffix = null)
     {
-        if (empty($username)) {
-            // Allow binding with null username.
-            $username = null;
-        } else {
+        // We'll allow binding with a null username and password
+        // if their empty. This will allow us to anonymously
+        // bind to our servers if needed.
+        $username = $username ?: null;
+        $password = $password ?: null;
+
+        if ($username) {
             // If the username isn't empty, we'll append the configured
             // account prefix and suffix to bind to the LDAP server.
-            $prefix = (is_null($prefix) ? $this->configuration->getAccountPrefix() : $prefix);
-            $suffix = (is_null($suffix) ? $this->configuration->getAccountSuffix() : $suffix);
+            $prefix = $prefix ?: $this->configuration->get('account_prefix');
+            $suffix = $suffix ?: $this->configuration->get('account_suffix');
 
             $username = $prefix.$username.$suffix;
-        }
-
-        if (empty($password)) {
-            // Allow binding with null password.
-            $password = null;
         }
 
         // We'll mute any exceptions / warnings here. All we need to know
@@ -92,14 +86,12 @@ class Guard implements GuardInterface
      */
     public function bindAsAdministrator()
     {
-        $credentials = $this->configuration->getAdminCredentials();
-
-        list($username, $password, $suffix) = array_pad($credentials, 3, null);
-
-        // Use the user account suffix if no administrator account suffix is given.
-        $suffix = (empty($suffix) ? $this->configuration->getAccountSuffix() : $suffix);
-
-        $this->bind($username, $password, '', $suffix);
+        $this->bind(
+            $this->configuration->get('admin_username'),
+            $this->configuration->get('admin_password'),
+            $this->configuration->get('admin_account_prefix'),
+            $this->configuration->get('admin_account_suffix')
+        );
     }
 
     /**
@@ -108,8 +100,8 @@ class Guard implements GuardInterface
      * @param string $username
      * @param string $password
      *
-     * @throws PasswordRequiredException
-     * @throws UsernameRequiredException
+     * @throws PasswordRequiredException When the given password is empty.
+     * @throws UsernameRequiredException When the given username is empty.
      */
     protected function validateCredentials($username, $password)
     {

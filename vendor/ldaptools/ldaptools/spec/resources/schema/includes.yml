@@ -1,0 +1,12 @@
+include: example
+objects:
+    foo:
+        type: foo
+        class: bar
+        attributes:
+            name: cn
+    user:
+        type: user
+        class: foobar
+        attributes:
+            name: cn

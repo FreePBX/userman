@@ -2,42 +2,51 @@
 
 namespace Adldap\Query;
 
+use Closure;
 use InvalidArgumentException;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Illuminate\Support\Collection;
 use Adldap\Utilities;
 use Adldap\Models\Model;
 use Adldap\Objects\Paginator;
-use Adldap\Query\Bindings\Filter;
-use Adldap\Query\Bindings\Where;
-use Adldap\Query\Bindings\Select;
-use Adldap\Query\Bindings\OrWhere;
-use Adldap\Query\Bindings\AbstractBinding;
+use Adldap\Schemas\SchemaInterface;
 use Adldap\Schemas\ActiveDirectory;
-use Adldap\Exceptions\ModelNotFoundException;
-use Adldap\Contracts\Schemas\SchemaInterface;
-use Adldap\Contracts\Connections\ConnectionInterface;
+use Adldap\Models\ModelNotFoundException;
+use Adldap\Connections\ConnectionInterface;
 
 class Builder
 {
+    /**
+     * The selected columns to retrieve on the query.
+     *
+     * @var array
+     */
+    public $columns = [];
+
+    /**
+     * The query filters.
+     *
+     * @var array
+     */
+    public $filters = [
+        'and' => [],
+        'or' => [],
+        'raw' => [],
+    ];
+
+    /**
+     * The size limit of the query.
+     *
+     * @var int
+     */
+    public $limit = 0;
+
     /**
      * Determines whether the current query is paginated.
      *
      * @var bool
      */
     public $paginated = false;
-
-    /**
-     * The query bindings.
-     *
-     * @var array
-     */
-    protected $bindings = [
-        'select'    => [],
-        'where'     => [],
-        'orWhere'   => [],
-        'filter'    => [],
-    ];
 
     /**
      * The field to sort search results by.
@@ -87,6 +96,13 @@ class Builder
      * @var bool
      */
     protected $raw = false;
+
+    /**
+     * Determines whether the query is nested.
+     *
+     * @var bool
+     */
+    protected $nested = false;
 
     /**
      * The current connection instance.
@@ -178,14 +194,18 @@ class Builder
     /**
      * Returns a new Query Builder instance.
      *
+     * @param string $baseDn
+     *
      * @return Builder
      */
-    public function newInstance()
+    public function newInstance($baseDn = null)
     {
         // We'll set the base DN of the new Builder so
         // developers don't need to do this manually.
+        $dn = is_null($baseDn) ? $this->getDn() : $baseDn;
+
         return (new static($this->connection, $this->grammar, $this->schema))
-            ->setDn($this->getDn());
+            ->setDn($dn);
     }
 
     /**
@@ -207,7 +227,7 @@ class Builder
      */
     public function getQuery()
     {
-        return $this->grammar->compileQuery($this);
+        return $this->grammar->compile($this);
     }
 
     /**
@@ -265,6 +285,32 @@ class Builder
     }
 
     /**
+     * Alias for setting the base DN of the query.
+     *
+     * @param string $dn
+     *
+     * @return Builder
+     */
+    public function in($dn)
+    {
+        return $this->setDn($dn);
+    }
+
+    /**
+     * Sets the size limit of the current query.
+     *
+     * @param int $limit
+     *
+     * @return Builder
+     */
+    public function limit($limit = 0)
+    {
+        $this->limit = $limit;
+
+        return $this;
+    }
+
+    /**
      * Performs the specified query on the current LDAP connection.
      *
      * @param string $query
@@ -279,16 +325,16 @@ class Builder
 
         if ($this->read) {
             // If read is true, we'll perform a read search, retrieving one record
-            $results = $this->connection->read($dn, $query, $selects);
+            $results = $this->connection->read($dn, $query, $selects, false, $this->limit);
         } elseif ($this->recursive) {
             // If recursive is true, we'll perform a recursive search
-            $results = $this->connection->search($dn, $query, $selects);
+            $results = $this->connection->search($dn, $query, $selects, false, $this->limit);
         } else {
             // Read and recursive is false, we'll return a listing
-            $results = $this->connection->listing($dn, $query, $selects);
+            $results = $this->connection->listing($dn, $query, $selects, false, $this->limit);
         }
 
-        return $this->process($results);
+        return $this->newProcessor()->process($results);
     }
 
     /**
@@ -298,7 +344,7 @@ class Builder
      * @param int  $currentPage
      * @param bool $isCritical
      *
-     * @return Paginator|bool
+     * @return Paginator
      */
     public function paginate($perPage = 50, $currentPage = 0, $isCritical = true)
     {
@@ -312,7 +358,7 @@ class Builder
             $this->connection->controlPagedResult($perPage, $isCritical, $cookie);
 
             // Run the search.
-            $resource = $this->connection->search($this->getDn(), $this->getQuery(), $this->getSelects());
+            $resource = @$this->connection->search($this->getDn(), $this->getQuery(), $this->getSelects());
 
             if ($resource) {
                 $this->connection->controlPagedResultResponse($resource, $cookie);
@@ -322,20 +368,15 @@ class Builder
             }
         } while (!empty($cookie));
 
-        if (count($pages) > 0) {
-            // If we have at least one page, we can process the results.
-            $paginator = $this->processPaginated($pages, $perPage, $currentPage);
+        $paginator = $this->newProcessor()->processPaginated($pages, $perPage, $currentPage);
 
-            // Reset paged result on the current connection. We won't pass in the current $perPage
-            // parameter since we want to reset the page size to the default '1000'. Sending '0'
-            // eliminates any further opportunity for running queries in the same request,
-            // even though that is supposed to be the correct usage.
-            $this->connection->controlPagedResult();
+        // Reset paged result on the current connection. We won't pass in the current $perPage
+        // parameter since we want to reset the page size to the default '1000'. Sending '0'
+        // eliminates any further opportunity for running queries in the same request,
+        // even though that is supposed to be the correct usage.
+        $this->connection->controlPagedResult();
 
-            return $paginator;
-        }
-
-        return false;
+        return $paginator;
     }
 
     /**
@@ -347,13 +388,9 @@ class Builder
      */
     public function first($columns = [])
     {
-        $results = $this->select($columns)->get();
+        $results = $this->select($columns)->limit(1)->get();
 
-        if ($results instanceof Collection) {
-            return $results->first();
-        } elseif (is_array($results) && array_key_exists(0, $results)) {
-            return $results[0];
-        }
+        return Arr::get($results, 0);
     }
 
     /**
@@ -448,22 +485,19 @@ class Builder
      */
     public function findManyBy($attribute, array $values = [], $columns = [])
     {
-        $models = [];
+        $query = $this->select($columns);
 
         foreach ($values as $value) {
-            $model = $this->newInstance()->findBy($attribute, $value, $columns);
-
-            if ($model instanceof Model) {
-                $models[] = $model;
-            }
+            $query->orWhere([$attribute => $value]);
         }
 
-        return $this->newCollection($models);
+        return $query->get();
     }
 
     /**
-     * Finds a record using ambiguous name resolution. If a record
-     * is not found, an exception is thrown.
+     * Finds a record using ambiguous name resolution.
+     * 
+     * If a record is not found, an exception is thrown.
      *
      * @param string       $anr
      * @param array|string $columns
@@ -525,6 +559,44 @@ class Builder
     }
 
     /**
+     * Finds a record by its string GUID.
+     *
+     * @param string       $guid
+     * @param array|string $columns
+     *
+     * @return Model
+     */
+    public function findByGuid($guid, $columns = [])
+    {
+        $guid = Utilities::stringGuidToHex($guid);
+
+        return $this->select($columns)->whereRaw([
+            $this->schema->objectGuid() => $guid
+        ])->first();
+    }
+
+    /**
+     * Finds a record by its string GUID.
+     *
+     * Fails upon no records returned.
+     *
+     * @param string       $guid
+     * @param array|string $columns
+     *
+     * @throws ModelNotFoundException
+     *
+     * @return mixed
+     */
+    public function findByGuidOrFail($guid, $columns = [])
+    {
+        $guid = Utilities::stringGuidToHex($guid);
+
+        return $this->select($columns)->whereRaw([
+            $this->schema->objectGuid() => $guid
+        ])->firstOrFail();
+    }
+
+    /**
      * Finds a record by its Object SID.
      *
      * @param string       $sid
@@ -538,6 +610,23 @@ class Builder
     }
 
     /**
+     * Finds a record by its Object SID.
+     *
+     * Fails upon no records returned.
+     *
+     * @param string       $sid
+     * @param array|string $columns
+     *
+     * @throws ModelNotFoundException
+     *
+     * @return mixed
+     */
+    public function findBySidOrFail($sid, $columns = [])
+    {
+        return $this->findByOrFail($this->schema->objectSid(), $sid, $columns);
+    }
+
+    /**
      * Finds the Base DN of your domain controller.
      *
      * @return string|bool
@@ -546,8 +635,7 @@ class Builder
     {
         $schema = $this->schema;
 
-        $result = $this
-            ->setDn(null)
+        $result = $this->setDn(null)
             ->read()
             ->raw()
             ->whereHas($schema->objectClass())
@@ -567,16 +655,16 @@ class Builder
     /**
      * Adds the inserted fields to query on the current LDAP connection.
      *
-     * @param array|string $fields
+     * @param array|string $columns
      *
      * @return Builder
      */
-    public function select($fields = [])
+    public function select($columns = [])
     {
-        $fields = is_array($fields) ? $fields : func_get_args();
+        $columns = is_array($columns) ? $columns : func_get_args();
 
-        foreach ($fields as $field) {
-            $this->addBinding(new Select($field), 'select');
+        if (!empty($columns)) {
+            $this->columns = is_array($columns) ? $columns : func_get_args();
         }
 
         return $this;
@@ -594,10 +682,46 @@ class Builder
         $filters = is_array($filters) ? $filters : func_get_args();
 
         foreach ($filters as $filter) {
-            $this->addBinding(new Filter($filter), 'filter');
+            $this->filters['raw'][] = $filter;
         }
 
         return $this;
+    }
+
+    /**
+     * Adds a nested 'and' filter to the current query.
+     *
+     * @param Closure $closure
+     *
+     * @return Builder
+     */
+    public function andFilter(Closure $closure)
+    {
+        $query = $this->newInstance()->nested();
+
+        call_user_func($closure, $query);
+
+        $filter = $this->grammar->compileAnd($query->getQuery());
+
+        return $this->rawFilter($filter);
+    }
+
+    /**
+     * Adds a nested 'or' filter to the current query.
+     *
+     * @param Closure $closure
+     *
+     * @return Builder
+     */
+    public function orFilter(Closure $closure)
+    {
+        $query = $this->newInstance()->nested();
+
+        call_user_func($closure, $query);
+
+        $filter = $this->grammar->compileOr($query->getQuery());
+
+        return $this->rawFilter($filter);
     }
 
     /**
@@ -606,41 +730,60 @@ class Builder
      * @param string|array $field
      * @param string       $operator
      * @param string       $value
-     * @param string       $type
+     * @param string       $boolean
+     * @param bool         $raw
+     *
+     * @throws InvalidArgumentException
      *
      * @return Builder
      */
-    public function where($field, $operator = null, $value = null, $type = 'and')
+    public function where($field, $operator = null, $value = null, $boolean = 'and', $raw = false)
     {
         if (is_array($field)) {
             // If the column is an array, we will assume it is an array of
             // key-value pairs and can add them each as a where clause.
-            foreach ($field as $key => $value) {
-                $this->where($key, Operator::$equals, $value, $type);
-            }
-
-            return $this;
+            return $this->addArrayOfWheres($field, $boolean, $raw);
         }
 
         // We'll bypass the 'has' and 'notHas' operator since they
         // only require two arguments inside the where method.
         $bypass = [Operator::$has, Operator::$notHas];
 
-        // Here we will make some assumptions about the operator. If only 2 values are
-        // passed to the method, we will assume that the operator is an equals sign
-        // and keep going.
+        // Here we will make some assumptions about the operator. If only
+        // 2 values are passed to the method, we will assume that
+        // the operator is an equals sign and keep going.
         if (func_num_args() === 2 && in_array($operator, $bypass) === false) {
             list($value, $operator) = [$operator, '='];
         }
 
-        // We'll construct a new where binding.
-        $binding = $this->newWhereBinding($field, $operator, $value, $type);
+        if (!in_array($operator, Operator::all())) {
+            throw new InvalidArgumentException("Invalid where operator: {$operator}");
+        }
 
-        // Normalize type.
-        $type = ($type == 'or' ? 'orWhere' : 'where');
+        // We'll escape the value if raw isn't requested.
+        $value = $raw ? $value : $this->escape($value);
 
-        // Then add it to the current query builder.
-        return $this->addBinding($binding, $type);
+        $field = $this->escape($field, null, 3);
+
+        $this->filters[$boolean][] = compact('field', 'operator', 'value');
+
+        return $this;
+    }
+
+    /**
+     * Adds a raw where clause to the current query.
+     *
+     * Values given to this method are not escaped.
+     *
+     * @param string $field
+     * @param string $operator
+     * @param string $value
+     *
+     * @return Builder
+     */
+    public function whereRaw($field, $operator = null, $value = null)
+    {
+        return $this->where($field, $operator, $value, 'and', true);
     }
 
     /**
@@ -654,6 +797,19 @@ class Builder
     public function whereEquals($field, $value)
     {
         return $this->where($field, Operator::$equals, $value);
+    }
+
+    /**
+     * Adds a where not equals clause to the current query.
+     *
+     * @param string $field
+     * @param string $value
+     *
+     * @return Builder
+     */
+    public function whereNotEquals($field, $value)
+    {
+        return $this->where($field, Operator::$doesNotEqual, $value);
     }
 
     /**
@@ -720,6 +876,22 @@ class Builder
     }
 
     /**
+     * Adds a between clause to the current query.
+     *
+     * @param string $field
+     * @param array  $values
+     *
+     * @return Builder
+     */
+    public function whereBetween($field, array $values)
+    {
+        return $this->where([
+            [$field, '>=', $values[0]],
+            [$field, '<=', $values[1]],
+        ]);
+    }
+
+    /**
      * Adds a where starts with clause to the current query.
      *
      * @param string $field
@@ -779,6 +951,18 @@ class Builder
     }
 
     /**
+     * Adds a member of filter to the current query.
+     *
+     * @param string $dn
+     *
+     * @return Builder
+     */
+    public function whereMemberOf($dn)
+    {
+        return $this->whereEquals('memberof:1.2.840.113556.1.4.1941:', $dn);
+    }
+
+    /**
      * Adds an or where clause to the current query.
      *
      * @param string      $field
@@ -790,6 +974,22 @@ class Builder
     public function orWhere($field, $operator = null, $value = null)
     {
         return $this->where($field, $operator, $value, 'or');
+    }
+
+    /**
+     * Adds a raw or where clause to the current query.
+     *
+     * Values given to this method are not escaped.
+     *
+     * @param string $field
+     * @param string $operator
+     * @param string $value
+     *
+     * @return Builder
+     */
+    public function orWhereRaw($field, $operator = null, $value = null)
+    {
+        return $this->where($field, $operator, $value, 'or', true);
     }
 
     /**
@@ -827,6 +1027,19 @@ class Builder
     public function orWhereEquals($field, $value)
     {
         return $this->orWhere($field, Operator::$equals, $value);
+    }
+
+    /**
+     * Adds an or where not equals clause to the current query.
+     *
+     * @param string $field
+     * @param string $value
+     *
+     * @return Builder
+     */
+    public function orWhereNotEquals($field, $value)
+    {
+        return $this->orWhere($field, Operator::$doesNotEqual, $value);
     }
 
     /**
@@ -921,6 +1134,18 @@ class Builder
     }
 
     /**
+     * Adds an or where member of filter to the current query.
+     *
+     * @param string $dn
+     *
+     * @return Builder
+     */
+    public function orWhereMemberOf($dn)
+    {
+        return $this->orWhereEquals('memberof:1.2.840.113556.1.4.1941:', $dn);
+    }
+
+    /**
      * Returns true / false depending if the current object
      * contains selects.
      *
@@ -938,63 +1163,20 @@ class Builder
      */
     public function getSelects()
     {
-        $selects = $this->bindings['select'];
-
-        $schema = $this->schema;
+        $selects = $this->columns;
 
         if (count($selects) > 0) {
             // Always make sure object category and class are selected. We need these
             // attributes to construct the right model instance for the record.
-            $selects[] = new Select($schema->objectCategory());
-            $selects[] = new Select($schema->objectClass());
+            $selects[] = $this->schema->objectCategory();
+            $selects[] = $this->schema->objectClass();
         }
 
         return $selects;
     }
 
     /**
-     * Returns the filters on the current builder.
-     *
-     * @return array
-     */
-    public function getFilters()
-    {
-        return $this->bindings['filter'];
-    }
-
-    /**
-     * Returns the wheres on the current builder.
-     *
-     * @return array
-     */
-    public function getWheres()
-    {
-        return $this->bindings['where'];
-    }
-
-    /**
-     * Returns the or wheres on the current builder.
-     *
-     * @return array
-     */
-    public function getOrWheres()
-    {
-        return $this->bindings['orWhere'];
-    }
-
-    /**
-     * Returns all of the query builder bindings.
-     *
-     * @return array
-     */
-    public function getBindings()
-    {
-        return $this->bindings;
-    }
-
-    /**
-     * Sorts the LDAP search results by the
-     * specified field and direction.
+     * Sorts the LDAP search results by the specified field and direction.
      *
      * @param string   $field
      * @param string   $direction
@@ -1006,7 +1188,7 @@ class Builder
     {
         $this->sortByField = $field;
 
-        // Lowercase direction for comparisons.
+        // Normalize direction.
         $direction = strtolower($direction);
 
         if ($direction === 'asc' || $direction === 'desc') {
@@ -1014,17 +1196,14 @@ class Builder
         }
 
         if (is_null($flags)) {
-            $flags = SORT_NATURAL + SORT_FLAG_CASE;
+            $this->sortByFlags = SORT_NATURAL + SORT_FLAG_CASE;
         }
-
-        $this->sortByFlags = $flags;
 
         return $this;
     }
 
     /**
-     * Sets the recursive property to tell the search
-     * whether or not to search recursively.
+     * Sets the recursive property to tell the search whether or not to search recursively.
      *
      * @param bool $recursive
      *
@@ -1054,9 +1233,8 @@ class Builder
     }
 
     /**
-     * Sets the recursive property to tell the search
-     * whether or not to return the LDAP results in
-     * their raw format.
+     * Sets the recursive property to tell the search whether or
+     * not to return the LDAP results in their raw format.
      *
      * @param bool $raw
      *
@@ -1067,6 +1245,45 @@ class Builder
         $this->raw = (bool) $raw;
 
         return $this;
+    }
+
+    /**
+     * Sets the nested property to tell the Grammar instance whether
+     * or not the current query is already nested.
+     *
+     * @param bool $nested
+     *
+     * @return $this
+     */
+    public function nested($nested = true)
+    {
+        $this->nested = (bool) $nested;
+
+        return $this;
+    }
+
+    /**
+     * Returns true / false if the current query is nested.
+     *
+     * @return bool
+     */
+    public function isNested()
+    {
+        return $this->nested === true;
+    }
+
+    /**
+     * Returns an escaped string for use in an LDAP filter.
+     *
+     * @param string $value
+     * @param string $ignore
+     * @param int    $flags
+     *
+     * @return string
+     */
+    public function escape($value, $ignore = '', $flags = 0)
+    {
+        return Utilities::escape($value, $ignore, $flags);
     }
 
     /**
@@ -1133,41 +1350,6 @@ class Builder
     }
 
     /**
-     * Adds a binding to the current query.
-     *
-     * @param AbstractBinding $value
-     * @param string          $type
-     *
-     * @throws InvalidArgumentException
-     *
-     * @return Builder
-     */
-    public function addBinding(AbstractBinding $value, $type = 'where')
-    {
-        if (!array_key_exists($type, $this->bindings)) {
-            throw new InvalidArgumentException("Invalid binding type: {$type}.");
-        }
-
-        $this->bindings[$type][] = $value;
-
-        return $this;
-    }
-
-    /**
-     * Clears all query bindings.
-     *
-     * @return Builder
-     */
-    public function clearBindings()
-    {
-        foreach ($this->bindings as $key => $bindings) {
-            $this->bindings[$key] = [];
-        }
-
-        return $this;
-    }
-
-    /**
      * Handle dynamic method calls on the query builder
      * object to be directed to the query processor.
      *
@@ -1183,40 +1365,6 @@ class Builder
         }
 
         return call_user_func_array([$this->newProcessor(), $method], $parameters);
-    }
-
-    /**
-     * Returns a new query Processor instance.
-     *
-     * @return Processor
-     */
-    protected function newProcessor()
-    {
-        return new Processor($this);
-    }
-
-    /**
-     * Constructs a new where binding depending on the specified type.
-     *
-     * @param string      $field
-     * @param string      $operator
-     * @param string|null $value
-     * @param string      $type
-     *
-     * @throws InvalidArgumentException
-     *
-     * @return Where|OrWhere
-     */
-    protected function newWhereBinding($field, $operator, $value = null, $type = 'and')
-    {
-        switch (strtolower($type)) {
-            case 'and':
-                return new Where($field, $operator, $value);
-            case 'or':
-                return new OrWhere($field, $operator, $value);
-            default:
-                throw new InvalidArgumentException("Invalid binding type: $type.");
-        }
     }
 
     /**
@@ -1262,6 +1410,31 @@ class Builder
     }
 
     /**
+     * Adds an array of wheres to the current query.
+     *
+     * @param array  $wheres
+     * @param string $boolean
+     * @param bool   $raw
+     *
+     * @return $this
+     */
+    protected function addArrayOfWheres($wheres, $boolean, $raw)
+    {
+        foreach ($wheres as $key => $value) {
+            if (is_numeric($key) && is_array($value)) {
+                // If the key is numeric and the value is an array, we'll
+                // assume we've been given an array with conditionals.
+                $this->where($value[0], $value[1], $value[2]);
+            } else {
+                // Otherwise, we'll assume the array is an equals clause.
+                $this->where($key, Operator::$equals, $value, $boolean, $raw);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * Add a single dynamic where clause statement to the query.
      *
      * @param string $segment
@@ -1279,5 +1452,15 @@ class Builder
         $bool = strtolower($connector);
 
         $this->where(Str::snake($segment), '=', $parameters[$index], $bool);
+    }
+
+    /**
+     * Returns a new query Processor instance.
+     *
+     * @return Processor
+     */
+    protected function newProcessor()
+    {
+        return new Processor($this);
     }
 }

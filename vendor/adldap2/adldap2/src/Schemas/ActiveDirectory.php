@@ -2,8 +2,6 @@
 
 namespace Adldap\Schemas;
 
-use Adldap\Contracts\Schemas\SchemaInterface;
-
 class ActiveDirectory implements SchemaInterface
 {
     /**
@@ -148,6 +146,14 @@ class ActiveDirectory implements SchemaInterface
     public function department()
     {
         return 'department';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function departmentNumber()
+    {
+        return 'departmentnumber';
     }
 
     /**
@@ -329,6 +335,14 @@ class ActiveDirectory implements SchemaInterface
     /**
      * {@inheritdoc}
      */
+    public function jpegPhoto()
+    {
+        return 'jpegphoto';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function lastLogOff()
     {
         return 'lastlogoff';
@@ -412,6 +426,14 @@ class ActiveDirectory implements SchemaInterface
     public function member()
     {
         return 'member';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function memberRange($from, $to)
+    {
+        return $this->member().";range={$from}-{$to}";
     }
 
     /**
@@ -868,6 +890,22 @@ class ActiveDirectory implements SchemaInterface
     public function proxyAddresses()
     {
         return 'proxyaddresses';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function roomNumber()
+    {
+        return 'roomnumber';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function rootDomainNamingContext()
+    {
+        return 'rootdomainnamingcontext';
     }
 
     /**

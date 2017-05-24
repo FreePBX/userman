@@ -87,7 +87,7 @@ class Str
     public static function endsWith($haystack, $needles)
     {
         foreach ((array) $needles as $needle) {
-            if ((string) $needle === static::substr($haystack, -static::length($needle))) {
+            if (substr($haystack, -strlen($needle)) === (string) $needle) {
                 return true;
             }
         }
@@ -130,6 +130,17 @@ class Str
         $pattern = str_replace('\*', '.*', $pattern);
 
         return (bool) preg_match('#^'.$pattern.'\z#u', $value);
+    }
+
+    /**
+     * Convert a string to kebab case.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public static function kebab($value)
+    {
+        return static::snake($value, '-');
     }
 
     /**
@@ -194,10 +205,10 @@ class Str
      * Parse a Class@method style callback into class and method.
      *
      * @param  string  $callback
-     * @param  string  $default
+     * @param  string|null  $default
      * @return array
      */
-    public static function parseCallback($callback, $default)
+    public static function parseCallback($callback, $default = null)
     {
         return static::contains($callback, '@') ? explode('@', $callback, 2) : [$callback, $default];
     }
@@ -224,12 +235,12 @@ class Str
     {
         $string = '';
 
-        while (($len = static::length($string)) < $length) {
+        while (($len = strlen($string)) < $length) {
             $size = $length - $len;
 
             $bytes = random_bytes($size);
 
-            $string .= static::substr(str_replace(['/', '+', '='], '', base64_encode($bytes)), 0, $size);
+            $string .= substr(str_replace(['/', '+', '='], '', base64_encode($bytes)), 0, $size);
         }
 
         return $string;
@@ -253,7 +264,7 @@ class Str
 
         $pool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-        return static::substr(str_shuffle(str_repeat($pool, $length)), 0, $length);
+        return substr(str_shuffle(str_repeat($pool, $length)), 0, $length);
     }
 
     /**
@@ -403,7 +414,7 @@ class Str
     public static function startsWith($haystack, $needles)
     {
         foreach ((array) $needles as $needle) {
-            if ($needle != '' && mb_strpos($haystack, $needle) === 0) {
+            if ($needle != '' && substr($haystack, 0, strlen($needle)) === (string) $needle) {
                 return true;
             }
         }

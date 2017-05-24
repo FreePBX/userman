@@ -1,5 +1,20 @@
 # Configuration
 
+- [Using an Array](#using-a-configuration-array)
+- [Using DomainConfiguration](#using-a-domainconfiguration-object)
+- [Definitions](#definitions)
+    - [Account Prefix (optional)](#account-prefix-optional)
+    - [Account Suffix (optional)](#account-suffix-optional)
+    - [Admin Account Suffix (optional)](#admin-account-suffix-optional)
+    - [Domain Controllers (required)](#domain-controllers-required)
+    - [Port (optional)](#port-optional)
+    - [Base Distinguished Name (required)](#base-distinguished-name-required)
+    - [Administrator Username & Password (required)](#administrator-username--password-required)
+    - [Follow Referrals (optional)](#follow-referrals-optional)
+    - [SSL & TLS (optional)](#ssl--tls-optional)
+    - [Timeout](#timeout)
+    - [Custom Options](#custom-options)
+
 Configuring Adldap2 is really easy. Let's get started.
 
 ## Using a configuration array
@@ -9,8 +24,7 @@ Here is an example array with all possible configuration options:
 
 ```php
 // Create the configuration array.
-$config = [
-    // Mandatory Configuration Options
+$config = [    // Mandatory Configuration Options
     'domain_controllers'    => ['corp-dc1.corp.acme.org', 'corp-dc2.corp.acme.org'],
     'base_dn'               => 'dc=corp,dc=acme,dc=org',
     'admin_username'        => 'admin',
@@ -25,38 +39,37 @@ $config = [
     'use_ssl'               => false,
     'use_tls'               => false,
     'timeout'               => 5,
+    
+    // Custom LDAP Options
+    'custom_options'        => [
+        // See: http://php.net/ldap_set_option
+        LDAP_OPT_X_TLS_REQUIRE_CERT => LDAP_OPT_X_TLS_HARD
+    ]
 ];
 
 // Create a new Adldap Provider instance.
 $provider = new \Adldap\Connections\Provider($config);
 ```
 
-## Using an configuration object
+## Using a DomainConfiguration object
 
-You can configure Adldap in an object oriented way by creating a `Configuration` object. Keep in mind, not all of these
-methods are required. This will be discussed below. Here is an example of a Configuration with all possible configuration options.
+If you'd prefer, you can also construct a `DomainConfiguration` object:
 
 ```php
-// Create a new Configuration object.
-$config = new \Adldap\Connections\Configuration();
+// Setting configuration options via construct:
+$config = new \Adldap\Configuration\DomainConfiguration([
+    'domain_controllers' => [
+        'corp-dc1.corp.acme.org',
+        'corp-dc2.corp.acme.org',
+    ],
+]);
 
-// Mandatory Configuration Options
-$config->setDomainControllers(['corp-dc1.corp.acme.org', 'corp-dc2.corp.acme.org']);
-$config->setBaseDn('dc=corp,dc=acme,dc=org');
-$config->setAdminUsername('admin');
-$config->setAdminPassword('password');
+// Setting configuration options via `set()` method:
+$config->set('domain_controllers', [
+    'corp-dc1.corp.acme.org',
+    'corp-dc2.corp.acme.org',
+]);
 
-// Optional Configuration Options
-$config->setAccountPrefix('ACME-');
-$config->setAccountSuffix('@acme.org');
-$config->setAdminAccountSuffix('@acme.org');
-$config->setPort(389);
-$config->setFollowReferrals(false);
-$config->setUseSSL(false);
-$config->setUseTLS(false);
-$config->setTimeout(5);
-
-// Create a new Adldap Provider instance.
 $provider = new \Adldap\Connections\Provider($config);
 ```
 
@@ -95,11 +108,11 @@ The port option is used for authenticating and binding to your AD server. The de
 
 Only insert a port if your AD server uses a unique port.
 
-### Base Distinguished Name (optional)
+### Base Distinguished Name (required)
 
 The base distinguished name is the base distinguished name you'd like to perform operations on. An example base DN would be `DC=corp,DC=acme,DC=org`.
 
-If one is not defined, then Adldap will try to find it automatically by querying your server. It's recommended to include it to limit queries executed per request.
+If one is not defined, you will not retrieve any search results.
 
 ### Administrator Username & Password (required)
 
@@ -124,3 +137,9 @@ securely.
 The timeout option allows you to configure the amount of seconds to wait until your application receives a response from your LDAP server.
 
 The default is 5 seconds.
+
+### Custom Options
+
+Arbitrary options can be set for the connection to fine-tune TLS and connection behavior. Please note that `LDAP_OPT_PROTOCOL_VERSION`,
+`LDAP_OPT_NETWORK_TIMEOUT` and `LDAP_OPT_REFERRALS` will be ignored if set. These are set above with the `version`, `timeout` and
+`follow_referrals` keys respectively. Valid options are listed in the [PHP documentation for ldap_set_option](http://php.net/ldap_set_option).

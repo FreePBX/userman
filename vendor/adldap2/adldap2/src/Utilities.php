@@ -106,7 +106,6 @@ class Utilities
      * Escapes the inserted value with flags. Supplying either 1
      * or 2 into the flags parameter will escape only certain values.
      *
-     *
      * @param string $value
      * @param string $ignore
      * @param int    $flags
@@ -218,6 +217,24 @@ class Utilities
     }
 
     /**
+     * Converts a string GUID to it's hex variant.
+     *
+     * @param string $string
+     *
+     * @return string
+     */
+    public static function stringGuidToHex($string)
+    {
+        $hex = '\\'.substr($string, 6, 2).'\\'.substr($string, 4, 2).'\\'.substr($string, 2, 2).'\\'.substr($string, 0, 2);
+        $hex = $hex .'\\'. substr($string, 11, 2).'\\'.substr($string, 9, 2);
+        $hex = $hex .'\\'. substr($string, 16, 2).'\\'.substr($string, 14, 2);
+        $hex = $hex .'\\'. substr($string, 19, 2).'\\'.substr($string, 21, 2);
+        $hex = $hex .'\\'. substr($string, 24, 2).'\\'. substr($string, 26, 2).'\\'. substr($string, 28, 2).'\\'. substr($string, 30, 2).'\\'. substr($string, 32, 2).'\\'. substr($string, 34, 2);
+
+        return $hex;
+    }
+
+    /**
      * Converts a little-endian hex number to one that hexdec() can convert.
      *
      * @param string $hex A hex code
@@ -283,11 +300,7 @@ class Utilities
     {
         preg_match("/S-1-5-21-\d+-\d+\-\d+\-\d+/", $sid, $matches);
 
-        if (count($matches) > 0) {
-            return true;
-        }
-
-        return false;
+        return count($matches) > 0;
     }
 
     /**
@@ -301,10 +314,6 @@ class Utilities
     {
         $ignore = trim($ignore);
 
-        if (!empty($ignore)) {
-            return str_split($ignore);
-        }
-
-        return [];
+        return $ignore ? str_split($ignore) : [];
     }
 }

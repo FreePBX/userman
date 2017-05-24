@@ -7,13 +7,16 @@ use DateTime;
 class RootDse extends Model
 {
     /**
-     * Returns the hosts current time.
+     * Returns the hosts current time in unix timestamp format.
      *
-     * @return string
+     * @return int
      */
     public function getCurrentTime()
     {
-        return $this->getAttribute($this->schema->currentTime(), 0);
+        $time = $this->getFirstAttribute($this->schema->currentTime());
+
+        return DateTime::createFromFormat($this->timestampFormat, $time)
+            ->getTimestamp();
     }
 
     /**
@@ -23,17 +26,9 @@ class RootDse extends Model
      */
     public function getCurrentTimeDate()
     {
-        return (new DateTime())->setTimestamp($this->getCurrentTimeTimestamp())->format($this->dateFormat);
-    }
-
-    /**
-     * Returns the hosts current time in unix timestamp format.
-     *
-     * @return int
-     */
-    public function getCurrentTimeTimestamp()
-    {
-        return DateTime::createFromFormat($this->timestampFormat, $this->getCurrentTime())->getTimestamp();
+        return (new DateTime())
+            ->setTimestamp($this->getCurrentTime())
+            ->format($this->dateFormat);
     }
 
     /**
@@ -43,7 +38,7 @@ class RootDse extends Model
      */
     public function getConfigurationNamingContext()
     {
-        return $this->getAttribute($this->schema->configurationNamingContext(), 0);
+        return $this->getFirstAttribute($this->schema->configurationNamingContext());
     }
 
     /**
@@ -53,7 +48,7 @@ class RootDse extends Model
      */
     public function getSchemaNamingContext()
     {
-        return $this->getAttribute($this->schema->schemaNamingContext(), 0);
+        return $this->getFirstAttribute($this->schema->schemaNamingContext());
     }
 
     /**
@@ -63,7 +58,7 @@ class RootDse extends Model
      */
     public function getDnsHostName()
     {
-        return $this->getAttribute($this->schema->dnsHostName(), 0);
+        return $this->getFirstAttribute($this->schema->dnsHostName());
     }
 
     /**
@@ -73,6 +68,16 @@ class RootDse extends Model
      */
     public function getServerName()
     {
-        return $this->getAttribute($this->schema->serverName(), 0);
+        return $this->getFirstAttribute($this->schema->serverName());
+    }
+
+    /**
+     * Returns the DN of the root domain NC for this DC's forest.
+     *
+     * @return mixed
+     */
+    public function getRootDomainNamingContext()
+    {
+        return $this->getFirstAttribute($this->schema->rootDomainNamingContext());
     }
 }

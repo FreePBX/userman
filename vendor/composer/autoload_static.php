@@ -12,6 +12,19 @@ class ComposerStaticInit268a4c9e6f4d2a15cc37d250ad62db1f
     );
 
     public static $prefixLengthsPsr4 = array (
+        'S' => 
+        array (
+            'Symfony\\Component\\Yaml\\' => 23,
+            'Symfony\\Component\\EventDispatcher\\' => 34,
+        ),
+        'R' => 
+        array (
+            'Ramsey\\Uuid\\' => 12,
+        ),
+        'L' => 
+        array (
+            'LdapTools\\' => 10,
+        ),
         'I' => 
         array (
             'Illuminate\\Support\\' => 19,
@@ -24,6 +37,22 @@ class ComposerStaticInit268a4c9e6f4d2a15cc37d250ad62db1f
     );
 
     public static $prefixDirsPsr4 = array (
+        'Symfony\\Component\\Yaml\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/yaml',
+        ),
+        'Symfony\\Component\\EventDispatcher\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/event-dispatcher',
+        ),
+        'Ramsey\\Uuid\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/ramsey/uuid/src',
+        ),
+        'LdapTools\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/ldaptools/ldaptools/src/LdapTools',
+        ),
         'Illuminate\\Support\\' => 
         array (
             0 => __DIR__ . '/..' . '/illuminate/support',

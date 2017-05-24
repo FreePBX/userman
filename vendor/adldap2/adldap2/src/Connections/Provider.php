@@ -2,15 +2,15 @@
 
 namespace Adldap\Connections;
 
-use Adldap\Auth\Guard;
 use InvalidArgumentException;
+use Adldap\Auth\Guard;
+use Adldap\Query\Builder;
+use Adldap\Auth\GuardInterface;
 use Adldap\Schemas\ActiveDirectory;
+use Adldap\Schemas\SchemaInterface;
 use Adldap\Models\Factory as ModelFactory;
 use Adldap\Search\Factory as SearchFactory;
-use Adldap\Contracts\Auth\GuardInterface;
-use Adldap\Contracts\Schemas\SchemaInterface;
-use Adldap\Contracts\Connections\ProviderInterface;
-use Adldap\Contracts\Connections\ConnectionInterface;
+use Adldap\Configuration\DomainConfiguration;
 
 class Provider implements ProviderInterface
 {
@@ -24,7 +24,7 @@ class Provider implements ProviderInterface
     /**
      * The providers configuration.
      *
-     * @var Configuration
+     * @var DomainConfiguration
      */
     protected $configuration;
 
@@ -47,9 +47,9 @@ class Provider implements ProviderInterface
      */
     public function __construct($configuration = [], ConnectionInterface $connection = null, SchemaInterface $schema = null)
     {
-        $this->setConfiguration($configuration);
-        $this->setConnection($connection);
-        $this->setSchema($schema);
+        $this->setConfiguration($configuration)
+            ->setConnection($connection)
+            ->setSchema($schema);
     }
 
     /**
@@ -57,9 +57,79 @@ class Provider implements ProviderInterface
      */
     public function __destruct()
     {
-        if ($this->connection instanceof ConnectionInterface && $this->connection->isBound()) {
+        if (
+            $this->connection instanceof ConnectionInterface &&
+            $this->connection->isBound()
+        ) {
             $this->connection->close();
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setConfiguration($configuration = [])
+    {
+        if (is_array($configuration)) {
+            // Construct a configuration instance if an array is given.
+            $configuration = new DomainConfiguration($configuration);
+        } elseif (!$configuration instanceof DomainConfiguration) {
+            $class = DomainConfiguration::class;
+
+            throw new InvalidArgumentException("Configuration must be either an array or instance of $class");
+        }
+
+        $this->configuration = $configuration;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setConnection(ConnectionInterface $connection = null)
+    {
+        // We'll create a standard connection if one isn't given.
+        $this->connection = $connection ?: new Ldap();
+
+        // Prepare the connection.
+        $this->prepareConnection();
+
+        // Instantiate the LDAP connection.
+        $this->connection->connect(
+            $this->configuration->get('domain_controllers'),
+            $this->configuration->get('port')
+        );
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setSchema(SchemaInterface $schema = null)
+    {
+        $this->schema = $schema ?: new ActiveDirectory();
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setGuard(GuardInterface $guard)
+    {
+        $this->guard = $guard;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getConfiguration()
+    {
+        return $this->configuration;
     }
 
     /**
@@ -73,9 +143,9 @@ class Provider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getConfiguration()
+    public function getSchema()
     {
-        return $this->configuration;
+        return $this->schema;
     }
 
     /**
@@ -93,7 +163,7 @@ class Provider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getDefaultGuard(ConnectionInterface $connection, Configuration $configuration)
+    public function getDefaultGuard(ConnectionInterface $connection, DomainConfiguration $configuration)
     {
         return new Guard($connection, $configuration);
     }
@@ -101,72 +171,12 @@ class Provider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function setConnection(ConnectionInterface $connection = null)
-    {
-        $this->connection = $connection ?: new Ldap();
-
-        // Prepare the connection.
-        $this->prepareConnection();
-
-        // Instantiate the LDAP connection.
-        $this->connection->connect($this->configuration->getDomainControllers(), $this->configuration->getPort());
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setConfiguration($configuration = [])
-    {
-        if (is_array($configuration)) {
-            // Construct a configuration instance if an array is given.
-            $configuration = new Configuration($configuration);
-        } elseif (!$configuration instanceof Configuration) {
-            $class = Configuration::class;
-
-            throw new InvalidArgumentException("Configuration must be either an array or instance of $class");
-        }
-
-        $this->configuration = $configuration;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setSchema(SchemaInterface $schema = null)
-    {
-        $this->schema = $schema ?: new ActiveDirectory();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getSchema()
-    {
-        return $this->schema;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setGuard(GuardInterface $guard)
-    {
-        $this->guard = $guard;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getRootDse()
-    {
-        return $this->search()->getRootDse();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function make()
     {
-        return new ModelFactory($this->search()->getQuery(), $this->schema);
+        return $this->newModelFactory(
+            $this->search()->getQuery(),
+            $this->schema
+        );
     }
 
     /**
@@ -174,7 +184,11 @@ class Provider implements ProviderInterface
      */
     public function search()
     {
-        return new SearchFactory($this->connection, $this->schema, $this->configuration->getBaseDn());
+        return $this->newSearchFactory(
+            $this->connection,
+            $this->schema,
+            $this->configuration->get('base_dn')
+        );
     }
 
     /**
@@ -206,22 +220,54 @@ class Provider implements ProviderInterface
     }
 
     /**
+     * Creates a new model factory.
+     *
+     * @param Builder         $builder
+     * @param SchemaInterface $schema
+     *
+     * @return ModelFactory
+     */
+    protected function newModelFactory(Builder $builder, SchemaInterface $schema)
+    {
+        return new ModelFactory($builder, $schema);
+    }
+
+    /**
+     * Creates a new search factory.
+     *
+     * @param ConnectionInterface $connection
+     * @param SchemaInterface     $schema
+     * @param string              $baseDn
+     *
+     * @return SearchFactory
+     */
+    protected function newSearchFactory(ConnectionInterface $connection, SchemaInterface $schema, $baseDn)
+    {
+        return new SearchFactory($connection, $schema, $baseDn);
+    }
+
+    /**
      * Prepares the connection by setting configured parameters.
      *
      * @return void
      */
     protected function prepareConnection()
     {
-        // Set the beginning protocol options on the connection
-        // if they're set in the configuration.
-        if ($this->configuration->getUseSSL()) {
-            $this->connection->useSSL();
-        } elseif ($this->configuration->getUseTLS()) {
-            $this->connection->useTLS();
+        if ($this->configuration->get('use_ssl')) {
+            $this->connection->ssl();
+        } elseif ($this->configuration->get('use_tls')) {
+            $this->connection->tls();
         }
 
-        $this->connection->setOption(LDAP_OPT_PROTOCOL_VERSION, 3);
-        $this->connection->setOption(LDAP_OPT_NETWORK_TIMEOUT, $this->configuration->getTimeout());
-        $this->connection->setOption(LDAP_OPT_REFERRALS, $this->configuration->getFollowReferrals());
+        $options = array_replace(
+            $this->configuration->get('custom_options'),
+            [
+                LDAP_OPT_PROTOCOL_VERSION => $this->configuration->get('version'),
+                LDAP_OPT_NETWORK_TIMEOUT => $this->configuration->get('timeout'),
+                LDAP_OPT_REFERRALS => $this->configuration->get('follow_referrals')
+            ]
+        );
+
+        $this->connection->setOptions($options);
     }
 }

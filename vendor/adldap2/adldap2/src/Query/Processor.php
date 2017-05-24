@@ -7,8 +7,8 @@ use Illuminate\Support\Collection;
 use Adldap\Models\Entry;
 use Adldap\Models\Model;
 use Adldap\Objects\Paginator;
-use Adldap\Contracts\Schemas\SchemaInterface;
-use Adldap\Contracts\Connections\ConnectionInterface;
+use Adldap\Schemas\SchemaInterface;
+use Adldap\Connections\ConnectionInterface;
 
 class Processor
 {
@@ -130,11 +130,12 @@ class Processor
                 $model = $models[current($map)];
 
                 // Construct and return a new model.
-                return $this->newModel([], $model)->setRawAttributes($attributes);
+                return $this->newModel([], $model)
+                    ->setRawAttributes($attributes);
             }
         }
 
-        // A default entry model if the object category isn't found.
+        // A default entry model if the object class isn't found.
         return $this->newModel()->setRawAttributes($attributes);
     }
 
@@ -163,7 +164,7 @@ class Processor
      *
      * @return Paginator
      */
-    public function newPaginator(array $models, $perPage = 25, $currentPage = 0, $pages = 1)
+    public function newPaginator(array $models = [], $perPage = 25, $currentPage = 0, $pages = 1)
     {
         return new Paginator($models, $perPage, $currentPage, $pages);
     }
@@ -216,7 +217,7 @@ class Processor
         $desc = ($direction === 'desc' ? true : false);
 
         return $this->newCollection($models)->sortBy(function (Model $model) use ($field) {
-            return $model->getAttribute($field, 0);
+            return $model->getFirstAttribute($field);
         }, $flags, $desc);
     }
 }

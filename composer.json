@@ -1,6 +1,7 @@
 {
     "require": {
-        "adldap2/adldap2": "^6.1",
-        "hautelook/phpass": "^1.1"
+        "adldap2/adldap2": "^7.0",
+        "hautelook/phpass": "^1.1",
+        "ldaptools/ldaptools": "^0.24.0"
     }
 }

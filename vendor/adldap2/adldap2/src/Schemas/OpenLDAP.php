@@ -23,6 +23,30 @@ class OpenLDAP extends ActiveDirectory
     /**
      * {@inheritdoc}
      */
+    public function objectClassOu()
+    {
+        return 'groupofuniquenames';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function objectClassGroup()
+    {
+        return 'groupofnames';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function objectGuid()
+    {
+        return 'entryuuid';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function distinguishedName()
     {
         return 'dn';
@@ -33,5 +57,6 @@ class OpenLDAP extends ActiveDirectory
      */
     public function distinguishedNameSubKey()
     {
+        //
     }
 }
