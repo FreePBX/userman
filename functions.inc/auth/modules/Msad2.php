@@ -551,7 +551,7 @@ class Msad2 extends Auth {
 				$this->out("\t\tERROR group is missing ".$this->config['groupexternalidattr']." attribute! Cant continue!!");
 				continue;
 			}
-			$sid = $this->binToStrSid($group[$this->config['groupexternalidattr']][0]);
+			$sid = $this->binaryGuidToString($group[$this->config['groupexternalidattr']][0]);
 			$this->gcache[$sid] = $group;
 			$groupname = $group[$this->config['groupnameattr']][0];
 			$um = $this->linkGroup($groupname, $sid);
@@ -631,7 +631,7 @@ class Msad2 extends Auth {
 				$this->out("\t\tERROR user is missing ".$this->config['userexternalidattr']." attribute! Cant continue!!");
 				continue;
 			}
-			$sid = $this->binToStrSid($user[$this->config['userexternalidattr']][0]);
+			$sid = $this->binaryGuidToString($user[$this->config['userexternalidattr']][0]);
 			$username = $user[$this->config['usernameattr']][0];
 			if(empty($username)) {
 				$this->out("\t\tUsername is blank! Skipping unknown user");
@@ -718,38 +718,18 @@ class Msad2 extends Auth {
 		}
 	}
 
-	/**
-	 * Turns a binary SID into a String
-	 * @param  string $binsid The binary string
-	 */
-	public function binToStrSid($binsid) {
-		$hex_sid = bin2hex($binsid);
-		$rev = hexdec(substr($hex_sid, 0, 2));
-		$subcount = hexdec(substr($hex_sid, 2, 2));
-		$auth = hexdec(substr($hex_sid, 4, 12));
-		$result    = "$rev-$auth";
-
-		for ($x=0;$x < $subcount; $x++) {
-			$subauth[$x] =
-			hexdec($this->littleEndian(substr($hex_sid, 16 + ($x * 8), 8)));
-			$result .= "-" . $subauth[$x];
-		}
-
-		// Cheat by tacking on the S-
-		return 'S-' . $result;
-	}
-
-	/**
-	 * Converts a little-endian hex-number to one, that 'hexdec' can convert
-	 * @param  string $hex hex string
-	 */
-	public function littleEndian($hex) {
-		$result = "";
-
-		for ($x = strlen($hex) - 2; $x >= 0; $x = $x - 2) {
-			$result .= substr($hex, $x, 2);
-		}
-		return $result;
+	public static function binaryGuidToString($binGuid) {
+			if (trim($binGuid) == '' || is_null($binGuid)) {
+					return;
+			}
+			$hex = unpack('H*hex', $binGuid)['hex'];
+			$hex1 = substr($hex, -26, 2).substr($hex, -28, 2).substr($hex, -30, 2).substr($hex, -32, 2);
+			$hex2 = substr($hex, -22, 2).substr($hex, -24, 2);
+			$hex3 = substr($hex, -18, 2).substr($hex, -20, 2);
+			$hex4 = substr($hex, -16, 4);
+			$hex5 = substr($hex, -12, 12);
+			$guid = sprintf('%s-%s-%s-%s-%s', $hex1, $hex2, $hex3, $hex4, $hex5);
+			return $guid;
 	}
 
 	/**

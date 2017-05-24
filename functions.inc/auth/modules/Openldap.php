@@ -732,7 +732,9 @@ class Openldap extends Auth {
 		}
 
 		// Cheat by tacking on the S-
-		return 'S-' . $result;
+		$string = 'S-' . $result;
+		$string = (strlen($string) > 255) ? substr($string,0,255) : $string;
+		return $string;
 	}
 
 	/**

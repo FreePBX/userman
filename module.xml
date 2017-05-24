@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>13.0.76</version>
+	<version>13.0.76.1</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -12,6 +12,7 @@
 		Modules like iSymphony, Rest API and User Control Panel and FreePBX itself use this module to manage their users.
 	</description>
 	<changelog>
+		*13.0.76.1* Limit old school sids, change sid lookup format (for AD)
 		*13.0.76* FREEPBX-14813 FREEPBX-14814 FREEPBX-14699 FREEPBX-14226 FREEPBX-13494 FREEPBX-13202 FREEPBX-12555 FREEPBX-10426 FREEPBX-14815 FREEPBX-14623
 		*13.0.75.4* Issues releated to FREEPBX-14212 and quick create
 		*13.0.75.3* SendEmail function needs to return true if it completed
