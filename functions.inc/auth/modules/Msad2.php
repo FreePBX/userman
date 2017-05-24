@@ -722,7 +722,8 @@ class Msad2 extends Auth {
 			if (trim($binGuid) == '' || is_null($binGuid)) {
 					return;
 			}
-			$hex = unpack('H*hex', $binGuid)['hex'];
+			$tHex = unpack('H*hex', $binGuid);
+			$hex = $tHex['hex'];
 			$hex1 = substr($hex, -26, 2).substr($hex, -28, 2).substr($hex, -30, 2).substr($hex, -32, 2);
 			$hex2 = substr($hex, -22, 2).substr($hex, -24, 2);
 			$hex3 = substr($hex, -18, 2).substr($hex, -20, 2);
