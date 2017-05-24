@@ -5,7 +5,7 @@
 //
 namespace FreePBX\modules\Userman\Auth;
 
-abstract class Auth {
+abstract class Auth implements Base {
 	protected $userTable = 'userman_users';
 	protected $userSettingsTable = 'userman_users_settings';
 	protected $groupTable = 'userman_groups';
@@ -56,6 +56,22 @@ abstract class Auth {
 
 	public function getDefaultGroups() {
 		return array();
+	}
+
+	public function addUser($username, $password, $default='none', $description=null, $extraData=array(), $encrypt = true) {
+		return array("status" => false, "type" => "danger", "message" => _("Add User is not defined"));
+	}
+
+	public function updateUser($uid, $prevUsername, $username, $default='none', $description=null, $extraData=array(), $password=null, $nodisplay=false) {
+		return array("status" => false, "type" => "danger", "message" => _("Update User is not defined"));
+	}
+
+	public function addGroup($groupname, $description=null, $users=array()) {
+		return array("status" => false, "type" => "danger", "message" => _("Add Group is not defined"));
+	}
+
+	public function updateGroup($gid, $prevGroupname, $groupname, $description=null, $users=array(), $nodisplay=false) {
+		return array("status" => false, "type" => "danger", "message" => _("Update Group is not defined"));
 	}
 
 	/**
