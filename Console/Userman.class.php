@@ -8,38 +8,119 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-//Tables
-use Symfony\Component\Console\Helper\TableHelper;
+//la mesa
+use Symfony\Component\Console\Helper\Table;
 //Process
 use Symfony\Component\Process\Process;
+use Symfony\Component\Console\Command\HelpCommand;
 class Userman extends Command {
-  protected function configure(){
-    $this->setName('userman')
-      ->setDescription(_('User Manager'))
-      ->setDefinition(array(
-        new InputArgument('args', InputArgument::IS_ARRAY, null, null),));
-  }
-  protected function execute(InputInterface $input, OutputInterface $output){
-    $args = $input->getArgument('args');
-    $command = isset($args[0])?$args[0]:'';
+	protected function configure() {
+		$this->setName('userman')
+			->setDescription(_('User Manager'))
+			->setDefinition(array(
+				new InputOption('syncall', null, InputOption::VALUE_NONE, _('Syncronize all directories')),
+				new InputOption('sync', null, InputOption::VALUE_REQUIRED, _('Syncronize a single directory by id (obtained from --list)')),
+				new InputOption('force', null, InputOption::VALUE_NONE, _('Force syncronization')),
+				new InputOption('list', null, InputOption::VALUE_NONE, _('List directories'))
+			));
+	}
+	protected function execute(InputInterface $input, OutputInterface $output){
+		$force = $input->getOption('force');
+		$sync = $input->getOption('sync');
 		$userman = \FreePBX::create()->Userman;
-		switch ($command) {
-      case "sync":
-        $auth = $userman->getAuthObject();
-        if(method_exists($auth,"sync")) {
-          $output->write("Starting Sync...");
-          $auth->sync($output);
-          $output->writeln("Finished");
-        } else {
-          $output->writeln("<comment>The active authentication driver does not support syncing.</comment>");
-        }
-      break;
-	    default:
-	      $output->writeln("<error>The command provided is not valid.</error>");
-        $output->writeln("Avalible commands are:");
-        $output->writeln("<info>sync</info> - Syncronize User/Group information for an authentication engine");
-	      exit(4);
-	    break;
-    }
-  }
+		if($input->getOption('list')) {
+			$table = new Table($output);
+			$table->setHeaders(array(_('ID'),_('Name')));
+			$rows = array();
+			$directories = $userman->getAllDirectories();
+			foreach($directories as $directory) {
+				$rows[] = array(
+					$directory['id'],
+					$directory['name']
+				);
+			}
+			$table->setRows($rows);
+			$table->render();
+		}
+		if($input->getOption('syncall') && $input->getOption('sync')) {
+			$output->writeln("<error>Can not sync and syncall at the same time!</error>");
+			exit(-1);
+		}
+		if($input->getOption('syncall')) {
+			$directories = $userman->getAllDirectories();
+			foreach($directories as $directory) {
+				$this->syncDirectory($directory,$output,$force);
+			}
+		}
+		if($input->getOption('sync')) {
+			$id = $input->getOption('sync');
+			$directory = $userman->getDirectoryByID($id);
+			$this->syncDirectory($directory,$output,$force);
+		}
+		if(!$input->getOption('syncall') && !$input->getOption('sync') && !$input->getOption('list')) {
+			$this->outputHelp($input,$output);
+			exit(4);
+		}
+	}
+
+	private function syncDirectory($directory,$output,$force=false) {
+		$userman = \FreePBX::create()->Userman;
+		if(!$directory['active']) {
+			$output->writeln("Directory '".$directory['name']."' is not active. Skipping");
+			return;
+		}
+		$dir = $userman->getDirectoryObjectByID($directory['id']);
+		if(method_exists($dir,"sync")) {
+			if(!$force && empty($directory['config']['sync'])) {
+				$output->writeln("Directory '".$directory['name']."' sync is None. Skipping (Unless --force flag is set)");
+				return;
+			}
+			$timeSince = $userman->getConfig("directory-last-sync-time");
+			$timeSince = !empty($timeSince) ? $timeSince : 0;
+			$timeNow = time();
+			$secondsSince = 0;
+			switch($directory['config']['sync']) {
+				case "*/15 * * * *":
+					$secondsSince = 900;
+				break;
+				case "*/30 * * * *":
+					$secondsSince = 1800;
+				break;
+				case "0 * * * *":
+					$secondsSince = 3600;
+				break;
+				case "0 */6 * * *":
+					$secondsSince = 7200;
+				break;
+				case "0 0 * * *":
+					$secondsSince = 14400;
+				break;
+			}
+			if($force || ($timeNow > ($timeSince + $secondsSince))) {
+				$userman->setConfig("directory-last-sync-time", $timeNow);
+				$output->writeln("Starting Sync on directory '".$directory['name']."'...");
+				$userman->lockDirectory($directory['id']);
+				$dir->sync($output);
+				$userman->unlockDirectory($directory['id']);
+				$output->writeln("Finished");
+			} else {
+				$output->writeln("Not syncing directory for another ".(($timeSince + $secondsSince)-$timeNow)." seconds");
+			}
+
+		} else {
+			$output->writeln("Directory '".$directory['name']."' does not support syncing");
+		}
+	}
+
+	/**
+	 * @param InputInterface $input
+	 * @param OutputInterface $output
+	 * @return int
+	 * @throws \Symfony\Component\Console\Exception\ExceptionInterface
+	 */
+	protected function outputHelp(InputInterface $input, OutputInterface $output)	 {
+		$help = new HelpCommand();
+		$help->setCommand($this);
+		return $help->run($input, $output);
+	}
 }

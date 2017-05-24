@@ -7,6 +7,7 @@ if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'showuser'){
 $formaction = 'config.php?display=userman#users';
 
 echo $heading;
+echo $usage_html;
 ?>
 <div class="container-fluid">
 	<div class="row">
@@ -14,6 +15,9 @@ echo $heading;
 			<div class="fpbx-container">
 				<?php if(!empty($message)){ ?>
 					<div class="alert alert-<?php echo $message['type']?>"><?php echo $message['message']?></div>
+				<?php } ?>
+				<?php if($locked){ ?>
+					<div class="alert alert-info"><?php echo _("The directory for this user is currently locked while updates are being run")?></div>
 				<?php } ?>
 				<div class="display no-border">
 					<div role="tabpanel">
@@ -38,6 +42,7 @@ echo $heading;
 					</div>
 					<form class="fpbx-submit" autocomplete="off" name="editM" id="editM" action="<?php echo $formaction ?>" method="post" <?php if(!empty($user['id'])) {?>data-fpbx-delete="config.php?display=userman&amp;action=deluser&amp;user=<?php echo $user['id']?>"<?php } ?> onsubmit="return true;">
 						<input type="hidden" name="type" value="user">
+						<input type="hidden" name="directory" value="<?php echo $directory ?>">
 						<input type="hidden" name="prevUsername" value="<?php echo !empty($user['username']) ? $user['username'] : ''; ?>">
 						<input type="hidden" name="user" value="<?php echo !empty($user['id']) ? $user['id'] : ''; ?>">
 						<input type="hidden" name="submittype" value="gui">
@@ -117,7 +122,34 @@ echo $heading;
 								</div>
 							</div>
 						<?php } ?>
-						<!--END Password-->
+						<!--
+						<div class="element-container">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="row">
+										<div class="form-group">
+											<div class="col-md-3">
+												<label class="control-label" for="group_primary"><?php echo _('Primary Group')?></label>
+												<i class="fa fa-question-circle fpbx-help-icon" data-for="group_users"></i>
+											</div>
+											<div class="col-md-9">
+												<select id="group_primary" data-placeholder="Groups" class="form-control" name="primary_group" <?php echo !$permissions['modifyGroup'] ? 'disabled' : ''?>>
+													<?php foreach($groups as $group) {?>
+														<option value="<?php echo $group['id']?>" <?php echo (!empty($user['id']) && in_array($user['id'], $group['users'])) || (empty($user['id']) && in_array($group['id'], $dgroups)) ? 'selected' : '' ?>><?php echo $group['groupname']?></option>
+													<?php } ?>
+												</select>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-12">
+									<span id="group_primary-help" class="help-block fpbx-help-block"><?php echo _("Which groups this user is in")?></span>
+								</div>
+							</div>
+						</div>
+						-->
 						<div class="element-container">
 							<div class="row">
 								<div class="col-md-12">
@@ -128,11 +160,19 @@ echo $heading;
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="group_users"></i>
 											</div>
 											<div class="col-md-9">
-												<select id="group_users" data-placeholder="Groups" class="form-control chosenmultiselect" name="groups[]" multiple="multiple" <?php echo !$permissions['modifyGroup'] ? 'disabled' : ''?>>
-													<?php foreach($groups as $group) {?>
-														<option value="<?php echo $group['id']?>" <?php echo (!empty($user['id']) && in_array($user['id'], $group['users'])) || (empty($user['id']) && in_array($group['id'], $dgroups)) ? 'selected' : '' ?>><?php echo $group['groupname']?></option>
-													<?php } ?>
-												</select>
+												<?php if($permissions['modifyGroup']) {?>
+													<select id="group_users" data-placeholder="Groups" class="form-control" name="groups[]" multiple="multiple">
+														<?php foreach($groups as $group) {?>
+															<option value="<?php echo $group['id']?>" <?php echo (!empty($user['id']) && in_array($user['id'], $group['users'])) || (empty($user['id']) && in_array($group['id'], $dgroups)) ? 'selected' : '' ?>><?php echo $group['groupname']?></option>
+														<?php } ?>
+													</select>
+												<?php } else {?>
+													<select class="form-control chosenmultiselect" name="groups[]" multiple="multiple" <?php echo !$permissions['modifyGroup'] ? 'disabled' : ''?>>
+														<?php foreach($groups as $group) {?>
+															<option value="<?php echo $group['id']?>" <?php echo (!empty($user['id']) && in_array($user['id'], $group['users'])) || (empty($user['id']) && in_array($group['id'], $dgroups)) ? 'selected' : '' ?>><?php echo $group['groupname']?></option>
+														<?php } ?>
+													</select>
+												<?php } ?>
 											</div>
 										</div>
 									</div>

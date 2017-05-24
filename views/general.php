@@ -7,7 +7,7 @@
 		<div class="wrapper">
 			<ul class="nav nav-tabs list" role="tablist">
 				<li data-name="tab1" class="change-tab active"><a href="#tab1" aria-controls="tab1" role="tab" data-toggle="tab"><?php echo _("Email Settings")?></a></li>
-				<li data-name="tab2" class="change-tab"><a href="#tab2" aria-controls="tab2" role="tab" data-toggle="tab"><?php echo _("Authentication Settings")?></a></li>
+				<!--<li data-name="tab2" class="change-tab"><a href="#tab2" aria-controls="tab2" role="tab" data-toggle="tab"><?php echo _("Authentication Settings")?></a></li>-->
 			</ul>
 		</div>
 	</div>
@@ -142,103 +142,8 @@
 				</div>
 			</div>
 		</div>
-		<div id="tab2" class="tab-pane display">
-			<div class="alert alert-info"><?php echo sprintf(_("Hitting submit on this page will start manual syncronization for engines other than the %s Internal Directory"),$brand)?></div>
-			<div class="element-container">
-				<div class="row">
-					<div class="col-md-12">
-						<div class="row">
-							<div class="form-group">
-								<div class="col-md-3">
-									<label class="control-label" for="authtype"><?php echo _("Authentication Engine")?></label>
-									<i class="fa fa-question-circle fpbx-help-icon" data-for="authtype"></i>
-								</div>
-								<div class="col-md-9">
-									<select id="authtype" name="authtype" class="form-control">
-										<?php foreach($auths as $rawname => $auth) {?>
-											<option value="<?php echo $rawname?>" <?php echo $rawname == $authtype ? 'selected' : ''?>><?php echo $auth['name']?></option>
-										<?php } ?>
-									</select>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-12">
-						<span id="authtype-help" class="help-block fpbx-help-block"><?php echo sprintf(_("The authentication engine to use"),$brand)?></span>
-					</div>
-				</div>
-			</div>
-			<div class="element-container">
-				<div class="row">
-					<div class="col-md-12">
-						<div class="row">
-							<div class="form-group">
-								<div class="col-md-3">
-									<label class="control-label" for="remoteips"><?php echo _("Remote Authentication IP Addresses")?></label>
-									<i class="fa fa-question-circle fpbx-help-icon" data-for="remoteips"></i>
-								</div>
-								<div class="col-md-9">
-									<input id="remoteips" name="remoteips" class="form-control" value="<?php echo $remoteips?>">
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-12">
-						<span id="remoteips-help" class="help-block fpbx-help-block"><?php echo sprintf(_("Comma separated list of IP addresses that can send a POST query to %s supplying the parameters of '%s' and '%s' which can be used for remote servers to authenticate against User Manager. Supplying no addresses disables this feature"),$_SERVER['HTTP_HOST']."/admin/ajax.php?module=userman&command=auth","userman","password")?></span>
-					</div>
-				</div>
-			</div>
-			<div class="element-container">
-				<div class="row">
-					<div class="col-md-12">
-						<div class="row">
-							<div class="form-group">
-								<div class="col-md-3">
-									<label class="control-label" for="cronsync"><?php echo _("Synchronize")?></label>
-									<i class="fa fa-question-circle fpbx-help-icon" data-for="cronsync"></i>
-								</div>
-								<div class="col-md-9">
-									<select name="cronsync" id="cronsync" class="form-control">
-										<option value="">Never</option>
-										<option value="*/30 * * * *" <?php echo isset($sync) && $sync == '*/30 * * * *' ? 'selected' : ''?>><?php echo _("30 Minutes")?></option>
-										<option value="0 * * * *" <?php echo !isset($sync) || (isset($sync) && $sync == '0 * * * *') ? 'selected' : ''?>><?php echo _("1 Hour")?></option>
-										<option value="0 */6 * * *" <?php echo isset($sync) && $sync == '0 */6 * * *' ? 'selected' : ''?>><?php echo _("6 Hours")?></option>
-										<option value="0 0 * * *" <?php echo isset($sync) && $sync == '0 0 * * *' ? 'selected' : ''?>><?php echo _("1 Day")?></option>
-									</select>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-12">
-						<span id="cronsync-help" class="help-block fpbx-help-block"><?php echo sprintf(_("This setting only applies to authentication engines other than the %s Internal Directory. For the %s Internal Directory this setting will be ignored."),$brand,$brand)?></span>
-					</div>
-				</div>
-			</div>
-			<?php foreach($auths as $rawname => $auth) {?>
-				<div id="<?php echo $rawname?>-auth-settings" class="auth-settings hidden">
-					<?php echo $auth['html']?>
-				</div>
-			<?php } ?>
-		</div>
 	</div>
-	<!--END Email Body-->
 </form>
-<script>
-	var val = $("#authtype").val();
-	$("#" + val + "-auth-settings").removeClass("hidden");
-
-	$("#authtype").change(function() {
-		var val = $(this).val();
-		$(".auth-settings").addClass("hidden");
-		$("#" + val + "-auth-settings").removeClass("hidden");
-	});
-</script>
 <style>
 .setting-navs .scroller-left {
 	left: 41px;

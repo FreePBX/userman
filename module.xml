@@ -42,7 +42,7 @@
 		<table name="userman_users">
 			<field name="id" type="integer" primarykey="true" autoincrement="true"/>
 			<field name="auth" type="string" length="150" default="freepbx" notnull="false"/>
-			<field name="authid" type="string" length="255" notnull="false"/>
+			<field name="authid" type="string" length="750" notnull="false"/>
 			<field name="username" type="string" length="150" notnull="false"/>
 			<field name="description" type="string" length="255" notnull="false"/>
 			<field name="password" type="string" length="255" notnull="false"/>
@@ -93,7 +93,7 @@
 		<table name="userman_groups">
 			<field name="id" type="integer" primarykey="true" autoincrement="true"/>
 			<field name="auth" type="string" length="150" default="freepbx" notnull="false"/>
-			<field name="authid" type="string" length="255" notnull="false"/>
+			<field name="authid" type="string" length="750" notnull="false"/>
 			<field name="groupname" type="string" length="150" notnull="false"/>
 			<field name="description" type="string" length="255" notnull="false"/>
 			<field name="language" type="string" length="100" notnull="false"/>
@@ -104,6 +104,7 @@
 			<field name="priority" type="integer" default="5"/>
 			<field name="users" type="blob" notnull="false"/>
 			<field name="permissions" type="blob" notnull="false"/>
+			<field name="local" type="integer" notnull="true" default="0"/>
 			<key name="groupname_UNIQUE" type="unique">
 				<column name="groupname"/>
 				<column name="auth"/>
@@ -128,6 +129,15 @@
 				<column name="module"/>
 				<column name="gid"/>
 			</key>
+		</table>
+		<table name="userman_directories">
+			<field name="id" type="integer" primarykey="true" autoincrement="true"/>
+			<field name="name" type="string" length="250" notnull="false"/>
+			<field name="driver" type="string" length="150" default=""/>
+			<field name="active" type="boolean" default="0"/>
+			<field name="order" type="integer" default="5"/>
+			<field name="default" type="boolean" default="0"/>
+			<field name="locked" type="boolean" default="0"/>
 		</table>
 	</database>
 	<supported>
