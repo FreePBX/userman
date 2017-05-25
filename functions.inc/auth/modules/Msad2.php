@@ -126,14 +126,14 @@ class Msad2 extends Auth {
 				$this->config[$key] = (isset($config[$key])) ? $config[$key] : '';
 			}
 		}
-		if(isset($c['userexternalidattr'])) {
-			$this->config['externalidattr'] = $c['userexternalidattr'];
+		if(isset($config['userexternalidattr'])) {
+			$this->config['externalidattr'] = strtolower($config['userexternalidattr']);
 		}
-		if(isset($c['userdescriptionattr'])) {
-			$this->config['descriptionattr'] = $c['userdescriptionattr'];
+		if(isset($config['userdescriptionattr'])) {
+			$this->config['descriptionattr'] = strtolower($config['userdescriptionattr']);
 		}
-		if(isset($c['groupnameattr'])) {
-			$this->config['commonnameattr'] = $c['groupnameattr'];
+		if(isset($config['groupnameattr'])) {
+			$this->config['commonnameattr'] = strtolower($config['groupnameattr']);
 		}
 	}
 
@@ -574,7 +574,7 @@ class Msad2 extends Auth {
 			$um = $this->linkGroup($groupname, $sid);
 			$description = !is_null($result->getDescription()) ? $result->getDescription() : '';
 			$members = array();
-			$this->out("\t\tWorking with ".$groupname);
+			$this->out("\tWorking on ".$groupname);
 			foreach($result->getMembers() as $member) {
 				$m = $this->getUserByAuthID($member->getConvertedGuid());
 				if(!empty($m)) {
