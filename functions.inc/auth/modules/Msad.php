@@ -457,7 +457,7 @@ class Msad extends Auth {
 		$process = array();
 		foreach($this->pucache as $usid => $group) {
 			$u = $this->getUserByAuthID($usid);
-			$gsid = $group->getSid();
+			$gsid = $this->limitString($group->getSid());
 			if(!empty($u) && !empty($groups[$gsid])) {
 				$group = $groups[$gsid];
 				$this->out("\tAdding ".$u['username']." to ".$group['groupname']."...",false);
@@ -586,13 +586,13 @@ class Msad extends Auth {
 
 			$members = array();
 			foreach($users as $user) {
-				$usid = $user->getSid();
+				$usid = $this->limitString($user->getSid());
 				$u = $this->getUserByAuthID($usid);
 				if(!empty($u)) {
 					$members[] = $u['id'];
 				}
 			}
-			$sid = $group->getSid();
+			$sid = $this->limitString($$group->getSid());
 			$this->gcache[$sid] = $group;
 			$um = $this->linkGroup($group->getName(), $sid);
 			if($um['status']) {
@@ -642,7 +642,7 @@ class Msad extends Auth {
 		$this->out("Found ".count($results). " users");
 
 		foreach($results as $result) {
-			$sid = $result->getSid();
+			$sid = $this->limitString($result->getSid());
 			$this->ucache[$sid] = $result; //store object
 
 			$this->pucache[$sid] = $result->getPrimaryGroup();
@@ -755,5 +755,9 @@ class Msad extends Auth {
 		} elseif(!is_object($this->output)) {
 			dbug($message);
 		}
+	}
+
+	private function limitString($string) {
+		return (strlen($string) > 255) ? substr($string,0,255) : $string;
 	}
 }

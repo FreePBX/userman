@@ -9,6 +9,7 @@ namespace FreePBX\modules\Userman\Auth;
 use Adldap\Adldap;
 use Adldap\Exceptions\Auth\BindException;
 class Msad2 extends Auth {
+	private $provider = null;
 	/**
 	 * LDAP Object
 	 * @var object
@@ -55,7 +56,10 @@ class Msad2 extends Auth {
 		'password' => '',
 		'connection' => '',
 		'localgroups' => 0,
-		'createextensions' => ''
+		'createextensions' => '',
+		'externalidattr' => 'objectGUID',
+		'descriptionattr' => 'description',
+		'commonnameattr' => 'cn'
 	);
 	/**
 	 * User Defaults
@@ -66,11 +70,9 @@ class Msad2 extends Auth {
 		'userobjectclass' => 'user',
 		'userobjectfilter' => '(&(objectCategory=Person)(sAMAccountName=*))',
 		'usernameattr' => 'sAMAccountName',
-		'usernamerdnattr' => 'cn',
 		'userfirstnameattr' => 'givenName',
 		'userlastnameattr' => 'sn',
 		'userdisplaynameattr' => 'displayName',
-		'userdescriptionattr' => 'description',
 		'usertitleattr' => 'personaltitle',
 		'usercompanyattr' => 'company',
 		'usercellphoneattr' => 'mobile',
@@ -80,9 +82,7 @@ class Msad2 extends Auth {
 		'usermailattr' => 'mail',
 		'usergroupmemberattr' => 'memberOf',
 		'userpasswordattr' => 'unicodePwd',
-		'userexternalidattr' => 'objectGUID',
 		'userprimarygroupattr' => 'primarygroupid',
-		'usermodifytimestampattr' => 'modifyTimestamp',
 		'la' => 'ipphone'
 	);
 	/**
@@ -93,12 +93,9 @@ class Msad2 extends Auth {
 		'groupdnaddition' => '',
 		'groupobjectclass' => 'group',
 		'groupobjectfilter' => '(objectCategory=Group)',
-		'groupnameattr' => 'cn',
 		'groupdescriptionattr' => 'description',
 		'groupmemberattr' => 'member',
 		'groupgidnumberattr' => 'primaryGroupToken',
-		'groupexternalidattr' => 'objectGUID',
-		'groupmodifytimestampattr' => 'modifyTimestamp',
 	);
 
 	private $userHooks = array(
@@ -128,6 +125,15 @@ class Msad2 extends Auth {
 			} else {
 				$this->config[$key] = (isset($config[$key])) ? $config[$key] : '';
 			}
+		}
+		if(isset($c['userexternalidattr'])) {
+			$this->config['externalidattr'] = $c['userexternalidattr'];
+		}
+		if(isset($c['userdescriptionattr'])) {
+			$this->config['descriptionattr'] = $c['userdescriptionattr'];
+		}
+		if(isset($c['groupnameattr'])) {
+			$this->config['commonnameattr'] = $c['groupnameattr'];
 		}
 	}
 
@@ -236,11 +242,11 @@ class Msad2 extends Auth {
 				'follow_referrals'      => false,
 				'use_ssl'               => ($this->config['connection'] == 'ssl'),
 				'use_tls'               => ($this->config['connection'] == 'tls'),
-				'timeout'               => 1
+				'timeout'               => $this->timeout
 			];
-			$provider = new \Adldap\Connections\Provider($config, $connection = null, $mySchema);
+			$this->provider = new \Adldap\Connections\Provider($config, $connection = null, $mySchema);
 			$ad = new Adldap(array("default" => $config));
-			$ad->addProvider($provider, 'default');
+			$ad->addProvider($this->provider, 'default');
 			try {
 				$this->ldap = $ad->connect();
 			} catch (BindException $e) {
@@ -469,9 +475,9 @@ class Msad2 extends Auth {
 		$this->connect();
 
 		if(strpos($username,"@") === false) {
-			$res = @ldap_bind($this->ldap, $username."@".$this->config['domain'], $password);
+			$res = $this->provider->auth()->attempt($username."@".$this->config['domain'], $password);
 		} else {
-			$res = @ldap_bind($this->ldap, $username, $password);
+			$res = $this->provider->auth()->attempt($username, $password);
 		}
 		if($res) {
 			$user = $this->getUserByUsername($username);
@@ -560,7 +566,7 @@ class Msad2 extends Auth {
 		foreach($results as $result) {
 			$sid = $result->getConvertedGuid();
 			if(empty($sid)) {
-				$this->out("\t\tERROR Group is missing ".$this->config['userexternalidattr']." attribute! Cant continue!!");
+				$this->out("\t\tERROR Group is missing ".$this->config['externalidattr']." attribute! Cant continue!!");
 				continue;
 			}
 			$this->gcache[$sid] = $result;
@@ -568,6 +574,7 @@ class Msad2 extends Auth {
 			$um = $this->linkGroup($groupname, $sid);
 			$description = !is_null($result->getDescription()) ? $result->getDescription() : '';
 			$members = array();
+			$this->out("\t\tWorking with ".$groupname);
 			foreach($result->getMembers() as $member) {
 				$m = $this->getUserByAuthID($member->getConvertedGuid());
 				if(!empty($m)) {
@@ -633,7 +640,7 @@ class Msad2 extends Auth {
 		foreach($results as $result) {
 			$sid = $result->getConvertedGuid();
 			if(empty($sid)) {
-				$this->out("\t\tERROR User is missing ".$this->config['userexternalidattr']." attribute! Cant continue!!");
+				$this->out("\t\tERROR User is missing ".$this->config['externalidattr']." attribute! Cant continue!!");
 				continue;
 			}
 			$username = $result->getAccountName();
@@ -723,40 +730,6 @@ class Msad2 extends Auth {
 	}
 
 	/**
-	 * Turns a binary SID into a String
-	 * @param  string $binsid The binary string
-	 */
-	public function binToStrSid($binsid) {
-		$hex_sid = bin2hex($binsid);
-		$rev = hexdec(substr($hex_sid, 0, 2));
-		$subcount = hexdec(substr($hex_sid, 2, 2));
-		$auth = hexdec(substr($hex_sid, 4, 12));
-		$result    = "$rev-$auth";
-
-		for ($x=0;$x < $subcount; $x++) {
-			$subauth[$x] =
-			hexdec($this->littleEndian(substr($hex_sid, 16 + ($x * 8), 8)));
-			$result .= "-" . $subauth[$x];
-		}
-
-		// Cheat by tacking on the S-
-		return 'S-' . $result;
-	}
-
-	/**
-	 * Converts a little-endian hex-number to one, that 'hexdec' can convert
-	 * @param  string $hex hex string
-	 */
-	public function littleEndian($hex) {
-		$result = "";
-
-		for ($x = strlen($hex) - 2; $x >= 0; $x = $x - 2) {
-			$result .= substr($hex, $x, 2);
-		}
-		return $result;
-	}
-
-	/**
 	 * Debug messages
 	 * @param  string $message The message
 	 * @param  boolean $nl      New line or not
@@ -771,15 +744,5 @@ class Msad2 extends Auth {
 		} elseif(!is_object($this->output)) {
 			dbug($message);
 		}
-	}
-
-	private function serviceping($host, $port=389, $timeout=1) {
-		$op = fsockopen($host, $port, $errno, $errstr, $timeout);
-		if (!$op) {
-			return 0; //DC is N/A
-		} else {
-			fclose($op); //explicitly close open socket connection
-		}
-		return 1; //DC is up & running, we can safely connect with ldap_connect
 	}
 }

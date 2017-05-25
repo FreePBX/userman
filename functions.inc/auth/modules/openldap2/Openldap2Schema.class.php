@@ -1,9 +1,9 @@
 <?php
 namespace App\Schemas;
 
-use Adldap\Schemas\ActiveDirectory;
+use Adldap\Schemas\OpenLDAP;
 
-class Msad2 extends ActiveDirectory {
+class Openldap2 extends OpenLDAP {
 	private $config;
 
 	public function __construct($config) {
