@@ -48,7 +48,10 @@ class Msad2 extends Auth {
 		'password' => '',
 		'connection' => '',
 		'localgroups' => 0,
-		'createextensions' => ''
+		'createextensions' => '',
+		'externalidattr' => 'objectGUID',
+		'descriptionattr' => 'description',
+		'commonnameattr' => 'cn'
 	);
 	/**
 	 * User Defaults
@@ -59,11 +62,9 @@ class Msad2 extends Auth {
 		'userobjectclass' => 'user',
 		'userobjectfilter' => '(&(objectCategory=Person)(sAMAccountName=*))',
 		'usernameattr' => 'sAMAccountName',
-		'usernamerdnattr' => 'cn',
 		'userfirstnameattr' => 'givenName',
 		'userlastnameattr' => 'sn',
 		'userdisplaynameattr' => 'displayName',
-		'userdescriptionattr' => 'description',
 		'usertitleattr' => '',
 		'usercompanyattr' => '',
 		'usercellphoneattr' => 'mobile',
@@ -73,9 +74,7 @@ class Msad2 extends Auth {
 		'usermailattr' => 'mail',
 		'usergroupmemberattr' => 'memberOf',
 		'userpasswordattr' => 'unicodePwd',
-		'userexternalidattr' => 'objectGUID',
 		'userprimarygroupattr' => 'primarygroupid',
-		'usermodifytimestampattr' => 'modifyTimestamp',
 		'la' => 'ipphone'
 	);
 	/**
@@ -86,12 +85,8 @@ class Msad2 extends Auth {
 		'groupdnaddition' => '',
 		'groupobjectclass' => 'group',
 		'groupobjectfilter' => '(objectCategory=Group)',
-		'groupnameattr' => 'cn',
-		'groupdescriptionattr' => 'description',
 		'groupmemberattr' => 'member',
 		'groupgidnumberattr' => 'primaryGroupToken',
-		'groupexternalidattr' => 'objectGUID',
-		'groupmodifytimestampattr' => 'modifyTimestamp',
 	);
 
 	private $userHooks = array(
@@ -121,6 +116,15 @@ class Msad2 extends Auth {
 			} else {
 				$this->config[$key] = (isset($config[$key])) ? $config[$key] : '';
 			}
+		}
+		if(isset($config['userexternalidattr'])) {
+			$this->config['externalidattr'] = strtolower($config['userexternalidattr']);
+		}
+		if(isset($config['userdescriptionattr'])) {
+			$this->config['descriptionattr'] = strtolower($config['userdescriptionattr']);
+		}
+		if(isset($config['groupnameattr'])) {
+			$this->config['commonnameattr'] = strtolower($config['groupnameattr']);
 		}
 	}
 
@@ -547,15 +551,15 @@ class Msad2 extends Auth {
 		unset($groups['count']);
 
 		foreach($groups as $group) {
-			if(!isset($group[$this->config['groupexternalidattr']])) {
-				$this->out("\t\tERROR group is missing ".$this->config['groupexternalidattr']." attribute! Cant continue!!");
+			if(!isset($group[$this->config['descriptionattr']])) {
+				$this->out("\t\tERROR group is missing ".$this->config['descriptionattr']." attribute! Cant continue!!");
 				continue;
 			}
-			$sid = $this->binaryGuidToString($group[$this->config['groupexternalidattr']][0]);
+			$sid = $this->binaryGuidToString($group[$this->config['descriptionattr']][0]);
 			$this->gcache[$sid] = $group;
-			$groupname = $group[$this->config['groupnameattr']][0];
+			$groupname = $group[$this->config['commonnameattr']][0];
 			$um = $this->linkGroup($groupname, $sid);
-			$description = (!empty($this->config['groupdescriptionattr']) && !empty($group[$this->config['groupdescriptionattr']][0])) ? $group[$this->config['groupdescriptionattr']][0] : '';
+			$description = (!empty($this->config['descriptionattr']) && !empty($group[$this->config['descriptionattr']][0])) ? $group[$this->config['descriptionattr']][0] : '';
 			$members = array();
 			$this->out("\tWorking on ".$groupname);
 			foreach($this->ucache as $usid => $user) {
@@ -627,11 +631,11 @@ class Msad2 extends Auth {
 		unset($users['count']);
 		//add and update users
 		foreach($users as $user) {
-			if(!isset($user[$this->config['userexternalidattr']])) {
-				$this->out("\t\tERROR user is missing ".$this->config['userexternalidattr']." attribute! Cant continue!!");
+			if(!isset($user[$this->config['externalidattr']])) {
+				$this->out("\t\tERROR user is missing ".$this->config['externalidattr']." attribute! Cant continue!!");
 				continue;
 			}
-			$sid = $this->binaryGuidToString($user[$this->config['userexternalidattr']][0]);
+			$sid = $this->binaryGuidToString($user[$this->config['externalidattr']][0]);
 			$username = $user[$this->config['usernameattr']][0];
 			if(empty($username)) {
 				$this->out("\t\tUsername is blank! Skipping unknown user");
@@ -646,7 +650,7 @@ class Msad2 extends Auth {
 					$this->out("\t\tUpdating ".$username);
 				}
 				$data = array(
-					"description" => (!empty($this->config['userdescriptionattr']) && !empty($user[$this->config['userdescriptionattr']][0])) ? $user['description'][0] : '',
+					"description" => (!empty($this->config['descriptionattr']) && !empty($user[$this->config['descriptionattr']][0])) ? $user[$this->config['descriptionattr']][0] : '',
 					"primary_group" => (!empty($this->config['userprimarygroupattr']) && !empty($user[$this->config['userprimarygroupattr']][0])) ? $user[$this->config['userprimarygroupattr']][0] : '',
 					"fname" => (!empty($this->config['userfirstnameattr']) && !empty($user[$this->config['userfirstnameattr']][0])) ? $user[$this->config['userfirstnameattr']][0] : '',
 					"lname" => (!empty($this->config['userlastnameattr']) && !empty($user[$this->config['userlastnameattr']][0])) ? $user[$this->config['userlastnameattr']][0] : '',
