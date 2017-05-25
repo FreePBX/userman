@@ -640,7 +640,7 @@ abstract class Auth implements Base {
 		if(empty($data)) {
 			return true;
 		}
-		$sql = "UPDATE ".$this->userTable." SET `fname` = :fname, `lname` = :lname, `default_extension` = :default_extension, `displayname` = :displayname, `company` = :company, `title` = :title, `email` = :email, `cell` = :cell, `work` = :work, `home` = :home, `fax` = :fax, `department` = :department, ``language` = :language, `timezone` = :timezone, `dateformat` = :dateformat, `timeformat` = :timeformat, `datetimeformat` = :datetimeformat, description` = :description, `primary_group` = :primary_group WHERE `id` = :uid";
+		$sql = "UPDATE ".$this->userTable." SET `fname` = :fname, `lname` = :lname, `default_extension` = :default_extension, `displayname` = :displayname, `company` = :company, `title` = :title, `email` = :email, `cell` = :cell, `work` = :work, `home` = :home, `fax` = :fax, `department` = :department, `language` = :language, `timezone` = :timezone, `dateformat` = :dateformat, `timeformat` = :timeformat, `datetimeformat` = :datetimeformat, `description` = :description, `primary_group` = :primary_group WHERE `id` = :uid";
 		$defaults = $this->getUserByID($uid);
 		$sth = $this->db->prepare($sql);
 		$fname = isset($data['fname']) ? $data['fname'] : (!isset($data['fname']) && !empty($defaults['fname']) ? $defaults['fname'] : null);
