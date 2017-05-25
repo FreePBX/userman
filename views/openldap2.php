@@ -489,7 +489,7 @@
 							<i class="fa fa-question-circle fpbx-help-icon" data-for="openldap2-usertitleattr"></i>
 						</div>
 						<div class="col-md-9">
-							<input id="openldap2-userdescriptionattr" data-default="<?php echo $defaults['usertitleattr']?>" name="openldap2-usertitleattr" type="text" class="form-control" value="<?php echo isset($config['usertitleattr']) ? $config['usertitleattr'] : $defaults['usertitleattr']?>">
+							<input id="openldap2-usertitleattr" data-default="<?php echo $defaults['usertitleattr']?>" name="openldap2-usertitleattr" type="text" class="form-control" value="<?php echo isset($config['usertitleattr']) ? $config['usertitleattr'] : $defaults['usertitleattr']?>">
 						</div>
 					</div>
 				</div>
@@ -563,7 +563,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<span id="openldap2-userdescriptionattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user home phone.")?></span>
+				<span id="openldap2-userhomephoneattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the user home phone.")?></span>
 			</div>
 		</div>
 	</div>
