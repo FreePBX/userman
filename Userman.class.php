@@ -1294,6 +1294,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 
 	public function addDefaultGroupToDirectory($dirid) {
 		$obj = $this->getDirectoryObjectByID($dirid);
+		$dir = $this->getDirectoryByID($dirid);
 		$groups = $obj->getAllGroups();
 		if(empty($groups)) {
 			$users = $obj->getAllUsers();
@@ -1309,6 +1310,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 			$config = array(
 				"default-groups" => array($g['id'])
 			);
+			$gid = $g['id'];
 			$this->updateDirectory($dirid, $dir['name'], 1, $config);
 			//Default New Group Settings
 			$this->setModuleSettingByGID($gid,'contactmanager','show', true);
