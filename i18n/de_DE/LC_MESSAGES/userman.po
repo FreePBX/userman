@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-23 18:08-0400\n"
+"POT-Creation-Date: 2017-05-25 17:00-0400\n"
 "PO-Revision-Date: 2017-03-06 03:14+0200\n"
 "Last-Translator: hammer125 <auswertung@aon.at>\n"
 "Language-Team: German <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -175,14 +175,18 @@ msgstr "Handynummer"
 msgid "Close"
 msgstr "Schließen"
 
+#: views/msad2.php:241 views/openldap2.php:219
+msgid "Common Name attribute"
+msgstr ""
+
 #: views/users.php:322
 msgid "Company"
 msgstr "Firma"
 
 #: functions.inc/auth/modules/Msad.php:120
-#: functions.inc/auth/modules/Msad2.php:161
+#: functions.inc/auth/modules/Msad2.php:165
 #: functions.inc/auth/modules/Openldap.php:155
-#: functions.inc/auth/modules/Openldap2.php:171
+#: functions.inc/auth/modules/Openldap2.php:175
 msgid "Connected"
 msgstr "Verbunden"
 
@@ -236,6 +240,10 @@ msgstr "Abteilung"
 #: views/users.php:82 views/welcome.php:59 views/welcome.php:89
 msgid "Description"
 msgstr "Beschreibung"
+
+#: views/msad2.php:263 views/openldap2.php:241
+msgid "Description attribute"
+msgstr ""
 
 #: views/welcome.php:26
 msgid "Directories"
@@ -398,7 +406,7 @@ msgstr ""
 msgid "Group '%s' Does Not Exist"
 msgstr "Gruppe '%s' existiert nicht"
 
-#: views/msad2.php:689 views/openldap2.php:667
+#: views/msad2.php:711 views/openldap2.php:665
 msgid "Group DN"
 msgstr ""
 
@@ -427,8 +435,8 @@ msgid ""
 msgstr ""
 
 #: functions.inc/auth/modules/Freepbx.php:134
-#: functions.inc/auth/modules/Msad2.php:396
-#: functions.inc/auth/modules/Openldap2.php:403
+#: functions.inc/auth/modules/Msad2.php:400
+#: functions.inc/auth/modules/Openldap2.php:407
 #: functions.inc/auth/modules/Voicemail.php:174
 msgid "Group Successfully Added"
 msgstr "Gruppe erfolgreich hinzugefügt"
@@ -445,38 +453,26 @@ msgstr "Gruppe erfolgreich aktualisiert"
 msgid "Group already exists"
 msgstr "Gruppe existiert bereits"
 
-#: views/msad2.php:682
+#: views/msad2.php:704
 msgid "Group configuration"
 msgstr ""
 
-#: views/msad2.php:777 views/openldap2.php:755
-msgid "Group description attribute"
-msgstr ""
-
-#: views/msad2.php:799 views/openldap2.php:777
+#: views/msad2.php:777 views/openldap2.php:731
 msgid "Group members attribute"
 msgstr ""
 
-#: views/msad2.php:755 views/openldap2.php:733
-msgid "Group name attribute"
-msgstr ""
-
-#: views/msad2.php:711 views/openldap2.php:689
+#: views/msad2.php:733 views/openldap2.php:687
 msgid "Group object class"
 msgstr ""
 
-#: views/msad2.php:733 views/openldap2.php:711
+#: views/msad2.php:755 views/openldap2.php:709
 msgid "Group object filter"
 msgstr ""
 
-#: views/msad2.php:821 views/openldap2.php:799
-msgid "Group unique identifier attribute"
-msgstr ""
-
 #: functions.inc/auth/modules/Msad.php:370
-#: functions.inc/auth/modules/Msad2.php:446
+#: functions.inc/auth/modules/Msad2.php:450
 #: functions.inc/auth/modules/Openldap.php:405
-#: functions.inc/auth/modules/Openldap2.php:453
+#: functions.inc/auth/modules/Openldap2.php:457
 msgid "Group updated"
 msgstr "Gruppe aktualisiert"
 
@@ -548,7 +544,7 @@ msgid ""
 "extists!!"
 msgstr ""
 
-#: views/msad2.php:676
+#: views/msad2.php:698
 msgid ""
 "If this is set then User Manager will use the defined attribute of the user "
 "from the Active Directory server as the extension link. NOTE: If this field "
@@ -556,7 +552,7 @@ msgid ""
 "extists!! (Try lowercase if it is not working.)"
 msgstr ""
 
-#: views/openldap.php:151 views/openldap2.php:654
+#: views/openldap.php:151 views/openldap2.php:652
 msgid ""
 "If this is set then User Manager will use the defined attribute of the user "
 "from the OpenLDAP server as the extension link. NOTE: If this field is set "
@@ -588,12 +584,12 @@ msgstr "Ungültiger Benutzer"
 
 #: functions.inc/auth/modules/Msad.php:319
 #: functions.inc/auth/modules/Msad.php:332
-#: functions.inc/auth/modules/Msad2.php:372
-#: functions.inc/auth/modules/Msad2.php:398
+#: functions.inc/auth/modules/Msad2.php:376
+#: functions.inc/auth/modules/Msad2.php:402
 #: functions.inc/auth/modules/Openldap.php:354
 #: functions.inc/auth/modules/Openldap.php:367
-#: functions.inc/auth/modules/Openldap2.php:379
-#: functions.inc/auth/modules/Openldap2.php:405
+#: functions.inc/auth/modules/Openldap2.php:383
+#: functions.inc/auth/modules/Openldap2.php:409
 msgid "LDAP is in Read Only Mode. Addition denied"
 msgstr ""
 
@@ -665,7 +661,7 @@ msgstr ""
 msgid "May this user log in to the %s Administration Pages?"
 msgstr ""
 
-#: functions.inc/auth/modules/Msad2.php:138
+#: functions.inc/auth/modules/Msad2.php:142
 msgid "Microsoft Active Directory"
 msgstr "Microsoft Active Directory"
 
@@ -708,16 +704,16 @@ msgid "None"
 msgstr "keine"
 
 #: functions.inc/auth/modules/Msad.php:111
-#: functions.inc/auth/modules/Msad2.php:152
+#: functions.inc/auth/modules/Msad2.php:156
 #: functions.inc/auth/modules/Openldap.php:146
-#: functions.inc/auth/modules/Openldap2.php:162
+#: functions.inc/auth/modules/Openldap2.php:166
 msgid "Not Connected"
 msgstr "nicht Verbunden"
 
 #: functions.inc/auth/modules/Msad.php:133
-#: functions.inc/auth/modules/Msad2.php:174
+#: functions.inc/auth/modules/Msad2.php:178
 #: functions.inc/auth/modules/Openldap.php:168
-#: functions.inc/auth/modules/Openldap2.php:184
+#: functions.inc/auth/modules/Openldap2.php:188
 msgid "Not all of the connection parameters have been filled out"
 msgstr ""
 
@@ -725,7 +721,7 @@ msgstr ""
 msgid "Obfuscated. To reset use the reset link in this email"
 msgstr ""
 
-#: functions.inc/auth/modules/Openldap2.php:148
+#: functions.inc/auth/modules/Openldap2.php:152
 msgid "OpenLDAP Directory"
 msgstr "OpenLDAP Directory"
 
@@ -950,11 +946,11 @@ msgid ""
 "The From: field for emails when using the user management email feature."
 msgstr ""
 
-#: views/msad2.php:723 views/openldap2.php:701
+#: views/msad2.php:745 views/openldap2.php:699
 msgid "The LDAP user object class type to use when loading groups."
 msgstr ""
 
-#: views/msad2.php:278 views/openldap2.php:256
+#: views/msad2.php:344 views/openldap2.php:322
 msgid "The LDAP user object class type to use when loading users."
 msgstr ""
 
@@ -987,7 +983,7 @@ msgstr ""
 msgid "The OpenLDAP username"
 msgstr ""
 
-#: views/msad2.php:345 views/openldap2.php:323
+#: views/msad2.php:411
 msgid "The RDN to use when loading the user username (eg. cn)."
 msgstr ""
 
@@ -1011,81 +1007,72 @@ msgstr ""
 msgid "The active directory username"
 msgstr ""
 
-#: views/msad2.php:833 views/openldap2.php:811
+#: views/msad2.php:297 views/openldap2.php:275
 msgid ""
-"The attribute field to use for tracking group identity across group renames."
+"The attribute field to use for tracking user identity across object renames."
 msgstr ""
 
-#: views/msad2.php:456 views/openldap2.php:434
-msgid ""
-"The attribute field to use for tracking user identity across user renames."
-msgstr ""
-
-#: views/msad2.php:322 views/openldap2.php:300
+#: views/msad2.php:388 views/openldap2.php:366
 msgid "The attribute field to use on the user object (eg. cn, sAMAccountName)"
 msgstr ""
 
-#: views/msad2.php:789 views/openldap2.php:767
-msgid "The attribute field to use when loading the group description."
-msgstr ""
-
-#: views/msad2.php:811 views/openldap2.php:789
+#: views/msad2.php:789 views/openldap2.php:743
 msgid "The attribute field to use when loading the group members."
 msgstr ""
 
-#: views/msad2.php:767 views/openldap2.php:745
-msgid "The attribute field to use when loading the group name."
+#: views/msad2.php:275 views/openldap2.php:253
+msgid "The attribute field to use when loading the object description."
 msgstr ""
 
-#: views/msad2.php:632 views/openldap2.php:610
+#: views/msad2.php:253 views/openldap2.php:231
+msgid "The attribute field to use when loading the object's common name."
+msgstr ""
+
+#: views/msad2.php:654 views/openldap2.php:608
 msgid "The attribute field to use when loading the user cell phone."
 msgstr ""
 
-#: views/msad2.php:544 views/openldap2.php:522
+#: views/msad2.php:566 views/openldap2.php:520
 msgid "The attribute field to use when loading the user company."
 msgstr ""
 
-#: views/msad2.php:566 views/openldap2.php:544
+#: views/msad2.php:588 views/openldap2.php:542
 msgid "The attribute field to use when loading the user department."
 msgstr ""
 
-#: views/msad2.php:500 views/openldap2.php:478
-msgid "The attribute field to use when loading the user description."
-msgstr ""
-
-#: views/msad2.php:478 views/openldap2.php:456
+#: views/msad2.php:522 views/openldap2.php:476
 msgid "The attribute field to use when loading the user email."
 msgstr ""
 
-#: views/msad2.php:654 views/openldap2.php:632
+#: views/msad2.php:676 views/openldap2.php:630
 msgid "The attribute field to use when loading the user fax."
 msgstr ""
 
-#: views/msad2.php:368 views/openldap2.php:346
+#: views/msad2.php:434 views/openldap2.php:388
 msgid "The attribute field to use when loading the user first name."
 msgstr ""
 
-#: views/msad2.php:412 views/openldap2.php:390
+#: views/msad2.php:478 views/openldap2.php:432
 msgid "The attribute field to use when loading the user full name."
 msgstr ""
 
-#: views/msad2.php:588 views/openldap2.php:566
+#: views/msad2.php:610 views/openldap2.php:564
 msgid "The attribute field to use when loading the user home phone."
 msgstr ""
 
-#: views/msad2.php:390 views/openldap2.php:368
+#: views/msad2.php:456 views/openldap2.php:410
 msgid "The attribute field to use when loading the user last name."
 msgstr ""
 
-#: views/msad2.php:522 views/openldap2.php:500
+#: views/msad2.php:544 views/openldap2.php:498
 msgid "The attribute field to use when loading the user title."
 msgstr ""
 
-#: views/msad2.php:610 views/openldap2.php:588
+#: views/msad2.php:632 views/openldap2.php:586
 msgid "The attribute field to use when loading the user work phone."
 msgstr ""
 
-#: views/msad2.php:434 views/openldap2.php:412
+#: views/msad2.php:500 views/openldap2.php:454
 msgid "The attribute field to use when loading the users groups."
 msgstr ""
 
@@ -1126,11 +1113,11 @@ msgid ""
 "to be separated with a comma."
 msgstr ""
 
-#: views/msad2.php:745 views/openldap2.php:723
+#: views/msad2.php:767 views/openldap2.php:721
 msgid "The filter to use when searching group objects."
 msgstr ""
 
-#: views/msad2.php:300 views/openldap2.php:278
+#: views/msad2.php:366 views/openldap2.php:344
 msgid "The filter to use when searching user objects."
 msgstr ""
 
@@ -1226,14 +1213,14 @@ msgid ""
 "ignored."
 msgstr ""
 
-#: views/msad2.php:701 views/openldap2.php:679
+#: views/msad2.php:723 views/openldap2.php:677
 msgid ""
 "This value is used in addition to the base DN when searching and loading "
 "groups. An example is ou=Groups. If no value is supplied, the subtree search "
 "will start from the base DN."
 msgstr ""
 
-#: views/msad2.php:256 views/openldap2.php:234
+#: views/msad2.php:322 views/openldap2.php:300
 msgid ""
 "This value is used in addition to the base DN when searching and loading "
 "users. An example is ou=Users. If no value is supplied, the subtree search "
@@ -1266,6 +1253,10 @@ msgstr ""
 
 #: functions.inc/auth/Auth.php:486
 msgid "Unable to link user to an invalid directory"
+msgstr ""
+
+#: views/msad2.php:285 views/openldap2.php:263
+msgid "Unique identifier attribute"
 msgstr ""
 
 #: views/passwordmodal.php:30 assets/js/userman.js:234
@@ -1305,24 +1296,20 @@ msgstr ""
 msgid "User '%s' Does Not Exist"
 msgstr ""
 
-#: views/msad2.php:620 views/openldap2.php:598
+#: views/msad2.php:642 views/openldap2.php:596
 msgid "User Cell Phone attribute"
 msgstr ""
 
-#: views/msad2.php:532 views/openldap2.php:510
+#: views/msad2.php:554 views/openldap2.php:508
 msgid "User Company attribute"
 msgstr ""
 
-#: views/msad2.php:244 views/openldap.php:95 views/openldap2.php:222
+#: views/msad2.php:310 views/openldap.php:95 views/openldap2.php:288
 msgid "User DN"
 msgstr ""
 
-#: views/msad2.php:554 views/openldap2.php:532
+#: views/msad2.php:576 views/openldap2.php:530
 msgid "User Department attribute"
-msgstr ""
-
-#: views/msad2.php:488 views/openldap2.php:466
-msgid "User Description attribute"
 msgstr ""
 
 #: views/users.php:30
@@ -1333,11 +1320,11 @@ msgstr "Benutzer-Details"
 msgid "User Does Not Exist"
 msgstr "Benutzer existiert nicht"
 
-#: views/msad2.php:642 views/openldap2.php:620
+#: views/msad2.php:664 views/openldap2.php:618
 msgid "User Fax attribute"
 msgstr ""
 
-#: views/msad2.php:576 views/openldap2.php:554
+#: views/msad2.php:598 views/openldap2.php:552
 msgid "User Home Phone attribute"
 msgstr ""
 
@@ -1377,11 +1364,11 @@ msgstr "Benutzer erfolgreich gelöscht"
 msgid "User Successfully Updated"
 msgstr "Benutzer erfolgreich geändert"
 
-#: views/msad2.php:510 views/openldap2.php:488
+#: views/msad2.php:532 views/openldap2.php:486
 msgid "User Title attribute"
 msgstr ""
 
-#: views/msad2.php:598 views/openldap2.php:576
+#: views/msad2.php:620 views/openldap2.php:574
 msgid "User Work Phone attribute"
 msgstr ""
 
@@ -1389,58 +1376,54 @@ msgstr ""
 msgid "User already exists"
 msgstr "Benutzer existiert bereits"
 
-#: views/msad2.php:237
+#: views/msad2.php:303
 msgid "User configuration"
 msgstr ""
 
-#: views/msad2.php:400 views/openldap2.php:378
+#: views/msad2.php:466 views/openldap2.php:420
 msgid "User display name attribute"
 msgstr ""
 
-#: views/msad2.php:466 views/openldap2.php:444
+#: views/msad2.php:510 views/openldap2.php:464
 msgid "User email attribute"
 msgstr ""
 
-#: views/msad2.php:664 views/openldap2.php:642
+#: views/msad2.php:686 views/openldap2.php:640
 msgid "User extension Link attribute"
 msgstr ""
 
-#: views/msad2.php:356 views/openldap2.php:334
+#: views/msad2.php:422 views/openldap2.php:376
 msgid "User first name attribute"
 msgstr ""
 
-#: views/msad2.php:422 views/openldap2.php:400
+#: views/msad2.php:488 views/openldap2.php:442
 msgid "User group attribute"
 msgstr ""
 
-#: views/msad2.php:378 views/openldap2.php:356
+#: views/msad2.php:444 views/openldap2.php:398
 msgid "User last name attribute"
 msgstr ""
 
-#: views/msad2.php:333 views/openldap2.php:311
+#: views/msad2.php:399
 msgid "User name RDN attribute"
 msgstr ""
 
-#: views/msad2.php:310 views/openldap2.php:288
+#: views/msad2.php:376 views/openldap2.php:354
 msgid "User name attribute"
 msgstr ""
 
-#: views/msad2.php:266 views/openldap2.php:244
+#: views/msad2.php:332 views/openldap2.php:310
 msgid "User object class"
 msgstr ""
 
-#: views/msad2.php:288 views/openldap2.php:266
+#: views/msad2.php:354 views/openldap2.php:332
 msgid "User object filter"
 msgstr ""
 
-#: views/msad2.php:444 views/openldap2.php:422
-msgid "User unique identifier attribute"
-msgstr ""
-
 #: functions.inc/auth/modules/Msad.php:357
-#: functions.inc/auth/modules/Msad2.php:424
+#: functions.inc/auth/modules/Msad2.php:428
 #: functions.inc/auth/modules/Openldap.php:392
-#: functions.inc/auth/modules/Openldap2.php:431
+#: functions.inc/auth/modules/Openldap2.php:435
 #: functions.inc/auth/modules/Voicemail.php:192
 msgid "User updated"
 msgstr "Benutzer geändert"
