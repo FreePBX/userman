@@ -5,7 +5,7 @@
 //
 namespace FreePBX\modules\Userman\Auth;
 
-abstract class Auth implements Base {
+abstract class Auth {
 	protected $userTable = 'userman_users';
 	protected $userSettingsTable = 'userman_users_settings';
 	protected $groupTable = 'userman_groups';
