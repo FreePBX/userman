@@ -61,7 +61,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 
 	public function getRightNav($request) {
 		if(isset($request['action'])) {
-			return load_view(__DIR__."/views/rnav.php",array("action" => $request['action']));
+			return load_view(__DIR__."/views/rnav.php",array("action" => $request['action'], "directory" => $request['directory']));
 		} else {
 			return '';
 		}
