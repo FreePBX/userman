@@ -30,7 +30,7 @@ $("#directory-users").change(function() {
 		$("#remove-users").addClass("hidden");
 		$("#add-users").addClass("hidden");
 	} else {
-		$("#add-groups").attr("href","?display=userman&action=addgroup&directory="+val);
+		$("#add-users").attr("href","?display=userman&action=adduser&directory="+val);
 		$("#table-users").bootstrapTable('refresh',{url: 'ajax.php?module=userman&command=getUsers&directory='+$(this).val()});
 		$("#table-users").bootstrapTable('hideColumn','auth');
 		if(directoryMapValues[val].permissions.addUser) {
