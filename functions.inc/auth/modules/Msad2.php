@@ -247,7 +247,7 @@ class Msad2 extends Auth {
 	public function sync($output=null) {
 		if(php_sapi_name() !== 'cli') {
 			$path = $this->FreePBX->Config->get("AMPSBIN");
-			exec($path."/fwconsole userman --sync ".escapeshellarg($this->config['id']));
+			exec($path."/fwconsole userman --sync ".escapeshellarg($this->config['id'])." --force");
 			return;
 		}
 
