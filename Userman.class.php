@@ -61,7 +61,8 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 
 	public function getRightNav($request) {
 		if(isset($request['action'])) {
-			return load_view(__DIR__."/views/rnav.php",array("action" => $request['action'], "directory" => $request['directory']));
+			$permissions = $this->getAuthAllPermissions($request['directory']);
+			return load_view(__DIR__."/views/rnav.php",array("action" => $request['action'], "directory" => $request['directory'], "permissions" => $permissions));
 		} else {
 			return '';
 		}
@@ -646,7 +647,6 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 					$directory = $_GET['directory'];
 					$usage_html = '';
 				}
-				$dir = $this->getDirectoryByID($directory);
 				$groups = $this->getAllGroups($directory);
 				$extrauserdetails = $this->getExtraUserDetailsDisplay($user);
 				$fpbxusers = array();

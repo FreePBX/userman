@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>13.0.76.8</version>
+	<version>13.0.76.9</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -12,6 +12,7 @@
 		Modules like iSymphony, Rest API and User Control Panel and FreePBX itself use this module to manage their users.
 	</description>
 	<changelog>
+		*13.0.76.9* FREEPBX-14966 fix rnav options for different directories
 		*13.0.76.8* FREEPBX-14897 FREEPBX-14896
 		*13.0.76.7* Run force sync from the gui
 		*13.0.76.6* FREEPBX-14896, FREEPBX-14897
