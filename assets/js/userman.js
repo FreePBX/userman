@@ -299,7 +299,7 @@ function directoryActive(value, row, index) {
 }
 
 function userActions(value, row, index) {
-	var html = '<a href="?display=userman&amp;action=showuser&amp;user='+row.id+'"><i class="fa fa-edit"></i></a>';
+	var html = '<a href="?display=userman&amp;action=showuser&amp;user='+row.id+'&amp;directory='+row.auth+'"><i class="fa fa-edit"></i></a>';
 
 	if(directoryMapValues[row.auth].permissions.changePassword) {
 		html += '<a data-toggle="modal" data-pwuid="'+row.id+'" data-target="#setpw" id="pwmlink'+row.id+'" class="clickable"><i class="fa fa-key"></i></a>';
@@ -312,7 +312,7 @@ function userActions(value, row, index) {
 }
 
 function groupActions(value, row, index) {
-	var html = '<a href="?display=userman&amp;action=showgroup&amp;group='+row.id+'"><i class="fa fa-edit"></i></a>';
+	var html = '<a href="?display=userman&amp;action=showgroup&amp;group='+row.id+'&amp;directory='+row.auth+'"><i class="fa fa-edit"></i></a>';
 
 	if(row.local == "1" || directoryMapValues[row.auth].permissions.removeGroup) {
 		html += '<a class="clickable"><i class="fa fa-trash-o" data-section="groups" data-type="group"  data-id="'+row.id+'"></i></a>';
