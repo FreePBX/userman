@@ -26,11 +26,6 @@
 
 
 namespace FreePBX\modules\Userman\Auth;
-use LdapTools\Configuration;
-use LdapTools\DomainConfiguration;
-use LdapTools\LdapManager;
-use LdapTools\Query\LdapQueryBuilder;
-use LdapTools\Object\LdapObjectType;
 use Adldap\Adldap;
 use Adldap\Exceptions\Auth\BindException;
 class Openldap2 extends Auth {
