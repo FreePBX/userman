@@ -1,8 +1,0 @@
-imports:
-  - php
-
-filter:
-  excluded_paths:
-    - docs/*
-    - spec/*
-    - resources/*
