@@ -1363,6 +1363,16 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	}
 
 	/**
+	 * Depreciated function to get the auth object
+	 * @method getAuthObject
+	 * @return object        The auth object
+	 */
+	public function getAuthObject() {
+		$directory = $this->getDefaultDirectory();
+		return $this->getDirectoryObjectByID($directory['id']);
+	}
+
+	/**
 	 * Get all Direvtory Drivers
 	 * @return array Array of valid directory engines
 	 */
