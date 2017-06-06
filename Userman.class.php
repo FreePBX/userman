@@ -722,7 +722,13 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 						$auths[$auth] = $a;
 					}
 				}
-				$directories = $this->getAllDirectories();
+				$directories = $this->getAllDirectories(true);
+				$activedirectorycount = $directories['active'];
+				$directories = $directories['directories'];
+				$dirwarn = '';
+				if($activedirectorycount === 0){
+					$dirwarn = '<div class="alert alert-warning" role="alert"><strong>'._("Warning")."</strong>: "._("You have no directories enabled. This will affect users ability to use features that require a login").'</div>';
+				}
 				$directoryMap = array();
 				foreach($directories as $directory) {
 					$directoryMap[$directory['id']]['name'] = $directory['name'];
@@ -760,7 +766,8 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 						"message" => $this->message,
 						"emailbody" => $emailbody,
 						"emailsubject" => $emailsubject,
-						"mailtype" => $mailtype
+						"mailtype" => $mailtype,
+						"dirwarn" => $dirwarn
 					)
 				);
 			break;
@@ -1015,13 +1022,20 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$this->globalDirectory = new $class($this, $this->FreePBX);
 	}
 
-	public function getAllDirectories() {
+	public function getAllDirectories($withactivecount = false) {
 		$sql = "SELECT * FROM ".$this->directoryTable." ORDER BY `order`";
 		$sth = $this->db->prepare($sql);
 		$sth->execute();
 		$directories = $sth->fetchAll(\PDO::FETCH_ASSOC);
+		$count = 0;
 		foreach($directories as $key => $d) {
 			$directories[$key]['config'] = $this->getConfig("auth-settings",$d['id']);
+			if($directories[$key]['active'] == 1){
+				$count++;
+			}
+		}
+		if($withactivecount){
+			return array('active' => $count, 'directories' => $directories);
 		}
 		return $directories;
 	}

@@ -16,6 +16,7 @@
 							<p><?php echo sprintf(_('In %s User Manager you can create users that have access to Extensions or Device/User Mode Users and the settings associated with those Devices. For example, a new user can be created that can log into User Control Panel and access the voicemail of 3 other accounts.'),$brand)?></p>
 						</div>
 					</div>
+					<?php echo $dirwarn?>
 					<?php if(!empty($message)){ ?>
 						<div class="alert alert-<?php echo $message['type']?>"><?php echo $message['message']?></div>
 					<?php } ?>
