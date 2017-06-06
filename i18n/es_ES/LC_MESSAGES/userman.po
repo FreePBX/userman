@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-06 09:54-0700\n"
+"POT-Creation-Date: 2017-06-06 10:28-0700\n"
 "PO-Revision-Date: 2016-12-11 08:33+0200\n"
 "Last-Translator: Ernesto <ecasas@sangoma.com>\n"
 "Language-Team: Spanish <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -202,7 +202,7 @@ msgstr ""
 msgid "Company"
 msgstr "Empresa"
 
-#: functions.inc/auth/modules/Msad.php:142
+#: functions.inc/auth/modules/Msad.php:156
 #: functions.inc/auth/modules/Msad2.php:174
 #: functions.inc/auth/modules/Openldap.php:168
 #: functions.inc/auth/modules/Openldap2.php:179
@@ -497,7 +497,7 @@ msgstr ""
 msgid "Group object filter"
 msgstr ""
 
-#: functions.inc/auth/modules/Msad.php:415
+#: functions.inc/auth/modules/Msad.php:430
 #: functions.inc/auth/modules/Msad2.php:466
 #: functions.inc/auth/modules/Openldap.php:426
 #: functions.inc/auth/modules/Openldap2.php:467
@@ -626,8 +626,8 @@ msgstr "Heredar"
 msgid "Invalid User"
 msgstr "Usuario Invalido"
 
-#: functions.inc/auth/modules/Msad.php:364
-#: functions.inc/auth/modules/Msad.php:377
+#: functions.inc/auth/modules/Msad.php:379
+#: functions.inc/auth/modules/Msad.php:392
 #: functions.inc/auth/modules/Msad2.php:392
 #: functions.inc/auth/modules/Msad2.php:418
 #: functions.inc/auth/modules/Openldap.php:375
@@ -719,7 +719,7 @@ msgstr ""
 msgid "Microsoft Active Directory"
 msgstr "Microsoft Active Directory"
 
-#: functions.inc/auth/modules/Msad.php:119
+#: functions.inc/auth/modules/Msad.php:133
 msgid "Microsoft Active Directory (Legacy)"
 msgstr ""
 
@@ -757,14 +757,14 @@ msgstr "No"
 msgid "None"
 msgstr "ninguno"
 
-#: functions.inc/auth/modules/Msad.php:133
+#: functions.inc/auth/modules/Msad.php:147
 #: functions.inc/auth/modules/Msad2.php:165
 #: functions.inc/auth/modules/Openldap.php:159
 #: functions.inc/auth/modules/Openldap2.php:170
 msgid "Not Connected"
 msgstr "No Conectado"
 
-#: functions.inc/auth/modules/Msad.php:155
+#: functions.inc/auth/modules/Msad.php:169
 #: functions.inc/auth/modules/Msad2.php:187
 #: functions.inc/auth/modules/Openldap.php:181
 #: functions.inc/auth/modules/Openldap2.php:192
@@ -1625,7 +1625,7 @@ msgstr ""
 msgid "User object filter"
 msgstr ""
 
-#: functions.inc/auth/modules/Msad.php:402
+#: functions.inc/auth/modules/Msad.php:417
 #: functions.inc/auth/modules/Msad2.php:444
 #: functions.inc/auth/modules/Openldap.php:413
 #: functions.inc/auth/modules/Openldap2.php:445
