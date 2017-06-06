@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>14.0.3.6</version>
+	<version>14.0.3.7</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -10,6 +10,7 @@
 		This Module manages all PBX users. It allows an Administrator to create a User Account that can be used by other applications for login or API purposes.
 	</description>
 	<changelog>
+		*14.0.3.7* FREEPBX-14963 Put an alert in Userman if no directories are active
 		*14.0.3.6* FREEPBX-14973 add back removed function
 		*14.0.3.5* FREEPBX-14966 fix rnav options for different directories
 		*14.0.3.4* Bump
