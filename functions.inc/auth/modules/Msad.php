@@ -80,6 +80,18 @@ class Msad extends Auth {
 	 */
 	private $ad = null;
 
+        /**
+         * The account suffix taken from configuration
+         * @var string
+         */
+        private $account_suffix;
+
+        /**
+         * Use or not startTLS
+         * @var boolean
+         */
+        private $use_tls;
+
 	private $userHooks = array(
 		'add' => array(),
 		'update' => array(),
@@ -102,6 +114,8 @@ class Msad extends Auth {
 		$this->user = $config['username'];
 		$this->password = $config['password'];
 		$this->linkAttr = isset($config['la']) ? strtolower($config['la']) : '';
+                $this->account_suffix = !empty($config['account_suffix']) ? $config['account_suffix'] : $config['domain'];
+                $this->use_tls = isset($config['use_tls']) ? $config['use_tls'] : false;
 		$this->output = null;
 	}
 
@@ -209,7 +223,8 @@ class Msad extends Auth {
 		if($reconnect || !$this->ad) {
 			$this->ad = new Adldap();
 			$config = [
-				'account_suffix'        => '@'.$this->domain,
+                                'account_suffix'        => $this->account_suffix,
+                                'use_tls'               => $this->use_tls,
 				'domain_controllers'    => [$this->host],
 				'base_dn'               => $this->dn,
 				'admin_username'        => $this->user,
