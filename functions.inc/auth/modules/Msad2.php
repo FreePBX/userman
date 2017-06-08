@@ -503,7 +503,12 @@ class Msad2 extends Auth {
 		$process = array();
 		foreach($this->ucache as $usid => $user) {
 			$u = $this->getUserByAuthID($usid);
-			$pgsid = $user->getPrimaryGroup()->getConvertedGuid();
+			$pg = $user->getPrimaryGroup();
+			if(empty($pg)) {
+				$this->out("\tUnable to find ".$u['username']."'s primary group");
+				continue;
+			}
+			$pgsid = $pg->getConvertedGuid();
 			if(isset($groups[$pgsid]) && !in_array($u['id'], $groups[$pgsid]['users'])) {
 				$gid = $groups[$pgsid]['id'];
 				$this->out("\tAdding ".$u['username']." to ".$groups[$pgsid]['groupname']."...",false);
