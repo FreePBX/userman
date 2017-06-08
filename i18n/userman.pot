@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-06 10:28-0700\n"
+"POT-Creation-Date: 2017-06-07 23:03-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -633,7 +633,7 @@ msgid ""
 "extists!! (Try lowercase if it is not working.)"
 msgstr ""
 
-#: install.php:33
+#: install.php:37
 #, php-format
 msgid "Imported %s directory"
 msgstr ""
@@ -844,7 +844,7 @@ msgid "Other Settings"
 msgstr ""
 
 #: Userman.class.php:1299
-#: install.php:54
+#: install.php:58
 msgid "PBX Internal Directory"
 msgstr ""
 

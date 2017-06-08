@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-06 10:28-0700\n"
+"POT-Creation-Date: 2017-06-07 23:03-0700\n"
 "PO-Revision-Date: 2016-12-21 00:22+0200\n"
 "Last-Translator: Alexander <alexander.schley@paranagua.pr.gov.br>\n"
 "Language-Team: Portuguese (Brazil) <http://weblate.freepbx.org/projects/"
@@ -599,7 +599,7 @@ msgstr ""
 "manualmente onde exista este atributo !! (Tente minúsculas se não estiver "
 "funcionando.)"
 
-#: install.php:33
+#: install.php:37
 #, php-format
 msgid "Imported %s directory"
 msgstr ""
@@ -790,7 +790,7 @@ msgstr ""
 msgid "Other Settings"
 msgstr "Outras Configurações"
 
-#: Userman.class.php:1299 install.php:54
+#: Userman.class.php:1299 install.php:58
 msgid "PBX Internal Directory"
 msgstr ""
 
