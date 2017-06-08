@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-06 12:46-0400\n"
+"POT-Creation-Date: 2017-06-08 02:01-0400\n"
 "PO-Revision-Date: 2016-12-11 08:33+0200\n"
 "Last-Translator: Ernesto <ecasas@sangoma.com>\n"
 "Language-Team: Spanish <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -582,7 +582,7 @@ msgstr ""
 "manualmente donde extists este atributo !! (Prueba con minúsculas si no "
 "funciona.)"
 
-#: install.php:266
+#: install.php:270
 #, php-format
 msgid "Imported %s directory"
 msgstr ""
@@ -765,7 +765,7 @@ msgstr ""
 msgid "Other Settings"
 msgstr "Otros ajustes"
 
-#: Userman.class.php:1272 install.php:287
+#: Userman.class.php:1272 install.php:291
 msgid "PBX Internal Directory"
 msgstr ""
 
