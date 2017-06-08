@@ -30,7 +30,11 @@ $check = array(
 foreach($check as $key => $driver) {
 	$settings = FreePBX::Userman()->getConfig($key);
 	if(!empty($settings)) {
-		$id = FreePBX::Userman()->addDirectory(ucfirst($driver), sprintf(_('Imported %s directory'),$driver), (strtolower($auth) == $driver), $settings);
+		$active = false;
+		if((empty($auth) && ($driver == 'freepbx')) || (!empty($auth) && strtolower($auth) == $driver)) {
+			$active = true;
+		}
+		$id = FreePBX::Userman()->addDirectory(ucfirst($driver), sprintf(_('Imported %s directory'),$driver), $active, $settings);
 		if(!empty($id)) {
 			$sql = "UPDATE userman_users SET auth = ? WHERE LOWER(auth) = '".$driver."'";
 			$sth = FreePBX::Database()->prepare($sql);
