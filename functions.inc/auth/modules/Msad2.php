@@ -474,11 +474,7 @@ class Msad2 extends Auth {
 	public function checkCredentials($username, $password) {
 		$this->connect();
 
-		if(strpos($username,"@") === false) {
-			$res = $this->provider->auth()->attempt($username."@".$this->config['domain'], $password);
-		} else {
-			$res = $this->provider->auth()->attempt($username, $password);
-		}
+		$res = $this->provider->auth()->attempt($username, $password);
 		if($res) {
 			$user = $this->getUserByUsername($username);
 		}
@@ -505,7 +501,11 @@ class Msad2 extends Auth {
 			$u = $this->getUserByAuthID($usid);
 			$pg = $user->getPrimaryGroup();
 			if(empty($pg)) {
+				$groupSid = preg_replace('/\d+$/', $user->getPrimaryGroupId(), $user->getConvertedSid());
 				$this->out("\tUnable to find ".$u['username']."'s primary group");
+				$this->out("\t\tGroup ID: ".$user->getPrimaryGroupId());
+				$this->out("\t\tUser SID: ".$user->getConvertedSid());
+				$this->out("\t\tGroup SID: ".$groupSid);
 				continue;
 			}
 			$pgsid = $pg->getConvertedGuid();

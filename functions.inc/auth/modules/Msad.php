@@ -205,26 +205,10 @@ class Msad extends Auth {
 	 * Connect to the LDAP server
 	 */
 	public function connect($reconnect = false) {
-		/*
-		if($reconnect || !$this->ldap) {
-			$this->ldap = ldap_connect($this->host,$this->port);
-			if($this->ldap === false) {
-				$this->ldap = null;
-				throw new \Exception("Unable to Connect");
-			}
-			ldap_set_option($this->ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
-
-			if(!@ldap_bind($this->ldap, $this->user."@".$this->domain, $this->password)) {
-				$this->ldap = null;
-				throw new \Exception("Unable to Auth");
-			}
-		}
-		*/
 		if($reconnect || !$this->ad) {
-			$this->ad = new Adldap();
 			$config = [
-                                'account_suffix'        => $this->account_suffix,
-                                'use_tls'               => $this->use_tls,
+				'account_suffix'        => $this->account_suffix,
+				'use_tls'               => $this->use_tls,
 				'domain_controllers'    => [$this->host],
 				'base_dn'               => $this->dn,
 				'admin_username'        => $this->user,
@@ -234,11 +218,15 @@ class Msad extends Auth {
 
 			$this->ad->addProvider('default', $provider);
 
-			//try {
-				$this->ad->connect('default');
-			//} catch (BindException $e) {
-				//throw error?
-			//}
+			$this->provider = new \Adldap\Connections\Provider($config);
+			$this->ad = new Adldap(array("default" => $config));
+			$ad->addProvider($this->provider, 'default');
+
+			try {
+				$this->ldap = $ad->connect();
+			} catch (BindException $e) {
+				throw new \Exception("Unable to Connect to host! Reason: ".$e->getMessage());
+			}
 		}
 	}
 
