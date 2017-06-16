@@ -613,6 +613,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 					$auth = $directory['driver'];
 					if(!empty($a)) {
 						$auths[$auth] = $a;
+						$directory['config']['id'] = $request['directory'];
 						$auths[$auth]['html'] = $class::getConfig($this, $this->FreePBX, $directory['config']);
 					}
 				} else {
