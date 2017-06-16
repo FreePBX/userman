@@ -94,6 +94,52 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 			}
 		}
 		$freepbxCron->addLine("*/15 * * * * ".$AMPSBIN."/fwconsole userman --syncall -q");
+
+		$auth = $this->getConfig('auth');
+
+		$check = array(
+			"authFREEPBXSettings" => "freepbx",
+			"authMSADSettings" => 'msad',
+			"authOpenLDAPSettings" => 'openldap',
+			"authVoicemailSettings" => 'voicemail'
+		);
+
+		foreach($check as $key => $driver) {
+			$settings = $this->getConfig($key);
+			if(!empty($settings)) {
+				$active = false;
+				if((empty($auth) && ($driver == 'freepbx')) || (!empty($auth) && strtolower($auth) == $driver)) {
+					$active = true;
+				}
+				$id = $this->addDirectory(ucfirst($driver), sprintf(_('Imported %s directory'),$driver), $active, $settings);
+				if(!empty($id)) {
+					$sql = "UPDATE userman_users SET auth = ? WHERE LOWER(auth) = '".$driver."'";
+					$sth = FreePBX::Database()->prepare($sql);
+					$sth->execute(array($id));
+					$sql = "UPDATE userman_groups SET auth = ? WHERE LOWER(auth) = '".$driver."'";
+					$sth = FreePBX::Database()->prepare($sql);
+					$sth->execute(array($id));
+					if(strtolower($auth) == $driver) {
+						$this->setDefaultDirectory($id);
+					}
+				}
+				$this->setConfig($key,false);
+			}
+		}
+		if(!empty($auth)) {
+			$this->setConfig('auth',false);
+		}
+
+		$directories = $this->getAllDirectories();
+		if(empty($directories)) {
+			$id = $this->addDirectory('Freepbx', _("PBX Internal Directory"), true, array());
+			$this->setDefaultDirectory($id);
+		}
+
+		$dir = $this->getDefaultDirectory();
+		if($dir['driver'] == 'Freepbx') {
+			$this->addDefaultGroupToDirectory($dir['id']);
+		}
 	}
 
 	/**
@@ -580,6 +626,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 					$auth = $directory['driver'];
 					if(!empty($a)) {
 						$auths[$auth] = $a;
+						$directory['config']['id'] = $request['directory'];
 						$auths[$auth]['html'] = $class::getConfig($this, $this->FreePBX, $directory['config']);
 					}
 				} else {

@@ -26,9 +26,7 @@ class Freepbx extends Auth {
 	}
 
 	public function getDefaultGroups() {
-		$config = $this->userman->getConfig("authFREEPBXSettings");
-		$sgroups = !empty($config['default-groups']) ? $config['default-groups'] : array();
-		return $sgroups;
+		return $this->config['default-groups'];
 	}
 
 	/**
