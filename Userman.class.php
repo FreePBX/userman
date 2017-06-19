@@ -175,6 +175,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$groups = $this->getAllGroups($directory['id']);
 		$permissions = $this->getAuthAllPermissions($directory['id']);
 		$dgroups = $this->getDefaultGroups($directory['id']);
+		$dgroups = !empty($dgroups) ? $dgroups : array();
 		$usersC = array();  // Initialize the array.
 		foreach($this->FreePBX->Core->getAllUsers() as $user) {
 			$usersC[] = $user['extension'];
