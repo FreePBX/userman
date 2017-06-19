@@ -39,7 +39,7 @@ if(!empty($sqls)) {
 /* Databases
  * Only needed before 14. After 14 this is handled in the XML.
  */
-$table = \FreePBX::Database()->migrate("userman_users");
+$table = FreePBX::Database()->migrate("userman_users");
 $cols = array (
 	'id' => array (
 		'type' => 'integer',
@@ -155,7 +155,58 @@ $indexes = array (
 $table->modify($cols, $indexes);
 unset($table);
 
-$table = \FreePBX::Database()->migrate("userman_groups");
+$table = FreePBX::Database()->migrate("userman_users_settings");
+$cols = array (
+	'uid' => array (
+		'type' => 'integer',
+	),
+	'module' => array (
+		'type' => 'string',
+		'length' => 65,
+	),
+	'key' => array (
+		'type' => 'string',
+		'length' => 190,
+	),
+	'val' => array (
+		'type' => 'blob',
+	),
+	'type' => array (
+		'type' => 'string',
+		'length' => 16,
+		'notnull' => false,
+	),
+);
+
+$indexes = array (
+	'index4' => array (
+		'type' => 'unique',
+		'cols' => array (
+			0 => 'uid',
+			1 => 'module',
+			2 => 'key',
+		),
+	),
+	'index2' => array (
+		'type' => 'index',
+		'cols' => array (
+			0 => 'uid',
+			1 => 'key',
+		),
+	),
+	'index6' => array (
+		'type' => 'index',
+		'cols' => array (
+			0 => 'module',
+			1 => 'uid',
+		),
+	),
+);
+$table->modify($cols, $indexes);
+unset($table);
+
+
+$table = FreePBX::Database()->migrate("userman_groups");
 $cols = array (
 	'id' => array (
 		'type' => 'integer',
@@ -214,7 +265,57 @@ $indexes = array (
 $table->modify($cols, $indexes);
 unset($table);
 
-$table = \FreePBX::Database()->migrate("userman_directories");
+$table = FreePBX::Database()->migrate("userman_groups_settings");
+$cols = array (
+	'gid' => array (
+		'type' => 'integer',
+	),
+	'module' => array (
+		'type' => 'string',
+		'length' => 65,
+	),
+	'key' => array (
+		'type' => 'string',
+		'length' => 190,
+	),
+	'val' => array (
+		'type' => 'blob',
+	),
+	'type' => array (
+		'type' => 'string',
+		'length' => 16,
+		'notnull' => false,
+	),
+);
+
+$indexes = array (
+	'index4' => array (
+		'type' => 'unique',
+		'cols' => array (
+			0 => 'gid',
+			1 => 'module',
+			2 => 'key',
+		),
+	),
+	'index2' => array (
+		'type' => 'index',
+		'cols' => array (
+			0 => 'gid',
+			1 => 'key',
+		),
+	),
+	'index6' => array (
+		'type' => 'index',
+		'cols' => array (
+			0 => 'module',
+			1 => 'gid',
+		),
+	),
+);
+$table->modify($cols, $indexes);
+unset($table);
+
+$table = FreePBX::Database()->migrate("userman_directories");
 $cols = array (
 	'id' => array (
 		'type' => 'integer',
@@ -252,37 +353,6 @@ $cols = array (
 $indexes = array ();
 $table->modify($cols, $indexes);
 unset($table);
-
-$sqls = array();
-
-$sqls[] = "CREATE TABLE IF NOT EXISTS `userman_users_settings` (
-	`uid` int(11) NOT NULL,
-	`module` char(65) NOT NULL,
-	`key` char(255) NOT NULL,
-	`val` longblob NOT NULL,
-	`type` char(16) DEFAULT NULL,
-	UNIQUE KEY `index4` (`uid`,`module`,`key`),
-	KEY `index2` (`uid`,`key`),
-	KEY `index6` (`module`,`uid`)
-)";
-
-$sqls[] = "CREATE TABLE IF NOT EXISTS `userman_groups_settings` (
-	`gid` int(11) NOT NULL,
-	`module` char(65) NOT NULL,
-	`key` char(255) NOT NULL,
-	`val` longblob NOT NULL,
-	`type` char(16) DEFAULT NULL,
-	UNIQUE KEY `index4` (`gid`,`module`,`key`),
-	KEY `index2` (`gid`,`key`),
-	KEY `index6` (`module`,`gid`)
-)";
-
-foreach($sqls as $sql) {
-	$result = $db->query($sql);
-	if (\DB::IsError($result)) {
-		die_freepbx($result->getDebugInfo());
-	}
-}
 
 
 $set = array();
