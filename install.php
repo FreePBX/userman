@@ -36,32 +36,225 @@ if(!empty($sqls)) {
 		return false;
 	}
 }
+/* Databases
+ * Only needed before 14. After 14 this is handled in the XML.
+ */
+$table = \FreePBX::Database()->migrate("userman_users");
+$cols = array (
+	'id' => array (
+		'type' => 'integer',
+		'primaryKey' => true,
+		'autoincrement' => true,
+	),
+	'auth' => array (
+		'type' => 'string',
+		'length' => '150',
+		'notnull' => false,
+		'default' => 'freepbx',
+	),
+	'authid' => array (
+		'type' => 'string',
+		'length' => '750',
+		'notnull' => false,
+		'default' => 'freepbx',
+	),
+	'username' => array (
+		'type' => 'string',
+		'length' => '150',
+		'notnull' => false,
+	),
+	'description' => array (
+		'type' => 'string',
+		'length' => '255',
+		'notnull' => false,
+	),
+	'password' => array (
+		'type' => 'string',
+		'length' => '255',
+		'notnull' => false,
+	),
+	'default_extension' => array (
+		'type' => 'string',
+		'length' => '45',
+		'default' => 'none',
+	),
+	'primary_group' => array (
+		'type' => 'integer',
+		'notnull' => false,
+	),
+	'permissions' => array (
+		'type' => 'blob',
+		'notnull' => false,
+	),
+	'fname' => array (
+		'type' => 'string',
+		'length' => '100',
+		'notnull' => false,
+	),
+	'lname' => array (
+		'type' => 'string',
+		'length' => '100',
+		'notnull' => false,
+	),
+	'displayname' => array (
+		'type' => 'string',
+		'length' => '200',
+		'notnull' => false,
+	),
+	'title' => array (
+		'type' => 'string',
+		'length' => '100',
+		'notnull' => false,
+	),
+	'company' => array (
+		'type' => 'string',
+		'length' => '100',
+		'notnull' => false,
+	),
+	'department' => array (
+		'type' => 'string',
+		'length' => '100',
+		'notnull' => false,
+	),
+	'email' => array (
+		'type' => 'text',
+		'length' => '',
+		'notnull' => false,
+	),
+	'cell' => array (
+		'type' => 'string',
+		'length' => '100',
+		'notnull' => false,
+	),
+	'work' => array (
+		'type' => 'string',
+		'length' => '100',
+		'notnull' => false,
+	),
+	'home' => array (
+		'type' => 'string',
+		'length' => '100',
+		'notnull' => false,
+	),
+	'fax' => array (
+		'type' => 'string',
+		'length' => '100',
+		'notnull' => false,
+	),
+);
+
+$indexes = array (
+	'username_UNIQUE' => array (
+		'type' => 'unique',
+		'cols' => array (
+			0 => 'username',
+			1 => 'auth',
+		),
+	),
+);
+$table->modify($cols, $indexes);
+unset($table);
+
+$table = \FreePBX::Database()->migrate("userman_groups");
+$cols = array (
+	'id' => array (
+		'type' => 'integer',
+		'primaryKey' => true,
+		'autoincrement' => true,
+	),
+	'auth' => array (
+		'type' => 'string',
+		'length' => '150',
+		'notnull' => false,
+		'default' => 'freepbx',
+	),
+	'authid' => array (
+		'type' => 'string',
+		'length' => '750',
+		'notnull' => false,
+		'default' => 'freepbx',
+	),
+	'groupname' => array (
+		'type' => 'string',
+		'length' => '150',
+		'notnull' => false,
+	),
+	'description' => array (
+		'type' => 'string',
+		'length' => '255',
+		'notnull' => false,
+	),
+	'priority' => array (
+		'type' => 'integer',
+		'default' => '5',
+	),
+	'users' => array (
+		'type' => 'blob',
+		'notnull' => false,
+	),
+	'permissions' => array (
+		'type' => 'blob',
+		'notnull' => false,
+	),
+	'local' => array (
+		'type' => 'boolean',
+		'default' => '0',
+	),
+);
+
+$indexes = array (
+	'groupname_UNIQUE' => array (
+		'type' => 'unique',
+		'cols' => array (
+			0 => 'groupname',
+			1 => 'auth',
+		),
+	),
+);
+$table->modify($cols, $indexes);
+unset($table);
+
+$table = \FreePBX::Database()->migrate("userman_directories");
+$cols = array (
+	'id' => array (
+		'type' => 'integer',
+		'primaryKey' => true,
+		'autoincrement' => true,
+	),
+	'name' => array (
+		'type' => 'string',
+		'length' => '250',
+		'notnull' => false,
+	),
+	'driver' => array (
+		'type' => 'string',
+		'length' => '150',
+		'default' => '',
+	),
+	'active' => array (
+		'type' => 'boolean',
+		'default' => '0',
+	),
+	'order' => array (
+		'type' => 'integer',
+		'default' => '5',
+	),
+	'default' => array (
+		'type' => 'boolean',
+		'default' => '0',
+	),
+	'locked' => array (
+		'type' => 'boolean',
+		'default' => '0',
+	),
+);
+
+$indexes = array ();
+$table->modify($cols, $indexes);
+unset($table);
 
 $sqls = array();
-$sqls[] = "CREATE TABLE IF NOT EXISTS `userman_users` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`auth` varchar(150) DEFAULT 'freepbx',
-	`authid` varchar(750) DEFAULT NULL,
-	`username` varchar(150) DEFAULT NULL,
-	`description` varchar(255) DEFAULT NULL,
-	`password` varchar(255) DEFAULT NULL,
-	`default_extension` varchar(45) NOT NULL DEFAULT 'none',
-	`primary_group` int(11) DEFAULT NULL,
-	`permissions` BLOB,
-	`fname` varchar(100) DEFAULT NULL,
-	`lname` varchar(100) DEFAULT NULL,
-	`displayname` varchar(200) DEFAULT NULL,
-	`title` varchar(100) DEFAULT NULL,
-	`company` varchar(100) DEFAULT NULL,
-	`department` varchar(100) DEFAULT NULL,
-	`email` text DEFAULT NULL,
-	`cell` varchar(100) DEFAULT NULL,
-	`work` varchar(100) DEFAULT NULL,
-	`home` varchar(100) DEFAULT NULL,
-	`fax` varchar(100) DEFAULT NULL,
-	PRIMARY KEY (`id`),
-	UNIQUE KEY `username_UNIQUE` (`username`,`auth`)
-)";
+
 $sqls[] = "CREATE TABLE IF NOT EXISTS `userman_users_settings` (
 	`uid` int(11) NOT NULL,
 	`module` char(65) NOT NULL,
@@ -72,19 +265,7 @@ $sqls[] = "CREATE TABLE IF NOT EXISTS `userman_users_settings` (
 	KEY `index2` (`uid`,`key`),
 	KEY `index6` (`module`,`uid`)
 )";
-$sqls[] = "CREATE TABLE IF NOT EXISTS `userman_groups` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`auth` varchar(150) DEFAULT 'freepbx',
-	`authid` varchar(750) DEFAULT NULL,
-	`groupname` varchar(150) DEFAULT NULL,
-	`description` varchar(255) DEFAULT NULL,
-	`priority` int(11) NOT NULL DEFAULT 5,
-	`users` BLOB,
-	`permissions` BLOB,
-	`local` tinyint(4) NOT NULL DEFAULT 0,
-	PRIMARY KEY (`id`),
-	UNIQUE KEY `groupname_UNIQUE` (`groupname`,`auth`)
-)";
+
 $sqls[] = "CREATE TABLE IF NOT EXISTS `userman_groups_settings` (
 	`gid` int(11) NOT NULL,
 	`module` char(65) NOT NULL,
@@ -95,16 +276,7 @@ $sqls[] = "CREATE TABLE IF NOT EXISTS `userman_groups_settings` (
 	KEY `index2` (`gid`,`key`),
 	KEY `index6` (`module`,`gid`)
 )";
-$sqls[] = "CREATE TABLE IF NOT EXISTS `userman_directories` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`name` varchar(250) DEFAULT NULL,
-	`driver` varchar(150) NOT NULL DEFAULT '',
-	`active` tinyint(4) NOT NULL DEFAULT '0',
-	`order` int(11) NOT NULL DEFAULT '5',
-	`default` tinyint(4) NOT NULL DEFAULT '0',
-	`locked` tinyint(4) NOT NULL DEFAULT '0',
-	PRIMARY KEY (`id`)
-)";
+
 foreach($sqls as $sql) {
 	$result = $db->query($sql);
 	if (\DB::IsError($result)) {
@@ -112,130 +284,6 @@ foreach($sqls as $sql) {
 	}
 }
 
-if (!$db->getAll('SHOW COLUMNS FROM `userman_users` WHERE FIELD = "auth"')) {
-	out("Adding default extension column");
-		$sql = "ALTER TABLE `userman_users` ADD COLUMN `auth` varchar(255) DEFAULT 'freepbx' AFTER `id`";
-		$result = $db->query($sql);
-		$sql = "ALTER TABLE `userman_users` ADD COLUMN `authid` varchar(255) DEFAULT NULL AFTER `auth`";
-		$result = $db->query($sql);
-}
-
-if (!$db->getAll('SHOW COLUMNS FROM `userman_groups` WHERE FIELD = "auth"')) {
-	out("Adding default extension column");
-		$sql = "ALTER TABLE `userman_groups` ADD COLUMN `auth` varchar(255) DEFAULT 'freepbx' AFTER `id`";
-		$result = $db->query($sql);
-		$sql = "ALTER TABLE `userman_groups` ADD COLUMN `authid` varchar(255) DEFAULT NULL AFTER `auth`";
-		$result = $db->query($sql);
-}
-
-if (!$db->getAll('SHOW COLUMNS FROM `userman_groups` WHERE FIELD = "priority"')) {
-	out("Adding default extension column");
-		$sql = "ALTER TABLE `userman_groups` ADD COLUMN `priority` int(11) NOT NULL DEFAULT 5 AFTER `description`";
-		$result = $db->query($sql);
-}
-
-if (!$db->getAll('SHOW COLUMNS FROM `userman_groups` WHERE FIELD = "local"')) {
-        out("Adding default local column");
-                $sql = "ALTER TABLE `userman_groups` ADD COLUMN `local` tinyint(4) NOT NULL DEFAULT 0 AFTER `permissions`";
-                $result = $db->query($sql);
-}
-
-if (!$db->getAll('SHOW COLUMNS FROM `userman_users` WHERE FIELD = "default_extension"')) {
-	out("Adding default extension column");
-		$sql = "ALTER TABLE `userman_users` ADD COLUMN `default_extension` VARCHAR(45) NOT NULL DEFAULT 'none' AFTER `password`";
-		$result = $db->query($sql);
-}
-
-if (!$db->getAll('SHOW COLUMNS FROM `userman_users` WHERE FIELD = "primary_group"')) {
-	//TODO: need to do migration here as well
-	out("Adding groups column");
-		$sql = "ALTER TABLE `userman_users` ADD COLUMN `primary_group` varchar(10) DEFAULT NULL AFTER `default_extension`";
-		$result = $db->query($sql);
-}
-
-if (!$db->getAll('SHOW COLUMNS FROM `userman_users` WHERE FIELD = "displayname"')) {
-		out("Adding additional field displayname");
-		$sql = "ALTER TABLE `userman_users` ADD COLUMN `displayname` VARCHAR(200) NULL DEFAULT NULL AFTER `lname`";
-		$result = $db->query($sql);
-}
-
-if (!$db->getAll('SHOW COLUMNS FROM `userman_users` WHERE FIELD = "fname"')) {
-		out("Adding additional fields");
-		$sql = "ALTER TABLE `userman_users` ADD COLUMN `fname` VARCHAR(100) NULL DEFAULT NULL AFTER `default_extension`, ADD COLUMN `lname` VARCHAR(100) NULL DEFAULT NULL AFTER `fname`, ADD COLUMN `title` VARCHAR(100) NULL DEFAULT NULL AFTER `lname`, ADD COLUMN `department` VARCHAR(100) NULL DEFAULT NULL AFTER `title`, ADD COLUMN `email` VARCHAR(100) NULL DEFAULT NULL AFTER `department`, ADD COLUMN `cell` VARCHAR(100) NULL DEFAULT NULL AFTER `email`, ADD COLUMN `work` VARCHAR(100) NULL DEFAULT NULL AFTER `cell`, ADD COLUMN `home` VARCHAR(100) NULL DEFAULT NULL AFTER `work`";
-		$result = $db->query($sql);
-}
-
-if (!$db->getAll('SHOW COLUMNS FROM `userman_users` WHERE FIELD = "company"')) {
-	out("Adding additional field company");
-	$sql = "ALTER TABLE `userman_users` ADD COLUMN `company` VARCHAR(100) NULL DEFAULT NULL AFTER `title`";
-	$result = $db->query($sql);
-}
-
-if (!$db->getAll('SHOW COLUMNS FROM `userman_users` WHERE FIELD = "fax"')) {
-	out("Adding additional field fax");
-	$sql = "ALTER TABLE `userman_users` ADD COLUMN `fax` VARCHAR(100) NULL DEFAULT NULL AFTER `home`";
-	$result = $db->query($sql);
-}
-
-$sql = 'SHOW COLUMNS FROM userman_users WHERE FIELD = "email"';
-$sth = FreePBX::Database()->prepare($sql);
-$sth->execute();
-$res = $sth->fetch(\PDO::FETCH_ASSOC);
-if($res['Type'] != "text") {
-	$sql = "ALTER TABLE userman_users
-	CHANGE COLUMN `email` `email` text NULL DEFAULT NULL";
-	$sth = FreePBX::Database()->prepare($sql);
-	$sth->execute();
-}
-
-$sql = 'SHOW COLUMNS FROM userman_users WHERE FIELD = "auth"';
-$sth = FreePBX::Database()->prepare($sql);
-$sth->execute();
-$res = $sth->fetch(\PDO::FETCH_ASSOC);
-if($res['Type'] != "varchar(150)") {
-	$sql = "ALTER TABLE userman_users
-	CHANGE COLUMN `auth` `auth` VARCHAR(150) NULL DEFAULT 'freepbx' ,
-	CHANGE COLUMN `username` `username` VARCHAR(150) NULL DEFAULT NULL ,
-	DROP INDEX `username_UNIQUE` ,
-	ADD UNIQUE INDEX `username_UNIQUE` (`username` ASC, `auth` ASC)";
-	$sth = FreePBX::Database()->prepare($sql);
-	$sth->execute();
-}
-
-$sql = 'SHOW COLUMNS FROM userman_groups WHERE FIELD = "auth"';
-$sth = FreePBX::Database()->prepare($sql);
-$sth->execute();
-$res = $sth->fetch(\PDO::FETCH_ASSOC);
-if($res['Type'] != "varchar(150)") {
-	$sql = "ALTER TABLE `userman_groups`
-	CHANGE COLUMN `auth` `auth` VARCHAR(150) NULL DEFAULT 'freepbx' ,
-	CHANGE COLUMN `groupname` `groupname` VARCHAR(150) NULL DEFAULT NULL ,
-	ADD UNIQUE INDEX `groupname_UNIQUE` (`auth` ASC, `groupname` ASC);";
-	$sth = FreePBX::Database()->prepare($sql);
-	$sth->execute();
-}
-
-$sql = 'SHOW COLUMNS FROM userman_users WHERE FIELD = "authid"';
-$sth = FreePBX::Database()->prepare($sql);
-$sth->execute();
-$res = $sth->fetch(\PDO::FETCH_ASSOC);
-if($res['Type'] != "varchar(750)") {
-	$sql = "ALTER TABLE userman_users
-	CHANGE COLUMN `authid` `authid` VARCHAR(750) NULL DEFAULT 'freepbx'";
-	$sth = FreePBX::Database()->prepare($sql);
-	$sth->execute();
-}
-
-$sql = 'SHOW COLUMNS FROM userman_groups WHERE FIELD = "authid"';
-$sth = FreePBX::Database()->prepare($sql);
-$sth->execute();
-$res = $sth->fetch(\PDO::FETCH_ASSOC);
-if($res['Type'] != "varchar(750)") {
-	$sql = "ALTER TABLE `userman_groups`
-	CHANGE COLUMN `authid` `authid` VARCHAR(750) NULL DEFAULT 'freepbx'";
-	$sth = FreePBX::Database()->prepare($sql);
-	$sth->execute();
-}
 
 $set = array();
 $set['value'] = '';
