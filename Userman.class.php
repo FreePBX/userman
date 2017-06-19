@@ -26,7 +26,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	public function __construct($freepbx = null) {
 		$this->FreePBX = $freepbx;
 		$this->db = $freepbx->Database;
-		$this->brand = \FreePBX::Config()->get("DASHBOARD_FREEPBX_BRAND");
+		$this->brand = $this->FreePBX->Config->get("DASHBOARD_FREEPBX_BRAND");
 
 		if(!interface_exists('FreePBX\modules\Userman\Auth\Base')) {
 			include(__DIR__."/functions.inc/auth/Base.php");
@@ -113,10 +113,10 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 				$id = $this->addDirectory(ucfirst($driver), sprintf(_('Imported %s directory'),$driver), $active, $settings);
 				if(!empty($id)) {
 					$sql = "UPDATE userman_users SET auth = ? WHERE LOWER(auth) = '".$driver."'";
-					$sth = FreePBX::Database()->prepare($sql);
+					$sth = $this->FreePBX->Database->prepare($sql);
 					$sth->execute(array($id));
 					$sql = "UPDATE userman_groups SET auth = ? WHERE LOWER(auth) = '".$driver."'";
-					$sth = FreePBX::Database()->prepare($sql);
+					$sth = $this->FreePBX->Database->prepare($sql);
 					$sth->execute(array($id));
 					if(strtolower($auth) == $driver) {
 						$this->setDefaultDirectory($id);
@@ -686,7 +686,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 					$assigned = !(empty($assigned)) ? $assigned : array();
 					$default = $user['default_extension'];
 					$directory = $user['auth'];
-					$usage_html = \FreePBX::View()->destinationUsage("ext-fax,$request[user],1");
+					$usage_html = $this->FreePBX->View->destinationUsage("ext-fax,$request[user],1");
 				} else {
 					$user = array();
 					$assigned = array();
