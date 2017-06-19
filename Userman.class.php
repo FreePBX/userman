@@ -301,7 +301,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$table->modify($cols, $indexes);
 		unset($table);
 
-		$table = FreePBX::Database()->migrate("userman_users_settings");
+		$table = $this->FreePBX->Database->migrate("userman_users_settings");
 		$cols = array (
 			'uid' => array (
 				'type' => 'integer',
@@ -351,7 +351,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$table->modify($cols, $indexes);
 		unset($table);
 
-		$table = FreePBX::Database()->migrate("userman_groups_settings");
+		$table = $this->FreePBX->Database->migrate("userman_groups_settings");
 		$cols = array (
 			'gid' => array (
 				'type' => 'integer',
