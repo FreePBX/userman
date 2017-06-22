@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>14.0.3.15</version>
+	<version>14.0.3.16</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -10,6 +10,7 @@
 		This Module manages all PBX users. It allows an Administrator to create a User Account that can be used by other applications for login or API purposes.
 	</description>
 	<changelog>
+		*14.0.3.16* FREEPBX-15147 Always return empty array
 		*14.0.3.15* FREEPBX-15134
 		*14.0.3.14* FREEPBX-15137 Use doctrine for tables
 		*14.0.3.13* Dont lock down the password
