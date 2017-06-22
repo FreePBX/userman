@@ -1133,7 +1133,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		} else {
 			$groups = $this->globalDirectory->getDefaultGroups();
 		}
-		return $groups;
+		return is_array($groups) ? $groups : array();
 	}
 
 	/**
