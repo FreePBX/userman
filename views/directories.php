@@ -145,5 +145,9 @@
 		}
 		$(".auth-settings").addClass("hidden");
 		$("#" + val + "-auth-settings").removeClass("hidden");
+		$(".fpbx-submit input:hidden, .fpbx-submit select:hidden").prop("disabled",true);
+		$(".fpbx-submit input:visible, .fpbx-submit select:visible").prop("disabled",false);
 	});
+	$(".fpbx-submit input:hidden, .fpbx-submit select:hidden").prop("disabled",true);
+	$(".fpbx-submit input:visible, .fpbx-submit select:visible").prop("disabled",false);
 </script>

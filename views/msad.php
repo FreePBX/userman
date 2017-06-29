@@ -8,7 +8,7 @@
 						<i class="fa fa-question-circle fpbx-help-icon" data-for="msad-host"></i>
 					</div>
 					<div class="col-md-9">
-						<input id="msad-host" name="msad-host" type="text" class="form-control" value="<?php echo isset($config['host']) ? $config['host'] : ''?>">
+						<input id="msad-host" name="msad-host" type="text" class="form-control" value="<?php echo isset($config['host']) ? $config['host'] : ''?>" required>
 					</div>
 				</div>
 			</div>
@@ -52,7 +52,7 @@
 						<i class="fa fa-question-circle fpbx-help-icon" data-for="msad-username"></i>
 					</div>
 					<div class="col-md-9">
-						<input id="msad-username" name="msad-username" type="text" class="form-control" value="<?php echo isset($config['username']) ? $config['username'] : ''?>">
+						<input id="msad-username" name="msad-username" type="text" class="form-control" value="<?php echo isset($config['username']) ? $config['username'] : ''?>" required>
 					</div>
 				</div>
 			</div>
@@ -96,7 +96,7 @@
 						<i class="fa fa-question-circle fpbx-help-icon" data-for="msad-domain"></i>
 					</div>
 					<div class="col-md-9">
-						<input id="msad-domain" name="msad-domain" type="text" class="form-control" value="<?php echo isset($config['domain']) ? $config['domain'] : ''?>">
+						<input id="msad-domain" name="msad-domain" type="text" class="form-control" value="<?php echo isset($config['domain']) ? $config['domain'] : ''?>" required>
 					</div>
 				</div>
 			</div>
@@ -118,7 +118,7 @@
 						<i class="fa fa-question-circle fpbx-help-icon" data-for="msad-dn"></i>
 					</div>
 					<div class="col-md-9">
-						<input id="msad-dn" name="msad-dn" type="text" class="form-control" value="<?php echo isset($config['dn']) ? $config['dn'] : ''?>">
+						<input id="msad-dn" name="msad-dn" type="text" class="form-control" value="<?php echo isset($config['dn']) ? $config['dn'] : ''?>" required>
 					</div>
 				</div>
 			</div>

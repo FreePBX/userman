@@ -34,7 +34,7 @@
 						<i class="fa fa-question-circle fpbx-help-icon" data-for="msad2-host"></i>
 					</div>
 					<div class="col-md-9">
-						<input id="msad2-host" name="msad2-host" data-default="<?php echo $defaults['host']?>" type="text" class="form-control" value="<?php echo isset($config['host']) ? $config['host'] : $defaults['host']?>">
+						<input id="msad2-host" name="msad2-host" data-default="<?php echo $defaults['host']?>" type="text" class="form-control" value="<?php echo isset($config['host']) ? $config['host'] : $defaults['host']?>" required>
 					</div>
 				</div>
 			</div>
@@ -78,7 +78,7 @@
 						<i class="fa fa-question-circle fpbx-help-icon" data-for="msad2-username"></i>
 					</div>
 					<div class="col-md-9">
-						<input id="msad2-username" data-default="<?php echo $defaults['username']?>" name="msad2-username" type="text" class="form-control" value="<?php echo isset($config['username']) ? $config['username'] : $defaults['username']?>">
+						<input id="msad2-username" data-default="<?php echo $defaults['username']?>" name="msad2-username" type="text" class="form-control" value="<?php echo isset($config['username']) ? $config['username'] : $defaults['username']?>" required>
 					</div>
 				</div>
 			</div>
@@ -122,7 +122,7 @@
 						<i class="fa fa-question-circle fpbx-help-icon" data-for="msad2-domain"></i>
 					</div>
 					<div class="col-md-9">
-						<input id="msad2-domain" data-default="<?php echo $defaults['domain']?>" name="msad2-domain" type="text" class="form-control" value="<?php echo isset($config['domain']) ? $config['domain'] : $defaults['domain']?>">
+						<input id="msad2-domain" data-default="<?php echo $defaults['domain']?>" name="msad2-domain" type="text" class="form-control" value="<?php echo isset($config['domain']) ? $config['domain'] : $defaults['domain']?>" required>
 					</div>
 				</div>
 			</div>
@@ -144,7 +144,7 @@
 						<i class="fa fa-question-circle fpbx-help-icon" data-for="msad2-dn"></i>
 					</div>
 					<div class="col-md-9">
-						<input id="msad2-dn" data-default="<?php echo $defaults['dn']?>" name="msad2-dn" type="text" class="form-control" value="<?php echo isset($config['dn']) ? $config['dn'] : $defaults['dn']?>">
+						<input id="msad2-dn" data-default="<?php echo $defaults['dn']?>" name="msad2-dn" type="text" class="form-control" value="<?php echo isset($config['dn']) ? $config['dn'] : $defaults['dn']?>" required>
 					</div>
 				</div>
 			</div>
