@@ -8,7 +8,7 @@
 						<i class="fa fa-question-circle fpbx-help-icon" data-for="openldap-host"></i>
 					</div>
 					<div class="col-md-9">
-						<input id="openldap-host" name="openldap-host" type="text" class="form-control" value="<?php echo isset($config['host']) ? $config['host'] : ''?>">
+						<input id="openldap-host" name="openldap-host" type="text" class="form-control" value="<?php echo isset($config['host']) ? $config['host'] : ''?>" required>
 					</div>
 				</div>
 			</div>
@@ -79,7 +79,7 @@
 						<i class="fa fa-question-circle fpbx-help-icon" data-for="openldap-username"></i>
 					</div>
 					<div class="col-md-9">
-						<input id="openldap-username" name="openldap-username" type="text" class="form-control" value="<?php echo isset($config['username']) ? $config['username'] : ''?>">
+						<input id="openldap-username" name="openldap-username" type="text" class="form-control" value="<?php echo isset($config['username']) ? $config['username'] : ''?>" required>
 					</div>
 				</div>
 			</div>
@@ -167,7 +167,7 @@
 						<i class="fa fa-question-circle fpbx-help-icon" data-for="openldap-userdn"></i>
 					</div>
 					<div class="col-md-9">
-						<input id="openldap-userdn" name="openldap-userdn" type="text" class="form-control" value="<?php echo isset($config['userdn']) ? $config['userdn'] : ''?>">
+						<input id="openldap-userdn" name="openldap-userdn" type="text" class="form-control" value="<?php echo isset($config['userdn']) ? $config['userdn'] : ''?>" required>
 					</div>
 				</div>
 			</div>
@@ -189,7 +189,7 @@
 						<i class="fa fa-question-circle fpbx-help-icon" data-for="openldap-basedn"></i>
 					</div>
 					<div class="col-md-9">
-						<input id="openldap-basedn" name="openldap-basedn" type="text" class="form-control" value="<?php echo isset($config['basedn']) ? $config['basedn'] : ''?>">
+						<input id="openldap-basedn" name="openldap-basedn" type="text" class="form-control" value="<?php echo isset($config['basedn']) ? $config['basedn'] : ''?>" required>
 					</div>
 				</div>
 			</div>
