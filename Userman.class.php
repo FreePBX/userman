@@ -423,9 +423,18 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 			"authVoicemailSettings" => 'voicemail'
 		);
 
+		$inuse = array();
+		$sql = "SELECT DISTINCT auth FROM userman_users WHERE auth REGEXP '^[A-Za-z]+$'";
+		$sth = $this->FreePBX->Database->prepare($sql);
+		$sth->execute();
+		$res = $sth->fetchAll(\PDO::FETCH_ASSOC);
+		foreach($res as $dat) {
+			$inuse[] = strtolower($dat['auth']);
+		}
+
 		foreach($check as $key => $driver) {
 			$settings = $this->getConfig($key);
-			if(!empty($settings)) {
+			if((strtolower($auth) == $driver) || in_array($driver,$inuse) || !empty($settings)) {
 				$active = false;
 				if((empty($auth) && ($driver == 'freepbx')) || (!empty($auth) && strtolower($auth) == $driver)) {
 					$active = true;
