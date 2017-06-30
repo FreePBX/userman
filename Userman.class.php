@@ -212,7 +212,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 				$autoEmail = $this->getGlobalsetting('autoEmail');
 				$autoEmail = is_null($autoEmail) ? true : $autoEmail;
 				if($autoEmail) {
-					$this->sendWelcomeEmail($extension, $pass);
+					$this->sendWelcomeEmail($ret['id'], $pass);
 				}
 				$permissions = $this->getAuthAllPermissions($directory['id']);
 				if($permissions['modifyGroup']) {
@@ -235,7 +235,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 				$autoEmail = $this->getGlobalsetting('autoEmail');
 				$autoEmail = is_null($autoEmail) ? true : $autoEmail;
 				if($autoEmail) {
-					$this->sendWelcomeEmail($extension);
+					$this->sendWelcomeEmail($ret['id']);
 				}
 			}
 		}
@@ -449,7 +449,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 						}
 						if(isset($_POST['submittype']) && $_POST['submittype'] == "guisend") {
 							$data = $this->getUserByID($request['user']);
-							$this->sendWelcomeEmail($data['username'], $password);
+							$this->sendWelcomeEmail($data['id'], $password);
 						}
 					}
 				break;
@@ -987,7 +987,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 				foreach($_REQUEST['extensions'] as $ext){
 					$user = $this->getUserbyID($ext);
 					if(!empty($user)) {
-						$this->sendWelcomeEmail($user['username']);
+						$this->sendWelcomeEmail($user['id']);
 						return array('status' => true);
 					}
 					return array('status' => false, "message" => _("Invalid User"));
@@ -2560,7 +2560,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 			if(!empty($user['id'])) {
 				echo "Added ".$exten." with password of ".$password."\\n";
 				if(!empty($email)) {
-					$this->sendWelcomeEmail($exten, $password);
+					$this->sendWelcomeEmail($user['id'], $password);
 				}
 			} else {
 				echo "Could not add ".$exten." because: ".$user['message']."\\n";
@@ -2572,19 +2572,19 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	public function sendWelcomeEmailToAll() {
 		$users = $this->getAllUsers();
 		foreach($users as $user) {
-			$this->sendWelcomeEmail($user['username']);
+			$this->sendWelcomeEmail($user['id']);
 		}
 	}
 
 	/**
 	 * Sends a welcome email
-	 * @param {string} $username The username to send to
+	 * @param {int} The user ID
 	 * @param {string} $password =              null If you want to send the password set it here
 	 */
-	public function sendWelcomeEmail($username, $password =  null) {
+	public function sendWelcomeEmail($id, $password =  null) {
 		global $amp_conf;
 		$request = $_REQUEST;
-		$user = $this->getUserByUsername($username);
+		$user = $this->getUserByID($id);
 		if(empty($user) || empty($user['email'])) {
 			return false;
 		}
@@ -2598,7 +2598,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		}
 		$user['brand'] = $this->brand;
 
-		$usettings = $this->getAuthAllPermissions($request['directory']);
+		$usettings = $this->getAuthAllPermissions($user['auth']);
 		if(!empty($password)) {
 			$user['password'] = $password;
 		} elseif(!$usettings['changePassword']) {
@@ -2877,7 +2877,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 							'fax' => isset($data['fax']) ? $data['fax'] : null,
 						);
 
-						$existing = $this->getUserByUsername($username);
+						$existing = $this->getUserByUsername($username,$directory['id']);
 						if(!$replaceExisting && $existing) {
 							return array("status" => false, "message" => _("User already exists"));
 						}
@@ -2945,7 +2945,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 						if (!empty($data['users'])) {
 							$usernames = explode(',', $data['users']);
 							foreach ($usernames as $username) {
-								$user = $this->getUserByUsername($username);
+								$user = $this->getUserByUsername($username,$directory['id']);
 								if ($user) {
 									$users[] = $user['id'];
 								}
