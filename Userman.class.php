@@ -272,6 +272,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		if(isset($_POST['submittype'])) {
 			switch($_POST['type']) {
 				case 'directory':
+				dbug("HERE");
 					$auths = array();
 					$config = false;
 					foreach($this->getDirectoryDrivers() as $auth) {
