@@ -1791,10 +1791,6 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * @return boolean                  True if deleted
 	 */
 	public function deleteDirectoryByID($id) {
-		$sql = "DELETE FROM ".$this->directoryTable." WHERE `id` = ?";
-		$sth = $this->db->prepare($sql);
-		$sth->execute(array($id));
-
 		$sql = "SELECT * FROM userman_users WHERE `auth` = ?";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array($id));
@@ -1810,6 +1806,10 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		foreach($groups as $group){
 			$this->deleteGroupByGID($group['id']);
 		}
+
+		$sql = "DELETE FROM ".$this->directoryTable." WHERE `id` = ?";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array($id));
 
 		$this->setConfig("auth-settings",$id,false);
 		$this->loadActiveDirectories();
