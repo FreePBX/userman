@@ -232,11 +232,12 @@ class Openldap extends Auth {
 				throw new \Exception("Unable to Connect");
 			}
 			ldap_set_option($this->ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
-
-			if(!@ldap_bind($this->ldap, $this->userident.'='.$this->user.','.$this->userdn, $this->password)) {
-				$this->ldap = null;
-				throw new \Exception("Unable to Auth");
-			}
+                        if (isset($this->user) && isset($this->password)) {
+			    if(!@ldap_bind($this->ldap, $this->userident.'='.$this->user.','.$this->userdn, $this->password)) {
+				    $this->ldap = null;
+				    throw new \Exception("Unable to Auth");
+			    }
+                        }
 		}
 	}
 
