@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-03 09:38-0700\n"
+"POT-Creation-Date: 2017-07-24 11:24-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -536,7 +536,7 @@ msgstr ""
 
 #: functions.inc/auth/modules/Msad.php:418
 #: functions.inc/auth/modules/Msad2.php:466
-#: functions.inc/auth/modules/Openldap.php:426
+#: functions.inc/auth/modules/Openldap.php:427
 #: functions.inc/auth/modules/Openldap2.php:467
 msgid "Group updated"
 msgstr ""
@@ -662,8 +662,8 @@ msgstr ""
 #: functions.inc/auth/modules/Msad.php:380
 #: functions.inc/auth/modules/Msad2.php:392
 #: functions.inc/auth/modules/Msad2.php:418
-#: functions.inc/auth/modules/Openldap.php:375
-#: functions.inc/auth/modules/Openldap.php:388
+#: functions.inc/auth/modules/Openldap.php:376
+#: functions.inc/auth/modules/Openldap.php:389
 #: functions.inc/auth/modules/Openldap2.php:393
 #: functions.inc/auth/modules/Openldap2.php:419
 msgid "LDAP is in Read Only Mode. Addition denied"
@@ -1725,7 +1725,7 @@ msgstr ""
 
 #: functions.inc/auth/modules/Msad.php:405
 #: functions.inc/auth/modules/Msad2.php:444
-#: functions.inc/auth/modules/Openldap.php:413
+#: functions.inc/auth/modules/Openldap.php:414
 #: functions.inc/auth/modules/Openldap2.php:445
 #: functions.inc/auth/modules/Voicemail.php:192
 msgid "User updated"
