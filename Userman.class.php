@@ -1285,14 +1285,23 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 				$directory = !empty($_GET['directory']) ? $_GET['directory'] : '';
 				return $this->getAllGroups($directory);
 			case "email":
+				//FREEPBX-15304 Send email to multiple selected users only sends to the first
+				$sendmail = false;
+				$maillist = array();
 				foreach($_REQUEST['extensions'] as $ext){
 					$user = $this->getUserbyID($ext);
 					if(!empty($user)) {
 						$this->sendWelcomeEmail($user['id']);
-						return array('status' => true);
+						$sendmail = true;
+						$maillist[] = $user['username'];
 					}
-					return array('status' => false, "message" => _("Invalid User"));
 				}
+				if($sendmail){
+					$list = implode(",",$maillist);
+					return array('status' => true,"message" => _("Email Sent to users : $list"));
+				}
+				return array('status' => false, "message" => _("Invalid User"));
+
 			break;
 			case "getuserfields":
 				if(empty($request['id'])){
