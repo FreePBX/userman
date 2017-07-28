@@ -268,37 +268,17 @@ class Openldap2 extends Auth {
 			return;
 		}
 
-		$ASTRUNDIR = \FreePBX::Config()->get("ASTRUNDIR");
-		$lock = $ASTRUNDIR."/userman.lock";
-
-		$continue = true;
-		if(file_exists($lock)) {
-			$pid = file_get_contents($lock);
-			if(posix_getpgid($pid) !== false) {
-				$continue = false;
-			} else {
-				unlink($lock);
-			}
-		}
-		if($continue) {
-			$pid = getmypid();
-			file_put_contents($lock,$pid);
-			$this->connect();
-			$this->output = $output;
-			$this->out("");
-			$this->out("Updating All Users");
-			$this->updateAllUsers();
-			$this->out("Updating All Groups");
-			$this->updateAllGroups();
-			$this->out("Updating Primary Groups");
-			$this->updatePrimaryGroups();
-			$this->out("Executing User Manager Hooks");
-			$this->executeHooks();
-			unlink($lock);
-		} else {
-			print_r("User Manager is already syncing (Process: ".$pid.")");
-		}
-
+		$this->connect();
+		$this->output = $output;
+		$this->out("");
+		$this->out("Updating All Users");
+		$this->updateAllUsers();
+		$this->out("Updating All Groups");
+		$this->updateAllGroups();
+		$this->out("Updating Primary Groups");
+		$this->updatePrimaryGroups();
+		$this->out("Executing User Manager Hooks");
+		$this->executeHooks();
 	}
 
 	/**
@@ -754,7 +734,7 @@ class Openldap2 extends Auth {
 	}
 
 	private function serviceping($host, $port=389, $timeout=1) {
-		$op = fsockopen($host, $port, $errno, $errstr, $timeout);
+		$op = @fsockopen($host, $port, $errno, $errstr, $timeout);
 		if (!$op) {
 			return 0; //DC is N/A
 		} else {

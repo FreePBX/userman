@@ -8,10 +8,19 @@ namespace FreePBX\modules\Userman\Auth;
 
 class Voicemail extends Auth {
 
-	public function __construct($userman, $freepbx, $config) {
+	private static $defaults = array(
+		"context" => "default"
+	);
+
+	public function __construct($userman, $freepbx, $config=array()) {
 		parent::__construct($userman, $freepbx, $config);
 		$this->FreePBX = $freepbx;
 		$this->userman = $userman;
+
+		$validKeys = array_merge(self::$defaults);
+		foreach($validKeys as $key => $value) {
+			$this->config[$key] = (isset($config[$key])) ? $config[$key] : '';
+		}
 	}
 
 	/**
@@ -33,7 +42,7 @@ class Voicemail extends Auth {
 	 * @return string          html display data
 	 */
 	public static function getConfig($userman, $freepbx, $config) {
-		$config['context'] = !empty($config['context']) ? $config['context'] : 'default';
+		$config['context'] = !empty($config['context']) ? $config['context'] : self::$defaults['context'];
 		return load_view(dirname(dirname(dirname(__DIR__)))."/views/voicemail.php", array("config" => $config));
 	}
 
@@ -57,12 +66,12 @@ class Voicemail extends Auth {
 			return;
 		}
 
-		$config = $this->userman->getConfig("authVoicemailSettings");
+		$this->output = $output;
+
 		$d = $this->FreePBX->Voicemail->getVoicemail(false);
-		if(!empty($d[$config['context']])) {
-			$this->out("");
+		if(!empty($d[$this->config['context']])) {
 			$valid = array();
-			foreach($d[$config['context']] as $username => $d) {
+			foreach($d[$this->config['context']] as $username => $d) {
 				$um = $this->linkUser($username, $username);
 				if($um['status']) {
 					$data = array(
@@ -73,10 +82,10 @@ class Voicemail extends Auth {
 					);
 					$this->updateUserData($um['id'], $data);
 					if($um['new']) {
-						$this->out(sprintf(_("Added Voicemail User %s"),$username));
+						$this->out("\t".sprintf(_("Added Voicemail User %s"),$username));
 						$this->addUserHook($um['id'], $username, $d['name'], null, false, $data);
 					} else {
-						$this->out(sprintf(_("Updated Voicemail User %s"),$username));
+						$this->out("\t".sprintf(_("Updated Voicemail User %s"),$username));
 						$this->updateUserHook($um['id'], $username, $username, $d['name'], null, $data);
 					}
 					$valid[] = $username;
@@ -86,7 +95,7 @@ class Voicemail extends Auth {
 			$fusers = $this->getAllUsers();
 			foreach($fusers as $user) {
 				if(!in_array($user['authid'],$valid)) {
-					$this->out(sprintf(_("Removed Voicemail User %s"),$user['authid']));
+					$this->out("\t".sprintf(_("Removed Voicemail User %s"),$user['authid']));
 					$this->deleteUserByID($user['id']);
 				}
 			}
@@ -188,6 +197,13 @@ class Voicemail extends Auth {
 	 * @return array
 	 */
 	public function updateUser($uid, $prevUsername, $username, $default='none', $description=null, $extraData=array(), $password=null,$nodisplay=false) {
+		$sql = "UPDATE ".$this->userTable." SET `default_extension` = :default_extension WHERE `id` = :uid";
+		$sth = $this->db->prepare($sql);
+		try {
+			$sth->execute(array(':uid' => $uid, ':default_extension' => $default));
+		} catch (\Exception $e) {
+			return array("status" => false, "type" => "danger", "message" => $e->getMessage());
+		}
 		$this->updateUserHook($uid, $prevUsername, $username, $description, $password, $extraData, $nodisplay);
 		return array("status" => true, "type" => "success", "message" => _("User updated"), "id" => $uid);
 	}
@@ -222,7 +238,6 @@ class Voicemail extends Auth {
 	 * @param {string} $password_sha1 The sha
 	 */
 	public function checkCredentials($username, $password) {
-		$config = $this->userman->getConfig("authVoicemailSettings");
 		try {
 			$d = $this->FreePBX->Voicemail->getVoicemail();
 		} catch(\Exception $e) {
@@ -236,8 +251,8 @@ class Voicemail extends Auth {
 			}
 			$d = $this->FreePBX->Voicemail->getVoicemail();
 		}
-		if(!empty($d[$config['context']][$username])) {
-			if($password === $d[$config['context']][$username]['pwd']) {
+		if(!empty($d[$this->config['context']][$username])) {
+			if($password === $d[$this->config['context']][$username]['pwd']) {
 				//Injecting breaks how FreePBX protects itself
 				//To fix this just force a refresh of modules
 				$this->FreePBX->Modules->active_modules = array();

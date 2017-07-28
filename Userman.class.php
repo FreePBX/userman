@@ -1675,6 +1675,35 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	}
 
 	/**
+	 * Move User to Directory
+	 * This only works on directories which allow adding users
+	 * @method moveUserToDirectory
+	 * @param  integer              $uid         User ID
+	 * @param  integer              $directoryid Directory ID
+	 * @return boolean                           True if success
+	 */
+	public function moveUserToDirectory($uid, $directoryid) {
+		$user = $this->getUserByID($uid);
+		if(empty($user)) {
+			throw new \Exception("User does not exist");
+		}
+		$permissions = $this->getAuthAllPermissions($user['auth']);
+		if(!$permissions['removeUser']) {
+			throw new \Exception("Cant remove users from this directory");
+		}
+		$permissions = $this->getAuthAllPermissions($directoryid);
+		if(!$permissions['addUser']) {
+			throw new \Exception("Cant add users to this directory");
+		}
+		$sql = "UPDATE ".$this->userTable." SET auth = :directoryid WHERE id = :id";
+		$sth = $this->db->prepare($sql);
+		return $sth->execute(array(
+			":directoryid" => $directoryid,
+			":id" => $uid
+		));
+	}
+
+	/**
 	 * Add Group by Directory
 	 * @method addGroupByDirectory
 	 * @param  int              $directory   The Directory ID

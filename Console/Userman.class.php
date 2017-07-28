@@ -47,15 +47,19 @@ class Userman extends Command {
 			exit(-1);
 		}
 		if($input->getOption('syncall')) {
+			$this->setLock();
 			$directories = $userman->getAllDirectories();
 			foreach($directories as $directory) {
 				$this->syncDirectory($directory,$output,$force);
 			}
+			$this->removeLock();
 		}
 		if($input->getOption('sync')) {
+			$this->setLock();
 			$id = $input->getOption('sync');
 			$directory = $userman->getDirectoryByID($id);
 			$this->syncDirectory($directory,$output,$force);
+			$this->removeLock();
 		}
 		if(!$input->getOption('syncall') && !$input->getOption('sync') && !$input->getOption('list')) {
 			$this->outputHelp($input,$output);
@@ -100,7 +104,11 @@ class Userman extends Command {
 				$userman->setConfig("directory-last-sync-time", $timeNow);
 				$output->writeln("Starting Sync on directory '".$directory['name']."'...");
 				$userman->lockDirectory($directory['id']);
-				$dir->sync($output);
+				try {
+					$dir->sync($output);
+				} catch(\Exception $e) {
+					$output->writeln("\t<error>".$e->getMessage()."</error>");
+				}
 				$userman->unlockDirectory($directory['id']);
 				$output->writeln("Finished");
 			} else {
@@ -110,6 +118,44 @@ class Userman extends Command {
 		} else {
 			$output->writeln("Directory '".$directory['name']."' does not support syncing");
 		}
+	}
+
+	private function setLock() {
+		$ASTRUNDIR = \FreePBX::Config()->get("ASTRUNDIR");
+		$lock = $ASTRUNDIR."/userman.lock";
+
+		if(!$this->checkLock()) {
+			$pid = getmypid();
+			file_put_contents($lock,$pid);
+			return true;
+		} else {
+			$pid = file_get_contents($lock);
+			throw new \Exception("User Manager is already syncing (Process: ".$pid.")");
+		}
+		return false;
+	}
+
+	private function checkLock() {
+		$ASTRUNDIR = \FreePBX::Config()->get("ASTRUNDIR");
+		$lock = $ASTRUNDIR."/userman.lock";
+		if(file_exists($lock)) {
+			$pid = file_get_contents($lock);
+			if(posix_getpgid($pid) !== false) {
+				return true;
+			} else {
+				$this->removeLock();
+			}
+		}
+		return false;
+	}
+
+	private function removeLock() {
+		$ASTRUNDIR = \FreePBX::Config()->get("ASTRUNDIR");
+		$lock = $ASTRUNDIR."/userman.lock";
+		if(file_exists($lock)) {
+			unlink($lock);
+		}
+		return true;
 	}
 
 	/**
