@@ -3317,13 +3317,15 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 			break;
 		case 'usermangroups':
 			$users = $this->getAllUsers();
-
 			$groups = $this->getAllGroups();
 			foreach ($groups as $group) {
 				$gu = array();
-				foreach ($group['users'] as $key => $val) {
-					if (isset($users[$key])) {
-						$gu[] = $users[$key]['username'];
+				//FREEPBX-15351 Bulk Export User Manager Groups does not export correct info in "users" field
+				foreach($users as $user){
+					foreach ($group['users'] as $key => $val) {
+						if ($user['id'] == $val) {
+							$gu[] = $user['username'];
+						}
 					}
 				}
 
@@ -3336,7 +3338,6 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 
 			break;
 		}
-
 		return $data;
 	}
 }
