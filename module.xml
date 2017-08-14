@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>13.0.76.28</version>
+	<version>13.0.76.29</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -12,6 +12,7 @@
 		Modules like iSymphony, Rest API and User Control Panel and FreePBX itself use this module to manage their users.
 	</description>
 	<changelog>
+		*13.0.76.29* FREEPBX-15351 FREEPBX-15304
 		*13.0.76.28* FREEPBX-15464
 		*13.0.76.27* Change ordering on delete directory
 		*13.0.76.26* FREEPBX-15200 Use Custom Username option broken under Extensions
