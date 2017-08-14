@@ -934,11 +934,11 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		switch($request['command']){
 			case "setlocales":
 				if(!empty($_SESSION['AMP_user']->id) && ($_SESSION['AMP_user']->id == $_POST['id'])) {
-					$_SESSION['AMP_user']->lang = !empty($_POST['language']) ? $_POST['language'] : $this->getLocaleSpecificSetting($_POST['id'],"language");
-					$_SESSION['AMP_user']->tz = !empty($_POST['timezone']) ? $_POST['timezone'] : $this->getLocaleSpecificSetting($_POST['id'],"timezone");
-					$_SESSION['AMP_user']->timeformat = !empty($_POST['timeformat']) ? $_POST['timeformat'] : $this->getLocaleSpecificSetting($_POST['id'],"timeformat");
-					$_SESSION['AMP_user']->dateformat = !empty($_POST['dateformat']) ? $_POST['dateformat'] : $this->getLocaleSpecificSetting($_POST['id'],"dateformat");
-					$_SESSION['AMP_user']->datetimeformat = !empty($_POST['datetimeformat']) ? $_POST['datetimeformat'] : $this->getLocaleSpecificSetting($_POST['id'],"datetimeformat");
+					$_SESSION['AMP_user']->lang = !empty($_POST['language']) ? $_POST['language'] : $this->getLocaleSpecificSettingByUID($_POST['id'],"language");
+					$_SESSION['AMP_user']->tz = !empty($_POST['timezone']) ? $_POST['timezone'] : $this->getLocaleSpecificSettingByUID($_POST['id'],"timezone");
+					$_SESSION['AMP_user']->timeformat = !empty($_POST['timeformat']) ? $_POST['timeformat'] : $this->getLocaleSpecificSettingByUID($_POST['id'],"timeformat");
+					$_SESSION['AMP_user']->dateformat = !empty($_POST['dateformat']) ? $_POST['dateformat'] : $this->getLocaleSpecificSettingByUID($_POST['id'],"dateformat");
+					$_SESSION['AMP_user']->datetimeformat = !empty($_POST['datetimeformat']) ? $_POST['datetimeformat'] : $this->getLocaleSpecificSettingByUID($_POST['id'],"datetimeformat");
 				}
 				return array("status" => true);
 			break;
@@ -2015,7 +2015,14 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		return ($null) ? null : false;
 	}
 
-	public function getLocaleSpecificSetting($uid, $keyword) {
+	/**
+	 * Get Locale Specific User Setting from Group
+	 * @method getLocaleSpecificSetting
+	 * @param  integer                   $uid     The User ID
+	 * @param  string                   $keyword The keyword to lookup
+	 * @return string                            Result of lookup
+	 */
+	public function getLocaleSpecificGroupSettingByUID($uid, $keyword) {
 		$user = $this->getUserByID($uid, false);
 		if(empty($user)) {
 			return null;
@@ -2032,11 +2039,35 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 					return $g[$keyword];
 				}
 			}
-		} else {
-			return $user[$keyword];
 		}
-
 		return null;
+	}
+
+	/**
+	 * Get Locale Specific User Setting
+	 * @method getLocaleSpecificSetting
+	 * @param  integer                   $uid     The User ID
+	 * @param  string                   $keyword The keyword to lookup
+	 * @return string                            Result of lookup
+	 */
+	public function getLocaleSpecificSettingByUID($uid, $keyword) {
+		$data = $this->getLocaleSpecificGroupSettingByUID($uid, $keyword);
+		if(is_null($data)) {
+			$user = $this->getUserByID($uid, false);
+			return !empty($user[$keyword]) ? $user[$keyword] : null;
+		}
+		return $data;
+	}
+
+	/**
+	 * Get Locale Specific User Setting
+	 * @method getLocaleSpecificSetting
+	 * @param  integer                   $uid     The User ID
+	 * @param  string                   $keyword The keyword to lookup
+	 * @return string                            Result of lookup
+	 */
+	public function getLocaleSpecificSetting($uid, $keyword) {
+		return $this->getLocaleSpecificSettingByUID($uid, $keyword);
 	}
 
 	/**
