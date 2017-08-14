@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>14.0.3.26</version>
+	<version>14.0.3.27</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -10,6 +10,7 @@
 		This Module manages all PBX users. It allows an Administrator to create a User Account that can be used by other applications for login or API purposes.
 	</description>
 	<changelog>
+		*14.0.3.27* FREEPBX-15304 
 		*14.0.3.26* FREEPBX-15576 Add function to retrieve group locale settings
 		*14.0.3.25* FREEPBX-15464
 		*14.0.3.24* Openldap legacy: allow unauthenticated connection, openldap2 and msad2 views: fix secure connection select
