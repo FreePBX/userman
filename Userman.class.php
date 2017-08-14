@@ -993,14 +993,23 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 				$directory = !empty($_GET['directory']) ? $_GET['directory'] : '';
 				return $this->getAllGroups($directory);
 			case "email":
+				//FREEPBX-15304 Send email to multiple selected users only sends to the first
+				$sendmail = false;
+				$maillist = array();
 				foreach($_REQUEST['extensions'] as $ext){
 					$user = $this->getUserbyID($ext);
 					if(!empty($user)) {
 						$this->sendWelcomeEmail($user['id']);
-						return array('status' => true);
+						$sendmail = true;
+						$maillist[] = $user['username'];
 					}
-					return array('status' => false, "message" => _("Invalid User"));
 				}
+				if($sendmail){
+					$list = implode(",",$maillist);
+					return array('status' => true,"message" => _("Email Sent to users : $list"));
+				}
+				return array('status' => false, "message" => _("Invalid User"));
+
 			break;
 			case "getuserfields":
 				if(empty($request['id'])){
@@ -3099,13 +3108,15 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 			break;
 		case 'usermangroups':
 			$users = $this->getAllUsers();
-
 			$groups = $this->getAllGroups();
 			foreach ($groups as $group) {
 				$gu = array();
-				foreach ($group['users'] as $key => $val) {
-					if (isset($users[$key])) {
-						$gu[] = $users[$key]['username'];
+				//FREEPBX-15351 Bulk Export User Manager Groups does not export correct info in "users" field
+				foreach($users as $user){
+					foreach ($group['users'] as $key => $val) {
+						if ($user['id'] == $val) {
+							$gu[] = $user['username'];
+						}
 					}
 				}
 
@@ -3118,7 +3129,6 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 
 			break;
 		}
-
 		return $data;
 	}
 }

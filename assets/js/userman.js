@@ -15,7 +15,7 @@ $("#email-users").click(function() {
 	$(this).prop("disabled",true);
 	$.post( "ajax.php", {command: "email", module: "userman", extensions: deleteExts.users}, function(data) {
 		if(data.status) {
-			alert(_("Email Sent"));
+			alert(data.message);
 		} else {
 			alert(data.message);
 		}
