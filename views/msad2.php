@@ -193,7 +193,7 @@
 							<select class="form-control" id="msad2-createextensions" name="msad2-createextensions">
 								<option value=""><?php echo _("Don't Create")?></option>
 								<?php foreach($techs as $tech) { ?>
-									<option value="<?php echo $tech['rawName']?>"><?php echo $tech['shortName']?></option>
+									<option value="<?php echo $tech['rawName']?>" <?php echo !empty($config['createextensions']) && ($config['createextensions'] == $tech['rawName']) ? 'selected' : ''?>><?php echo $tech['shortName']?></option>
 								<?php } ?>
 							</select>
 						</div>
