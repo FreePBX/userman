@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-14 14:43-0700\n"
+"POT-Creation-Date: 2017-08-22 17:04-0700\n"
 "PO-Revision-Date: 2016-12-11 08:33+0200\n"
 "Last-Translator: Ernesto <ecasas@sangoma.com>\n"
 "Language-Team: Spanish <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -493,7 +493,7 @@ msgstr ""
 msgid "Group object filter"
 msgstr ""
 
-#: functions.inc/auth/modules/Msad.php:397
+#: functions.inc/auth/modules/Msad.php:394
 #: functions.inc/auth/modules/Msad2.php:446
 #: functions.inc/auth/modules/Openldap.php:407
 #: functions.inc/auth/modules/Openldap2.php:447
@@ -622,8 +622,8 @@ msgstr "Heredar"
 msgid "Invalid User"
 msgstr "Usuario Invalido"
 
-#: functions.inc/auth/modules/Msad.php:346
-#: functions.inc/auth/modules/Msad.php:359
+#: functions.inc/auth/modules/Msad.php:343
+#: functions.inc/auth/modules/Msad.php:356
 #: functions.inc/auth/modules/Msad2.php:372
 #: functions.inc/auth/modules/Msad2.php:398
 #: functions.inc/auth/modules/Openldap.php:356
@@ -1621,7 +1621,7 @@ msgstr ""
 msgid "User object filter"
 msgstr ""
 
-#: functions.inc/auth/modules/Msad.php:384
+#: functions.inc/auth/modules/Msad.php:381
 #: functions.inc/auth/modules/Msad2.php:424
 #: functions.inc/auth/modules/Openldap.php:394
 #: functions.inc/auth/modules/Openldap2.php:425
