@@ -214,9 +214,6 @@ class Msad extends Auth {
 				'admin_username'        => $this->user,
 				'admin_password'        => $this->password,
 			];
-			$provider = new Provider($config);
-
-			$this->ad->addProvider('default', $provider);
 
 			$this->provider = new \Adldap\Connections\Provider($config);
 			$this->ad = new Adldap(array("default" => $config));
