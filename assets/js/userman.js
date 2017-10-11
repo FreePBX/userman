@@ -11,6 +11,14 @@ translations = {
 	'directory': _('directory'),
 	'directories': _('directories')
 };
+if($("#directory").length) {
+	$("#directory").submit(function(e) {
+		if($("#name").val() === "") {
+			return warnInvalid($("#name"),_("Name can not be blank!"));
+		}
+		$("#submit").prop("disabled",true);
+	});
+}
 $("#email-users").click(function() {
 	$(this).prop("disabled",true);
 	$.post( "ajax.php", {command: "email", module: "userman", extensions: deleteExts.users}, function(data) {
@@ -159,6 +167,12 @@ $("table").on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs
 	deleteExts[type] = $.map($("#"+id).bootstrapTable('getSelections'), function (row) {
 		return row.id;
   });
+});
+
+$("#submit").click(function(e) {
+	e.stopPropagation();
+	e.preventDefault();
+	$(".fpbx-submit").submit();
 });
 
 $("#submitsend").click(function(e) {
