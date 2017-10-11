@@ -164,18 +164,36 @@ $("table").on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs
 $("#submit").click(function(e) {
 	e.stopPropagation();
 	e.preventDefault();
-	setLocales(function() {
-		$(".fpbx-submit").submit();
+	var invalid = false;
+	$('.fpbx-submit input').map(function() {
+		if(!this.validity.valid) {
+			warnInvalid($(this),_("Invalid input"));
+			invalid = true;
+		}
 	});
+	if(!invalid) {
+		setLocales(function() {
+			$(".fpbx-submit").submit();
+		});
+	}
 });
 
 $("#submitsend").click(function(e) {
 	e.stopPropagation();
 	e.preventDefault();
-	$("input[name=submittype]").val("guisend");
-	setLocales(function() {
-		$(".fpbx-submit").submit();
+	var invalid = false;
+	$('.fpbx-submit input').map(function() {
+		if(!this.validity.valid) {
+			warnInvalid($(this),_("Invalid input"));
+			invalid = true;
+		}
 	});
+	$("input[name=submittype]").val("guisend");
+	if(!invalid) {
+		setLocales(function() {
+			$(".fpbx-submit").submit();
+		});
+	}
 });
 
 function setLocales(callback) {
