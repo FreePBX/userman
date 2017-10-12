@@ -215,7 +215,7 @@ echo $heading;
 												<div class="row">
 													<div class="form-group">
 														<div class="col-md-3">
-															<label class="control-label" for="timeformat"><?php echo _("Date Format")?></label>
+															<label class="control-label" for="timeformat"><?php echo _("Time Format")?></label>
 															<i class="fa fa-question-circle fpbx-help-icon" data-for="timeformat"></i>
 														</div>
 														<div class="col-md-9">
@@ -227,7 +227,7 @@ echo $heading;
 										</div>
 										<div class="row">
 											<div class="col-md-12">
-												<span id="timeformat-help" class="help-block fpbx-help-block"><?php echo _('The format dates should display in. The default of "l" is locale aware. If left blank this will use the system format. For more formats please see: http://momentjs.com/docs/#/displaying/format/')?></span>
+												<span id="timeformat-help" class="help-block fpbx-help-block"><?php echo _('The format times should display in. The default of "LT" is locale aware. If left blank this will use the system format. For more formats please see: http://momentjs.com/docs/#/displaying/format/')?></span>
 											</div>
 										</div>
 									</div>
@@ -237,7 +237,7 @@ echo $heading;
 												<div class="row">
 													<div class="form-group">
 														<div class="col-md-3">
-															<label class="control-label" for="dateformat"><?php echo _("Time Format")?></label>
+															<label class="control-label" for="dateformat"><?php echo _("Date Format")?></label>
 															<i class="fa fa-question-circle fpbx-help-icon" data-for="dateformat"></i>
 														</div>
 														<div class="col-md-9">
@@ -249,7 +249,7 @@ echo $heading;
 										</div>
 										<div class="row">
 											<div class="col-md-12">
-												<span id="dateformat-help" class="help-block fpbx-help-block"><?php echo _('The format times should display in. The default of "LT" is locale aware. If left blank this will use the system format. For more formats please see: http://momentjs.com/docs/#/displaying/format/')?></span>
+												<span id="dateformat-help" class="help-block fpbx-help-block"><?php echo _('The format dates should display in. The default of "l" is locale aware. If left blank this will use the system format. For more formats please see: http://momentjs.com/docs/#/displaying/format/')?></span>
 											</div>
 										</div>
 									</div>
