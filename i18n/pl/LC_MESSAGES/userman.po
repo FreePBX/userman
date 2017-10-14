@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-14 17:42-0400\n"
+"POT-Creation-Date: 2017-10-13 21:07-0400\n"
 "PO-Revision-Date: 2017-03-01 04:02+0200\n"
 "Last-Translator: Michal <mboltz@tlen.pl>\n"
 "Language-Team: Polish <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -132,16 +132,16 @@ msgstr "Wystąpił nieznany błąd podczas próby aktualizacji danych użytkowni
 msgid "Apply Changes Bar"
 msgstr ""
 
-#: assets/js/userman.js:134
+#: assets/js/userman.js:142
 msgid "Are you sure you want to make this directory the system default?"
 msgstr ""
 
-#: assets/js/userman.js:77
+#: assets/js/userman.js:85
 #, perl-format
 msgid "Are you sure you wish to delete these %s?"
 msgstr "Czy na pewno chcesz to usunąć %s?"
 
-#: assets/js/userman.js:117
+#: assets/js/userman.js:125
 #, perl-format
 msgid "Are you sure you wish to delete this %s?"
 msgstr "Czy na pewno chcesz to usunąć %s?"
@@ -224,11 +224,11 @@ msgid "Default Groups"
 msgstr ""
 
 #: Userman.class.php:840 views/welcome.php:38 views/welcome.php:75
-#: views/welcome.php:106 assets/js/userman.js:82 assets/js/userman.js:88
+#: views/welcome.php:106 assets/js/userman.js:90 assets/js/userman.js:96
 msgid "Delete"
 msgstr ""
 
-#: assets/js/userman.js:78
+#: assets/js/userman.js:86
 msgid "Deleting..."
 msgstr ""
 
@@ -356,7 +356,7 @@ msgstr ""
 msgid "Extension Link Attribute"
 msgstr ""
 
-#: assets/js/userman.js:298
+#: assets/js/userman.js:312
 msgid "False"
 msgstr ""
 
@@ -672,6 +672,10 @@ msgstr ""
 
 #: Console/Userman.class.php:33 views/welcome.php:113
 msgid "Name"
+msgstr ""
+
+#: assets/js/userman.js:17
+msgid "Name can not be blank!"
 msgstr ""
 
 #: views/directories.php:99
@@ -1214,7 +1218,7 @@ msgstr ""
 msgid "Title"
 msgstr ""
 
-#: assets/js/userman.js:298
+#: assets/js/userman.js:312
 msgid "True"
 msgstr ""
 
@@ -1242,7 +1246,7 @@ msgstr ""
 msgid "Unique identifier attribute"
 msgstr ""
 
-#: views/passwordmodal.php:30 assets/js/userman.js:234
+#: views/passwordmodal.php:30 assets/js/userman.js:248
 msgid "Update Password"
 msgstr ""
 
@@ -1260,7 +1264,7 @@ msgstr ""
 msgid "Updated Voicemail User %s"
 msgstr ""
 
-#: assets/js/userman.js:238
+#: assets/js/userman.js:252
 msgid "Updating"
 msgstr ""
 

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-14 17:42-0400\n"
+"POT-Creation-Date: 2017-10-13 21:07-0400\n"
 "PO-Revision-Date: 2016-08-07 06:51+0200\n"
 "Last-Translator: Media <mousavi.media@gmail.com>\n"
 "Language-Team: Persian (Iran) <http://weblate.freepbx.org/projects/freepbx/"
@@ -135,16 +135,16 @@ msgstr "یک خطای نا معلوم در هنگام به روزرسانی اط
 msgid "Apply Changes Bar"
 msgstr "میله اعمال تغییرات"
 
-#: assets/js/userman.js:134
+#: assets/js/userman.js:142
 msgid "Are you sure you want to make this directory the system default?"
 msgstr ""
 
-#: assets/js/userman.js:77
+#: assets/js/userman.js:85
 #, perl-format
 msgid "Are you sure you wish to delete these %s?"
 msgstr "آیا از حذف این %s مطمئن هستید؟"
 
-#: assets/js/userman.js:117
+#: assets/js/userman.js:125
 #, perl-format
 msgid "Are you sure you wish to delete this %s?"
 msgstr "آیا از حذف این %s مطمئن هستید؟"
@@ -227,11 +227,11 @@ msgid "Default Groups"
 msgstr "گروههای پیشفرض"
 
 #: Userman.class.php:840 views/welcome.php:38 views/welcome.php:75
-#: views/welcome.php:106 assets/js/userman.js:82 assets/js/userman.js:88
+#: views/welcome.php:106 assets/js/userman.js:90 assets/js/userman.js:96
 msgid "Delete"
 msgstr "حذف"
 
-#: assets/js/userman.js:78
+#: assets/js/userman.js:86
 msgid "Deleting..."
 msgstr "حذف شدن..."
 
@@ -361,7 +361,7 @@ msgstr "خطا: شما هرگز نباید این را ببینید"
 msgid "Extension Link Attribute"
 msgstr "صفت لینک داخلی"
 
-#: assets/js/userman.js:298
+#: assets/js/userman.js:312
 msgid "False"
 msgstr ""
 
@@ -695,6 +695,10 @@ msgstr "ماژول هسته غیرفعال است . لطفا آن را فعال 
 
 #: Console/Userman.class.php:33 views/welcome.php:113
 msgid "Name"
+msgstr ""
+
+#: assets/js/userman.js:17
+msgid "Name can not be blank!"
 msgstr ""
 
 #: views/directories.php:99
@@ -1266,7 +1270,7 @@ msgstr ""
 msgid "Title"
 msgstr "عنوان"
 
-#: assets/js/userman.js:298
+#: assets/js/userman.js:312
 msgid "True"
 msgstr ""
 
@@ -1294,7 +1298,7 @@ msgstr ""
 msgid "Unique identifier attribute"
 msgstr ""
 
-#: views/passwordmodal.php:30 assets/js/userman.js:234
+#: views/passwordmodal.php:30 assets/js/userman.js:248
 msgid "Update Password"
 msgstr "کلمه عبور به روز شد"
 
@@ -1312,7 +1316,7 @@ msgstr "کاربر به روز شد"
 msgid "Updated Voicemail User %s"
 msgstr "ایمیل صوتی کاربر %s به روز شد"
 
-#: assets/js/userman.js:238
+#: assets/js/userman.js:252
 msgid "Updating"
 msgstr "به روزرسانی"
 

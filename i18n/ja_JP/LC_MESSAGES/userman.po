@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-14 17:42-0400\n"
+"POT-Creation-Date: 2017-10-13 21:07-0400\n"
 "PO-Revision-Date: 2015-10-30 07:56+0200\n"
 "Last-Translator: Kevin <kevin@qloog.com>\n"
 "Language-Team: Japanese <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -145,16 +145,16 @@ msgstr "ユーザー情報を更新中に不明なエラーが発生しました
 msgid "Apply Changes Bar"
 msgstr "「設定適用」ボタン"
 
-#: assets/js/userman.js:134
+#: assets/js/userman.js:142
 msgid "Are you sure you want to make this directory the system default?"
 msgstr ""
 
-#: assets/js/userman.js:77
+#: assets/js/userman.js:85
 #, perl-format
 msgid "Are you sure you wish to delete these %s?"
 msgstr "この %s を削除してもよろしいですか？"
 
-#: assets/js/userman.js:117
+#: assets/js/userman.js:125
 #, perl-format
 msgid "Are you sure you wish to delete this %s?"
 msgstr "この %s を削除してもよろしいですか？"
@@ -237,11 +237,11 @@ msgid "Default Groups"
 msgstr "デフォルトグループ"
 
 #: Userman.class.php:840 views/welcome.php:38 views/welcome.php:75
-#: views/welcome.php:106 assets/js/userman.js:82 assets/js/userman.js:88
+#: views/welcome.php:106 assets/js/userman.js:90 assets/js/userman.js:96
 msgid "Delete"
 msgstr "削除"
 
-#: assets/js/userman.js:78
+#: assets/js/userman.js:86
 msgid "Deleting..."
 msgstr "削除中..."
 
@@ -371,7 +371,7 @@ msgstr "エラー: このメッセージは見えないはず"
 msgid "Extension Link Attribute"
 msgstr "内線リンク属性"
 
-#: assets/js/userman.js:298
+#: assets/js/userman.js:312
 msgid "False"
 msgstr ""
 
@@ -697,6 +697,10 @@ msgstr "モジュール「コア」が無効です。有効にしてください
 
 #: Console/Userman.class.php:33 views/welcome.php:113
 msgid "Name"
+msgstr ""
+
+#: assets/js/userman.js:17
+msgid "Name can not be blank!"
 msgstr ""
 
 #: views/directories.php:99
@@ -1257,7 +1261,7 @@ msgstr ""
 msgid "Title"
 msgstr "肩書"
 
-#: assets/js/userman.js:298
+#: assets/js/userman.js:312
 msgid "True"
 msgstr ""
 
@@ -1285,7 +1289,7 @@ msgstr ""
 msgid "Unique identifier attribute"
 msgstr ""
 
-#: views/passwordmodal.php:30 assets/js/userman.js:234
+#: views/passwordmodal.php:30 assets/js/userman.js:248
 msgid "Update Password"
 msgstr "パスワードを変更"
 
@@ -1303,7 +1307,7 @@ msgstr "ユーザーを更新しました"
 msgid "Updated Voicemail User %s"
 msgstr ""
 
-#: assets/js/userman.js:238
+#: assets/js/userman.js:252
 msgid "Updating"
 msgstr "更新中"
 
