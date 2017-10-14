@@ -11,6 +11,14 @@ translations = {
 	'directory': _('directory'),
 	'directories': _('directories')
 };
+if($("#directory").length) {
+	$("#directory").submit(function(e) {
+		if($("#name").val() === "") {
+			return warnInvalid($("#name"),_("Name can not be blank!"));
+		}
+		$("#submit").prop("disabled",true);
+	});
+}
 $("#email-users").click(function() {
 	$(this).prop("disabled",true);
 	$.post( "ajax.php", {command: "email", module: "userman", extensions: deleteExts.users}, function(data) {

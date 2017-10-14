@@ -3,7 +3,7 @@
 		<div class="col-sm-12">
 			<div class="fpbx-container">
 				<div class="display full-border">
-					<form autocomplete="off" class="fpbx-submit" name="general" action="config.php?display=userman#directories" method="post" onsubmit="return">
+					<form autocomplete="off" class="fpbx-submit" id="directory" name="directory" action="config.php?display=userman#directories" method="post" onsubmit="return">
 						<input type="hidden" name="type" value="directory">
 						<input type="hidden" name="submittype" value="gui">
 						<input type="hidden" name="id" value="<?php echo !empty($config['id']) ? $config['id'] : ''?>">
@@ -48,7 +48,7 @@
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="name"></i>
 											</div>
 											<div class="col-md-9">
-												<input class="form-control" name="name" value="<?php echo !empty($config['name']) ? $config['name'] : ''?>">
+												<input class="form-control" id="name" name="name" value="<?php echo !empty($config['name']) ? $config['name'] : ''?>">
 											</div>
 										</div>
 									</div>
