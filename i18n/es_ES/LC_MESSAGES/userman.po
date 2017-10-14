@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-22 17:04-0700\n"
+"POT-Creation-Date: 2017-10-13 18:10-0700\n"
 "PO-Revision-Date: 2016-12-11 08:33+0200\n"
 "Last-Translator: Ernesto <ecasas@sangoma.com>\n"
 "Language-Team: Spanish <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -150,16 +150,16 @@ msgstr ""
 msgid "Apply Changes Bar"
 msgstr "Barra Aplicar Cambios"
 
-#: assets/js/userman.js:134
+#: assets/js/userman.js:142
 msgid "Are you sure you want to make this directory the system default?"
 msgstr ""
 
-#: assets/js/userman.js:77
+#: assets/js/userman.js:85
 #, perl-format
 msgid "Are you sure you wish to delete these %s?"
 msgstr "¿Seguro que desea eliminar estos %s?"
 
-#: assets/js/userman.js:117
+#: assets/js/userman.js:125
 #, perl-format
 msgid "Are you sure you wish to delete this %s?"
 msgstr "¿Está seguro de que desea eliminar este %s?"
@@ -229,7 +229,7 @@ msgstr "Crear un Nuevo Usuario"
 msgid "Create User Manager User"
 msgstr "Crear usuario gestor de usuarios"
 
-#: views/groups.php:218 views/users.php:610
+#: views/groups.php:240 views/users.php:610
 msgid "Date Format"
 msgstr ""
 
@@ -246,11 +246,11 @@ msgid "Default Groups"
 msgstr "Grupos predeterminados"
 
 #: Userman.class.php:534 views/welcome.php:38 views/welcome.php:75
-#: views/welcome.php:106 assets/js/userman.js:82 assets/js/userman.js:88
+#: views/welcome.php:106 assets/js/userman.js:90 assets/js/userman.js:96
 msgid "Delete"
 msgstr "Borrar"
 
-#: assets/js/userman.js:78
+#: assets/js/userman.js:86
 msgid "Deleting..."
 msgstr "Borrando..."
 
@@ -380,7 +380,7 @@ msgstr "Error: No debería ver esto nunca"
 msgid "Extension Link Attribute"
 msgstr "Atributo de enlace de extensión"
 
-#: assets/js/userman.js:336
+#: assets/js/userman.js:362
 msgid "False"
 msgstr ""
 
@@ -622,6 +622,10 @@ msgstr "Heredar"
 msgid "Invalid User"
 msgstr "Usuario Invalido"
 
+#: assets/js/userman.js:178 assets/js/userman.js:195
+msgid "Invalid input"
+msgstr ""
+
 #: functions.inc/auth/modules/Msad.php:343
 #: functions.inc/auth/modules/Msad.php:356
 #: functions.inc/auth/modules/Msad2.php:372
@@ -729,6 +733,10 @@ msgstr "Modulo Core esta deshabilitado. Por favor habilítelo"
 
 #: Console/Userman.class.php:33 views/welcome.php:113
 msgid "Name"
+msgstr ""
+
+#: assets/js/userman.js:17
+msgid "Name can not be blank!"
 msgstr ""
 
 #: views/directories.php:99
@@ -1007,11 +1015,11 @@ msgstr ""
 msgid "The Active Directory secure connection type"
 msgstr ""
 
-#: assets/js/userman.js:401
+#: assets/js/userman.js:427
 msgid "The Browser Language could not be determined"
 msgstr ""
 
-#: assets/js/userman.js:421
+#: assets/js/userman.js:447
 msgid "The Browser Timezone could not be determined"
 msgstr ""
 
@@ -1070,11 +1078,11 @@ msgstr ""
 msgid "The OpenLDAP username"
 msgstr "usuario OpenLDAP"
 
-#: assets/js/userman.js:411
+#: assets/js/userman.js:437
 msgid "The PBX Language is not set"
 msgstr ""
 
-#: assets/js/userman.js:431
+#: assets/js/userman.js:457
 msgid "The PBX Timezone is not set"
 msgstr ""
 
@@ -1239,7 +1247,7 @@ msgid ""
 "see: http://momentjs.com/docs/#/displaying/format/"
 msgstr ""
 
-#: views/groups.php:230
+#: views/groups.php:252
 msgid ""
 "The format dates should display in. The default of \"l\" is locale aware. If "
 "left blank this will use the system format. For more formats please see: "
@@ -1253,7 +1261,7 @@ msgid ""
 "see: http://momentjs.com/docs/#/displaying/format/"
 msgstr ""
 
-#: views/groups.php:252
+#: views/groups.php:230
 msgid ""
 "The format times should display in. The default of \"LT\" is locale aware. "
 "If left blank this will use the system format. For more formats please see: "
@@ -1376,7 +1384,7 @@ msgid ""
 "will start from the base DN."
 msgstr ""
 
-#: views/groups.php:240 views/users.php:585
+#: views/groups.php:218 views/users.php:585
 msgid "Time Format"
 msgstr ""
 
@@ -1392,7 +1400,7 @@ msgstr ""
 msgid "Title"
 msgstr "Titulo"
 
-#: assets/js/userman.js:336
+#: assets/js/userman.js:362
 msgid "True"
 msgstr ""
 
@@ -1424,7 +1432,7 @@ msgstr ""
 msgid "Update Group is not defined"
 msgstr ""
 
-#: views/passwordmodal.php:30 assets/js/userman.js:269
+#: views/passwordmodal.php:30 assets/js/userman.js:295
 msgid "Update Password"
 msgstr "Actualizar Contraseña"
 
@@ -1446,7 +1454,7 @@ msgstr "Actualizar Usuario"
 msgid "Updated Voicemail User %s"
 msgstr "Actualizado Voicemail de usuario: %s"
 
-#: assets/js/userman.js:273
+#: assets/js/userman.js:299
 msgid "Updating"
 msgstr "Actualizando"
 
