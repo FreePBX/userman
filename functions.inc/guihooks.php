@@ -111,11 +111,10 @@ $js = <<<JS
 	});
 JS;
 		$currentcomponent->addjsfunc('changeDirectory()',$js);
-		$jsusers = json_encode($uUsers);
+
 $js = <<<JS
 	if($('#userman_username_cb').prop('checked')) {
-		var users = $jsusers;
-		if(isEmpty($('#userman_username').val()) || users.indexOf(\$('#userman_username').val()) >= 0) {
+		if(isEmpty($('#userman_username').val())) {
 			return true;
 		}
 	}
