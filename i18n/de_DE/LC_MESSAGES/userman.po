@@ -10,14 +10,14 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-16 15:51-0400\n"
-"PO-Revision-Date: 2017-03-06 03:14+0200\n"
+"PO-Revision-Date: 2017-11-12 15:59+0200\n"
 "Last-Translator: hammer125 <auswertung@aon.at>\n"
-"Language-Team: German <http://weblate.freepbx.org/projects/freepbx/userman/"
-"de_DE/>\n"
+"Language-Team: German "
+"<http://weblate.freepbx.org/projects/freepbx/userman/de_DE/>\n"
+"Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: de_DE\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 2.4\n"
 
@@ -134,6 +134,8 @@ msgstr ""
 #: assets/js/userman.js:142
 msgid "Are you sure you want to make this directory the system default?"
 msgstr ""
+"Sind Sie sicher, dass Sie dieses Verzeichnis zum Systemstandard machen "
+"möchten?"
 
 #: assets/js/userman.js:85
 #, perl-format
@@ -160,12 +162,13 @@ msgstr "Automatisch generierter Benutzer zu neuem Nebenstellengerät"
 
 #: views/msad.php:117 views/msad2.php:143 views/openldap.php:117
 #: views/openldap2.php:121
+#, fuzzy
 msgid "Base DN"
-msgstr ""
+msgstr "Basis-DN"
 
 #: views/openldap2.php:77
 msgid "Bind DN or Username"
-msgstr ""
+msgstr "Binde DN oder Benutzernamen"
 
 #: views/users.php:394
 msgid "Cell Phone Number"
@@ -177,7 +180,7 @@ msgstr "Schließen"
 
 #: views/msad2.php:241 views/openldap2.php:219
 msgid "Common Name attribute"
-msgstr ""
+msgstr "Allgemeines Namensattribut"
 
 #: views/users.php:322
 msgid "Company"
@@ -200,7 +203,7 @@ msgstr ""
 
 #: views/msad2.php:189 views/openldap2.php:167
 msgid "Create Missing Extensions"
-msgstr ""
+msgstr "Erzeuge fehlende Durchwahlen"
 
 #: functions.inc/guihooks.php:204 functions.inc/guihooks.php:253
 msgid "Create New User"
@@ -216,7 +219,7 @@ msgstr "Datenbankumbenennung nicht abgeschlossen"
 
 #: views/welcome.php:116
 msgid "Default"
-msgstr ""
+msgstr "Standard"
 
 #: views/freepbx.php:7
 msgid "Default Groups"
@@ -243,19 +246,19 @@ msgstr "Beschreibung"
 
 #: views/msad2.php:263 views/openldap2.php:241
 msgid "Description attribute"
-msgstr ""
+msgstr "Beschreibungs-Attribut"
 
 #: views/welcome.php:27
 msgid "Directories"
-msgstr ""
+msgstr "Verzeichnisse"
 
 #: views/welcome.php:54 views/welcome.php:88
 msgid "Directory"
-msgstr ""
+msgstr "Verzeichnis"
 
 #: views/directories.php:47 views/rnav.php:45
 msgid "Directory Name"
-msgstr ""
+msgstr "Telefonbuchname"
 
 #: views/directories.php:117
 msgid "Directory Settings"
