@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-16 15:51-0400\n"
-"PO-Revision-Date: 2017-11-12 15:59+0200\n"
+"PO-Revision-Date: 2017-11-12 16:21+0200\n"
 "Last-Translator: hammer125 <auswertung@aon.at>\n"
 "Language-Team: German "
 "<http://weblate.freepbx.org/projects/freepbx/userman/de_DE/>\n"
@@ -262,27 +262,27 @@ msgstr "Telefonbuchname"
 
 #: views/directories.php:117
 msgid "Directory Settings"
-msgstr ""
+msgstr "Telefonbuch-Einstellungen"
 
 #: views/directories.php:16
 msgid "Directory Type"
-msgstr ""
+msgstr "Telefonbuch-Typ"
 
 #: Userman.class.php:2021 Userman.class.php:2051
 msgid "Directory is locked. Can not add group"
-msgstr ""
+msgstr "Telefonbuch ist gesperrt. Gruppe kann nicht hinzugefügt werden"
 
 #: Userman.class.php:1935 Userman.class.php:1968
 msgid "Directory is locked. Can not add user"
-msgstr ""
+msgstr "Telefonbuch ist gesperrt. Benutzer kann nicht hinzugefügt werden"
 
 #: Userman.class.php:2160
 msgid "Directory is locked. Can not update group"
-msgstr ""
+msgstr "Telefonbuch ist gesperrt. Gruppe kann nicht aktualisiert werden"
 
 #: Userman.class.php:2117
 msgid "Directory is locked. Can not update user"
-msgstr ""
+msgstr "Telefonbuch ist gesperrt. Benutzer kann nicht aktualisiert werden"
 
 #: views/welcome.php:100
 msgid ""
@@ -575,7 +575,7 @@ msgstr ""
 
 #: views/users.php:504 views/users.php:531
 msgid "Inherit"
-msgstr "Erben"
+msgstr "Geerbt"
 
 #: Userman.class.php:1303
 msgid "Invalid User"
