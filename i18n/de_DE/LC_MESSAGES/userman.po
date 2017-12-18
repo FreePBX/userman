@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-16 15:51-0400\n"
-"PO-Revision-Date: 2017-11-12 16:21+0200\n"
-"Last-Translator: hammer125 <auswertung@aon.at>\n"
+"PO-Revision-Date: 2017-12-18 17:35+0200\n"
+"Last-Translator: Nils <Nils@heckenkamp.info>\n"
 "Language-Team: German "
 "<http://weblate.freepbx.org/projects/freepbx/userman/de_DE/>\n"
 "Language: de_DE\n"
@@ -575,7 +575,7 @@ msgstr ""
 
 #: views/users.php:504 views/users.php:531
 msgid "Inherit"
-msgstr "Geerbt"
+msgstr "Übernehmen"
 
 #: Userman.class.php:1303
 msgid "Invalid User"
