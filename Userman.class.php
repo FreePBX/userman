@@ -1132,6 +1132,10 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	* @return array
 	*/
 	public function getAllGroups($directory=null) {
+		if (!empty($directory) && empty($this->directories[$directory])) {
+			throw new \Exception("Please ask for a valid directory");
+		}
+		
 		if(!empty($directory)) {
 			$groups = $this->directories[$directory]->getAllGroups();
 		} else {
