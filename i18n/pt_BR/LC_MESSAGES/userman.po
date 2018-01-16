@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-18 16:50-0500\n"
+"POT-Creation-Date: 2018-01-15 20:42-0500\n"
 "PO-Revision-Date: 2016-12-21 00:22+0200\n"
 "Last-Translator: Alexander <alexander.schley@paranagua.pr.gov.br>\n"
 "Language-Team: Portuguese (Brazil) <http://weblate.freepbx.org/projects/"
@@ -378,7 +378,7 @@ msgstr "Erro: você nunca deveria ver isso"
 msgid "Extension Link Attribute"
 msgstr "Atributo do Link de Ramal"
 
-#: assets/js/userman.js:362
+#: assets/js/userman.js:366
 msgid "False"
 msgstr ""
 
@@ -623,10 +623,6 @@ msgstr "Herdar"
 msgid "Invalid User"
 msgstr "Usuário Inválido"
 
-#: assets/js/userman.js:178 assets/js/userman.js:195
-msgid "Invalid input"
-msgstr ""
-
 #: functions.inc/auth/modules/Msad.php:343
 #: functions.inc/auth/modules/Msad.php:356
 #: functions.inc/auth/modules/Msad2.php:372
@@ -815,6 +811,10 @@ msgstr "Senha para Novo Usuário"
 #: Userman.class.php:1642 Userman.class.php:1675
 msgid "Password can not be blank"
 msgstr "A senha não pode ficar em branco"
+
+#: assets/js/userman.js:178 assets/js/userman.js:199
+msgid "Please fill all missing fields"
+msgstr ""
 
 #: functions.inc/guihooks.php:233 functions.inc/guihooks.php:277
 msgid "Please select a valid username for New User Creation"
@@ -1010,11 +1010,11 @@ msgstr ""
 msgid "The Active Directory secure connection type"
 msgstr ""
 
-#: assets/js/userman.js:427
+#: assets/js/userman.js:431
 msgid "The Browser Language could not be determined"
 msgstr ""
 
-#: assets/js/userman.js:447
+#: assets/js/userman.js:451
 msgid "The Browser Timezone could not be determined"
 msgstr ""
 
@@ -1071,11 +1071,11 @@ msgstr ""
 msgid "The OpenLDAP username"
 msgstr "Nome de Usuário OpenLDAP"
 
-#: assets/js/userman.js:437
+#: assets/js/userman.js:441
 msgid "The PBX Language is not set"
 msgstr ""
 
-#: assets/js/userman.js:457
+#: assets/js/userman.js:461
 msgid "The PBX Timezone is not set"
 msgstr ""
 
@@ -1393,7 +1393,7 @@ msgstr ""
 msgid "Title"
 msgstr "Título"
 
-#: assets/js/userman.js:362
+#: assets/js/userman.js:366
 msgid "True"
 msgstr ""
 
@@ -1425,7 +1425,7 @@ msgstr ""
 msgid "Update Group is not defined"
 msgstr ""
 
-#: views/passwordmodal.php:30 assets/js/userman.js:295
+#: views/passwordmodal.php:30 assets/js/userman.js:299
 msgid "Update Password"
 msgstr "Atualizar Senha"
 
@@ -1447,7 +1447,7 @@ msgstr "Usuário Atualizado"
 msgid "Updated Voicemail User %s"
 msgstr "Usuário de Correio de Voz %s atualizado"
 
-#: assets/js/userman.js:299
+#: assets/js/userman.js:303
 msgid "Updating"
 msgstr "Atualizando"
 

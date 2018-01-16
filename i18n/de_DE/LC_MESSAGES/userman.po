@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-18 16:50-0500\n"
+"POT-Creation-Date: 2018-01-15 20:42-0500\n"
 "PO-Revision-Date: 2017-03-06 03:14+0200\n"
 "Last-Translator: hammer125 <auswertung@aon.at>\n"
 "Language-Team: German <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -372,7 +372,7 @@ msgstr ""
 msgid "Extension Link Attribute"
 msgstr ""
 
-#: assets/js/userman.js:362
+#: assets/js/userman.js:366
 msgid "False"
 msgstr ""
 
@@ -596,10 +596,6 @@ msgstr "Erben"
 msgid "Invalid User"
 msgstr "Ungültiger Benutzer"
 
-#: assets/js/userman.js:178 assets/js/userman.js:195
-msgid "Invalid input"
-msgstr ""
-
 #: functions.inc/auth/modules/Msad.php:343
 #: functions.inc/auth/modules/Msad.php:356
 #: functions.inc/auth/modules/Msad2.php:372
@@ -789,6 +785,10 @@ msgstr "Passwort für neue Benutzer"
 msgid "Password can not be blank"
 msgstr "Passwort darf nicht leer sein"
 
+#: assets/js/userman.js:178 assets/js/userman.js:199
+msgid "Please fill all missing fields"
+msgstr ""
+
 #: functions.inc/guihooks.php:233 functions.inc/guihooks.php:277
 msgid "Please select a valid username for New User Creation"
 msgstr "Bitte wählen Sie einen gültigen Benutzernamen für den neuen Benutzer"
@@ -971,11 +971,11 @@ msgstr ""
 msgid "The Active Directory secure connection type"
 msgstr ""
 
-#: assets/js/userman.js:427
+#: assets/js/userman.js:431
 msgid "The Browser Language could not be determined"
 msgstr ""
 
-#: assets/js/userman.js:447
+#: assets/js/userman.js:451
 msgid "The Browser Timezone could not be determined"
 msgstr ""
 
@@ -1029,11 +1029,11 @@ msgstr ""
 msgid "The OpenLDAP username"
 msgstr ""
 
-#: assets/js/userman.js:437
+#: assets/js/userman.js:441
 msgid "The PBX Language is not set"
 msgstr ""
 
-#: assets/js/userman.js:457
+#: assets/js/userman.js:461
 msgid "The PBX Timezone is not set"
 msgstr ""
 
@@ -1338,7 +1338,7 @@ msgstr ""
 msgid "Title"
 msgstr ""
 
-#: assets/js/userman.js:362
+#: assets/js/userman.js:366
 msgid "True"
 msgstr ""
 
@@ -1370,7 +1370,7 @@ msgstr ""
 msgid "Update Group is not defined"
 msgstr ""
 
-#: views/passwordmodal.php:30 assets/js/userman.js:295
+#: views/passwordmodal.php:30 assets/js/userman.js:299
 msgid "Update Password"
 msgstr ""
 
@@ -1392,7 +1392,7 @@ msgstr ""
 msgid "Updated Voicemail User %s"
 msgstr ""
 
-#: assets/js/userman.js:299
+#: assets/js/userman.js:303
 msgid "Updating"
 msgstr ""
 
