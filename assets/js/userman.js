@@ -180,7 +180,7 @@ $("#submit").click(function(e) {
 		}
 	});
 	if(!invalid) {
-		if($("form.fpbx-submit").attr("name") !== "directory")) {
+		if($("form.fpbx-submit").attr("name") !== "directory") {
 			$(".fpbx-submit").submit();
 		} else {
 			setLocales(function() {
