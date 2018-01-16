@@ -174,15 +174,19 @@ $("#submit").click(function(e) {
 	e.preventDefault();
 	var invalid = false;
 	$('.fpbx-submit input').map(function() {
-		if(!this.validity.valid) {
-			warnInvalid($(this),_("Invalid input"));
+		if(!this.validity.valid && !invalid) {
+			warnInvalid($(this),_("Please fill all missing fields"));
 			invalid = true;
 		}
 	});
 	if(!invalid) {
-		setLocales(function() {
+		if($("form.fpbx-submit").attr("name") !== "directory")) {
 			$(".fpbx-submit").submit();
-		});
+		} else {
+			setLocales(function() {
+				$(".fpbx-submit").submit();
+			});
+		}
 	}
 });
 
@@ -191,8 +195,8 @@ $("#submitsend").click(function(e) {
 	e.preventDefault();
 	var invalid = false;
 	$('.fpbx-submit input').map(function() {
-		if(!this.validity.valid) {
-			warnInvalid($(this),_("Invalid input"));
+		if(!this.validity.valid && !invalid) {
+			warnInvalid($(this),_("Please fill all missing fields"));
 			invalid = true;
 		}
 	});
