@@ -219,26 +219,26 @@ class Openldap extends Auth {
 	/**
 	 * Connect to the LDAP server
 	 */
-	public function connect($reconnect = false) {
-		if($reconnect || !$this->ldap) {
-			$this->ldap = ldap_connect($this->host,$this->port);
+	 public function connect($reconnect = false) {
+		 if($reconnect || !$this->ldap) {
+			 $this->ldap = ldap_connect($this->host,$this->port);
 
-			if ($this->tls) {
-				ldap_start_tls($this->ldap);
-			}
+			 if ($this->tls) {
+				 ldap_start_tls($this->ldap);
+			 }
 
-			if($this->ldap === false) {
-				$this->ldap = null;
-				throw new \Exception("Unable to Connect");
-			}
-			ldap_set_option($this->ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
-                        if (isset($this->user) && isset($this->password)) {
-			    if(!@ldap_bind($this->ldap, $this->userident.'='.$this->user.','.$this->userdn, $this->password)) {
-				    $this->ldap = null;
-				    throw new \Exception("Unable to Auth");
-			    }
-                        }
-		}
+			 if($this->ldap === false) {
+				 $this->ldap = null;
+				 throw new \Exception("Unable to Connect");
+			 }
+			 ldap_set_option($this->ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
+			 if (isset($this->user) && isset($this->password)) {
+				 if(!@ldap_bind($this->ldap, $this->userident.'='.$this->user.','.$this->userdn, $this->password)) {
+					 $this->ldap = null;
+					 throw new \Exception("Unable to Auth");
+				 }
+			 }
+		 }
 	}
 
 	/**

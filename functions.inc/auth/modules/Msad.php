@@ -217,10 +217,10 @@ class Msad extends Auth {
 
 			$this->provider = new \Adldap\Connections\Provider($config);
 			$this->ad = new Adldap(array("default" => $config));
-			$ad->addProvider($this->provider, 'default');
+			$this->ad->addProvider($this->provider, 'default');
 
 			try {
-				$this->ldap = $ad->connect();
+				$this->ldap = $this->ad->connect();
 			} catch (BindException $e) {
 				throw new \Exception("Unable to Connect to host! Reason: ".$e->getMessage());
 			}
