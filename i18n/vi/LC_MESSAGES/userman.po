@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-15 20:42-0500\n"
+"POT-Creation-Date: 2018-01-22 11:34-0800\n"
 "PO-Revision-Date: 2017-07-03 12:33-0400\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -370,7 +370,7 @@ msgstr ""
 msgid "Extension Link Attribute"
 msgstr ""
 
-#: assets/js/userman.js:366
+#: assets/js/userman.js:368
 msgid "False"
 msgstr ""
 
@@ -779,7 +779,7 @@ msgstr ""
 msgid "Password can not be blank"
 msgstr ""
 
-#: assets/js/userman.js:178 assets/js/userman.js:199
+#: assets/js/userman.js:178 assets/js/userman.js:200
 msgid "Please fill all missing fields"
 msgstr ""
 
@@ -955,11 +955,11 @@ msgstr ""
 msgid "The Active Directory secure connection type"
 msgstr ""
 
-#: assets/js/userman.js:431
+#: assets/js/userman.js:433
 msgid "The Browser Language could not be determined"
 msgstr ""
 
-#: assets/js/userman.js:451
+#: assets/js/userman.js:453
 msgid "The Browser Timezone could not be determined"
 msgstr ""
 
@@ -1013,11 +1013,11 @@ msgstr ""
 msgid "The OpenLDAP username"
 msgstr ""
 
-#: assets/js/userman.js:441
+#: assets/js/userman.js:443
 msgid "The PBX Language is not set"
 msgstr ""
 
-#: assets/js/userman.js:461
+#: assets/js/userman.js:463
 msgid "The PBX Timezone is not set"
 msgstr ""
 
@@ -1322,7 +1322,7 @@ msgstr ""
 msgid "Title"
 msgstr ""
 
-#: assets/js/userman.js:366
+#: assets/js/userman.js:368
 msgid "True"
 msgstr ""
 
@@ -1354,7 +1354,7 @@ msgstr ""
 msgid "Update Group is not defined"
 msgstr ""
 
-#: views/passwordmodal.php:30 assets/js/userman.js:299
+#: views/passwordmodal.php:30 assets/js/userman.js:301
 msgid "Update Password"
 msgstr ""
 
@@ -1376,7 +1376,7 @@ msgstr ""
 msgid "Updated Voicemail User %s"
 msgstr ""
 
-#: assets/js/userman.js:303
+#: assets/js/userman.js:305
 msgid "Updating"
 msgstr ""
 
