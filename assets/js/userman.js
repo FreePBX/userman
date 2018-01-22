@@ -180,7 +180,7 @@ $("#submit").click(function(e) {
 		}
 	});
 	if(!invalid) {
-		if($("form.fpbx-submit").attr("name") !== "directory") {
+		if($("form.fpbx-submit").attr("name") === "directory") {
 			$(".fpbx-submit").submit();
 		} else {
 			setLocales(function() {
@@ -188,6 +188,7 @@ $("#submit").click(function(e) {
 			});
 		}
 	}
+	return false;
 });
 
 $("#submitsend").click(function(e) {
@@ -206,6 +207,7 @@ $("#submitsend").click(function(e) {
 			$(".fpbx-submit").submit();
 		});
 	}
+	return false;
 });
 
 function setLocales(callback) {
