@@ -84,7 +84,6 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	}
 
 	public function install() {
-		//END Database Stuff
 		$AMPASTERISKWEBUSER = $this->FreePBX->Config->get("AMPASTERISKWEBUSER");
 		$AMPSBIN = $this->FreePBX->Config->get("AMPSBIN");
 		$freepbxCron = $this->FreePBX->Cron($AMPASTERISKWEBUSER);
@@ -1135,7 +1134,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		if (!empty($directory) && empty($this->directories[$directory])) {
 			throw new \Exception("Please ask for a valid directory");
 		}
-		
+
 		if(!empty($directory)) {
 			$groups = $this->directories[$directory]->getAllGroups();
 		} else {
