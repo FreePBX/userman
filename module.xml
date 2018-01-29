@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>13.0.76.33</version>
+	<version>13.0.76.34</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -12,6 +12,7 @@
 		Modules like iSymphony, Rest API and User Control Panel and FreePBX itself use this module to manage their users.
 	</description>
 	<changelog>
+		*13.0.76.34* FREEPBX-16241 FREEPBX-16494 FREEPBX-16377
 		*13.0.76.33* ZUC-121 Create users after extension is created
 		*13.0.76.32* FREEPBX-16020
 		*13.0.76.31* FREEPBX-16020 FREEPBX-15532
