@@ -532,11 +532,11 @@ class Msad2 extends Auth {
 		unset($groups['count']);
 
 		foreach($groups as $group) {
-			if(!isset($group[$this->config['descriptionattr']])) {
-				$this->out("\t\tERROR group is missing ".$this->config['descriptionattr']." attribute! Cant continue!!");
+			if(!isset($group[$this->config['externalidattr']])) {
+				$this->out("\t\tERROR group is missing ".$this->config['externalidattr']." attribute! Cant continue!!");
 				continue;
 			}
-			$sid = $this->binaryGuidToString($group[$this->config['descriptionattr']][0]);
+			$sid = $this->binaryGuidToString($group[$this->config['externalidattr']][0]);
 			$this->gcache[$sid] = $group;
 			$groupname = $group[$this->config['commonnameattr']][0];
 			$um = $this->linkGroup($groupname, $sid);
