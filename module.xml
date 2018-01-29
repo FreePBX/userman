@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>14.0.3.35</version>
+	<version>14.0.3.36</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -10,7 +10,8 @@
 		This Module manages all PBX users. It allows an Administrator to create a User Account that can be used by other applications for login or API purposes.
 	</description>
 	<changelog>
-		*14.0.3.25* FREEPBX-15647
+		*14.0.3.36* ZUC-121 Create users after extension is created
+		*14.0.3.35* FREEPBX-15647
 		*14.0.3.34* FREEPBX-15571
 		*14.0.3.33* Fix javascript error
 		*14.0.3.32* FREEPBX-15647
