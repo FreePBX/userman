@@ -23,11 +23,11 @@ function userman_configpageinit($pagename) {
 		if ($tech_hardware != null ) {
 			userman_applyhooks();
 		} elseif ($action == 'add') {
-			$currentcomponent->addprocessfunc('userman_configprocess', 1);
+			$currentcomponent->addprocessfunc('userman_configprocess', 9);
 		} elseif ($extdisplay != '' || $pagename == 'users') {
 			// We're now viewing an extension, so we need to display _and_ process.
 			userman_applyhooks();
-			$currentcomponent->addprocessfunc('userman_configprocess', 1);
+			$currentcomponent->addprocessfunc('userman_configprocess', 9);
 		}
 	}
 }
