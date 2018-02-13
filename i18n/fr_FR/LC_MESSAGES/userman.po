@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-29 15:56-0500\n"
+"POT-Creation-Date: 2018-02-13 18:05-0500\n"
 "PO-Revision-Date: 2016-02-05 11:51+0200\n"
 "Last-Translator: Nicolas Riendeau <freepbx@riendeau.org>\n"
 "Language-Team: French <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -21,7 +21,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Generator: Weblate 2.2-dev\n"
 
-#: install.php:378
+#: install.php:41
 msgid ""
 "!!!WARNING!!!! MSAD2 Directory Groups SID might have changed. Please check "
 "your permissions! !!!WARNING!!!!"
@@ -219,10 +219,6 @@ msgstr "Créer un nouvel utilisateur"
 #: views/quickCreate.php:8
 msgid "Create User Manager User"
 msgstr "Créer un utilisateur du gestionnaire d'utilisateur"
-
-#: install.php:28 install.php:35
-msgid "Database rename not completed"
-msgstr ""
 
 #: views/welcome.php:116
 msgid "Default"
@@ -1249,6 +1245,12 @@ msgstr ""
 
 #: functions.inc/auth/Auth.php:486
 msgid "Unable to link user to an invalid directory"
+msgstr ""
+
+#: install.php:14
+msgid ""
+"Unable to upgrade. Old users table still exists. Please report this to "
+"http://community.freepbx.org"
 msgstr ""
 
 #: views/msad2.php:285 views/openldap2.php:263

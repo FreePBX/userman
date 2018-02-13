@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-29 15:56-0500\n"
+"POT-Creation-Date: 2018-02-13 18:05-0500\n"
 "PO-Revision-Date: 2017-12-18 17:35+0200\n"
 "Last-Translator: Nils <Nils@heckenkamp.info>\n"
 "Language-Team: German <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -21,7 +21,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 2.4\n"
 
-#: install.php:378
+#: install.php:41
 msgid ""
 "!!!WARNING!!!! MSAD2 Directory Groups SID might have changed. Please check "
 "your permissions! !!!WARNING!!!!"
@@ -218,10 +218,6 @@ msgstr "Neuen Benutzer erstellen"
 #: views/quickCreate.php:8
 msgid "Create User Manager User"
 msgstr "Benutzermanager Benutzer erstellen"
-
-#: install.php:28 install.php:35
-msgid "Database rename not completed"
-msgstr "Datenbankumbenennung nicht abgeschlossen"
 
 #: views/welcome.php:116
 msgid "Default"
@@ -1264,6 +1260,12 @@ msgstr ""
 msgid "Unable to link user to an invalid directory"
 msgstr ""
 
+#: install.php:14
+msgid ""
+"Unable to upgrade. Old users table still exists. Please report this to "
+"http://community.freepbx.org"
+msgstr ""
+
 #: views/msad2.php:285 views/openldap2.php:263
 msgid "Unique identifier attribute"
 msgstr ""
@@ -1561,6 +1563,9 @@ msgstr "Benutzername erforderlich."
 #: assets/js/userman.js:8
 msgid "users"
 msgstr "Benutzer"
+
+#~ msgid "Database rename not completed"
+#~ msgstr "Datenbankumbenennung nicht abgeschlossen"
 
 #~ msgid "Email Sent"
 #~ msgstr "E-Mail gesendet"

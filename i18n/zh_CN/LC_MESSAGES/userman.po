@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-29 15:56-0500\n"
+"POT-Creation-Date: 2018-02-13 18:05-0500\n"
 "PO-Revision-Date: 2015-10-14 14:59+0200\n"
 "Last-Translator: james <zhulizhong@gmail.com>\n"
 "Language-Team: Simplified Chinese <http://weblate.freepbx.org/projects/"
@@ -21,7 +21,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 2.2-dev\n"
 
-#: install.php:378
+#: install.php:41
 msgid ""
 "!!!WARNING!!!! MSAD2 Directory Groups SID might have changed. Please check "
 "your permissions! !!!WARNING!!!!"
@@ -215,10 +215,6 @@ msgstr "创建新用户"
 #: views/quickCreate.php:8
 msgid "Create User Manager User"
 msgstr "创建一个新用户管理员"
-
-#: install.php:28 install.php:35
-msgid "Database rename not completed"
-msgstr "没有完成数据库重新命名"
 
 #: views/welcome.php:116
 msgid "Default"
@@ -1247,6 +1243,12 @@ msgstr ""
 msgid "Unable to link user to an invalid directory"
 msgstr ""
 
+#: install.php:14
+msgid ""
+"Unable to upgrade. Old users table still exists. Please report this to "
+"http://community.freepbx.org"
+msgstr ""
+
 #: views/msad2.php:285 views/openldap2.php:263
 msgid "Unique identifier attribute"
 msgstr ""
@@ -1544,6 +1546,9 @@ msgstr ""
 #: assets/js/userman.js:8
 msgid "users"
 msgstr ""
+
+#~ msgid "Database rename not completed"
+#~ msgstr "没有完成数据库重新命名"
 
 #~ msgid "Email Sent"
 #~ msgstr "已发送邮件"
