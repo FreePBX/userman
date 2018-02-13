@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>13.0.76.34</version>
+	<version>13.0.76.35</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -12,6 +12,7 @@
 		Modules like iSymphony, Rest API and User Control Panel and FreePBX itself use this module to manage their users.
 	</description>
 	<changelog>
+		*13.0.76.35* Move userman tables into module xml
 		*13.0.76.34* FREEPBX-16241 FREEPBX-16494 FREEPBX-16377
 		*13.0.76.33* ZUC-121 Create users after extension is created
 		*13.0.76.32* FREEPBX-16020
@@ -145,7 +146,7 @@
 	</menuitems>
 	<depends>
 		<phpversion>5.3.3</phpversion>
-		<version>13.0.192.8</version>
+		<version>13.0.194</version>
 		<module>core ge 13.0.118.9</module>
 	</depends>
 	<hooks>
@@ -160,6 +161,108 @@
 			<method callingMethod="export" class="Userman" namespace="FreePBX\modules">bulkhandlerExport</method>
 		</bulkhandler>
 	</hooks>
+	<database>
+		<table name="userman_users">
+			<field name="id" type="integer" primarykey="true" autoincrement="true"/>
+			<field name="auth" type="string" length="150" default="freepbx" notnull="false"/>
+			<field name="authid" type="string" length="750" notnull="false"/>
+			<field name="username" type="string" length="150" notnull="false"/>
+			<field name="description" type="string" length="255" notnull="false"/>
+			<field name="password" type="string" length="255" notnull="false"/>
+			<field name="default_extension" type="string" length="45" default="none"/>
+			<field name="primary_group" type="integer" notnull="false"/>
+			<field name="permissions" type="blob" notnull="false"/>
+			<field name="fname" type="string" length="100" notnull="false"/>
+			<field name="lname" type="string" length="100" notnull="false"/>
+			<field name="displayname" type="string" length="200" notnull="false"/>
+			<field name="title" type="string" length="100" notnull="false"/>
+			<field name="company" type="string" length="100" notnull="false"/>
+			<field name="department" type="string" length="100" notnull="false"/>
+			<field name="language" type="string" length="100" notnull="false"/>
+			<field name="timezone" type="string" length="100" notnull="false"/>
+			<field name="dateformat" type="string" length="100" notnull="false"/>
+			<field name="timeformat" type="string" length="100" notnull="false"/>
+			<field name="datetimeformat" type="string" length="100" notnull="false"/>
+			<field name="email" type="text" notnull="false"/>
+			<field name="cell" type="string" length="100" notnull="false"/>
+			<field name="work" type="string" length="100" notnull="false"/>
+			<field name="home" type="string" length="100" notnull="false"/>
+			<field name="fax" type="string" length="100" notnull="false"/>
+			<key name="username_UNIQUE" type="unique">
+				<column name="username"/>
+				<column name="auth"/>
+			</key>
+		</table>
+		<table name="userman_users_settings">
+			<field name="uid" type="integer"/>
+			<field name="module" type="string" length="65"/>
+			<field name="key" type="string" length="190"/>
+			<field name="val" type="blob"/>
+			<field name="type" type="string" length="16" notnull="false"/>
+			<key name="index4" type="unique">
+				<column name="uid"/>
+				<column name="module"/>
+				<column name="key"/>
+			</key>
+			<key name="index2" type="index">
+				<column name="uid"/>
+				<column name="key"/>
+			</key>
+			<key name="index6" type="index">
+				<column name="module"/>
+				<column name="uid"/>
+			</key>
+		</table>
+		<table name="userman_groups">
+			<field name="id" type="integer" primarykey="true" autoincrement="true"/>
+			<field name="auth" type="string" length="150" default="freepbx" notnull="false"/>
+			<field name="authid" type="string" length="750" notnull="false"/>
+			<field name="groupname" type="string" length="150" notnull="false"/>
+			<field name="description" type="string" length="255" notnull="false"/>
+			<field name="language" type="string" length="100" notnull="false"/>
+			<field name="timezone" type="string" length="100" notnull="false"/>
+			<field name="dateformat" type="string" length="100" notnull="false"/>
+			<field name="timeformat" type="string" length="100" notnull="false"/>
+			<field name="datetimeformat" type="string" length="100" notnull="false"/>
+			<field name="priority" type="integer" default="5"/>
+			<field name="users" type="blob" notnull="false"/>
+			<field name="permissions" type="blob" notnull="false"/>
+			<field name="local" type="integer" notnull="true" default="0"/>
+			<key name="groupname_UNIQUE" type="unique">
+				<column name="groupname"/>
+				<column name="auth"/>
+			</key>
+		</table>
+		<table name="userman_groups_settings">
+			<field name="gid" type="integer"/>
+			<field name="module" type="string" length="65"/>
+			<field name="key" type="string" length="190"/>
+			<field name="val" type="blob"/>
+			<field name="type" type="string" length="16" notnull="false"/>
+			<key name="index4" type="unique">
+				<column name="gid"/>
+				<column name="module"/>
+				<column name="key"/>
+			</key>
+			<key name="index2" type="index">
+				<column name="gid"/>
+				<column name="key"/>
+			</key>
+			<key name="index6" type="index">
+				<column name="module"/>
+				<column name="gid"/>
+			</key>
+		</table>
+		<table name="userman_directories">
+			<field name="id" type="integer" primarykey="true" autoincrement="true"/>
+			<field name="name" type="string" length="250" notnull="false"/>
+			<field name="driver" type="string" length="150" default=""/>
+			<field name="active" type="boolean" default="0"/>
+			<field name="order" type="integer" default="5"/>
+			<field name="default" type="boolean" default="0"/>
+			<field name="locked" type="boolean" default="0"/>
+		</table>
+	</database>
 	<supported>
 		<version>13.0</version>
 	</supported>
