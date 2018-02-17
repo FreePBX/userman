@@ -10,14 +10,14 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-13 18:05-0500\n"
-"PO-Revision-Date: 2017-12-18 17:35+0200\n"
+"PO-Revision-Date: 2018-02-16 19:54+0200\n"
 "Last-Translator: Nils <Nils@heckenkamp.info>\n"
-"Language-Team: German <http://weblate.freepbx.org/projects/freepbx/userman/"
-"de_DE/>\n"
+"Language-Team: German "
+"<http://weblate.freepbx.org/projects/freepbx/userman/de_DE/>\n"
+"Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: de_DE\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 2.4\n"
 
@@ -680,15 +680,15 @@ msgstr ""
 
 #: Console/Userman.class.php:33 views/welcome.php:113
 msgid "Name"
-msgstr ""
+msgstr "Name"
 
 #: assets/js/userman.js:17
 msgid "Name can not be blank!"
-msgstr ""
+msgstr "Name darf nicht leer sein!"
 
 #: views/directories.php:99
 msgid "Never"
-msgstr ""
+msgstr "Niemals"
 
 #: views/msad2.php:231 views/openldap2.php:209
 msgid ""
