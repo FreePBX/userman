@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-13 18:05-0500\n"
+"POT-Creation-Date: 2018-02-27 22:47-0500\n"
 "PO-Revision-Date: 2015-10-14 14:59+0200\n"
 "Last-Translator: james <zhulizhong@gmail.com>\n"
 "Language-Team: Simplified Chinese <http://weblate.freepbx.org/projects/"
@@ -846,11 +846,11 @@ msgid ""
 "select None to have no association to a user"
 msgstr ""
 
-#: views/groups.php:220
+#: views/groups.php:224
 msgid "Select the Admin Sections this group should have access to."
 msgstr ""
 
-#: views/users.php:587
+#: views/users.php:590
 msgid "Select the Admin Sections this user should have access to."
 msgstr ""
 

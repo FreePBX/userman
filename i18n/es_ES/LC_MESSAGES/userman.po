@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-13 18:05-0500\n"
+"POT-Creation-Date: 2018-02-27 22:47-0500\n"
 "PO-Revision-Date: 2016-12-11 08:33+0200\n"
 "Last-Translator: Ernesto <ecasas@sangoma.com>\n"
 "Language-Team: Spanish <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -892,13 +892,13 @@ msgstr ""
 "Administrador de Usuarios, si no, seleccione Ninguno para no tener "
 "asociación a un usuario"
 
-#: views/groups.php:220
+#: views/groups.php:224
 msgid "Select the Admin Sections this group should have access to."
 msgstr ""
 "Seleccione las secciones de administración a las que este grupo debe tener "
 "acceso."
 
-#: views/users.php:587
+#: views/users.php:590
 msgid "Select the Admin Sections this user should have access to."
 msgstr ""
 "Seleccione las secciones de administración a las que este usuario debe tener "
