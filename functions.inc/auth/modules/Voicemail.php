@@ -170,10 +170,10 @@ class Voicemail extends Auth {
 	 * @param array  $users       users to add to said group (by ID)
 	 */
 	public function addGroup($groupname, $description=null, $users=array()) {
-		$sql = "INSERT INTO ".$this->groupTable." (`auth`,`groupname`,`description`,`users`) VALUES (:auth,:groupname,:description,:users)";
+		$sql = "INSERT INTO ".$this->groupTable." (`groupname`,`description`,`users`, `auth`) VALUES (:groupname,:description,:users,:directory)";
 		$sth = $this->db->prepare($sql);
 		try {
-			$sth->execute(array(':auth' => 'voicemail', ':groupname' => $groupname, ':description' => $description, ':users' => json_encode($users)));
+		$sth->execute(array(':directory' => $this->config['id'],':groupname' => $groupname, ':description' => $description, ':users' => json_encode($users)));
 		} catch (\Exception $e) {
 			return array("status" => false, "type" => "danger", "message" => $e->getMessage());
 		}
@@ -220,10 +220,10 @@ class Voicemail extends Auth {
 		if(!$group || empty($group)) {
 			return array("status" => false, "type" => "danger", "message" => sprintf(_("Group '%s' Does Not Exist"),$group));
 		}
-		$sql = "UPDATE ".$this->groupTable." SET `groupname` = :groupname, `description` = :description, `users` = :users WHERE `auth` = :auth AND `id` = :gid";
+		$sql = "UPDATE ".$this->groupTable." SET `groupname` = :groupname, `description` = :description, `users` = :users WHERE  `id` = :gid";
 		$sth = $this->db->prepare($sql);
 		try {
-			$sth->execute(array(':groupname' => $groupname, ':auth' => 'voicemail', ':gid' => $gid, ':description' => $description, ':users' => json_encode($users)));
+		 $sth->execute(array(':groupname' => $groupname, ':gid' => $gid, ':description' => $description, ':users' => json_encode($users)));
 		} catch (\Exception $e) {
 			return array("status" => false, "type" => "danger", "message" => $e->getMessage());
 		}
