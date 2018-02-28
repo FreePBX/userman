@@ -715,7 +715,10 @@ echo $usage_html;
 												</div>
 												<div class="col-md-9">
 													<select id="pbx_modules" class="bsmultiselect " name="pbx_modules[]" multiple="multiple">
-														<?php foreach($modules as $key => $val) {?>
+														<?php foreach($modules as $key => $val) {
+															 if($key == "wiki"){//FREEPBX-16966
+																 continue;
+															 } ?>
 															<option value="<?php echo $key?>" <?php echo is_array($pbx_modules) && in_array($key,$pbx_modules) ? 'selected' : '' ?>><?php echo $val['name']?></option>
 														<?php } ?>
 													</select>
