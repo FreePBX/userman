@@ -207,7 +207,7 @@ echo $heading;
 															<div class="col-md-9">
 																<select id="pbx_modules" class="bsmultiselect " name="pbx_modules[]" multiple="multiple">
 																	<?php foreach($modules as $key => $val) {
-																		if($key == "wiki"){//FREEPBX-16966
+																		if($key == "wiki"){
 																		 continue;
 																		}
 																		?>
