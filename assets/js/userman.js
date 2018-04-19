@@ -154,7 +154,7 @@ $("#table-directories").on("post-body.bs.table", function () {
 $("table").on("page-change.bs.table", function () {
 	$(".btn-remove").prop("disabled", true);
 	deleteExts.users = [];
-	deleteExt.groups = [];
+	deleteExts.groups = [];
 });
 $("table").on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
 	var toolbar = $(this).data("toolbar"),
