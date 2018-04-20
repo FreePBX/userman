@@ -238,7 +238,7 @@ class Msad2 extends Auth {
 			}
 			$resp = ldap_read($this->ldap, '', 'objectclass=*');
 			$settings = ldap_get_entries($this->ldap, $resp);
-			$this->currentTime = $settings['currentTime'][0];
+			$this->currentTime = $settings[0]['currenttime'][0];
 		}
 	}
 
