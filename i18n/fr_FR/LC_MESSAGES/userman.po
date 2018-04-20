@@ -10,16 +10,15 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-27 22:47-0500\n"
-"PO-Revision-Date: 2016-02-05 11:51+0200\n"
-"Last-Translator: Nicolas Riendeau <freepbx@riendeau.org>\n"
-"Language-Team: French <http://weblate.freepbx.org/projects/freepbx/userman/"
-"fr_FR/>\n"
+"PO-Revision-Date: 2018-04-13 22:01+0000\n"
+"Last-Translator: philippebolduc <philippe@florenceinc.com>\n"
+"Language-Team: French <http://*/projects/freepbx/userman/fr/>\n"
+"Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr_FR\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 2.2-dev\n"
+"X-Generator: Weblate 2.19.1\n"
 
 #: install.php:41
 msgid ""
@@ -53,19 +52,19 @@ msgstr ""
 
 #: views/directories.php:103
 msgid "1 Day"
-msgstr ""
+msgstr "1 Jour"
 
 #: views/directories.php:101
 msgid "1 Hour"
-msgstr ""
+msgstr "1 Heure"
 
 #: views/directories.php:100
 msgid "30 Minutes"
-msgstr ""
+msgstr "30 Minutes"
 
 #: views/directories.php:102
 msgid "6 Hours"
-msgstr ""
+msgstr "6 Heures"
 
 #: views/users.php:94
 msgid "A brief description for this user."
@@ -77,7 +76,7 @@ msgstr "Action"
 
 #: views/welcome.php:114
 msgid "Active"
-msgstr ""
+msgstr "Actif"
 
 #: views/welcome.php:35 views/welcome.php:72 views/welcome.php:103
 msgid "Add"
@@ -89,7 +88,7 @@ msgstr "Ajouter un dispositif"
 
 #: views/rnav.php:40
 msgid "Add Directory"
-msgstr ""
+msgstr "Ajouter un répertoire"
 
 #: Userman.class.php:842
 msgid "Add Extension"
@@ -722,6 +721,8 @@ msgstr ""
 #: Userman.class.php:2583
 msgid "Obfuscated. To reset use the reset link in this email"
 msgstr ""
+"Caché. Pour réinitialiser, utilisez le lien de réinitialisation dans ce "
+"courriel"
 
 #: functions.inc/auth/modules/Openldap2.php:152
 msgid "OpenLDAP Directory"
