@@ -154,7 +154,7 @@ $("#table-directories").on("post-body.bs.table", function () {
 $("table").on("page-change.bs.table", function () {
 	$(".btn-remove").prop("disabled", true);
 	deleteExts.users = [];
-	deleteExt.groups = [];
+	deleteExts.groups = [];
 });
 $("table").on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
 	var toolbar = $(this).data("toolbar"),
@@ -295,7 +295,9 @@ $('#defaultextension').multiselect({
 });
 
 function directoryMap(value, row, index) {
-	return directoryMapValues[value].name;
+	if (value in directoryMapValues) {
+		return directoryMapValues[value].name;
+	}
 }
 
 function directoryActions(value, row, index) {
@@ -315,11 +317,11 @@ function directoryActive(value, row, index) {
 function userActions(value, row, index) {
 	var html = '<a href="?display=userman&amp;action=showuser&amp;user='+row.id+'&amp;directory='+row.auth+'"><i class="fa fa-edit"></i></a>';
 
-	if(directoryMapValues[row.auth].permissions.changePassword) {
+	if(row.auth in directoryMapValues && directoryMapValues[row.auth].permissions.changePassword) {
 		html += '<a data-toggle="modal" data-pwuid="'+row.id+'" data-target="#setpw" id="pwmlink'+row.id+'" class="clickable"><i class="fa fa-key"></i></a>';
 	}
 
-	if(directoryMapValues[row.auth].permissions.removeUser) {
+	if(row.auth in directoryMapValues && directoryMapValues[row.auth].permissions.removeUser) {
 		html += '<a class="clickable"><i class="fa fa-trash-o" data-section="users" data-type="user"  data-id="'+row.id+'"></i></a>';
 	}
 	return html;
