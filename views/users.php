@@ -40,7 +40,7 @@ echo $usage_html;
 							</div>
 						</div>
 					</div>
-					<form class="fpbx-submit" autocomplete="off" name="editM" id="editM" action="<?php echo $formaction ?>" method="post" <?php if(!empty($user['id'])) {?>data-fpbx-delete="config.php?display=userman&amp;action=deluser&amp;user=<?php echo $user['id']?>"<?php } ?> onsubmit="return true;">
+					<form class="fpbx-submit" autocomplete="off" name="editM" id="editM" enctype="multipart/form-data" action="<?php echo $formaction ?>" method="post" <?php if(!empty($user['id'])) {?>data-fpbx-delete="config.php?display=userman&amp;action=deluser&amp;user=<?php echo $user['id']?>"<?php } ?> onsubmit="return true;">
 						<input type="hidden" name="type" value="user">
 						<input type="hidden" name="directory" value="<?php echo $directory ?>">
 						<input type="hidden" name="prevUsername" value="<?php echo !empty($user['username']) ? $user['username'] : ''; ?>">
