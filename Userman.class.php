@@ -999,25 +999,42 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 				return $this->updateUser($uid, $user['username'], $user['username'], $user['default_extension'], $user['description'], $extra, $newpass);
 			break;
 			case 'delete':
+				$set 			= \FreePBX::Conferencespro()->getSettings();
+				$set['prefix'] 	= isset($set['prefix']) ? $set['prefix'] : '8';
 				switch ($_REQUEST['type']) {
 					case 'groups':
 						$ret = array();
 						foreach($_REQUEST['extensions'] as $ext){
-							$ret[$ext] = $this->deleteGroupByGID($ext);
+							$u 			= $this->getUserByID($ext);
+							$ret[$ext] 	= $this->deleteGroupByGID($ext);
+							$room 		= $set['prefix'].$u['default_extension'];
+							\FreePBX::Conferences()->deleteConference($room);
+							\FreePBX::Conferencespro()->delRoom($room);
+							needreload();
 						}
 						return array('status' => true, 'message' => $ret);
 					break;
 					case 'users':
 						$ret = array();
 						foreach($_REQUEST['extensions'] as $ext){
-							$ret[$ext] = $this->deleteUserByID($ext);
+							$u 			= $this->getUserByID($ext);
+							$ret[$ext] 	= $this->deleteUserByID($ext);
+							$room 		= $set['prefix'].$u['default_extension'];
+							\FreePBX::Conferences()->deleteConference($room);
+							\FreePBX::Conferencespro()->delRoom($room);
+							needreload();
 						}
 						return array('status' => true, 'message' => $ret);
 					break;
 					case 'directories':
 						$ret = array();
 						foreach($_REQUEST['extensions'] as $ext){
-							$ret[$ext] = $this->deleteDirectoryByID($ext);
+							$u 			= $this->getUserByID($ext);
+							$ret[$ext] 	= $this->deleteDirectoryByID($ext);
+							$room 		= $set['prefix'].$u['default_extension'];
+							\FreePBX::Conferences()->deleteConference($room);
+							\FreePBX::Conferencespro()->delRoom($room);
+							needreload();
 						}
 						return array('status' => true, 'message' => $ret);
 					break;
