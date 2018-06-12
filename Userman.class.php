@@ -1,11 +1,19 @@
 <?php
 // vim: set ai ts=4 sw=4 ft=php:
-//	License for all code of this FreePBX module can be found in the license file inside the module directory
-//	Copyright 2013 Schmooze Com Inc.
-//
-namespace FreePBX\modules;
+/**
+ * 
+ * License for all code of this FreePBX module can be found in the license file inside the module directory
+ * @copyright 2013 Schmooze Com Inc.
+ * @copyright 2018 Sangoma Technologies
+ * 
+ */
+ namespace FreePBX\modules;
 include __DIR__."/vendor/autoload.php";
-class Userman extends \FreePBX_Helpers implements \BMO {
+use BMO;
+use FreePBX_Helpers;
+use PDO;
+use Exception;
+class Userman extends FreePBX_Helpers implements BMO {
 	private $registeredFunctions = array();
 	private $message = '';
 	private $userTable = 'userman_users';
@@ -38,7 +46,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 
 		try {
 			$this->loadActiveDirectories();
-		} catch(\Exception $e) {}
+		} catch(Exception $e) {}
 	}
 
 	/**
@@ -51,7 +59,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 			$sql = "SELECT * FROM ".$this->userTable." WHERE (username LIKE :query or description LIKE :query or fname LIKE :query or lname LIKE :query or displayname LIKE :query or title LIKE :query or company LIKE :query or department LIKE :query or email LIKE :query)";
 			$sth = $this->db->prepare($sql);
 			$sth->execute(array("query" => "%".$query."%"));
-			$rows = $sth->fetchAll(\PDO::FETCH_ASSOC);
+			$rows = $sth->fetchAll(PDO::FETCH_ASSOC);
 			foreach($rows as $entry) {
 				$entry['displayname'] = !empty($entry['displayname']) ? $entry['displayname'] : trim($entry['fname'] . " " . $entry['lname']);
 				$entry['displayname'] = !empty($entry['displayname']) ? $entry['displayname'] : $entry['username'];
@@ -108,7 +116,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$sql = "SELECT DISTINCT auth FROM userman_users WHERE auth REGEXP '^[A-Za-z]+$'";
 		$sth = $this->FreePBX->Database->prepare($sql);
 		$sth->execute();
-		$res = $sth->fetchAll(\PDO::FETCH_ASSOC);
+		$res = $sth->fetchAll(PDO::FETCH_ASSOC);
 		foreach($res as $dat) {
 			$inuse[] = strtolower($dat['auth']);
 		}
@@ -1092,7 +1100,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$sql = "SELECT * FROM ".$this->directoryTable." ORDER BY `order`";
 		$sth = $this->db->prepare($sql);
 		$sth->execute();
-		$directories = $sth->fetchAll(\PDO::FETCH_ASSOC);
+		$directories = $sth->fetchAll(PDO::FETCH_ASSOC);
 		$count = 0;
 		foreach($directories as $key => $d) {
 			$directories[$key]['config'] = $this->getConfig("auth-settings",$d['id']);
@@ -1131,7 +1139,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	*/
 	public function getAllGroups($directory=null) {
 		if (!empty($directory) && empty($this->directories[$directory])) {
-			throw new \Exception("Please ask for a valid directory");
+			throw new Exception("Please ask for a valid directory");
 		}
 
 		if(!empty($directory)) {
@@ -1297,7 +1305,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 */
 	public function deleteUserByID($id) {
 		if(!is_numeric($id)) {
-			throw new \Exception(_("ID was not numeric"));
+			throw new Exception(_("ID was not numeric"));
 		}
 		set_time_limit(0);
 		$status = $this->globalDirectory->deleteUserByID($id);
@@ -1315,7 +1323,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 */
 	public function deleteGroupByGID($gid) {
 		if(!is_numeric($gid)) {
-			throw new \Exception(_("GID was not numeric"));
+			throw new Exception(_("GID was not numeric"));
 		}
 		set_time_limit(0);
 		$data = $this->getGroupByGID($gid);
@@ -1358,12 +1366,12 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$sql = "SELECT id FROM ".$this->directoryTable." WHERE `default` = 1";
 		$sth = $this->db->prepare($sql);
 		$sth->execute();
-		$dir = $sth->fetch(\PDO::FETCH_ASSOC);
+		$dir = $sth->fetch(PDO::FETCH_ASSOC);
 		if(empty($dir)) {
 			$sql = "SELECT id FROM ".$this->directoryTable." WHERE `driver` = 'Freepbx' ORDER BY `order` LIMIT 1";
 			$sth = $this->db->prepare($sql);
 			$sth->execute();
-			$dir = $sth->fetch(\PDO::FETCH_ASSOC);
+			$dir = $sth->fetch(PDO::FETCH_ASSOC);
 			if(empty($dir)) {
 				$dir = array(
 					"id" => $this->addDirectory('Freepbx', _("PBX Internal Directory"), true, array())
@@ -1513,7 +1521,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$sql = "SELECT * FROM userman_users WHERE `auth` = ?";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array($id));
-		$users = $sth->fetchAll(\PDO::FETCH_ASSOC);
+		$users = $sth->fetchAll(PDO::FETCH_ASSOC);
 		foreach($users as $user){
 			$this->deleteUserByID($user['id']);
 		}
@@ -1521,7 +1529,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$sql = "SELECT * FROM userman_groups WHERE `auth` = ?";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array($id));
-		$groups = $sth->fetchAll(\PDO::FETCH_ASSOC);
+		$groups = $sth->fetchAll(PDO::FETCH_ASSOC);
 		foreach($groups as $group){
 			$this->deleteGroupByGID($group['id']);
 		}
@@ -1547,7 +1555,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$sth->execute(array($id));
 		$settings = $this->getConfig("auth-settings",$id);
 		$settings = is_array($settings) ? $settings : array();
-		$out = $sth->fetch(\PDO::FETCH_ASSOC);
+		$out = $sth->fetch(PDO::FETCH_ASSOC);
 		if(empty($out)) {
 			return false;
 		}
@@ -1634,10 +1642,10 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 */
 	public function addUserByDirectory($directory, $username, $password, $default='none', $description=null, $extraData=array(), $encrypt = true) {
 		if(empty($username)) {
-			throw new \Exception(_("Username can not be blank"));
+			throw new Exception(_("Username can not be blank"));
 		}
 		if(empty($password)) {
-			throw new \Exception(_("Password can not be blank"));
+			throw new Exception(_("Password can not be blank"));
 		}
 		set_time_limit(0);
 		$dir = $this->getDirectoryByID($directory);
@@ -1667,10 +1675,10 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 */
 	public function addUser($username, $password, $default='none', $description=null, $extraData=array(), $encrypt = true) {
 		if(empty($username)) {
-			throw new \Exception(_("Username can not be blank"));
+			throw new Exception(_("Username can not be blank"));
 		}
 		if(empty($password)) {
-			throw new \Exception(_("Password can not be blank"));
+			throw new Exception(_("Password can not be blank"));
 		}
 		set_time_limit(0);
 		$dir = $this->getDefaultDirectory();
@@ -1696,15 +1704,15 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	public function moveUserToDirectory($uid, $directoryid) {
 		$user = $this->getUserByID($uid);
 		if(empty($user)) {
-			throw new \Exception("User does not exist");
+			throw new Exception("User does not exist");
 		}
 		$permissions = $this->getAuthAllPermissions($user['auth']);
 		if(!$permissions['removeUser']) {
-			throw new \Exception("Cant remove users from this directory");
+			throw new Exception("Cant remove users from this directory");
 		}
 		$permissions = $this->getAuthAllPermissions($directoryid);
 		if(!$permissions['addUser']) {
-			throw new \Exception("Cant add users to this directory");
+			throw new Exception("Cant add users to this directory");
 		}
 		$sql = "UPDATE ".$this->userTable." SET auth = :directoryid WHERE id = :id";
 		$sth = $this->db->prepare($sql);
@@ -1723,7 +1731,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 */
 	public function addGroupByDirectory($directory, $groupname, $description=null, $users=array()) {
 		if(empty($groupname)) {
-			throw new \Exception(_("Groupname can not be blank"));
+			throw new Exception(_("Groupname can not be blank"));
 		}
 		set_time_limit(0);
 		$dir = $this->getDirectoryByID($directory);
@@ -1753,7 +1761,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 */
 	public function addGroup($groupname, $description=null, $users=array(), $extraData=array()) {
 		if(empty($groupname)) {
-			throw new \Exception(_("Groupname can not be blank"));
+			throw new Exception(_("Groupname can not be blank"));
 		}
 		set_time_limit(0);
 		$dir = $this->getDefaultDirectory();
@@ -1828,10 +1836,10 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 */
 	public function updateUser($uid, $prevUsername, $username, $default='none', $description=null, $extraData=array(), $password=null, $nodisplay = false) {
 		if(!is_numeric($uid)) {
-			throw new \Exception(_("UID was not numeric"));
+			throw new Exception(_("UID was not numeric"));
 		}
 		if(empty($prevUsername)) {
-			throw new \Exception(_("Previous Username can not be blank"));
+			throw new Exception(_("Previous Username can not be blank"));
 		}
 		set_time_limit(0);
 		/**
@@ -1863,10 +1871,10 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 */
 	public function updateGroup($gid, $prevGroupname, $groupname, $description=null, $users=array(), $nodisplay = false, $extraData=array()) {
 		if(!is_numeric($gid)) {
-			throw new \Exception(_("GID was not numeric"));
+			throw new Exception(_("GID was not numeric"));
 		}
 		if(empty($prevGroupname)) {
-			throw new \Exception(_("Previous Groupname can not be blank"));
+			throw new Exception(_("Previous Groupname can not be blank"));
 		}
 		set_time_limit(0);
 
@@ -1905,7 +1913,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$sql = "SELECT u.username, d.id as dirid from userman_users u, userman_directories d WHERE username = ? AND u.auth = d.id AND d.active = 1 ORDER BY d.order LIMIT 1";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array($username));
-		$user = $sth->fetch(\PDO::FETCH_ASSOC);
+		$user = $sth->fetch(PDO::FETCH_ASSOC);
 		if(empty($user)) {
 			return false;
 		}
@@ -1950,7 +1958,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$sql = "SELECT a.val, a.type, a.key FROM ".$this->userSettingsTable." a, ".$this->userTable." b WHERE b.id = a.uid AND b.id = :id AND a.module = 'global'";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':id' => $uid));
-		$result = $sth->fetchAll(\PDO::FETCH_ASSOC);
+		$result = $sth->fetchAll(PDO::FETCH_ASSOC);
 		if($result) {
 			$fout = array();
 			foreach($result as $res) {
@@ -1973,7 +1981,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$sql = "SELECT a.val, a.type, a.key FROM ".$this->groupSettingsTable." a, ".$this->groupTable." b WHERE b.id = a.gid AND b.id = :id AND a.module = 'global'";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':id' => $gid));
-		$result = $sth->fetchAll(\PDO::FETCH_ASSOC);
+		$result = $sth->fetchAll(PDO::FETCH_ASSOC);
 		if($result) {
 			$fout = array();
 			foreach($result as $res) {
@@ -1998,7 +2006,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$sql = "SELECT a.val, a.type FROM ".$this->userSettingsTable." a, ".$this->userTable." b WHERE b.id = a.uid AND b.id = :id AND a.key = :setting AND a.module = 'global'";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':id' => $uid, ':setting' => $setting));
-		$result = $sth->fetch(\PDO::FETCH_ASSOC);
+		$result = $sth->fetch(PDO::FETCH_ASSOC);
 		if($result) {
 			return ($result['type'] == 'json-arr' && $this->isJson($result['val'])) ? json_decode($result['val'],true) : $result['val'];
 		}
@@ -2019,7 +2027,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$sql = "SELECT a.val, a.type FROM ".$this->groupSettingsTable." a, ".$this->groupTable." b WHERE b.id = a.gid AND b.id = :id AND a.key = :setting AND a.module = 'global'";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':id' => $gid, ':setting' => $setting));
-		$result = $sth->fetch(\PDO::FETCH_ASSOC);
+		$result = $sth->fetch(PDO::FETCH_ASSOC);
 		if($result) {
 			return ($result['type'] == 'json-arr' && $this->isJson($result['val'])) ? json_decode($result['val'],true) : $result['val'];
 		}
@@ -2040,7 +2048,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		}
 		$allowed = array("language","timezone","dateformat","timeformat","datetimeformat");
 		if(!in_array($keyword,$allowed)) {
-			throw new \Exception($keyword . " is not a valid keyword");
+			throw new Exception($keyword . " is not a valid keyword");
 		}
 		if(empty($user[$keyword])) {
 			$groups = $this->getGroupsByID($uid);
@@ -2254,7 +2262,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$sql = "SELECT a.val, a.type, a.key FROM ".$this->userSettingsTable." a, ".$this->userTable." b WHERE b.id = :id AND b.id = a.uid AND a.module = :module";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':id' => $uid, ':module' => $module));
-		$result = $sth->fetchAll(\PDO::FETCH_ASSOC);
+		$result = $sth->fetchAll(PDO::FETCH_ASSOC);
 		if($result) {
 			$fout = array();
 			foreach($result as $res) {
@@ -2278,7 +2286,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$sql = "SELECT a.val, a.type, a.key FROM ".$this->groupSettingsTable." a, ".$this->groupTable." b WHERE b.id = :id AND b.id = a.gid AND a.module = :module";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':id' => $gid, ':module' => $module));
-		$result = $sth->fetchAll(\PDO::FETCH_ASSOC);
+		$result = $sth->fetchAll(PDO::FETCH_ASSOC);
 		if($result) {
 			$fout = array();
 			foreach($result as $res) {
@@ -2321,7 +2329,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$sql = "SELECT * FROM ".$this->userSettingsTable;
 		$sth = $this->db->prepare($sql);
 		$sth->execute();
-		$results = $sth->fetchAll(\PDO::FETCH_ASSOC);
+		$results = $sth->fetchAll(PDO::FETCH_ASSOC);
 		$final = array();
 		foreach($results as $r) {
 			$val = ($r['type'] == 'json-arr' && $this->isJson($r['val'])) ? json_decode($r['val'],true) : $r['val'];
@@ -2363,7 +2371,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$sql = "SELECT * FROM ".$this->groupSettingsTable;
 		$sth = $this->db->prepare($sql);
 		$sth->execute();
-		$results = $sth->fetchAll(\PDO::FETCH_ASSOC);
+		$results = $sth->fetchAll(PDO::FETCH_ASSOC);
 		$final = array();
 		foreach($results as $r) {
 			$val = ($r['type'] == 'json-arr' && $this->isJson($r['val'])) ? json_decode($r['val'],true) : $r['val'];
@@ -2549,7 +2557,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$sql = "SELECT data FROM module_xml WHERE id = 'userman_data'";
 		$sth = $this->db->prepare($sql);
 		$sth->execute();
-		$result = $sth->fetch(\PDO::FETCH_ASSOC);
+		$result = $sth->fetch(PDO::FETCH_ASSOC);
 		$results = !empty($result['data']) ? json_decode($result['data'], true) : array();
 		return isset($results[$key]) ? $results[$key] : null;
 	}
@@ -2561,7 +2569,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$sql = "SELECT data FROM module_xml WHERE id = 'userman_data'";
 		$sth = $this->db->prepare($sql);
 		$sth->execute();
-		$result = $sth->fetch(\PDO::FETCH_ASSOC);
+		$result = $sth->fetch(PDO::FETCH_ASSOC);
 		return !empty($result['data']) ? json_decode($result['data'], true) : array();
 	}
 
@@ -2795,7 +2803,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$sql = 'SELECT default_extension FROM '.$this->userTable;
 		$sth = $this->db->prepare($sql);
 		$sth->execute();
-		$devices = $sth->fetchAll(\PDO::FETCH_ASSOC);
+		$devices = $sth->fetchAll(PDO::FETCH_ASSOC);
 		$used = array();
 		foreach($devices as $device) {
 			if($device['default_extension'] == 'none') {
@@ -2965,7 +2973,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 							try {
 								$password = !empty($password) ? $password : null;
 								$status = $this->updateUser($existing['id'], $username, $username, $default_extension, $description, $extraData, $password);
-							} catch (\Exception $e) {
+							} catch (Exception $e) {
 								return array("status" => false, "message" => $e->getMessage());
 							}
 							if (!$status['status']) {
@@ -2981,7 +2989,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 							}
 							try {
 								$status = $this->addUser($username, $password, $default_extension, $description, $extraData, true);
-							} catch (\Exception $e) {
+							} catch (Exception $e) {
 								return array("status" => false, "message" => $e->getMessage());
 							}
 							if (!$status['status']) {
@@ -3039,7 +3047,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 						if ($existing) {
 							try {
 								$status = $this->updateGroup($existing['id'], $groupname, $groupname, $description, $users);
-							} catch (\Exception $e) {
+							} catch (Exception $e) {
 								return array("status" => false, "message" => $e->getMessage());
 							}
 							if (!$status['status']) {
@@ -3052,7 +3060,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 						} else {
 							try {
 								$status = $this->addGroup($groupname, $description, $users);
-							} catch (\Exception $e) {
+							} catch (Exception $e) {
 								return array("status" => false, "message" => $e->getMessage());
 							}
 							if (!$status['status']) {
