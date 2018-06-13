@@ -124,7 +124,7 @@ class Freepbx extends Auth {
 		return array("status" => true, "type" => "success", "message" => _("User Successfully Added"), "id" => $id);
 	}
 
-	public function addGroup($groupname, $description=null, $users=array()) {
+	public function addGroup($groupname, $description=null, $users=array(), $extraData=array()) {
 		$sql = "INSERT INTO ".$this->groupTable." (`groupname`,`description`,`users`, `auth`) VALUES (:groupname,:description,:users,:directory)";
 		$sth = $this->db->prepare($sql);
 		try {
