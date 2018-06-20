@@ -10,16 +10,15 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-27 22:47-0500\n"
-"PO-Revision-Date: 2018-02-16 19:54+0200\n"
-"Last-Translator: Nils <Nils@heckenkamp.info>\n"
-"Language-Team: German <http://weblate.freepbx.org/projects/freepbx/userman/"
-"de_DE/>\n"
+"PO-Revision-Date: 2018-07-18 19:15+0000\n"
+"Last-Translator: Bastian Mertgen <b.mertgen@bastian-mertgen.de>\n"
+"Language-Team: German <http://*/projects/freepbx/userman/de/>\n"
+"Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: de_DE\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2.4\n"
+"X-Generator: Weblate 2.19.1\n"
 
 #: install.php:41
 msgid ""
@@ -626,7 +625,7 @@ msgstr "Verlinkt zu Benutzer %s"
 
 #: views/rnav.php:39
 msgid "List Directories"
-msgstr ""
+msgstr "Verzeichnisse auflisten"
 
 #: views/rnav.php:22
 msgid "List Groups"
@@ -728,7 +727,7 @@ msgstr ""
 
 #: functions.inc/auth/modules/Openldap2.php:152
 msgid "OpenLDAP Directory"
-msgstr "OpenLDAP Directory"
+msgstr "OpenLDAP-Verzeichnis"
 
 #: functions.inc/auth/modules/Openldap.php:132
 msgid "OpenLDAP Directory (Legacy)"
@@ -1242,7 +1241,7 @@ msgstr ""
 
 #: views/welcome.php:115
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 #: Userman.class.php:1782
 msgid "UID was not numeric"
@@ -1471,7 +1470,7 @@ msgstr ""
 
 #: Userman.class.php:775
 msgid "Warning"
-msgstr ""
+msgstr "Warnung"
 
 #: views/welcome.php:10
 msgid "What is User Manager"
