@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-13 17:28-0400\n"
+"POT-Creation-Date: 2018-07-11 15:02-0400\n"
 "PO-Revision-Date: 2016-12-21 00:22+0200\n"
 "Last-Translator: Alexander <alexander.schley@paranagua.pr.gov.br>\n"
 "Language-Team: Portuguese (Brazil) <http://weblate.freepbx.org/projects/"
@@ -457,8 +457,8 @@ msgstr ""
 "0 é superior a 1)"
 
 #: functions.inc/auth/modules/Freepbx.php:139
-#: functions.inc/auth/modules/Msad2.php:397
-#: functions.inc/auth/modules/Openldap2.php:397
+#: functions.inc/auth/modules/Msad2.php:398
+#: functions.inc/auth/modules/Openldap2.php:398
 #: functions.inc/auth/modules/Voicemail.php:183
 msgid "Group Successfully Added"
 msgstr "Grupo Adicionado com Sucesso"
@@ -492,9 +492,9 @@ msgid "Group object filter"
 msgstr ""
 
 #: functions.inc/auth/modules/Msad.php:394
-#: functions.inc/auth/modules/Msad2.php:447
+#: functions.inc/auth/modules/Msad2.php:448
 #: functions.inc/auth/modules/Openldap.php:407
-#: functions.inc/auth/modules/Openldap2.php:447
+#: functions.inc/auth/modules/Openldap2.php:448
 msgid "Group updated"
 msgstr "Grupo atualizado"
 
@@ -625,12 +625,12 @@ msgstr "Usuário Inválido"
 
 #: functions.inc/auth/modules/Msad.php:343
 #: functions.inc/auth/modules/Msad.php:356
-#: functions.inc/auth/modules/Msad2.php:373
-#: functions.inc/auth/modules/Msad2.php:399
+#: functions.inc/auth/modules/Msad2.php:374
+#: functions.inc/auth/modules/Msad2.php:400
 #: functions.inc/auth/modules/Openldap.php:356
 #: functions.inc/auth/modules/Openldap.php:369
-#: functions.inc/auth/modules/Openldap2.php:373
-#: functions.inc/auth/modules/Openldap2.php:399
+#: functions.inc/auth/modules/Openldap2.php:374
+#: functions.inc/auth/modules/Openldap2.php:400
 msgid "LDAP is in Read Only Mode. Addition denied"
 msgstr "LDAP está no modo Somente Leitura. Adição negada"
 
@@ -1623,9 +1623,9 @@ msgid "User object filter"
 msgstr ""
 
 #: functions.inc/auth/modules/Msad.php:381
-#: functions.inc/auth/modules/Msad2.php:425
+#: functions.inc/auth/modules/Msad2.php:426
 #: functions.inc/auth/modules/Openldap.php:394
-#: functions.inc/auth/modules/Openldap2.php:425
+#: functions.inc/auth/modules/Openldap2.php:426
 #: functions.inc/auth/modules/Voicemail.php:208
 msgid "User updated"
 msgstr "Usuário atualizado"
