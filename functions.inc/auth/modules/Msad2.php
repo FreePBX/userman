@@ -231,7 +231,8 @@ class Msad2 extends Auth {
 			$mySchema = new \App\Schemas\Msad2($this->config);
 			$config = [
 				// Mandatory Configuration Options
-				'domain_controllers'    => [$this->config['host']],
+				'domain_controllers'    => 
+					preg_split("/[ ,]/", $this->config['host']),
 				'base_dn'               => $this->config['dn'],
 				'admin_username'        => $this->config['username'],
 				'admin_password'        => $this->config['password'],
@@ -535,7 +536,8 @@ class Msad2 extends Auth {
 		$this->connect();
 		$userdn = !empty($this->config['userdn']) ? $this->config['userdn'].",".$this->config['dn'] : $this->config['dn'];
 		$groupdn = !empty($this->config['groupdnaddition']) ? $this->config['groupdnaddition'].",".$this->config['dn'] : $this->config['dn'];
-		$this->out("\t".'ldapsearch -w '.$this->config['password'].' -h '.$this->config['host'].' -p '.$this->config['port'].'  -D "'.$this->config['username'].'@'.$this->config['domain'].'" -b "'.$groupdn.'" -s sub "(&'.$this->config['groupobjectfilter'].'(objectclass='.$this->config['groupobjectclass'].'))"');
+		$ldapuri = buildldapuri($this->config['connection'], $this->config['host'], $this->config['port']));
+		$this->out("\t".'ldapsearch -w '.$this->config['password'].' -H "'.$ldapuri.'" -D "'.$this->config['username'].'@'.$this->config['domain'].'" -b "'.$groupdn.'" -s sub "(&'.$this->config['groupobjectfilter'].'(objectclass='.$this->config['groupobjectclass'].'))"');
 		$this->out("\tRetrieving all groups...");
 
 		$search = $this->ldap->search();
@@ -609,7 +611,8 @@ class Msad2 extends Auth {
 		$this->connect();
 
 		$userdn = !empty($this->config['userdn']) ? $this->config['userdn'].",".$this->config['dn'] : $this->config['dn'];
-		$this->out("\t".'ldapsearch -w '.$this->config['password'].' -h '.$this->config['host'].' -p '.$this->config['port'].' -D "'.$this->config['username'].'@'.$this->config['domain'].'" -b "'.$userdn.'" -s sub "(&'.$this->config['userobjectfilter'].'(objectclass='.$this->config['userobjectclass'].'))"');
+		$ldapuri = buildldapuri($this->config['connection'], $this->config['host'], $this->config['port']));
+		$this->out("\t".'ldapsearch -w '.$this->config['password'].' -H "'.$ldapuri.'" -D "'.$this->config['username'].'@'.$this->config['domain'].'" -b "'.$userdn.'" -s sub "(&'.$this->config['userobjectfilter'].'(objectclass='.$this->config['userobjectclass'].'))"');
 		$this->out("\tRetrieving all users...");
 
 		$search = $this->ldap->search();
@@ -733,13 +736,30 @@ class Msad2 extends Auth {
 		}
 	}
 
-	private function serviceping($host, $port=389, $timeout=1) {
-		$op = @fsockopen($host, $port, $errno, $errstr, $timeout);
-		if (!$op) {
-			return 0; //DC is N/A
-		} else {
-			fclose($op); //explicitly close open socket connection
+	private function serviceping($hosts, $port=389, $timeout=1) {
+		foreach (preg_split("/[ ,]/", $hosts) as $host) {
+			$op = @fsockopen($host, $port, $errno, $errstr, $timeout);
+			if ($op) {
+				fclose($op); //explicitly close open socket connection
+				return 1; //DC is up & running, 
+						  //we can safely connect with ldap_connect
+			}
 		}
-		return 1; //DC is up & running, we can safely connect with ldap_connect
+		return 0; //DC is N/A 
+	}
+
+	private function buildldapuri($connection, $hosts, $port) {
+		$securearray = array("ldaps", "ssl", "tls");
+		$uriarray = array();
+		if (in_array($connection, $securearray)) {
+			$proto = 'ldaps';
+		} else {
+			$proto = 'ldap';
+		}
+		foreach (preg_split("/[ ,]/", $hosts) as $host) {
+			array_push($uriarray, $proto . "://" . $host . ":" . $port);
+		}
+		return implode(" ", $uriarray);
 	}
 }
+
