@@ -739,28 +739,29 @@ class Msad2 extends Auth {
 	}
 
 	private function serviceping($hosts, $port=389, $timeout=1) {
-        foreach (preg_split("/[ ,]/", $hosts) as $host) {
-            $op = @fsockopen($host, $port, $errno, $errstr, $timeout);
-            if ($op) {
-                fclose($op); //explicitly close open socket connection
-                return 1; //DC is up & running, 
-                          //we can safely connect with ldap_connect
-            }
-        }
-        return 0; //DC is N/A 
-    }
+		foreach (preg_split("/[ ,]/", $hosts) as $host) {
+			$op = @fsockopen($host, $port, $errno, $errstr, $timeout);
+			if ($op) {
+				fclose($op); //explicitly close open socket connection
+				return 1; //DC is up & running, 
+						  //we can safely connect with ldap_connect
+			}
+		}
+		return 0; //DC is N/A 
+	}
 
 	private function buildldapuri($connection, $hosts, $port) {
 	    $securearray = array("ldaps", "ssl");
 		$uriarray = array();
 		if (in_array($connection, $securearray)) {
-		  $proto = 'ldaps';
+			$proto = 'ldaps';
 		} else {
-		  $proto = 'ldap';
+			$proto = 'ldap';
 		}
-        foreach (preg_split("/[ ,]/", $hosts) as $host) {
-		  array_push($uriarray, $proto . "://" . $host . ":" . $port);
+		foreach (preg_split("/[ ,]/", $hosts) as $host) {
+			array_push($uriarray, $proto . "://" . $host . ":" . $port);
 		}
 		return implode(" ", $uriarray);
 	}
 }
+
