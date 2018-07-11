@@ -219,8 +219,8 @@ class Msad2 extends Auth {
 			if(!$this->serviceping($this->config['host'], $this->config['port'], $this->timeout)) {
 				throw new \Exception("Unable to Connect to ".$this->config['host']."!");
 			}
-			$protocol = ($this->config['connection'] == 'ssl') ? 'ldaps' : 'ldap';
-			$this->ldap = ldap_connect($protocol.'://'.$this->config['host'].":".$this->config['port']);
+           $this->ldap = ldap_connect(buildldapuri($this->config['connection'],
+ $this->config['host'], $this->config['port']));
 			if($this->ldap === false) {
 				$this->ldap = null;
 				throw new \Exception("Unable to Connect");
@@ -516,7 +516,8 @@ class Msad2 extends Auth {
 		$this->connect();
 		$userdn = !empty($this->config['userdn']) ? $this->config['userdn'].",".$this->config['dn'] : $this->config['dn'];
 		$groupdn = !empty($this->config['groupdnaddition']) ? $this->config['groupdnaddition'].",".$this->config['dn'] : $this->config['dn'];
-		$this->out("\t".'ldapsearch -w '.$this->config['password'].' -h '.$this->config['host'].' -p '.$this->config['port'].'  -D "'.$this->config['username'].'@'.$this->config['domain'].'" -b "'.$groupdn.'" -s sub "(&'.$this->config['groupobjectfilter'].'(objectclass='.$this->config['groupobjectclass'].'))"');
+		$ldapuri = buildldapuri($this->config['connection'], $this->config['host'], $this->config['port']));
+		$this->out("\t".'ldapsearch -w '.$this->config['password'].' -H "'.$ldapuri.'" -D "'.$this->config['username'].'@'.$this->config['domain'].'" -b "'.$groupdn.'" -s sub "(&'.$this->config['groupobjectfilter'].'(objectclass='.$this->config['groupobjectclass'].'))"');
 		$this->out("\tRetrieving all groups...");
 		//(".$this->config['usermodifytimestampattr'].">=20010301000000Z)
 		$sr = ldap_search($this->ldap, $groupdn, "(&".$this->config['groupobjectfilter']."(objectclass=".$this->config['groupobjectclass']."))", array("*",$this->config['groupgidnumberattr']));
@@ -596,7 +597,8 @@ class Msad2 extends Auth {
 		$this->connect();
 
 		$userdn = !empty($this->config['userdn']) ? $this->config['userdn'].",".$this->config['dn'] : $this->config['dn'];
-		$this->out("\t".'ldapsearch -w '.$this->config['password'].' -h '.$this->config['host'].' -p '.$this->config['port'].' -D "'.$this->config['username'].'@'.$this->config['domain'].'" -b "'.$userdn.'" -s sub "(&'.$this->config['userobjectfilter'].'(objectclass='.$this->config['userobjectclass'].'))"');
+        $ldapuri = buildldapuri($this->config['connection'], $this->config['host'], $this->config['port']));
+		$this->out("\t".'ldapsearch -w '.$this->config['password'].' -H "'.$ldapuri.'" -D "'.$this->config['username'].'@'.$this->config['domain'].'" -b "'.$userdn.'" -s sub "(&'.$this->config['userobjectfilter'].'(objectclass='.$this->config['userobjectclass'].'))"');
 		$this->out("\tRetrieving all users...");
 
 		$sr = ldap_search($this->ldap, $userdn, "(&".$this->config['userobjectfilter']."(objectclass=".$this->config['userobjectclass']."))", array('*'));
@@ -736,13 +738,30 @@ class Msad2 extends Auth {
 		}
 	}
 
-	private function serviceping($host, $port=389, $timeout=1) {
-		$op = @fsockopen($host, $port, $errno, $errstr, $timeout);
-		if (!$op) {
-			return 0; //DC is N/A
-		} else {
-			fclose($op); //explicitly close open socket connection
+	private function serviceping($hosts, $port=389, $timeout=1) {
+		foreach (preg_split("/[ ,]/", $hosts) as $host) {
+			$op = @fsockopen($host, $port, $errno, $errstr, $timeout);
+			if ($op) {
+				fclose($op); //explicitly close open socket connection
+				return 1; //DC is up & running, 
+						  //we can safely connect with ldap_connect
+			}
 		}
-		return 1; //DC is up & running, we can safely connect with ldap_connect
+		return 0; //DC is N/A 
+	}
+
+	private function buildldapuri($connection, $hosts, $port) {
+	    $securearray = array("ldaps", "ssl");
+		$uriarray = array();
+		if (in_array($connection, $securearray)) {
+			$proto = 'ldaps';
+		} else {
+			$proto = 'ldap';
+		}
+		foreach (preg_split("/[ ,]/", $hosts) as $host) {
+			array_push($uriarray, $proto . "://" . $host . ":" . $port);
+		}
+		return implode(" ", $uriarray);
 	}
 }
+
