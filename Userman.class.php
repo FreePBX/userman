@@ -1954,7 +1954,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		if($result) {
 			$fout = array();
 			foreach($result as $res) {
-				$fout[$res['key']] = ($result['type'] == 'json-arr' && $this->isJson($result['val'])) ? json_decode($result['val'],true) : $result;
+				$fout[$res['key']] = (isset($result['type']) && $result['type'] == 'json-arr' && $this->isJson($result['val'])) ? json_decode($result['val'],true) : $result;
 			}
 			return $fout;
 		}
@@ -1977,7 +1977,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		if($result) {
 			$fout = array();
 			foreach($result as $res) {
-				$fout[$res['key']] = ($result['type'] == 'json-arr' && $this->isJson($result['val'])) ? json_decode($result['val'],true) : $result;
+				$fout[$res['key']] = (isset($result['type']) && $result['type'] == 'json-arr' && $this->isJson($result['val'])) ? json_decode($result['val'],true) : $result;
 			}
 			return $fout;
 		}
