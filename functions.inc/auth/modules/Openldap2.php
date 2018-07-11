@@ -230,7 +230,7 @@ class Openldap2 extends Auth {
 			}
 			$protocol = ($this->config['connection'] == 'ssl') ? 'ldaps' : 'ldap';
 			$this->ldap = ldap_connect(buildldapuri($this->config['connection'],
- $this->config['host'], $this->config['port']));
+ $this->config['host'], $this->config['port']);
 			if($this->ldap === false) {
 				$this->ldap = null;
 				throw new \Exception("Unable to Connect");
@@ -525,7 +525,7 @@ class Openldap2 extends Auth {
 		$this->connect();
 		$userdn = !empty($this->config['userdn']) ? $this->config['userdn'].",".$this->config['basedn'] : $this->config['basedn'];
 		$groupdn = !empty($this->config['groupdnaddition']) ? $this->config['groupdnaddition'].",".$this->config['basedn'] : $this->config['basedn'];
-        $ldapuri = buildldapuri($this->config['connection'], $this->config['host'], $this->config['port']));
+        $ldapuri = buildldapuri($this->config['connection'], $this->config['host'], $this->config['port']);
 		$this->out("\t".'ldapsearch -w '.$this->config['password'].' -H "'.$ldapuri.'" -D "'.$this->config['username'].'" -b "'.$groupdn.'" -s sub "'.$this->config['groupobjectfilter'].'"');
 		$this->out("\tRetrieving all groups...");
 		//(".$this->config['usermodifytimestampattr'].">=20010301000000Z)
