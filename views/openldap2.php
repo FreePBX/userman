@@ -30,7 +30,7 @@
 			<div class="row">
 				<div class="form-group">
 					<div class="col-md-3">
-						<label class="control-label" for="openldap2-host"><?php echo _("Host")?></label>
+						<label class="control-label" for="openldap2-host"><?php echo _("Host(s)")?></label>
 						<i class="fa fa-question-circle fpbx-help-icon" data-for="openldap2-host"></i>
 					</div>
 					<div class="col-md-9">
@@ -42,7 +42,7 @@
 	</div>
 	<div class="row">
 		<div class="col-md-12">
-			<span id="openldap2-host-help" class="help-block fpbx-help-block"><?php echo _("The OpenLDAP host")?></span>
+			<span id="openldap2-host-help" class="help-block fpbx-help-block"><?php echo _("The OpenLDAP host(s), comma/space separated")?></span>
 		</div>
 	</div>
 </div>
