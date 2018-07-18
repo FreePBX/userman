@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>13.0.76.38</version>
+	<version>13.0.76.40</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -12,6 +12,8 @@
 		Modules like iSymphony, Rest API and User Control Panel and FreePBX itself use this module to manage their users.
 	</description>
 	<changelog>
+		*13.0.76.40* FREEPBX-17848
+		*13.0.76.39* Fix formatting of currenttime on msad2 driver
 		*13.0.76.38* FREEPBX-16966 Remove 'FreePBX Support' option from Menu selections
 		*13.0.76.37* FREEPBX-16279 Error in database. Groups associated with a directory authenticated by voicemail
 		*13.0.76.36* FREEPBX-16966 Remove option from Menu selections

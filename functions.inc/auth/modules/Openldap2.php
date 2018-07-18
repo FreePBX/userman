@@ -229,7 +229,7 @@ class Openldap2 extends Auth {
 				throw new \Exception("Unable to Connect to ".$this->config['host']."!");
 			}
 			$protocol = ($this->config['connection'] == 'ssl') ? 'ldaps' : 'ldap';
-			$this->ldap = ldap_connect($protocol.'://'.$this->config['host'].":".$this->config['port']);
+			$this->ldap = ldap_connect(buildldapuri($this->config['connection'],$this->config['host'], $this->config['port']));
 			if($this->ldap === false) {
 				$this->ldap = null;
 				throw new \Exception("Unable to Connect");
@@ -524,7 +524,8 @@ class Openldap2 extends Auth {
 		$this->connect();
 		$userdn = !empty($this->config['userdn']) ? $this->config['userdn'].",".$this->config['basedn'] : $this->config['basedn'];
 		$groupdn = !empty($this->config['groupdnaddition']) ? $this->config['groupdnaddition'].",".$this->config['basedn'] : $this->config['basedn'];
-		$this->out("\t".'ldapsearch -w '.$this->config['password'].' -h '.$this->config['host'].' -p '.$this->config['port'].'  "'.$this->config['username'].'" -b "'.$groupdn.'" -s sub "'.$this->config['groupobjectfilter'].'"');
+		$ldapuri = buildldapuri($this->config['connection'], $this->config['host'], $this->config['port']);
+		$this->out("\t".'ldapsearch -w '.$this->config['password'].' -H "'.$ldapuri.'" -D "'.$this->config['username'].'" -b "'.$groupdn.'" -s sub "'.$this->config['groupobjectfilter'].'"');
 		$this->out("\tRetrieving all groups...");
 		//(".$this->config['usermodifytimestampattr'].">=20010301000000Z)
 		$sr = ldap_search($this->ldap, $groupdn, "(&".$this->config['groupobjectfilter']."(objectclass=".$this->config['groupobjectclass']."))", array("*",$this->config['groupgidnumberattr'],$this->config['descriptionattr'],$this->config['commonnameattr'], $this->config['externalidattr'], $this->config['groupmemberattr']));
@@ -605,7 +606,8 @@ class Openldap2 extends Auth {
 		$this->connect();
 
 		$userdn = !empty($this->config['userdn']) ? $this->config['userdn'].",".$this->config['basedn'] : $this->config['basedn'];
-		$this->out("\t".'ldapsearch -w '.$this->config['password'].' -h '.$this->config['host'].' -p '.$this->config['port'].'  "'.$this->config['username'].'" -b "'.$userdn.'" -s sub "'.$this->config['userobjectfilter'].'" "'.$this->config['externalidattr'].'=*" '.$this->config['externalidattr']);
+		$ldapuri = buildldapuri($this->config['connection'], $this->config['host'], $this->config['port']);
+		$this->out("\t".'ldapsearch -w '.$this->config['password'].' -H "'.$ldapuri.'" -D "'.$this->config['username'].'" -b "'.$userdn.'" -s sub "'.$this->config['userobjectfilter'].'" "'.$this->config['externalidattr'].'=*" '.$this->config['externalidattr']);
 		$this->out("\tRetrieving all users...");
 		//(".$this->config['groupmodifytimestampattr'].">=20010301000000Z)
 		$sr = ldap_search($this->ldap, $userdn, "(&".$this->config['userobjectfilter']."(objectclass=".$this->config['userobjectclass']."))", array('*',$this->config['externalidattr']));
@@ -724,13 +726,30 @@ class Openldap2 extends Auth {
 		}
 	}
 
-	private function serviceping($host, $port=389, $timeout=1) {
-		$op = @fsockopen($host, $port, $errno, $errstr, $timeout);
-		if (!$op) {
-			return 0; //DC is N/A
-		} else {
-			fclose($op); //explicitly close open socket connection
+	private function serviceping($hosts, $port=389, $timeout=1) {
+		foreach (preg_split("/[ ,]/", $hosts) as $host) {
+			$op = @fsockopen($host, $port, $errno, $errstr, $timeout);
+			if ($op) {
+				fclose($op); //explicitly close open socket connection
+				return 1; //DC is up & running, 
+						  //we can safely connect with ldap_connect
+			}
 		}
-		return 1; //DC is up & running, we can safely connect with ldap_connect
+		return 0; //DC is N/A 
+	}
+
+	private function buildldapuri($connection, $hosts, $port) {
+	    $securearray = array("ldaps", "ssl");
+		$uriarray = array();
+		if (in_array($connection, $securearray)) {
+			$proto = 'ldaps';
+		} else {
+			$proto = 'ldap';
+		}
+		foreach (preg_split("/[ ,]/", $hosts) as $host) {
+			array_push($uriarray, $proto . "://" . $host . ":" . $port);
+		}
+		return implode(" ", $uriarray);
 	}
 }
+

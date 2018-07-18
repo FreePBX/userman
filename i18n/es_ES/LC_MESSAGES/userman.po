@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-27 22:47-0500\n"
+"POT-Creation-Date: 2018-07-11 15:05-0400\n"
 "PO-Revision-Date: 2016-12-11 08:33+0200\n"
 "Last-Translator: Ernesto <ecasas@sangoma.com>\n"
 "Language-Team: Spanish <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -365,7 +365,7 @@ msgstr "Error: No debería ver esto nunca"
 msgid "Extension Link Attribute"
 msgstr "Atributo de enlace de extensión"
 
-#: assets/js/userman.js:312
+#: assets/js/userman.js:314
 msgid "False"
 msgstr ""
 
@@ -444,7 +444,7 @@ msgstr ""
 "prioridad (0 es mayor en prioridad que 1)"
 
 #: functions.inc/auth/modules/Freepbx.php:132
-#: functions.inc/auth/modules/Msad2.php:381
+#: functions.inc/auth/modules/Msad2.php:380
 #: functions.inc/auth/modules/Openldap2.php:387
 #: functions.inc/auth/modules/Voicemail.php:183
 msgid "Group Successfully Added"
@@ -479,7 +479,7 @@ msgid "Group object filter"
 msgstr ""
 
 #: functions.inc/auth/modules/Msad.php:350
-#: functions.inc/auth/modules/Msad2.php:431
+#: functions.inc/auth/modules/Msad2.php:430
 #: functions.inc/auth/modules/Openldap.php:385
 #: functions.inc/auth/modules/Openldap2.php:437
 msgid "Group updated"
@@ -608,8 +608,8 @@ msgstr "Usuario Invalido"
 
 #: functions.inc/auth/modules/Msad.php:299
 #: functions.inc/auth/modules/Msad.php:312
-#: functions.inc/auth/modules/Msad2.php:357
-#: functions.inc/auth/modules/Msad2.php:383
+#: functions.inc/auth/modules/Msad2.php:356
+#: functions.inc/auth/modules/Msad2.php:382
 #: functions.inc/auth/modules/Openldap.php:334
 #: functions.inc/auth/modules/Openldap.php:347
 #: functions.inc/auth/modules/Openldap2.php:363
@@ -1300,7 +1300,7 @@ msgstr ""
 msgid "Title"
 msgstr "Titulo"
 
-#: assets/js/userman.js:312
+#: assets/js/userman.js:314
 msgid "True"
 msgstr ""
 
@@ -1496,7 +1496,7 @@ msgid "User object filter"
 msgstr ""
 
 #: functions.inc/auth/modules/Msad.php:337
-#: functions.inc/auth/modules/Msad2.php:409
+#: functions.inc/auth/modules/Msad2.php:408
 #: functions.inc/auth/modules/Openldap.php:372
 #: functions.inc/auth/modules/Openldap2.php:415
 #: functions.inc/auth/modules/Voicemail.php:208
