@@ -9,9 +9,9 @@
 					</div>
 					<div class="col-md-9">
 						<select id="msad2-connection" data-default="<?php echo $defaults['connection']?>" name="msad2-connection" class="form-control">
-							<option <?php $config['connection'] == '' ? 'selected' : ''?>><?php echo _("None")?></option>
-							<option <?php $config['connection'] == 'tls' ? 'selected' : ''?>>Start TLS</option>
-							<option <?php $config['connection'] == 'ssl' ? 'selected' : ''?>>SSL</option>
+							<option value='' <?php echo $config['connection'] == '' ? 'selected' : ''?>><?php echo _("None")?></option>
+							<option value='tls' <?php echo $config['connection'] == 'tls' ? 'selected' : ''?>>Start TLS</option>
+							<option value='ssl' <?php echo $config['connection'] == 'ssl' ? 'selected' : ''?>>SSL</option>
 						</select>
 					</div>
 				</div>

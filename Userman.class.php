@@ -4,6 +4,7 @@
 //	Copyright 2013 Schmooze Com Inc.
 //
 namespace FreePBX\modules;
+include __DIR__."/vendor/autoload.php";
 class Userman extends \FreePBX_Helpers implements \BMO {
 	private $registeredFunctions = array();
 	private $message = '';
@@ -279,7 +280,6 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		if(isset($_POST['submittype'])) {
 			switch($_POST['type']) {
 				case 'directory':
-				dbug("HERE");
 					$auths = array();
 					$config = false;
 					foreach($this->getDirectoryDrivers() as $auth) {
@@ -312,6 +312,13 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 					$prevGroupname = !empty($request['prevGroupname']) ? $request['prevGroupname'] : '';
 					$directory = $request['directory'];
 					$users = !empty($request['users']) ? $request['users'] : array();
+					$extraData = array(
+						'language' => isset($request['language']) ? $request['language'] : null,
+						'timezone' => isset($request['timezone']) ? $request['timezone'] : null,
+						'timeformat' => isset($request['timeformat']) ? $request['timeformat'] : null,
+						'dateformat' => isset($request['dateformat']) ? $request['dateformat'] : null,
+						'datetimeformat' => isset($request['datetimeformat']) ? $request['datetimeformat'] : null,
+					);
 					if($request['group'] == "") {
 						$ret = $this->addGroupByDirectory($directory, $groupname, $description, $users);
 						if($ret['status']) {
@@ -327,7 +334,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 							return false;
 						}
 					} else {
-						$ret = $this->updateGroup($request['group'],$prevGroupname, $groupname, $description, $users);
+						$ret = $this->updateGroup($request['group'],$prevGroupname, $groupname, $description, $users, false, $extraData);
 						if($ret['status']) {
 							$this->message = array(
 								'message' => $ret['message'],
@@ -366,6 +373,11 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 						'title' => isset($request['title']) ? $request['title'] : null,
 						'company' => isset($request['company']) ? $request['company'] : null,
 						'department' => isset($request['department']) ? $request['department'] : null,
+						'language' => isset($request['language']) ? $request['language'] : null,
+						'timezone' => isset($request['timezone']) ? $request['timezone'] : null,
+						'timeformat' => isset($request['timeformat']) ? $request['timeformat'] : null,
+						'dateformat' => isset($request['dateformat']) ? $request['dateformat'] : null,
+						'datetimeformat' => isset($request['datetimeformat']) ? $request['datetimeformat'] : null,
 						'email' => isset($request['email']) ? $request['email'] : null,
 						'cell' => isset($request['cell']) ? $request['cell'] : null,
 						'work' => isset($request['work']) ? $request['work'] : null,
@@ -893,6 +905,10 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 			case "email":
 				return true;
 			break;
+			case "setlocales":
+				$setting['changesession'] = true;
+				return true;
+			break;
 			case "auth":
 				$ips = $this->getConfig('remoteips');
 				if(empty($ips) || !is_array($ips) || !in_array($_SERVER['REMOTE_ADDR'],$ips)) {
@@ -914,6 +930,16 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	public function ajaxHandler(){
 		$request = $_REQUEST;
 		switch($request['command']){
+			case "setlocales":
+				if(!empty($_SESSION['AMP_user']->id) && ($_SESSION['AMP_user']->id == $_POST['id'])) {
+					$_SESSION['AMP_user']->lang = !empty($_POST['language']) ? $_POST['language'] : $this->getLocaleSpecificSettingByUID($_POST['id'],"language");
+					$_SESSION['AMP_user']->tz = !empty($_POST['timezone']) ? $_POST['timezone'] : $this->getLocaleSpecificSettingByUID($_POST['id'],"timezone");
+					$_SESSION['AMP_user']->timeformat = !empty($_POST['timeformat']) ? $_POST['timeformat'] : $this->getLocaleSpecificSettingByUID($_POST['id'],"timeformat");
+					$_SESSION['AMP_user']->dateformat = !empty($_POST['dateformat']) ? $_POST['dateformat'] : $this->getLocaleSpecificSettingByUID($_POST['id'],"dateformat");
+					$_SESSION['AMP_user']->datetimeformat = !empty($_POST['datetimeformat']) ? $_POST['datetimeformat'] : $this->getLocaleSpecificSettingByUID($_POST['id'],"datetimeformat");
+				}
+				return array("status" => true);
+			break;
 			case "getGuihookInfo":
 				$directory = $this->getDirectoryByID($_POST['directory']);
 				$users = $this->getAllUsers($directory['id']);
@@ -1104,6 +1130,10 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	* @return array
 	*/
 	public function getAllGroups($directory=null) {
+		if (!empty($directory) && empty($this->directories[$directory])) {
+			throw new \Exception("Please ask for a valid directory");
+		}
+
 		if(!empty($directory)) {
 			$groups = $this->directories[$directory]->getAllGroups();
 		} else {
@@ -1180,11 +1210,11 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * @param string $username The User Manager Username
 	 * @return bool
 	 */
-	public function getUserByUsername($username, $directory=null) {
+	public function getUserByUsername($username, $directory=null, $extraInfo = true) {
 		if(!empty($directory)) {
-			$user = $this->directories[$directory]->getUserByUsername($username);
+			$user = $this->directories[$directory]->getUserByUsername($username, $extraInfo);
 		} else {
-			$user = $this->globalDirectory->getUserByUsername($username);
+			$user = $this->globalDirectory->getUserByUsername($username, $extraInfo);
 		}
 		return $user;
 	}
@@ -1214,11 +1244,11 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	* @param string $email The User Manager Email Address
 	* @return bool
 	*/
-	public function getUserByEmail($email, $directory=null) {
+	public function getUserByEmail($email, $directory=null, $extraInfo = true) {
 		if(!empty($directory)) {
-			$user = $this->directories[$directory]->getUserByEmail($email);
+			$user = $this->directories[$directory]->getUserByEmail($email, $extraInfo);
 		} else {
-			$user = $this->globalDirectory->getUserByEmail($email);
+			$user = $this->globalDirectory->getUserByEmail($email, $extraInfo);
 		}
 		return $user;
 	}
@@ -1231,8 +1261,8 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * @param string $id The ID of the user from User Manager
 	 * @return bool
 	 */
-	public function getUserByID($id) {
-		$user = $this->globalDirectory->getUserByID($id);
+	public function getUserByID($id, $extraInfo = true) {
+		$user = $this->globalDirectory->getUserByID($id, $extraInfo);
 		return $user;
 	}
 
@@ -1721,7 +1751,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * @param  string   $groupname   The Group Name
 	 * @param  string   $description The group description
 	 */
-	public function addGroup($groupname, $description=null, $users=array()) {
+	public function addGroup($groupname, $description=null, $users=array(), $extraData=array()) {
 		if(empty($groupname)) {
 			throw new \Exception(_("Groupname can not be blank"));
 		}
@@ -1738,7 +1768,8 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 				$fusers[] = $u;
 			}
 		}
-		$status = $this->directories[$dir['id']]->addGroup($groupname, $description, $fusers);
+
+		$status = $this->directories[$dir['id']]->addGroup($groupname, $description, $fusers, $extraData);
 		if(!$status['status']) {
 			return $status;
 		}
@@ -1760,6 +1791,24 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 			return false;
 		}
 		$o = $this->updateUser($id, $user['username'], $user['username'], $user['default_extension'], $user['description'], $data);
+		return $o['status'];
+	}
+
+	/**
+	 * Update User Extra Data
+	 *
+	 * This updates Extra Data about the user
+	 * (fname,lname,title,email,cell,work,home,department)
+	 *
+	 * @param int $id The User Manager User ID
+	 * @param array $data A hash of data to update (see above)
+	 */
+	public function updateGroupExtraData($gid,$data=array()) {
+		$group = $this->getGroupByID($id);
+		if(empty($group)) {
+			return false;
+		}
+		$o = $this->updateGroup($gid, $group['groupname'], $group['groupname'], $group['groupname'], $group['users'],false,$data);
 		return $o['status'];
 	}
 
@@ -1812,7 +1861,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * @param string $description   The group description
 	 * @param array  $users         Array of users in this Group
 	 */
-	public function updateGroup($gid, $prevGroupname, $groupname, $description=null, $users=array(), $nodisplay = false) {
+	public function updateGroup($gid, $prevGroupname, $groupname, $description=null, $users=array(), $nodisplay = false, $extraData=array()) {
 		if(!is_numeric($gid)) {
 			throw new \Exception(_("GID was not numeric"));
 		}
@@ -1834,12 +1883,13 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 				$fusers[] = $u;
 			}
 		}
+
 		$g = $this->getGroupByGID($gid);
 		$dir = $this->getDirectoryByID($g['auth']);
 		if($dir['locked']) {
 			return array("status" => false, "message" => _("Directory is locked. Can not update group"));
 		}
-		$status = $this->directories[$g['auth']]->updateGroup($gid, $prevGroupname, $groupname, $description, $fusers, $nodisplay);
+		$status = $this->directories[$g['auth']]->updateGroup($gid, $prevGroupname, $groupname, $description, $fusers, $nodisplay, $extraData);
 		if(!$status['status']) {
 			return $status;
 		}
@@ -1900,11 +1950,11 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$sql = "SELECT a.val, a.type, a.key FROM ".$this->userSettingsTable." a, ".$this->userTable." b WHERE b.id = a.uid AND b.id = :id AND a.module = 'global'";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':id' => $uid));
-		$result = $sth->fetch(\PDO::FETCH_ASSOC);
+		$result = $sth->fetchAll(\PDO::FETCH_ASSOC);
 		if($result) {
 			$fout = array();
 			foreach($result as $res) {
-				$fout[$res['key']] = ($result['type'] == 'json-arr' && $this->isJson($result['type'])) ? json_decode($result['type'],true) : $result;
+				$fout[$res['key']] = (isset($result['type']) && $result['type'] == 'json-arr' && $this->isJson($result['val'])) ? json_decode($result['val'],true) : $result;
 			}
 			return $fout;
 		}
@@ -1923,11 +1973,11 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$sql = "SELECT a.val, a.type, a.key FROM ".$this->groupSettingsTable." a, ".$this->groupTable." b WHERE b.id = a.gid AND b.id = :id AND a.module = 'global'";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':id' => $gid));
-		$result = $sth->fetch(\PDO::FETCH_ASSOC);
+		$result = $sth->fetchAll(\PDO::FETCH_ASSOC);
 		if($result) {
 			$fout = array();
 			foreach($result as $res) {
-				$fout[$res['key']] = ($result['type'] == 'json-arr' && $this->isJson($result['type'])) ? json_decode($result['type'],true) : $result;
+				$fout[$res['key']] = (isset($result['type']) && $result['type'] == 'json-arr' && $this->isJson($result['val'])) ? json_decode($result['val'],true) : $result;
 			}
 			return $fout;
 		}
@@ -1977,6 +2027,61 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	}
 
 	/**
+	 * Get Locale Specific User Setting from Group
+	 * @method getLocaleSpecificSetting
+	 * @param  integer                   $uid     The User ID
+	 * @param  string                   $keyword The keyword to lookup
+	 * @return string                            Result of lookup
+	 */
+	public function getLocaleSpecificGroupSettingByUID($uid, $keyword) {
+		$user = $this->getUserByID($uid, false);
+		if(empty($user)) {
+			return null;
+		}
+		$allowed = array("language","timezone","dateformat","timeformat","datetimeformat");
+		if(!in_array($keyword,$allowed)) {
+			throw new \Exception($keyword . " is not a valid keyword");
+		}
+		if(empty($user[$keyword])) {
+			$groups = $this->getGroupsByID($uid);
+			foreach($groups as $group) {
+				$g = $this->getGroupByGID($group);
+				if(!empty($g[$keyword])) {
+					return $g[$keyword];
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Get Locale Specific User Setting
+	 * @method getLocaleSpecificSetting
+	 * @param  integer                   $uid     The User ID
+	 * @param  string                   $keyword The keyword to lookup
+	 * @return string                            Result of lookup
+	 */
+	public function getLocaleSpecificSettingByUID($uid, $keyword) {
+		$data = $this->getLocaleSpecificGroupSettingByUID($uid, $keyword);
+		if(is_null($data)) {
+			$user = $this->getUserByID($uid, false);
+			return !empty($user[$keyword]) ? $user[$keyword] : null;
+		}
+		return $data;
+	}
+
+	/**
+	 * Get Locale Specific User Setting
+	 * @method getLocaleSpecificSetting
+	 * @param  integer                   $uid     The User ID
+	 * @param  string                   $keyword The keyword to lookup
+	 * @return string                            Result of lookup
+	 */
+	public function getLocaleSpecificSetting($uid, $keyword) {
+		return $this->getLocaleSpecificSettingByUID($uid, $keyword);
+	}
+
+	/**
 	 * Gets a single setting after determining groups
 	 * by merging group settings into user settings
 	 * where as user settings will override groups
@@ -1988,12 +2093,10 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * @param int $uid     The user ID to lookup
 	 * @param string $setting The setting to get
 	 */
-	public function getCombinedGlobalSettingByID($id,$setting, $detailed = false) {
+	public function getCombinedGlobalSettingByID($id, $setting, $detailed = false) {
 		$groupid = -1;
 		$groupname = "user";
 		$output = $this->getGlobalSettingByID($id,$setting,true);
-		//$this->allUsersCache = !empty($this->allUsersCache) ? $this->allUsersCache : $this->getAllUsers();
-		//$this->allGroupsByUserCache[$id] = !empty($this->allGroupsByUserCache[$id]) ? $this->allGroupsByUserCache[$id] : $this->getGroupsByID($id);
 		if(is_null($output)) {
 			$groups = $this->getGroupsByID($id);
 			foreach($groups as $group) {
@@ -2053,6 +2156,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 			$grp = ($groupid >= 0) ? $this->getGroupByGID($groupid) : array('groupname' => 'user');
 			return array(
 				"val" => $output,
+				"null" => is_null($output),
 				"group" => $groupid,
 				"setting" => $setting,
 				"module" => $module,
@@ -2154,7 +2258,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		if($result) {
 			$fout = array();
 			foreach($result as $res) {
-				$fout[$res['key']] = ($res['type'] == 'json-arr' && $this->isJson($res['val'])) ? json_decode($re['val'],true) : $res['val'];
+				$fout[$res['key']] = ($res['type'] == 'json-arr' && $this->isJson($res['val'])) ? json_decode($res['val'],true) : $res['val'];
 			}
 			return $fout;
 		}

@@ -48,6 +48,33 @@
 			<div class="row">
 				<div class="form-group">
 					<div class="col-md-3">
+						<label class="control-label" for="openldap-post"><?php echo _("Use TLS")?></label>
+						<i class="fa fa-question-circle fpbx-help-icon" data-for="openldap-tls"></i>
+					</div>
+						<div class="col-md-9">
+							<span class="radioset">
+								<input type="radio" id="tls-yes" name="openldap-tls" value="yes" <?php echo (!isset($config['tls']) || $config['tls']) ? "checked" : ""?>>
+								<label for="tls-yes"><?php echo _("Yes")?></label>
+								<input type="radio" id="tls-no" name="openldap-tls" value="no" <?php echo (isset($config['tls']) && !($config['tls'])) ? "checked" : ""?>>
+								<label for="tls-no"><?php echo _("No")?></label>
+							</span>
+						</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<span id="openldap-tls-help" class="help-block fpbx-help-block"><?php echo _("Use TLS")?></span>
+		</div>
+	</div>
+</div>
+<div class="element-container">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="row">
+				<div class="form-group">
+					<div class="col-md-3">
 						<label class="control-label" for="openldap-host"><?php echo _("Username")?></label>
 						<i class="fa fa-question-circle fpbx-help-icon" data-for="openldap-username"></i>
 					</div>
@@ -83,6 +110,50 @@
 	<div class="row">
 		<div class="col-md-12">
 			<span id="openldap-password-help" class="help-block fpbx-help-block"><?php echo _("The OpenLDAP password")?></span>
+		</div>
+	</div>
+</div>
+<div class="element-container">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="row">
+				<div class="form-group">
+					<div class="col-md-3">
+						<label class="control-label" for="openldap-userident"><?php echo _("User Identity")?></label>
+						<i class="fa fa-question-circle fpbx-help-icon" data-for="openldap-userident"></i>
+					</div>
+					<div class="col-md-9">
+						<input id="openldap-userident" name="openldap-userident" type="text" class="form-control" value="<?php echo isset($config['userident']) ? $config['userident'] : 'uid'?>">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<span id="openldap-userident-help" class="help-block fpbx-help-block"><?php echo _("The OpenLDAP User Identity. Usually is uid")?></span>
+		</div>
+	</div>
+</div>
+<div class="element-container">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="row">
+				<div class="form-group">
+					<div class="col-md-3">
+						<label class="control-label" for="openldap-displayname"><?php echo _("Display Name")?></label>
+						<i class="fa fa-question-circle fpbx-help-icon" data-for="openldap-displayname"></i>
+					</div>
+					<div class="col-md-9">
+						<input id="openldap-displayname" name="openldap-displayname" type="text" class="form-control" value="<?php echo isset($config['displayname']) ? $config['displayname'] : 'displayname' ?>">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<span id="openldap-displayname-help" class="help-block fpbx-help-block"><?php echo _("The OpenLDAP Display Name. Usually is displayname")?></span>
 		</div>
 	</div>
 </div>

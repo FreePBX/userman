@@ -6,7 +6,9 @@
 //	https://msdn.microsoft.com/en-us/library/windows/desktop/ms677605(v=vs.85).aspx
 //
 namespace FreePBX\modules\Userman\Auth;
-
+use Adldap\Adldap;
+use Adldap\Connections\Provider;
+use Adldap\Exceptions\Auth\BindException;
 class Msad extends Auth {
 	/**
 	 * LDAP Object
@@ -58,6 +60,38 @@ class Msad extends Auth {
 
 	private $active = 0;
 
+	/**
+	 * Private Group Cache
+	 * cache requests throughout this class
+	 * @var array
+	 */
+	private $pucache = array();
+
+	/**
+	 * Results Limit.
+	 * Everything is paginated but we have to define a limit
+	 * @var integer
+	 */
+	private $limit = 900;
+
+	/**
+	 * The Adldap2 connector
+	 * @var object
+	 */
+	private $ad = null;
+
+	/**
+	 * The account suffix taken from configuration
+	 * @var string
+	 */
+	private $account_suffix;
+
+	/**
+	 * Use or not startTLS
+	 * @var boolean
+	 */
+	private $use_tls;
+
 	private $userHooks = array(
 		'add' => array(),
 		'update' => array(),
@@ -80,6 +114,8 @@ class Msad extends Auth {
 		$this->user = $config['username'];
 		$this->password = $config['password'];
 		$this->linkAttr = isset($config['la']) ? strtolower($config['la']) : '';
+		$this->account_suffix = !empty($config['account_suffix']) ? $config['account_suffix'] : $config['domain'];
+		$this->use_tls = isset($config['use_tls']) ? $config['use_tls'] : false;
 		$this->output = null;
 	}
 
@@ -169,17 +205,24 @@ class Msad extends Auth {
 	 * Connect to the LDAP server
 	 */
 	public function connect($reconnect = false) {
-		if($reconnect || !$this->ldap) {
-			$this->ldap = ldap_connect($this->host,$this->port);
-			if($this->ldap === false) {
-				$this->ldap = null;
-				throw new \Exception("Unable to Connect");
-			}
-			ldap_set_option($this->ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
+		if($reconnect || !$this->ad) {
+			$config = [
+				'account_suffix'        => $this->account_suffix,
+				'use_tls'               => $this->use_tls,
+				'domain_controllers'    => [$this->host],
+				'base_dn'               => $this->dn,
+				'admin_username'        => $this->user,
+				'admin_password'        => $this->password,
+			];
 
-			if(!@ldap_bind($this->ldap, $this->user."@".$this->domain, $this->password)) {
-				$this->ldap = null;
-				throw new \Exception("Unable to Auth");
+			$this->provider = new \Adldap\Connections\Provider($config);
+			$this->ad = new Adldap(array("default" => $config));
+			$this->ad->addProvider($this->provider, 'default');
+
+			try {
+				$this->ldap = $this->ad->connect();
+			} catch (BindException $e) {
+				throw new \Exception("Unable to Connect to host! Reason: ".$e->getMessage());
 			}
 		}
 	}
@@ -188,6 +231,7 @@ class Msad extends Auth {
 	 * Sync users and groups to the local database
 	 */
 	public function sync($output=null) {
+
 		if(php_sapi_name() !== 'cli') {
 			$path = $this->FreePBX->Config->get("AMPSBIN");
 			exec($path."/fwconsole userman --sync ".escapeshellarg($this->config['id'])." --force");
@@ -387,31 +431,30 @@ class Msad extends Auth {
 		$groups = array();
 		foreach($this->gcache as $gsid => $group) {
 			$groups[$gsid] = $this->getGroupByAuthID($gsid);
-			$groups[$gsid]['cache'] = $group;
 		}
+
 		$process = array();
-		foreach($this->ucache as $usid => $user) {
+		foreach($this->pucache as $usid => $group) {
 			$u = $this->getUserByAuthID($usid);
-			foreach($groups as $gsid => $group) {
-				if(!empty($group) && !empty($u) && ($group['cache']['primarygrouptoken'][0] == $user['primarygroupid'][0])) {
-					if(!in_array($u['id'], $group['users'])) {
-						$this->out("\tAdding ".$u['username']." to ".$group['groupname']."...",false);
-						if(empty($process[$group['id']])) {
-							$process[$group['id']] = array(
-								"id" => $group['id'],
-								"description" => $group['description'],
-								"users" => $group['users'],
-								"name" => $group['groupname']
-							);
-						}
-						if(!in_array($u['id'],$process[$group['id']]['users'])) {
-							$process[$group['id']]['users'][] = $u['id'];
-						}
-						$this->out("Done");
-					}
+			$gsid = $this->limitString($group->getSid());
+			if(!empty($u) && !empty($groups[$gsid])) {
+				$group = $groups[$gsid];
+				$this->out("\tAdding ".$u['username']." to ".$group['groupname']."...",false);
+				if(empty($process[$group['id']])) {
+					$process[$group['id']] = array(
+						"id" => $group['id'],
+						"description" => $group['description'],
+						"users" => $group['users'],
+						"name" => $group['groupname']
+					);
 				}
+				if(!in_array($u['id'],$process[$group['id']]['users'])) {
+					$process[$group['id']]['users'][] = $u['id'];
+				}
+				$this->out("Done");
 			}
 		}
+
 		foreach($process as $id => $g) {
 			$this->updateGroupData($g['id'], array(
 				"description" => $g['description'],
@@ -425,18 +468,6 @@ class Msad extends Auth {
 		}
 	}
 
-	public function sig_handler($signo) {
-		switch ($signo) {
-			case SIGCLD:
-				while(($pid = pcntl_wait($signo, WNOHANG)) > 0){
-					$signal = pcntl_wexitstatus ($signo);
-					$this->active -= 1;
-					echo "Fork ".$signal." has finished\n";
-				}
-			break;
-		}
-	}
-
 	/**
 	 * Update All Groups
 	 * Runs through the directory to update all settings (users and naming)
@@ -445,18 +476,13 @@ class Msad extends Auth {
 		if(!empty($this->gcache)) {
 			return true;
 		}
-		if(php_sapi_name() !== 'cli') {
-			throw new \Exception("Can only update groups over CLI");
-		}
 		$this->connect();
-		$this->out("Retrieving all groups...",false);
-		$sr = ldap_search($this->ldap, $this->dn, "(objectCategory=Group)",array("distinguishedname","primarygrouptoken","objectsid","description","cn"));
-		if($sr === false) {
-			return false;
-		}
-		$groups = ldap_get_entries($this->ldap, $sr);
-		$this->out("Got ".$groups['count']. " groups");
-		unset($groups['count']);
+
+		$search = $this->ad->search();
+		$paginator = $search->groups()->paginate($this->limit, 1);
+		$results = $paginator->getResults();
+
+		$this->out("Found ".count($results). " groups");
 
 		$sql = "DROP TABLE IF EXISTS msad_procs_temp";
 		$sth = $this->FreePBX->Database->prepare($sql);
@@ -479,44 +505,44 @@ class Msad extends Auth {
 		$max = getCpuCount() * 7;
 		$this->active = 0;
 		$this->out("Forking out $max active children at a time");
-		foreach($groups as $i => $group) {
+		foreach($results as $i => $result) {
 
 			while ($this->active >= $max) {
 				sleep(1);
 			}
 
+			$ssid = $result->getObjectSid();
 			$this->active++;
 			$pid = pcntl_fork();
 			if (!$pid) {
 				$iid = getmypid().time();
 				\FreePBX::Database()->__construct();
 				$db = new \DB();
+				$this->out("\tGetting users from ".$result->getName()."...");
 				$this->connect(true);
-				//http://www.rlmueller.net/CharactersEscaped.htm
-				$group['distinguishedname'][0] = ldap_escape($group['distinguishedname'][0]);
-				$this->out("\tFork $i getting users from ".$group['cn'][0]."...");
-				$gs = ldap_search($this->ldap, $this->dn, "(&(objectCategory=Person)(sAMAccountName=*)(memberof=".$group['distinguishedname'][0]."))");
-				if($gs !== false) {
-					$users = ldap_get_entries($this->ldap, $gs);
-					$susers = serialize($users);
-					file_put_contents($tpath."/".$iid."-users",$susers);
-					$sgroup = serialize($group);
-					file_put_contents($tpath."/".$iid."-group",$sgroup);
-					$sql = "INSERT INTO msad_procs_temp (`pid`,`udata`,`gdata`) VALUES (?,?,?)";
-					$sth = $this->FreePBX->Database->prepare($sql);
-					$sth->execute(array($i,$iid."-users",$iid."-group"));
-				}
-				$this->out("\tFork $i finished Getting users from ".$group['cn'][0]);
+				$search = $this->ad->search();
+				$record = $search->findBy('objectsid', $ssid);
+				$users = $record->getMembers();
+				$susers = serialize($users);
+				file_put_contents($tpath."/".$iid."-users",$susers);
+				$sgroup = serialize($record);
+				file_put_contents($tpath."/".$iid."-group",$sgroup);
+				$sql = "INSERT INTO msad_procs_temp (`pid`,`udata`,`gdata`) VALUES (?,?,?)";
+				$sth = $this->FreePBX->Database->prepare($sql);
+				$sth->execute(array($i,$iid."-users",$iid."-group"));
+				$this->out("\tFork $i finished Getting users from ".$result->getName());
 				exit($i);
 			}
 		}
+		while (pcntl_waitpid(0, $status) != -1) {
+			$status = pcntl_wexitstatus($status);
+		}
 		\FreePBX::Database()->__construct();
 		$db = new \DB();
+		//$this->connect(true); //Do we have to reconnect?
 
-		while (pcntl_waitpid(0, $status) != -1) {
-				$status = pcntl_wexitstatus($status);
-		}
 		$this->out("Child processes have finished");
+
 		$sql = "SELECT * FROM msad_procs_temp";
 		$sth = $this->FreePBX->Database->prepare($sql);
 		$sth->execute();
@@ -537,30 +563,34 @@ class Msad extends Auth {
 				throw new \Exception("Users or Groups are empty");
 			}
 
-			$this->out("\tFound ".$users['count']. " users in ".$group['cn'][0]);
-			unset($users['count']);
 			$members = array();
 			foreach($users as $user) {
-				$usid = $this->binToStrSid($user['objectsid'][0]);
+				$usid = $this->limitString($user->getSid());
 				$u = $this->getUserByAuthID($usid);
-				$members[] = $u['id'];
+				if(!empty($u)) {
+					$members[] = $u['id'];
+				}
 			}
-			$sid = $this->binToStrSid($group['objectsid'][0]);
+			$sid = $this->limitString($$group->getSid());
 			$this->gcache[$sid] = $group;
-			$um = $this->linkGroup($group['cn'][0], $sid);
+			$um = $this->linkGroup($group->getName(), $sid);
 			if($um['status']) {
+				$this->out("\t".$group->getAccountName(). ": ".$um['message']);
+				$this->out("\t\tFound ".count($users). " users in ".$group->getName());
+				$description = !empty($group->getAttribute('description',0)) ? $group->getAttribute('description',0) : '';
 				$this->updateGroupData($um['id'], array(
-					"description" => !empty($group['description'][0]) ? $group['description'][0] : '',
+					"description" => $description,
 					"users" => $members
 				));
 				if($um['new']) {
-					$this->groupHooks['add'][$um['id']] = array($um['id'], $group['cn'][0], (!empty($group['description'][0]) ? $group['description'][0] : ''), $members);
+					$this->groupHooks['add'][$um['id']] = array($um['id'], $group->getName(), $description, $members);
 				} else {
-					$this->groupHooks['update'][$um['id']] = array($um['id'], $um['prevGroupname'], $group['cn'][0], (!empty($group['description'][0]) ? $group['description'][0] : ''), $members);
+					$this->groupHooks['update'][$um['id']] = array($um['id'], $um['prevGroupname'], $group->getName(), $description, $members);
 				}
 			}
 		}
-		//remove users
+
+		//remove groups
 		$fgroups = $this->getAllGroups();
 		foreach($fgroups as $group) {
 			if(!isset($this->gcache[$group['authid']])) {
@@ -583,47 +613,51 @@ class Msad extends Auth {
 		}
 		$this->connect();
 
-		$this->out("Retrieving all users...",false);
+		$search = $this->ad->search();
 
-		$sr = ldap_search($this->ldap, $this->dn, "(&(objectCategory=Person)(sAMAccountName=*))");
-		$users = ldap_get_entries($this->ldap, $sr);
+		$paginator = $search->users()->paginate($this->limit, 1);
+		$results = $paginator->getResults();
 
-		$this->out("Got ".$users['count']. " users");
+		$this->out("Found ".count($results). " users");
 
-		unset($users['count']);
-		//add and update users
-		foreach($users as $user) {
-			$sid = $this->binToStrSid($user['objectsid'][0]);
-			$this->ucache[$sid] = $user;
-			$um = $this->linkUser($user['samaccountname'][0], $sid);
+		foreach($results as $result) {
+			$sid = $this->limitString($result->getSid());
+			$this->ucache[$sid] = $result; //store object
+
+			$this->pucache[$sid] = $result->getPrimaryGroup();
+
+			$um = $this->linkUser($result->getAccountName(), $sid);
 			if($um['status']) {
+				$this->out("\t".$result->getAccountName(). ": ".$um['message']);
 				$data = array(
-					"description" => !empty($user['description'][0]) ? $user['description'][0] : '',
-					"primary_group" => !empty($user['primarygroupid'][0]) ? $user['primarygroupid'][0] : '',
-					"fname" => !empty($user['givenname'][0]) ? $user['givenname'][0] : '',
-					"lname" => !empty($user['sn'][0]) ? $user['sn'][0] : '',
-					"displayname" => !empty($user['displayname'][0]) ?$user['displayname'][0] : '',
-					"department" => !empty($user['department'][0]) ? $user['department'][0] : '',
-					"email" => !empty($user['mail'][0]) ? $user['mail'][0] : '',
-					"cell" => !empty($user['mobile'][0]) ? $user['mobile'][0] : '',
-					"work" => !empty($user['telephonenumber'][0]) ? $user['telephonenumber'][0] : '',
+					"description" => !empty($result->getAttribute('description',0)) ? $result->getAttribute('description',0) : '',
+					"primary_group" => !empty($result->getPrimaryGroupId()) ? $result->getPrimaryGroupId() : '',
+					"fname" => !empty($result->getFirstName()) ? $result->getFirstName() : '',
+					"lname" => !empty($result->getLastName()) ? $result->getLastName() : '',
+					"displayname" => !empty($result->getDisplayName()) ? $result->getDisplayName() : '',
+					"department" => !empty($result->getDepartment()) ? $result->getDepartment() : '',
+					"email" => !empty($result->getEmail()) ? $result->getEmail() : '',
+					"cell" => !empty($result->getAttribute('mobile',0)) ? $result->getAttribute('mobile',0) : '',
+					"work" => !empty($result->getTelephoneNumber()) ? $result->getTelephoneNumber() : '',
 				);
-				if(!empty($this->linkAttr) && !empty($user[$this->linkAttr][0])) {
-					$d = $this->FreePBX->Core->getUser((string)$user[$this->linkAttr][0]);
+				//automatically assign Extension to this User
+				if(!empty($this->linkAttr) && !empty($result->getAttribute($this->linkAttr,0))) {
+					$ext = $result->getAttribute($this->linkAttr,0);
+					$d = $this->FreePBX->Core->getUser($ext);
 					if(!empty($d)) {
-						$data["default_extension"] = !empty($user[$this->linkAttr][0]) ? $user[$this->linkAttr][0] : '';
+						$data["default_extension"] = !empty($ext) ? $ext : '';
 					} else {
 						//TODO: Technically we could create an extension here..
-						dbug("Extension ".$user[$this->linkAttr][0] . " does not exist, skipping link");
+						dbug("Extension ".$ext . " does not exist, skipping link");
 					}
-				} elseif(!empty($this->linkAttr) && empty($user[$this->linkAttr][0])) {
+				} elseif(!empty($this->linkAttr) && empty($result->getAttribute($this->linkAttr,0))) {
 					$data["default_extension"] = 'none';
 				}
 				$this->updateUserData($um['id'], $data);
 				if($um['new']) {
-					$this->userHooks['add'][$um['id']] = array($um['id'], $user['samaccountname'][0], (!empty($user['description'][0]) ? $user['description'][0] : ''), null, false, $data);
+					$this->userHooks['add'][$um['id']] = array($um['id'], $result->getAccountName(), $data['description'], null, false, $data);
 				} else {
-					$this->userHooks['update'][$um['id']] = array($um['id'], $um['prevUsername'], $user['samaccountname'][0], (!empty($user['description'][0]) ? $user['description'][0] : ''), null, $data);
+					$this->userHooks['update'][$um['id']] = array($um['id'], $um['prevUsername'], $result->getAccountName(), $data['description'], null, $data);
 				}
 			}
 		}
@@ -673,6 +707,18 @@ class Msad extends Auth {
 		return $result;
 	}
 
+	public function sig_handler($signo) {
+		switch($signo) {
+			case SIGCLD:
+				while (($pid = pcntl_wait($signo, WNOHANG)) > 0) {
+					$signal = pcntl_wexitstatus($signo);
+					$this->active -= 1;
+				}
+
+				break;
+		}
+	}
+
 	/**
 	 * Debug messages
 	 * @param  string $message The message
@@ -688,5 +734,9 @@ class Msad extends Auth {
 		} elseif(!is_object($this->output)) {
 			dbug($message);
 		}
+	}
+
+	private function limitString($string) {
+		return (strlen($string) > 255) ? substr($string,0,255) : $string;
 	}
 }

@@ -58,6 +58,22 @@ abstract class Auth {
 		return array();
 	}
 
+	public function addUser($username, $password, $default='none', $description=null, $extraData=array(), $encrypt = true) {
+		return array("status" => false, "type" => "danger", "message" => _("Add User is not defined"));
+	}
+
+	public function updateUser($uid, $prevUsername, $username, $default='none', $description=null, $extraData=array(), $password=null, $nodisplay=false) {
+		return array("status" => false, "type" => "danger", "message" => _("Update User is not defined"));
+	}
+
+	public function addGroup($groupname, $description=null, $users=array()) {
+		return array("status" => false, "type" => "danger", "message" => _("Add Group is not defined"));
+	}
+
+	public function updateGroup($gid, $prevGroupname, $groupname, $description=null, $users=array(), $nodisplay=false) {
+		return array("status" => false, "type" => "danger", "message" => _("Update Group is not defined"));
+	}
+
 	/**
 	 * Get information about this authentication driver
 	 * @param  object $userman The userman object
@@ -113,7 +129,7 @@ abstract class Auth {
 	 * @param string $username The User Manager Username
 	 * @return bool
 	 */
-	public function getUserByUsername($username) {
+	public function getUserByUsername($username, $extraInfo = true) {
 		if(!empty($this->config['id'])) {
 			$sql = "SELECT * FROM ".$this->userTable." WHERE username = :username AND auth = :auth LIMIT 1";
 			$sth = $this->db->prepare($sql);
@@ -124,6 +140,9 @@ abstract class Auth {
 			$sth->execute(array(':username' => $username));
 		}
 		$user = $sth->fetch(\PDO::FETCH_ASSOC);
+		if($extraInfo) {
+			$user = $this->userman->getExtraContactInfo($user);
+		}
 		return $user;
 	}
 
@@ -135,7 +154,7 @@ abstract class Auth {
 	 * @param string $username The User Manager Email Address
 	 * @return bool
 	 */
-	public function getUserByEmail($username) {
+	public function getUserByEmail($username, $extraInfo = true) {
 		if(!empty($this->config['id'])) {
 			$sql = "SELECT * FROM ".$this->userTable." WHERE email = :email AND auth = :auth LIMIT 1";
 			$sth = $this->db->prepare($sql);
@@ -146,7 +165,9 @@ abstract class Auth {
 			$sth->execute(array(':email' => $username));
 		}
 		$user = $sth->fetch(\PDO::FETCH_ASSOC);
-		$user = $this->userman->getExtraContactInfo($user);
+		if($extraInfo) {
+			$user = $this->userman->getExtraContactInfo($user);
+		}
 		return $user;
 	}
 
@@ -158,7 +179,7 @@ abstract class Auth {
 	 * @param string $id The ID of the user from User Manager
 	 * @return bool
 	 */
-	public function getUserByID($id) {
+	public function getUserByID($id, $extraInfo = true) {
 		if(!empty($this->config['id'])) {
 			$sql = "SELECT * FROM ".$this->userTable." WHERE id = :id AND auth = :auth LIMIT 1";
 			$sth = $this->db->prepare($sql);
@@ -169,7 +190,9 @@ abstract class Auth {
 			$sth->execute(array(':id' => $id));
 		}
 		$user = $sth->fetch(\PDO::FETCH_ASSOC);
-		$user = $this->userman->getExtraContactInfo($user);
+		if($extraInfo) {
+			$user = $this->userman->getExtraContactInfo($user);
+		}
 		return $user;
 	}
 
@@ -178,7 +201,7 @@ abstract class Auth {
 	 * @param  string $id The external auth ID
 	 * @return array     Array of user data
 	 */
-	public function getUserByAuthID($id) {
+	public function getUserByAuthID($id, $extraInfo = true) {
 		if(!empty($this->config['id'])) {
 			$sql = "SELECT * FROM ".$this->userTable." WHERE authid = :id AND auth = :auth LIMIT 1";
 			$sth = $this->db->prepare($sql);
@@ -190,7 +213,9 @@ abstract class Auth {
 			$sth->execute(array(':id' => $id));
 			$user = $sth->fetch(\PDO::FETCH_ASSOC);
 		}
-		$user = $this->userman->getExtraContactInfo($user);
+		if($extraInfo) {
+			$user = $this->userman->getExtraContactInfo($user);
+		}
 		return $user;
 	}
 
@@ -575,14 +600,25 @@ abstract class Auth {
 	 * @return Boolean       True is success
 	 */
 	public function updateGroupData($gid, $data = array()) {
-		$sql = "UPDATE ".$this->groupTable." SET `description` = :description, `users` = :users WHERE `id` = :gid";
+		$sql = "UPDATE ".$this->groupTable." SET `description` = :description, `language` = :language, `timezone` = :timezone, `dateformat` = :dateformat, `timeformat` = :timeformat, `datetimeformat` = :datetimeformat, `users` = :users WHERE `id` = :gid";
 		$sth = $this->db->prepare($sql);
+		$defaults = $this->getGroupByGID($gid);
 		$description = isset($data['description']) ? $data['description'] : (!isset($data['description']) && !empty($defaults['description']) ? $defaults['description'] : null);
 		$users = isset($data['users']) ? $data['users'] : (!isset($data['users']) && !empty($defaults['users']) ? $defaults['users'] : null);
+		$language = isset($data['language']) ? $data['language'] : (!isset($data['language']) && !empty($defaults['language']) ? $defaults['language'] : null);
+		$timezone = isset($data['timezone']) ? $data['timezone'] : (!isset($data['timezone']) && !empty($defaults['timezone']) ? $defaults['timezone'] : null);
+		$datetimeformat = isset($data['datetimeformat']) ? $data['datetimeformat'] : (!isset($data['datetimeformat']) && !empty($defaults['datetimeformat']) ? $defaults['datetimeformat'] : null);
+		$timeformat = isset($data['timeformat']) ? $data['timeformat'] : (!isset($data['timeformat']) && !empty($defaults['timeformat']) ? $defaults['timeformat'] : null);
+		$dateformat = isset($data['dateformat']) ? $data['dateformat'] : (!isset($data['dateformat']) && !empty($defaults['dateformat']) ? $defaults['dateformat'] : null);
 		try {
 			$sth->execute(
 				array(
 					':description' => $description,
+					':language' => $language,
+					':timezone' => $timezone,
+					':timeformat' => $timeformat,
+					':dateformat' => $dateformat,
+					':datetimeformat' => $datetimeformat,
 					':users' => json_encode($users),
 					':gid' => $gid
 				)
@@ -604,7 +640,7 @@ abstract class Auth {
 		if(empty($data)) {
 			return true;
 		}
-		$sql = "UPDATE ".$this->userTable." SET `fname` = :fname, `lname` = :lname, `default_extension` = :default_extension, `displayname` = :displayname, `company` = :company, `title` = :title, `email` = :email, `cell` = :cell, `work` = :work, `home` = :home, `fax` = :fax, `department` = :department, `description` = :description, `primary_group` = :primary_group WHERE `id` = :uid";
+		$sql = "UPDATE ".$this->userTable." SET `fname` = :fname, `lname` = :lname, `default_extension` = :default_extension, `displayname` = :displayname, `company` = :company, `title` = :title, `email` = :email, `cell` = :cell, `work` = :work, `home` = :home, `fax` = :fax, `department` = :department, `language` = :language, `timezone` = :timezone, `dateformat` = :dateformat, `timeformat` = :timeformat, `datetimeformat` = :datetimeformat, `description` = :description, `primary_group` = :primary_group WHERE `id` = :uid";
 		$defaults = $this->getUserByID($uid);
 		$sth = $this->db->prepare($sql);
 		$fname = isset($data['fname']) ? $data['fname'] : (!isset($data['fname']) && !empty($defaults['fname']) ? $defaults['fname'] : null);
@@ -622,6 +658,13 @@ abstract class Auth {
 		$description = isset($data['description']) ? $data['description'] : (!isset($data['description']) && !empty($defaults['description']) ? $defaults['description'] : null);
 		$primary_group = isset($data['primary_group']) ? $data['primary_group'] : (!isset($data['primary_group']) && !empty($defaults['primary_group']) ? $defaults['primary_group'] : null);
 
+		//special case
+		$language = (array_key_exists('language',$data) && !empty($data['language'])) ? $data['language'] : (!array_key_exists('language',$data) && !empty($defaults['language']) ? $defaults['language'] : null);
+		$timezone = (array_key_exists('timezone',$data) && !empty($data['timezone'])) ? $data['timezone'] : (!array_key_exists('timezone',$data) && !empty($defaults['timezone']) ? $defaults['timezone'] : null);
+		$datetimeformat = (array_key_exists('datetimeformat',$data) && !empty($data['datetimeformat'])) ? $data['datetimeformat'] : (!array_key_exists('datetimeformat',$data) && !empty($defaults['datetimeformat']) ? $defaults['datetimeformat'] : null);
+		$timeformat = (array_key_exists('timeformat',$data) && !empty($data['timeformat'])) ? $data['timeformat'] : (!array_key_exists('timeformat',$data) && !empty($defaults['timeformat']) ? $defaults['timeformat'] : null);
+		$dateformat = (array_key_exists('dateformat',$data) && !empty($data['dateformat'])) ? $data['dateformat'] : (!array_key_exists('dateformat',$data) && !empty($defaults['dateformat']) ? $defaults['dateformat'] : null);
+
 		try {
 			$sth->execute(
 				array(
@@ -637,6 +680,11 @@ abstract class Auth {
 					':home' => $home,
 					':fax' => $fax,
 					':department' => $department,
+					':language' => $language,
+					':timezone' => $timezone,
+					':timeformat' => $timeformat,
+					':dateformat' => $dateformat,
+					':datetimeformat' => $datetimeformat,
 					':description' => $description,
 					':primary_group' => $primary_group,
 					':uid' => $uid

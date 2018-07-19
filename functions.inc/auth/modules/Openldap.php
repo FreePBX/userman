@@ -44,6 +44,11 @@ class Openldap extends Auth {
 	 */
 	private $port = 389;
 	/**
+	 * LDAP TLS
+	 * @var boolean
+	 */
+	private $tls = true;
+	/**
 	 * LDAP Base DN
 	 * @var string
 	 */
@@ -68,6 +73,11 @@ class Openldap extends Auth {
 	 * @var string
 	 */
 	private $userident = "uid";
+	/**
+	 * LDAP Display Name
+	 * @var string
+	 */
+	private $displayname = "displayname";
 	/**
 	 * LDAP Object Class of a user
 	 * @var string
@@ -110,7 +120,10 @@ class Openldap extends Auth {
 		$this->FreePBX = $freepbx;
 		$this->host = $config['host'];
 		$this->port = !empty($config['port']) ? $config['port'] : 389;
+		$this->tls = isset($config['tls']) ? $config['tls'] : true;
 		$this->basedn = $config['basedn'];
+		$this->userident = isset($config['userident']) ? $config['userident'] : 'uid';
+		$this->displayname = isset($config['displayname']) ? $config['displayname'] : 'displayname';
 		$this->userdn = $config['userdn'];
 		$this->user = $config['username'];
 		$this->password = $config['password'];
@@ -181,8 +194,11 @@ class Openldap extends Auth {
 		$config = array(
 			"host" => $_REQUEST['openldap-host'],
 			"port" => $_REQUEST['openldap-port'],
+			"tls" => $_REQUEST['openldap-tls'] === 'yes',
 			"username" => $_REQUEST['openldap-username'],
 			"password" => $_REQUEST['openldap-password'],
+			"userident" => $_REQUEST['openldap-userident'],
+			"displayname" => $_REQUEST['openldap-displayname'],
 			"userdn" => $_REQUEST['openldap-userdn'],
 			"basedn" => $_REQUEST['openldap-basedn'],
 			"la" => $_REQUEST['openldap-la'],
@@ -203,20 +219,26 @@ class Openldap extends Auth {
 	/**
 	 * Connect to the LDAP server
 	 */
-	public function connect($reconnect = false) {
-		if($reconnect || !$this->ldap) {
-			$this->ldap = ldap_connect($this->host,$this->port);
-			if($this->ldap === false) {
-				$this->ldap = null;
-				throw new \Exception("Unable to Connect");
-			}
-			ldap_set_option($this->ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
+	 public function connect($reconnect = false) {
+		 if($reconnect || !$this->ldap) {
+			 $this->ldap = ldap_connect($this->host,$this->port);
 
-			if(!@ldap_bind($this->ldap, $this->userident.'='.$this->user.','.$this->userdn, $this->password)) {
-				$this->ldap = null;
-				throw new \Exception("Unable to Auth");
-			}
-		}
+			 if ($this->tls) {
+				 ldap_start_tls($this->ldap);
+			 }
+
+			 if($this->ldap === false) {
+				 $this->ldap = null;
+				 throw new \Exception("Unable to Connect");
+			 }
+			 ldap_set_option($this->ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
+			 if (isset($this->user) && isset($this->password)) {
+				 if(!@ldap_bind($this->ldap, $this->userident.'='.$this->user.','.$this->userdn, $this->password)) {
+					 $this->ldap = null;
+					 throw new \Exception("Unable to Auth");
+				 }
+			 }
+		 }
 	}
 
 	/**
@@ -641,7 +663,6 @@ class Openldap extends Auth {
 		$this->connect();
 
 		$this->out("Retrieving all users...",false);
-
 		$sr = ldap_search($this->ldap, $this->basedn, "(&(objectClass=".$this->userObjectClass.")(uid=*))");
 		$users = ldap_get_entries($this->ldap, $sr);
 
@@ -659,7 +680,7 @@ class Openldap extends Auth {
 					"primary_group" => !empty($user['gidnumber'][0]) ? $user['gidnumber'][0] : '',
 					"fname" => !empty($user['givenname'][0]) ? $user['givenname'][0] : '',
 					"lname" => !empty($user['sn'][0]) ? $user['sn'][0] : '',
-					"displayname" => !empty($user['displayname'][0]) ?$user['displayname'][0] : '',
+					"displayname" => !empty($user[$this->displayname][0]) ?$user[$this->displayname][0] : '',
 					"department" => !empty($user['department'][0]) ? $user['department'][0] : '',
 					"email" => !empty($user['mail'][0]) ? $user['mail'][0] : '',
 					"cell" => !empty($user['mobile'][0]) ? $user['mobile'][0] : '',

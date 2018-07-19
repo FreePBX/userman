@@ -1,158 +1,73 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>13.0.76.40</version>
+	<version>14.0.3.42</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
 	<repo>standard</repo>
 	<description>
-		This Module manages all FreePBX users
-		It allows an Administrator to create a User Account that can be used by other applications for login or API purposes.
-		Modules like iSymphony, Rest API and User Control Panel and FreePBX itself use this module to manage their users.
+		This Module manages all PBX users. It allows an Administrator to create a User Account that can be used by other applications for login or API purposes.
 	</description>
 	<changelog>
-		*13.0.76.40* FREEPBX-17848
-		*13.0.76.39* Fix formatting of currenttime on msad2 driver
-		*13.0.76.38* FREEPBX-16966 Remove 'FreePBX Support' option from Menu selections
-		*13.0.76.37* FREEPBX-16279 Error in database. Groups associated with a directory authenticated by voicemail
-		*13.0.76.36* FREEPBX-16966 Remove option from Menu selections
-		*13.0.76.35* Move userman tables into module xml
-		*13.0.76.34* FREEPBX-16241 FREEPBX-16494 FREEPBX-16377
-		*13.0.76.33* ZUC-121 Create users after extension is created
-		*13.0.76.32* FREEPBX-16020
-		*13.0.76.31* FREEPBX-16020 FREEPBX-15532
-		*13.0.76.30* FREEPBX-15614
-		*13.0.76.29* FREEPBX-15351 FREEPBX-15304
-		*13.0.76.28* FREEPBX-15464
-		*13.0.76.27* Change ordering on delete directory
-		*13.0.76.26* FREEPBX-15200 Use Custom Username option broken under Extensions
-		*13.0.76.25* Double check upgrade proceedures
-		*13.0.76.24* Fix issue with sending out emails
-		*13.0.76.23* Type equals text only
-		*13.0.76.22* Once more
-		*13.0.76.21* FREEPBX-15204
-		*13.0.76.20* FREEPBX-15147 Always return empty array
-		*13.0.76.19* FREEPBX-15134
-		*13.0.76.18* Name fix
-		*13.0.76.17* FREEPBX-15137 Use doctrine for tables
-		*13.0.76.16* FREEPBX-15137 Use instansiated FreePBX object.
-		*13.0.76.15* Dont lock down the password
-		*13.0.76.14* FREEPBX-15108 FREEPBX-15096
-		*13.0.76.13* FREEPBX-15096 fix class compat issues
-		*13.0.76.12* Set default auth if one was not previously set
-		*13.0.76.11* FREEPBX-14963 Put an alert in Userman if no directories are active
-		*13.0.76.10* FREEPBX-14973 add back removed function
-		*13.0.76.9* FREEPBX-14966 fix rnav options for different directories
-		*13.0.76.8* FREEPBX-14897 FREEPBX-14896
-		*13.0.76.7* Run force sync from the gui
-		*13.0.76.6* FREEPBX-14896, FREEPBX-14897
-		*13.0.76.5* FREEPBX-14908 Add framework dependency
-		*13.0.76.4* Fix bug in first install
-		*13.0.76.3* Consolidate settings
-		*13.0.76.2* html ids were duplicated in openldap
-		*13.0.76.1* Limit old school sids, change sid lookup format (for AD)
-		*13.0.76* FREEPBX-14813 FREEPBX-14814 FREEPBX-14699 FREEPBX-14226 FREEPBX-13494 FREEPBX-13202 FREEPBX-12555 FREEPBX-10426 FREEPBX-14815 FREEPBX-14623
-		*13.0.75.4* Issues releated to FREEPBX-14212 and quick create
-		*13.0.75.3* SendEmail function needs to return true if it completed
-		*13.0.75.2* One more addition
-		*13.0.75.1* Endpoint additions
-		*13.0.75* FREEPBX-13479 fix 12 to 13 migration problems
-		*13.0.74.1* FREEPBX-13386 Linked Extensions reset if not Auth mode is set
-		*13.0.74* FREEPBX-13272 Added OpenLDAP support
-		*13.0.73.3* FREEPBX-13177 First install of User Manager fails
-		*13.0.73.2* Make sure the object is in the right format
-		*13.0.73.1* FREEPBX-13164 limit number of forks based on CPU count
-		*13.0.73* FREEPBX-12953 check to make sure there is valid data
-		*13.0.72* Increase token timeout from 1 hour to 1 day
-		*13.0.71* FREEPBX-12804 Add HTML support for User Management emails
-		*13.0.70* Add additional hook point
-		*13.0.69* FREEPBX-12606 Absolute paths used in some modules.
-		*13.0.68* FREEPBX-12496 Purge cache when setting values to null
-		*13.0.67* Allow editing of 1-2 character usernames
-		*13.0.66* FREEPBX-12291 remove lock file if pid is not active
-		*13.0.65* FREEPBX-12038 User Manager doesnt Sync link Extension attribute to Virtual Extensions
-		*13.0.64* FREEPBX-11767 fix authentication when using voicemail, also add deletions during sync
-		*13.0.63* FREEPBX-11183 increase email field to allow comma separated email addresses
-		*13.0.62* FREEPBX-11597 default to yes, require core module
-		*13.0.61* Remove null users from groups
-		*13.0.60* FREEPBX-12165 error with extension adds with user conflicts
-		*13.0.59* FREEPBX-12167 Define array
-		*13.0.58* FREEPBX-12167 LDAP sync not deleting old records
-		*13.0.57* FREEPBX-12029 Use file based storage to avoid issues with database packet limits
-		*13.0.56* FREEPBX-12009 FREEPBX-11747 FREEPBX-11147 FREEPBX-11184 FREEPBX-11442 FREEPBX-11972
-		*13.0.55* Put notice up about group priorities
-		*13.0.54* Fix strange race condition, check if empty not if false
-		*13.0.53* FREEPBX-11795 Fix erroring cron
-		*13.0.52* Remove extra crons when saving
-		*13.0.51* Remove en_US Translations
-		*13.0.50* Better notices
-		*13.0.49* FREEPBX-11069
-		*13.0.48* FREEPBX-10962 with fax support as well in fax and faxpro
-		*13.0.47* Fix bad id in voicemail driver
-		*13.0.46* Fix broken voicemail auth driver
-		*13.0.45* FREEPBX-10861
-		*13.0.44* FREEPBX-10775
-		*13.0.43* Fix invalid variable
-		*13.0.42* More work done on FREEPBX-10973
-		*13.0.41* FREEPBX-11002 require Asterisk to be connected
-		*13.0.40* FREEPBX-10973
-		*13.0.39* Allow sorting/ordering of groups
-		*13.0.38* FREEPBX-11019
-		*13.0.37* FREEPBX-10840 switch to using asterisk type variables in emails (old still supported)
-		*13.0.36* FREEPBX-10802 Hard Coded Database name
-		*13.0.35* FREEPBX-10621 add missing function back
-		*13.0.34* FREEPBX-10535 Additional group settings for the default group
-		*13.0.33* Add side nav functionality and fix up two functions
-		*13.0.32* Fix array diff error when it is not an array
-		*13.0.31* Move everything back into install.php
-		*13.0.30* FREEPBX-10421 Dont show drivers that arent supported
-		*13.0.29* FREEPBX-9118 Selectable columns
-		*13.0.28* FREEPBX-8919 Delete WebRTC when account is deleted
-		*13.0.27* Adjustments to escaping of distinguished name
-		*13.0.26* FREEPBX-9858 add voicemail auth (untested)
-		*13.0.25* Bump to force an upgrade
-		*13.0.24* Add method to get default group
-		*13.0.23* FREEPBX-10215 Add default permissions for default group
-		*13.0.22* FREEPBX-10282 Allow creating of files
-		*13.0.21* Console functionality
-		*13.0.20* FREEPBX-10246 Fix labels, buttons and save on main page.
-		*13.0.19* FREEPBX-10204 No default Userman Group is created at install or upgrade time
-		*13.0.18* Need to insert a blank array into the DB
-		*13.0.17* Default groups, quick create permissions and fixes
-		*13.0.16* Add Active Directory users to their primary groups
-		*13.0.15* Group settings added to extensions page, proper active directory username represenation, default groups, dont send emails
-		*13.0.14* Add ability to link users to extensions through active directory attributes
-		*13.0.13* FREEPBX-10034 Actually fix Active Directory functionality so that it works
-		*13.0.12* FREEPBX-9987 Invalid module count
-		*13.0.11* FREEPBX-9907 Cannot autogenerate new user from drop-down in existing extension
-		*13.0.10* FREEPBX-9832 Dont let userman changes be submitted twice
-		*13.0.9* FREEPBX-9799 bug in JS prevented JS updates
-		*13.0.8* FREEPBX-9732 Fixes broken group and user delete and rnav
-		*13.0.7* Proper uninstall commands
-		*13.0.6* FREEPBX-9653 Bulk handler errors
-		*13.0.5* Finalize authentication engines. Now supporting Microsoft Active Directory
-		*13.0.4* Set priority of bulkhandler hooks
-		*13.0.3* Add hooks for bulkhandler module
-		*13.0.2.1* Typo fix
-		*13.0.2* Version bump Beta
-		*13.0.1alpha14* FREEPBX-9500 Can't change user's password in User Management with "Key" action button
-		*13.0.1alpha13* FREEPBX-9467 add search hooks
-		*13.0.1alpha12* Tab scrolls
-		*13.0.1alpha11* Better quick create visuals
-		*13.0.1alpha8* Initial groups support
-		*13.0.1alpha2* Visual Changes
-		*12.0.10* Invisible display names...
+		*14.0.3.42* FREEPBX-17848
+		*14.0.3.41* Fixing FREEPBX-17563 Importing userman groups issue 
+		*14.0.3.40* FREEPBX-16966 Remove 'FreePBX Support' option from Menu selections
+		*14.0.3.39* FREEPBX-16279 Error in database. Groups associated with a directory authenticated by voicemail
+		*14.0.3.38* FREEPBX-16966 Remove 'FreePBX Support' option from Menu selections
+		*14.0.3.37* FREEPBX-16241 FREEPBX-16494 FREEPBX-16377
+		*14.0.3.36* ZUC-121 Create users after extension is created
+		*14.0.3.35* FREEPBX-15647
+		*14.0.3.34* FREEPBX-15571
+		*14.0.3.33* Fix javascript error
+		*14.0.3.32* FREEPBX-15647
+		*14.0.3.31* FREEPBX-16131
+		*14.0.3.30* FREEPBX-16020 FREEPBX-15532
+		*14.0.3.29* FREEPBX-15571
+		*14.0.3.28* FREEPBX-15614
+		*14.0.3.27* FREEPBX-15304
+		*14.0.3.26* FREEPBX-15576 Add function to retrieve group locale settings
+		*14.0.3.25* FREEPBX-15464
+		*14.0.3.24* Openldap legacy: allow unauthenticated connection, openldap2 and msad2 views: fix secure connection select
+		*14.0.3.23* Ordering of directory deletions
+		*14.0.3.22* FREEPBX-15200 Use Custom Username option broken under Extensions
+		*14.0.3.21* Upgrade bug fixes
+		*14.0.3.20* Email
+		*14.0.3.19* Type equals text only
+		*14.0.3.18* More FREEPBX-15204
+		*14.0.3.17* FREEPBX-15204
+		*14.0.3.16* FREEPBX-15147 Always return empty array
+		*14.0.3.15* FREEPBX-15134
+		*14.0.3.14* FREEPBX-15137 Use doctrine for tables
+		*14.0.3.13* Dont lock down the password
+		*14.0.3.12* FREEPBX-15108 FREEPBX-15096
+		*14.0.3.11* Duplicate domains
+		*14.0.3.10* AD: Catch error if we cant find any primary groups
+		*14.0.3.9* Set default auth if one was not previously set
+		*14.0.3.8* Add account_suffix and use_tls configurations
+		*14.0.3.7* FREEPBX-14963 Put an alert in Userman if no directories are active
+		*14.0.3.6* FREEPBX-14973 add back removed function
+		*14.0.3.5* FREEPBX-14966 fix rnav options for different directories
+		*14.0.3.4* Bump
+		*14.0.3.3* Run force sync from the gui
+		*14.0.3.2* Merge from 13
+		*14.0.3.1* FREEPBX-14914 dont implement class
+		*14.0.3* Merge from 13
+		*14.0.2.1* Reduce key length in database
+		*14.0.2* FREEPBX-14209 use phppass instead of sha1s
+		*14.0.1.1* XML database creation
+		*14.0.1alpha7* Allow user and group counts above 1000
+		*14.0.1alpha1* Inital Release
 	</changelog>
-	<info />
+	<info/>
 	<category>Admin</category>
 	<menuitems>
 		<userman needsenginedb="yes">User Management</userman>
 	</menuitems>
 	<depends>
 		<phpversion>5.3.3</phpversion>
-		<version>13.0.194</version>
-		<module>core ge 13.0.118.9</module>
+		<version>14.0.1rc1.17</version>
+		<module>core ge 13.0.84</module>
 	</depends>
 	<hooks>
 		<core class="Core" namespace="FreePBX\modules">
@@ -269,6 +184,6 @@
 		</table>
 	</database>
 	<supported>
-		<version>13.0</version>
+		<version>14.0</version>
 	</supported>
 </module>

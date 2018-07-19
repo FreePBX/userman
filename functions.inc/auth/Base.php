@@ -6,6 +6,20 @@
 namespace FreePBX\modules\Userman\Auth;
 
 interface Base {
+	public function addUserHook($id, $username, $description, $password, $encrypt, $extraData);
+	public function updateUserHook($id, $prevUsername, $username, $description, $password, $extraData, $nodisplay=false);
+	public function delUserHook($id, $data);
+	public function addGroupHook($id, $groupname, $description, $users);
+	public function updateGroupHook($id, $prevGroupname, $groupname, $description, $users, $nodisplay=false);
+	public function delGroupHook($gid, $data);
+	public function getDefaultGroups();
+	public function getUserByAuthID($id, $extraInfo = true);
+	public function getAllUserIDs();
+	public function getGroupByAuthID($aid);
+	public function linkUser($username, $authid = null);
+	public function linkGroup($groupname, $authid = null);
+	public function updateGroupData($gid, $data = array());
+	public function updateUserData($uid, $data = array());
 	/**
 	 * Get information about this authentication driver
 	 * @param  object $userman The userman object
@@ -78,7 +92,7 @@ interface Base {
 	 * @param string $username The User Manager Username
 	 * @return bool
 	 */
-	public function getUserByUsername($username);
+	public function getUserByUsername($username, $extraInfo = true);
 
 	/**
 	 * Get User Information by Username
@@ -98,7 +112,7 @@ interface Base {
 	 * @param string $username The User Manager Email Address
 	 * @return bool
 	 */
-	public function getUserByEmail($username);
+	public function getUserByEmail($username, $extraInfo = true);
 
 	/**
 	 * Get User Information by User ID
@@ -108,7 +122,7 @@ interface Base {
 	 * @param string $id The ID of the user from User Manager
 	 * @return bool
 	 */
-	public function getUserByID($id);
+	public function getUserByID($id, $extraInfo = true);
 
 	/**
 	 * Get User Information by User ID
@@ -135,13 +149,13 @@ interface Base {
 	 * @param string $id The ID of the user from User Manager
 	 * @return array
 	 */
-	public function deleteUserByID($id);
+	public function deleteUserByID($id, $processHooks=true);
 
 	/**
 	 * Delete a Group by it's ID
 	 * @param int $gid The group ID
 	 */
-	public function deleteGroupByGID($gid);
+	public function deleteGroupByGID($gid, $processHooks=true);
 
 	/**
 	 * Add a user to User Manager

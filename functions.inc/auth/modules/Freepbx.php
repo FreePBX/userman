@@ -4,6 +4,7 @@
 //	Copyright 2013 Schmooze Com Inc.
 //
 namespace FreePBX\modules\Userman\Auth;
+use Hautelook\Phpass\PasswordHash;
 
 class Freepbx extends Auth {
 
@@ -90,7 +91,7 @@ class Freepbx extends Auth {
 	* @param string $default The default user extension, there is an integrity constraint here so there can't be duplicates
 	* @param string $description a short description of this account
 	* @param array $extraData A hash of extra data to provide about this account (work, email, telephone, etc)
-	* @param bool $encrypt Whether to encrypt the password or not. If this is false the system will still assume its hashed as sha1, so this is only useful if importing accounts with previous sha1 passwords
+	* @param bool $encrypt Whether to encrypt the password or not. If this is false the system will still assume its hashed, so this is only useful if importing accounts with previous hashed passwords
 	* @return array
 	*/
 	public function addUser($username, $password, $default='none', $description=null, $extraData=array(), $encrypt = true) {
@@ -105,9 +106,14 @@ class Freepbx extends Auth {
 		}
 		$sql = "INSERT INTO ".$this->userTable." (`username`,`auth`,`password`,`description`,`default_extension`) VALUES (:username,:directory,:password,:description,:default_extension)";
 		$sth = $this->db->prepare($sql);
-		$password = ($encrypt) ? sha1($password) : $password;
+		if($encrypt) {
+			$passwordHasher = new PasswordHash(8,false);
+			$pw = $passwordHasher->HashPassword($password);
+		} else {
+			$pw = $password;
+		}
 		try {
-			$sth->execute(array(':directory' => $this->config['id'], ':username' => $username, ':password' => $password, ':description' => $description, ':default_extension' => $default));
+			$sth->execute(array(':directory' => $this->config['id'], ':username' => $username, ':password' => $pw, ':description' => $description, ':default_extension' => $default));
 		} catch (\Exception $e) {
 			return array("status" => false, "type" => "danger", "message" => $e->getMessage());
 		}
@@ -118,7 +124,7 @@ class Freepbx extends Auth {
 		return array("status" => true, "type" => "success", "message" => _("User Successfully Added"), "id" => $id);
 	}
 
-	public function addGroup($groupname, $description=null, $users=array()) {
+	public function addGroup($groupname, $description=null, $users=array(), $extraData=array()) {
 		$sql = "INSERT INTO ".$this->groupTable." (`groupname`,`description`,`users`, `auth`) VALUES (:groupname,:description,:users,:directory)";
 		$sth = $this->db->prepare($sql);
 		try {
@@ -128,6 +134,7 @@ class Freepbx extends Auth {
 		}
 
 		$id = $this->db->lastInsertId();
+		$this->updateGroupData($id,$extraData);
 		$this->addGroupHook($id, $groupname, $description, $users);
 		return array("status" => true, "type" => "success", "message" => _("Group Successfully Added"), "id" => $id);
 	}
@@ -154,11 +161,13 @@ class Freepbx extends Auth {
 		if(!$user || empty($user)) {
 			return array("status" => false, "type" => "danger", "message" => sprintf(_("User '%s' Does Not Exist"),$prevUsername));
 		}
-		if(isset($password) && (sha1($password) != $user['password'])) {
+
+		if(isset($password)) {
 			$sql = "UPDATE ".$this->userTable." SET `username` = :username, `password` = :password, `description` = :description, `default_extension` = :default_extension WHERE `id` = :uid";
 			$sth = $this->db->prepare($sql);
 			try {
-				$sth->execute(array(':username' => $username, ':uid' => $uid, ':description' => $description, ':password' => sha1($password), ':default_extension' => $default));
+				$passwordHasher = new PasswordHash(8,false);
+				$sth->execute(array(':username' => $username, ':uid' => $uid, ':description' => $description, ':password' => $passwordHasher->HashPassword($password), ':default_extension' => $default));
 			} catch (\Exception $e) {
 				return array("status" => false, "type" => "danger", "message" => $e->getMessage());
 			}
@@ -190,7 +199,7 @@ class Freepbx extends Auth {
 	* @param string $description   The group description
 	* @param array  $users         Array of users in this Group
 	*/
-	public function updateGroup($gid, $prevGroupname, $groupname, $description=null, $users=array(), $nodisplay = false) {
+	public function updateGroup($gid, $prevGroupname, $groupname, $description=null, $users=array(), $nodisplay = false, $extraData=array()) {
 		$group = $this->getGroupByUsername($prevGroupname);
 		if(!$group || empty($group)) {
 			return array("status" => false, "type" => "danger", "message" => sprintf(_("Group '%s' Does Not Exist"),$group));
@@ -201,6 +210,9 @@ class Freepbx extends Auth {
 			$sth->execute(array(':groupname' => $groupname, ':gid' => $gid, ':description' => $description, ':users' => json_encode($users)));
 		} catch (\Exception $e) {
 			return array("status" => false, "type" => "danger", "message" => $e->getMessage());
+		}
+		if(!$this->updateGroupData($gid,$extraData)) {
+			return array("status" => false, "type" => "danger", "message" => _("An Unknown error occured while trying to update user data"));
 		}
 		$message = _("Updated Group");
 		$this->updateGroupHook($gid, $prevGroupname, $groupname, $description, $users, $nodisplay);
@@ -217,9 +229,22 @@ class Freepbx extends Auth {
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':username' => $username, ':directory' => $this->config['id']));
 		$result = $sth->fetch(\PDO::FETCH_ASSOC);
-		if(!empty($result) && (sha1($password) === $result['password'])) {
+
+		$passwordHasher = new PasswordHash(8,false);
+
+		if(!empty($result) && (strlen($result['password']) === 40) && (sha1($password) === $result['password'])) {
+			$hash = $passwordHasher->HashPassword($password);
+			$sql = "UPDATE ".$this->userTable." SET password = :password WHERE username = :username";
+			$sth = $this->db->prepare($sql);
+			$sth->execute(array(':password' => $hash, ':username' => $username));
 			return $result['id'];
+		} elseif(!empty($result)) {
+			$passwordMatch = $passwordHasher->CheckPassword($password, $result['password']);
+			if($passwordMatch) {
+				return $result['id'];
+			}
 		}
+
 		return false;
 	}
 }

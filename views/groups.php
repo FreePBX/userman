@@ -31,6 +31,7 @@ echo $heading;
 								<div class="wrapper">
 									<ul class="nav nav-tabs list" role="tablist">
 										<li role="presentation" class="active"><a href="#usermanlogin" aria-controls="usermanlogin" role="tab" data-toggle="tab"><?php echo _("Group Details")?></a></li>
+										<li role="presentation"><a href="#advanced" aria-controls="usermanlogin" role="tab" data-toggle="tab"><?php echo _("Advanced")?></a></li>
 										<?php if(\FreePBX::Config()->get('AUTHTYPE') == "usermanager") { ?>
 											<li role="presentation"><a href="#pbx" aria-controls="pbx" role="tab" data-toggle="tab"><?php echo sprintf(_("%s Administration GUI"),$brand)?></a></li>
 										<?php } ?>
@@ -94,6 +95,70 @@ echo $heading;
 											</div>
 										</div>
 									</div>
+									<!--Language-->
+									<div class="element-container">
+										<div class="row">
+											<div class="col-md-12">
+												<div class="row">
+													<div class="form-group">
+														<div class="col-md-3">
+															<label class="control-label" for="language"><?php echo _("Language") ?></label>
+															<i class="fa fa-question-circle fpbx-help-icon" data-for="language"></i>
+														</div>
+														<div class="col-md-9">
+															<div class="input-group">
+																<?php echo FreePBX::View()->languageDrawSelect('language',$group['language'],_("Use System Language")); ?>
+																<span class="input-group-btn">
+																	<a href="#" class="btn btn-default" id="browserlang"><?php echo _("Use Browser Language")?></a>
+																</span>
+																<span class="input-group-btn">
+																	<a href="#" class="btn btn-default" id="systemlang"><?php echo _("Use PBX Language")?></a>
+																</span>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-12">
+												<span id="language-help" class="help-block fpbx-help-block"><?php echo _("Language for this user")?></span>
+											</div>
+										</div>
+									</div>
+									<!--END Language-->
+									<!--Timezone-->
+									<div class="element-container">
+										<div class="row">
+											<div class="col-md-12">
+												<div class="row">
+													<div class="form-group">
+														<div class="col-md-3">
+															<label class="control-label" for="timezone"><?php echo _("Timezone") ?></label>
+															<i class="fa fa-question-circle fpbx-help-icon" data-for="timezone"></i>
+														</div>
+														<div class="col-md-9">
+															<div class="input-group">
+																<?php echo FreePBX::View()->timezoneDrawSelect('timezone',$group['timezone'],_("Use System Timezone")); ?>
+																<span class="input-group-btn">
+																	<a href="#" class="btn btn-default" id="browsertz"><?php echo _("Use Browser Timezone")?></a>
+																</span>
+																<span class="input-group-btn">
+																	<a href="#" class="btn btn-default" id="systemtz"><?php echo _("Use PBX Timezone")?></a>
+																</span>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-12">
+												<span id="timezone-help" class="help-block fpbx-help-block"><?php echo _("Timezone for this user")?></span>
+											</div>
+										</div>
+									</div>
+									<!--END Timezone-->
 									<div class="element-container">
 										<div class="row">
 											<div class="col-md-12">
@@ -117,6 +182,74 @@ echo $heading;
 										<div class="row">
 											<div class="col-md-12">
 												<span id="group_users-help" class="help-block fpbx-help-block"><?php echo _("Which users are in this group")?></span>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div role="tabpanel" class="tab-pane display" id="advanced">
+									<div class="element-container">
+										<div class="row">
+											<div class="col-md-12">
+												<div class="row">
+													<div class="form-group">
+														<div class="col-md-3">
+															<label class="control-label" for="datetimeformat"><?php echo _("Date and Time Format")?></label>
+															<i class="fa fa-question-circle fpbx-help-icon" data-for="datetimeformat"></i>
+														</div>
+														<div class="col-md-9">
+															<input type="text" class="form-control" id="datetimeformat" name="datetimeformat" value="<?php echo !empty($group['datetimeformat']) ? $group['datetimeformat'] : ''; ?>">
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-12">
+												<span id="datetimeformat-help" class="help-block fpbx-help-block"><?php echo _('The format dates and times should display in. The default of "llll" is locale aware. If left blank this will use the system format. For more formats please see: http://momentjs.com/docs/#/displaying/format/')?></span>
+											</div>
+										</div>
+									</div>
+									<div class="element-container">
+										<div class="row">
+											<div class="col-md-12">
+												<div class="row">
+													<div class="form-group">
+														<div class="col-md-3">
+															<label class="control-label" for="timeformat"><?php echo _("Time Format")?></label>
+															<i class="fa fa-question-circle fpbx-help-icon" data-for="timeformat"></i>
+														</div>
+														<div class="col-md-9">
+															<input type="text" class="form-control" id="timeformat" name="timeformat" value="<?php echo !empty($group['timeformat']) ? $group['timeformat'] : ''; ?>">
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-12">
+												<span id="timeformat-help" class="help-block fpbx-help-block"><?php echo _('The format times should display in. The default of "LT" is locale aware. If left blank this will use the system format. For more formats please see: http://momentjs.com/docs/#/displaying/format/')?></span>
+											</div>
+										</div>
+									</div>
+									<div class="element-container">
+										<div class="row">
+											<div class="col-md-12">
+												<div class="row">
+													<div class="form-group">
+														<div class="col-md-3">
+															<label class="control-label" for="dateformat"><?php echo _("Date Format")?></label>
+															<i class="fa fa-question-circle fpbx-help-icon" data-for="dateformat"></i>
+														</div>
+														<div class="col-md-9">
+															<input type="text" class="form-control" id="dateformat" name="dateformat" value="<?php echo !empty($group['dateformat']) ? $group['dateformat'] : ''; ?>">
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-12">
+												<span id="dateformat-help" class="help-block fpbx-help-block"><?php echo _('The format dates should display in. The default of "l" is locale aware. If left blank this will use the system format. For more formats please see: http://momentjs.com/docs/#/displaying/format/')?></span>
 											</div>
 										</div>
 									</div>
