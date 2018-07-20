@@ -219,7 +219,7 @@ class Msad2 extends Auth {
 			if(!$this->serviceping($this->config['host'], $this->config['port'], $this->timeout)) {
 				throw new \Exception("Unable to Connect to ".$this->config['host']."!");
 			}
-			$this->ldap = ldap_connect(buildldapuri($this->config['connection'],$this->config['host'], $this->config['port']));
+			$this->ldap = ldap_connect($this->buildldapuri($this->config['connection'],$this->config['host'], $this->config['port']));
 			if($this->ldap === false) {
 				$this->ldap = null;
 				throw new \Exception("Unable to Connect");
@@ -515,7 +515,7 @@ class Msad2 extends Auth {
 		$this->connect();
 		$userdn = !empty($this->config['userdn']) ? $this->config['userdn'].",".$this->config['dn'] : $this->config['dn'];
 		$groupdn = !empty($this->config['groupdnaddition']) ? $this->config['groupdnaddition'].",".$this->config['dn'] : $this->config['dn'];
-		$ldapuri = buildldapuri($this->config['connection'], $this->config['host'], $this->config['port']);
+		$ldapuri = $this->buildldapuri($this->config['connection'], $this->config['host'], $this->config['port']);
 		$this->out("\t".'ldapsearch -w '.$this->config['password'].' -H "'.$ldapuri.'" -D "'.$this->config['username'].'@'.$this->config['domain'].'" -b "'.$groupdn.'" -s sub "(&'.$this->config['groupobjectfilter'].'(objectclass='.$this->config['groupobjectclass'].'))"');
 		$this->out("\tRetrieving all groups...");
 		//(".$this->config['usermodifytimestampattr'].">=20010301000000Z)
@@ -596,7 +596,7 @@ class Msad2 extends Auth {
 		$this->connect();
 
 		$userdn = !empty($this->config['userdn']) ? $this->config['userdn'].",".$this->config['dn'] : $this->config['dn'];
-		$ldapuri = buildldapuri($this->config['connection'], $this->config['host'], $this->config['port']);
+		$ldapuri = $this->buildldapuri($this->config['connection'], $this->config['host'], $this->config['port']);
 		$this->out("\t".'ldapsearch -w '.$this->config['password'].' -H "'.$ldapuri.'" -D "'.$this->config['username'].'@'.$this->config['domain'].'" -b "'.$userdn.'" -s sub "(&'.$this->config['userobjectfilter'].'(objectclass='.$this->config['userobjectclass'].'))"');
 		$this->out("\tRetrieving all users...");
 
