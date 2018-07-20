@@ -9,15 +9,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-11 15:05-0400\n"
+"POT-Creation-Date: 2018-07-20 16:41-0400\n"
 "PO-Revision-Date: 2016-12-11 08:33+0200\n"
 "Last-Translator: Ernesto <ecasas@sangoma.com>\n"
 "Language-Team: Spanish <http://weblate.freepbx.org/projects/freepbx/userman/"
 "es_ES/>\n"
+"Language: es_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: es_ES\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 2.4\n"
 
@@ -510,14 +510,17 @@ msgstr ""
 msgid "Home Phone Number"
 msgstr "Teléfono de Habitación"
 
-#: views/msad.php:7 views/msad2.php:33 views/openldap.php:7
-#: views/openldap2.php:33
+#: views/msad.php:7 views/openldap.php:7
 msgid "Host"
 msgstr "Anfitrión"
 
 #: views/general.php:81
 msgid "Host Name"
 msgstr "Nombre Anfitrión"
+
+#: views/msad2.php:33 views/openldap2.php:33
+msgid "Host(s)"
+msgstr ""
 
 #: Console/Userman.class.php:33
 msgid "ID"
@@ -1014,9 +1017,13 @@ msgstr ""
 "El User-DN  de OpenLDAP. Normalmente en el formato de OU = personas, DC = "
 "ejemplo, DC = com)"
 
-#: views/openldap.php:19 views/openldap2.php:45
+#: views/openldap.php:19
 msgid "The OpenLDAP host"
 msgstr "Anfitrión OpenLDAP"
+
+#: views/openldap2.php:45
+msgid "The OpenLDAP host(s), comma/space separated"
+msgstr ""
 
 #: views/openldap.php:85 views/openldap2.php:111
 msgid "The OpenLDAP password"
@@ -1042,9 +1049,13 @@ msgstr ""
 msgid "The active directory domain"
 msgstr "Dominio del Active Directory"
 
-#: views/msad.php:19 views/msad2.php:45
+#: views/msad.php:19
 msgid "The active directory host"
 msgstr "Anfitrión del Active Directory"
+
+#: views/msad2.php:45
+msgid "The active directory host(s), comma/space separated"
+msgstr ""
 
 #: views/msad.php:85 views/msad2.php:111
 msgid "The active directory password"
@@ -1504,8 +1515,8 @@ msgid "User updated"
 msgstr "Usuario actualizado"
 
 #: functions.inc/guihooks.php:233 functions.inc/guihooks.php:277
-#: views/msad.php:51 views/msad2.php:77 views/openldap.php:51
-#: views/rnav.php:13 views/welcome.php:55
+#: views/msad.php:51 views/msad2.php:77 views/openldap.php:51 views/rnav.php:13
+#: views/welcome.php:55
 msgid "Username"
 msgstr "Nombre Usuario"
 

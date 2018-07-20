@@ -20,15 +20,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-11 15:05-0400\n"
+"POT-Creation-Date: 2018-07-20 16:41-0400\n"
 "PO-Revision-Date: 2015-10-30 07:56+0200\n"
 "Last-Translator: Kevin <kevin@qloog.com>\n"
 "Language-Team: Japanese <http://weblate.freepbx.org/projects/freepbx/userman/"
 "ja_JP/>\n"
+"Language: ja_JP\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ja_JP\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 2.2-dev\n"
 
@@ -513,13 +513,16 @@ msgstr ""
 msgid "Home Phone Number"
 msgstr "自宅番号"
 
-#: views/msad.php:7 views/msad2.php:33 views/openldap.php:7
-#: views/openldap2.php:33
+#: views/msad.php:7 views/openldap.php:7
 msgid "Host"
 msgstr "ホスト"
 
 #: views/general.php:81
 msgid "Host Name"
+msgstr ""
+
+#: views/msad2.php:33 views/openldap2.php:33
+msgid "Host(s)"
 msgstr ""
 
 #: Console/Userman.class.php:33
@@ -993,8 +996,12 @@ msgid ""
 "The OpenLDAP User-DN. Usually in the format of OU=people,DC=example,DC=com)"
 msgstr ""
 
-#: views/openldap.php:19 views/openldap2.php:45
+#: views/openldap.php:19
 msgid "The OpenLDAP host"
+msgstr ""
+
+#: views/openldap2.php:45
+msgid "The OpenLDAP host(s), comma/space separated"
 msgstr ""
 
 #: views/openldap.php:85 views/openldap2.php:111
@@ -1021,9 +1028,13 @@ msgstr ""
 msgid "The active directory domain"
 msgstr "Active Directoryのドメイン"
 
-#: views/msad.php:19 views/msad2.php:45
+#: views/msad.php:19
 msgid "The active directory host"
 msgstr "Active Directoryのホスト名"
+
+#: views/msad2.php:45
+msgid "The active directory host(s), comma/space separated"
+msgstr ""
 
 #: views/msad.php:85 views/msad2.php:111
 msgid "The active directory password"
@@ -1467,8 +1478,8 @@ msgid "User updated"
 msgstr "ユーザを更新しました"
 
 #: functions.inc/guihooks.php:233 functions.inc/guihooks.php:277
-#: views/msad.php:51 views/msad2.php:77 views/openldap.php:51
-#: views/rnav.php:13 views/welcome.php:55
+#: views/msad.php:51 views/msad2.php:77 views/openldap.php:51 views/rnav.php:13
+#: views/welcome.php:55
 msgid "Username"
 msgstr "ユーザー名"
 
