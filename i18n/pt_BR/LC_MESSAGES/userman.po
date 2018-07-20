@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-11 15:02-0400\n"
+"POT-Creation-Date: 2018-07-20 16:51-0400\n"
 "PO-Revision-Date: 2016-12-21 00:22+0200\n"
 "Last-Translator: Alexander <alexander.schley@paranagua.pr.gov.br>\n"
 "Language-Team: Portuguese (Brazil) <http://weblate.freepbx.org/projects/"
@@ -523,14 +523,17 @@ msgstr ""
 msgid "Home Phone Number"
 msgstr "Número de Telefone Residencial"
 
-#: views/msad.php:7 views/msad2.php:33 views/openldap.php:7
-#: views/openldap2.php:33
+#: views/msad.php:7 views/openldap.php:7
 msgid "Host"
 msgstr "Host"
 
 #: views/general.php:81
 msgid "Host Name"
 msgstr "Nome do Host"
+
+#: views/msad2.php:33 views/openldap2.php:33
+msgid "Host(s)"
+msgstr ""
 
 #: Console/Userman.class.php:33
 msgid "ID"
@@ -1051,9 +1054,13 @@ msgid ""
 msgstr ""
 "OpenLDAP User-DN. Geralmente no formato  OU=pessoas, DC=exemplo, DC=com)"
 
-#: views/openldap.php:19 views/openldap2.php:45
+#: views/openldap.php:19
 msgid "The OpenLDAP host"
 msgstr "Host OpenLDAP"
+
+#: views/openldap2.php:45
+msgid "The OpenLDAP host(s), comma/space separated"
+msgstr ""
 
 #: views/openldap.php:112 views/openldap2.php:111
 msgid "The OpenLDAP password"
@@ -1087,9 +1094,13 @@ msgstr ""
 msgid "The active directory domain"
 msgstr "Domínio do active directory"
 
-#: views/msad.php:19 views/msad2.php:45
+#: views/msad.php:19
 msgid "The active directory host"
 msgstr "Host do active directory"
+
+#: views/msad2.php:45
+msgid "The active directory host(s), comma/space separated"
+msgstr ""
 
 #: views/msad.php:85 views/msad2.php:111
 msgid "The active directory password"
