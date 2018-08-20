@@ -44,6 +44,4 @@ class Restore Extends Base\RestoreBase{
         $userman->bulkhandlerImport('usermangroups', $configs['usermangroups'], true);
         $userman->bulkhandlerImport('usermanusers', $configs['usermanusers'], true);
     }
-  }
-
 }
