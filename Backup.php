@@ -10,7 +10,6 @@ class Backup Extends Base\BackupBase{
         'directories' => $userman->getAllDirectories(),
         'defaultdirectory' => $userman->getDefaultDirectory()
     ];
-    $this->addFile(basename($recordingfile),$path,'ASTVARLIBDIR',"recording");
     $this->addDirectories($dirs);
     $this->addDependency('');
     $this->addConfigs($configs);

@@ -49,6 +49,8 @@ class Userman extends FreePBX_Helpers implements BMO {
 		} catch(Exception $e) {}
 	}
 
+	
+
 	/**
 	 * Search for users
 	 * @param  string $query   The query string
@@ -3140,5 +3142,14 @@ class Userman extends FreePBX_Helpers implements BMO {
 			break;
 		}
 		return $data;
+	}
+	public function setDatabase($pdo){
+	$this->db = $pdo;
+	return $this;
+	}
+	
+	public function resetDatabase(){
+	$this->db = $this->FreePBX->Database;
+	return $this;
 	}
 }
