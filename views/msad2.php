@@ -30,7 +30,7 @@
 			<div class="row">
 				<div class="form-group">
 					<div class="col-md-3">
-						<label class="control-label" for="msad2-host"><?php echo _("Host")?></label>
+						<label class="control-label" for="msad2-host"><?php echo _("Host(s)")?></label>
 						<i class="fa fa-question-circle fpbx-help-icon" data-for="msad2-host"></i>
 					</div>
 					<div class="col-md-9">
@@ -42,7 +42,7 @@
 	</div>
 	<div class="row">
 		<div class="col-md-12">
-			<span id="msad2-host-help" class="help-block fpbx-help-block"><?php echo _("The active directory host")?></span>
+			<span id="msad2-host-help" class="help-block fpbx-help-block"><?php echo _("The active directory host(s), comma/space separated")?></span>
 		</div>
 	</div>
 </div>
