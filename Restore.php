@@ -8,7 +8,7 @@ class Restore Extends Base\RestoreBase{
     $configs['directories'] = is_array($configs['directories'])? $configs['directories']:[];
     $configs['usermanusers'] = is_array($configs['usermanusers'])? $configs['usermanusers']:[];
     $configs['usermangroups'] = is_array($configs['usermangroups'])? $configs['usermangroups']:[];
-    $this->processData($configs);
+    $this->processData($userman, $configs);
   }
 
   public function processLegacy($pdo, $data, $tables, $unknownTables, $tmpfiledir){
@@ -26,11 +26,11 @@ class Restore Extends Base\RestoreBase{
         ];
       $bmo->resetDatabase();
       $configs = reset($configs);
-      $this->processData($configs);
+      $this->processData($bmo, $configs);
 
       return $this;
   }
-  public function processData($usermnan,$configs){
+  public function processData($userman,$configs){
         foreach ($configs['directories'] as $dir) {
             if ($userman->getDirectoryByID($dir['id']) !== false) {
                 $userman->updateDirectory($dir['id'], $dir['name'], $dir['active'], $dir['config']);
