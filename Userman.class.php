@@ -2949,7 +2949,6 @@ class Userman extends FreePBX_Helpers implements BMO {
 						}
 
 						$username = $data['username'];
-						$password = $data['password'];
 						$default_extension = $data['default_extension'];
 						$description = !empty($data['description']) ? $data['description'] : null;
 
@@ -2973,8 +2972,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 						}
 						if ($existing) {
 							try {
-								$password = !empty($password) ? $password : null;
-								$status = $this->updateUser($existing['id'], $username, $username, $default_extension, $description, $extraData, $password);
+								$status = $this->updateUser($existing['id'], $username, $username, $default_extension, $description, $extraData, !empty($data['password']) ? $data['password'] : null);
 							} catch (Exception $e) {
 								return array("status" => false, "message" => $e->getMessage());
 							}
@@ -2986,11 +2984,11 @@ class Userman extends FreePBX_Helpers implements BMO {
 								return $ret;
 							}
 						} else {
-							if (empty($data['password'])) {
+							if (empty($data['password']) && empty($data['encrypted_password'])) {
 								return array("status" => false, "message" => _("password is required."));
 							}
 							try {
-								$status = $this->addUser($username, $password, $default_extension, $description, $extraData, true);
+								$status = $this->addUser($username, !empty($data['encrypted_password']) ? $data['encrypted_password'] : $data['password'], $default_extension, $description, $extraData, !empty($data['encrypted_password']) ? false : true);
 							} catch (Exception $e) {
 								return array("status" => false, "message" => $e->getMessage());
 							}
@@ -3103,6 +3101,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 					'description' => $user['description'],
 					'default_extension' => $user['default_extension'],
 					'password' => '',
+					'encrypted_password' => $user['password'],
 					'fname' => $user['fname'],
 					'lname' => $user['lname'],
 					'displayname' => $user['displayname'],
@@ -3145,11 +3144,19 @@ class Userman extends FreePBX_Helpers implements BMO {
 	}
 	public function setDatabase($pdo){
 	$this->db = $pdo;
+	$this->globalDirectory->db = $this->db;
+	foreach ($this->directories as $dirid => $directory) {
+		$this->directories[$dirid]->db = $this->db;
+	}
 	return $this;
 	}
 	
 	public function resetDatabase(){
 	$this->db = $this->FreePBX->Database;
+	$this->globalDirectory->db = $this->db;
+	foreach ($this->directories as $dirid => $directory) {
+		$this->directories[$dirid]->db = $this->db;
+	}
 	return $this;
 	}
 }
