@@ -19,13 +19,12 @@ class Restore Extends Base\RestoreBase{
       $bmo = $this->FreePBX->Userman;
       $bmo->setDatabase($pdo);
         $configs = [
-            'usermanusers' => $userman->bulkhandlerExport('usermanusers'),
-            'usermangroups' => $userman->bulkhandlerExport('usermanugroups'),
-            'directories' => $userman->getAllDirectories(),
-            'defaultdirectory' => $userman->getDefaultDirectory()
+            'usermanusers' => $bmo->bulkhandlerExport('usermanusers'),
+            'usermangroups' => $bmo->bulkhandlerExport('usermangroups'),
+            'directories' => $bmo->getAllDirectories(),
+            'defaultdirectory' => $bmo->getDefaultDirectory()
         ];
       $bmo->resetDatabase();
-      $configs = reset($configs);
       $this->processData($bmo, $configs);
 
       return $this;
