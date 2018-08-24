@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-20 16:51-0400\n"
-"PO-Revision-Date: 2018-07-28 13:00+0000\n"
+"PO-Revision-Date: 2018-08-25 12:01+0000\n"
 "Last-Translator: Bastian Mertgen <b.mertgen@bastian-mertgen.de>\n"
 "Language-Team: German <http://*/projects/freepbx/userman/de/>\n"
 "Language: de_DE\n"
@@ -947,7 +947,7 @@ msgstr "Status"
 
 #: Userman.class.php:526
 msgid "Submit"
-msgstr "Bestätigen"
+msgstr "Absenden"
 
 #: Userman.class.php:520
 msgid "Submit & Send Email to User"
