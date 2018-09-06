@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-20 14:28-0400\n"
+"POT-Creation-Date: 2018-09-05 22:51-0400\n"
 "PO-Revision-Date: 2017-03-06 03:14+0200\n"
 "Last-Translator: hammer125 <auswertung@aon.at>\n"
 "Language-Team: German <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -462,7 +462,7 @@ msgstr "Gruppe erfolgreich gelöscht"
 msgid "Group Successfully Updated"
 msgstr "Gruppe erfolgreich aktualisiert"
 
-#: Userman.class.php:3047
+#: Userman.class.php:3045
 msgid "Group already exists"
 msgstr "Gruppe existiert bereits"
 
@@ -796,7 +796,7 @@ msgstr ""
 msgid "Please select a valid username for New User Creation"
 msgstr "Bitte wählen Sie einen gültigen Benutzernamen für den neuen Benutzer"
 
-#: Userman.class.php:2940 Userman.class.php:3023
+#: Userman.class.php:2940 Userman.class.php:3021
 msgid "Please set a default directory in User Manager"
 msgstr ""
 
@@ -1290,7 +1290,7 @@ msgid ""
 "purposes."
 msgstr ""
 
-#: Userman.class.php:3016 Userman.class.php:3080
+#: Userman.class.php:3014 Userman.class.php:3078
 msgid "This authentication driver does not allow importing"
 msgstr ""
 
@@ -1530,7 +1530,7 @@ msgstr ""
 msgid "User Work Phone attribute"
 msgstr ""
 
-#: Userman.class.php:2972
+#: Userman.class.php:2971
 msgid "User already exists"
 msgstr "Benutzer existiert bereits"
 
@@ -1687,7 +1687,7 @@ msgstr "Gruppe"
 msgid "group Successfully Added"
 msgstr "Gruppe erfolgreich hinzugefügt"
 
-#: Userman.class.php:3028
+#: Userman.class.php:3026
 msgid "groupname is required."
 msgstr "Gruppenname erforderlich."
 
@@ -1695,7 +1695,7 @@ msgstr "Gruppenname erforderlich."
 msgid "groups"
 msgstr "Gruppen"
 
-#: Userman.class.php:2990
+#: Userman.class.php:2988
 msgid "password is required."
 msgstr "Passwort erforderlich."
 
