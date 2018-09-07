@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-05 22:51-0400\n"
+"POT-Creation-Date: 2018-09-07 15:49-0400\n"
 "PO-Revision-Date: 2017-03-06 03:14+0200\n"
 "Last-Translator: hammer125 <auswertung@aon.at>\n"
 "Language-Team: German <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -40,7 +40,7 @@ msgid ""
 "new User Control Panel also uses User Manager."
 msgstr ""
 
-#: Userman.class.php:2919
+#: Userman.class.php:2920
 #, php-format
 msgid "%s records failed validation"
 msgstr "%s Überprüfung beim Eintrag fehlgeschlagen"
@@ -252,8 +252,8 @@ msgstr "Löschen..."
 msgid "Department"
 msgstr "Abteilung"
 
-#: Userman.class.php:2865 Userman.class.php:2866 Userman.class.php:2891
-#: Userman.class.php:2892 views/rnav.php:14 views/rnav.php:31
+#: Userman.class.php:2866 Userman.class.php:2867 Userman.class.php:2892
+#: Userman.class.php:2893 views/rnav.php:14 views/rnav.php:31
 #: views/users.php:83 views/welcome.php:60 views/welcome.php:90
 msgid "Description"
 msgstr "Beschreibung"
@@ -305,7 +305,7 @@ msgid ""
 "then if no match was found waterfall down the list in the order chosen below"
 msgstr ""
 
-#: Userman.class.php:2877 Userman.class.php:2878 views/openldap.php:144
+#: Userman.class.php:2878 Userman.class.php:2879 views/openldap.php:144
 #: views/users.php:275 views/welcome.php:56
 msgid "Display Name"
 msgstr "Anzeigename"
@@ -380,7 +380,7 @@ msgstr ""
 msgid "Fax Phone Number"
 msgstr "Faxnummer"
 
-#: Userman.class.php:2869 Userman.class.php:2870 views/users.php:227
+#: Userman.class.php:2870 Userman.class.php:2871 views/users.php:227
 #: views/welcome.php:57
 msgid "First Name"
 msgstr "Vorname"
@@ -435,7 +435,7 @@ msgstr "Gruppendetails"
 msgid "Group Does Not Exist"
 msgstr "Gruppe existiert nicht"
 
-#: Userman.class.php:2887 Userman.class.php:2888 views/groups.php:60
+#: Userman.class.php:2888 Userman.class.php:2889 views/groups.php:60
 #: views/rnav.php:30 views/welcome.php:89
 msgid "Group Name"
 msgstr "Gruppenname"
@@ -462,7 +462,7 @@ msgstr "Gruppe erfolgreich gelöscht"
 msgid "Group Successfully Updated"
 msgstr "Gruppe erfolgreich aktualisiert"
 
-#: Userman.class.php:3045
+#: Userman.class.php:3046
 msgid "Group already exists"
 msgstr "Gruppe existiert bereits"
 
@@ -618,7 +618,7 @@ msgstr ""
 msgid "Language for this user"
 msgstr ""
 
-#: Userman.class.php:2873 Userman.class.php:2874 views/users.php:251
+#: Userman.class.php:2874 Userman.class.php:2875 views/users.php:251
 #: views/welcome.php:58
 msgid "Last Name"
 msgstr "Nachname"
@@ -668,7 +668,7 @@ msgstr ""
 msgid "Login Details"
 msgstr "Login Details"
 
-#: Userman.class.php:2851 Userman.class.php:2852 views/users.php:59
+#: Userman.class.php:2852 Userman.class.php:2853 views/users.php:59
 msgid "Login Name"
 msgstr "Login Name"
 
@@ -770,13 +770,13 @@ msgstr "Andere Einstellungen"
 msgid "PBX Internal Directory"
 msgstr ""
 
-#: Userman.class.php:2856 views/msad.php:73 views/msad2.php:99
+#: Userman.class.php:2857 views/msad.php:73 views/msad2.php:99
 #: views/openldap.php:100 views/openldap2.php:99 views/passwordmodal.php:16
 #: views/users.php:108
 msgid "Password"
 msgstr "Passwort"
 
-#: Userman.class.php:2857
+#: Userman.class.php:2858
 msgid "Password - plaintext"
 msgstr "Passwort - Klartext"
 
@@ -796,7 +796,7 @@ msgstr ""
 msgid "Please select a valid username for New User Creation"
 msgstr "Bitte wählen Sie einen gültigen Benutzernamen für den neuen Benutzer"
 
-#: Userman.class.php:2940 Userman.class.php:3021
+#: Userman.class.php:2941 Userman.class.php:3022
 msgid "Please set a default directory in User Manager"
 msgstr ""
 
@@ -813,7 +813,7 @@ msgstr "Vorheriger Gruppenname darf nicht leer sein"
 msgid "Previous Username can not be blank"
 msgstr "Vorheriger Benutzername darf nicht leer sein"
 
-#: Userman.class.php:2861
+#: Userman.class.php:2862
 msgid "Primary Extension"
 msgstr "Primäre Nebenstelle"
 
@@ -821,7 +821,7 @@ msgstr "Primäre Nebenstelle"
 msgid "Primary Group"
 msgstr ""
 
-#: Userman.class.php:2862 views/users.php:194
+#: Userman.class.php:2863 views/users.php:194
 msgid "Primary Linked Extension"
 msgstr "Primäre verlinkte Nebenstelle"
 
@@ -1290,7 +1290,7 @@ msgid ""
 "purposes."
 msgstr ""
 
-#: Userman.class.php:3014 Userman.class.php:3078
+#: Userman.class.php:3015 Userman.class.php:3079
 msgid "This authentication driver does not allow importing"
 msgstr ""
 
@@ -1498,7 +1498,7 @@ msgstr "Benutzerverwaltungs-Modul"
 msgid "User Manager"
 msgstr "Benutzer-Manager"
 
-#: Userman.class.php:2833 Userman.class.php:2834 views/quickCreate.php:36
+#: Userman.class.php:2834 Userman.class.php:2835 views/quickCreate.php:36
 msgid "User Manager Groups"
 msgstr "Benutzer-Manager-Gruppen"
 
@@ -1506,7 +1506,7 @@ msgstr "Benutzer-Manager-Gruppen"
 msgid "User Manager Settings"
 msgstr "Benutzer-Manager-Einstellungen"
 
-#: Userman.class.php:2827 Userman.class.php:2828
+#: Userman.class.php:2828 Userman.class.php:2829
 msgid "User Manager Users"
 msgstr "Benutzer-Manager User"
 
@@ -1530,7 +1530,7 @@ msgstr ""
 msgid "User Work Phone attribute"
 msgstr ""
 
-#: Userman.class.php:2971
+#: Userman.class.php:2972
 msgid "User already exists"
 msgstr "Benutzer existiert bereits"
 
@@ -1667,7 +1667,7 @@ msgstr ""
 msgid "Your %brand% Account"
 msgstr "Ihr %brand% Account"
 
-#: Userman.class.php:2948
+#: Userman.class.php:2949
 msgid "default_extension is required."
 msgstr "default_extension erforderlich."
 
@@ -1687,7 +1687,7 @@ msgstr "Gruppe"
 msgid "group Successfully Added"
 msgstr "Gruppe erfolgreich hinzugefügt"
 
-#: Userman.class.php:3026
+#: Userman.class.php:3027
 msgid "groupname is required."
 msgstr "Gruppenname erforderlich."
 
@@ -1695,7 +1695,7 @@ msgstr "Gruppenname erforderlich."
 msgid "groups"
 msgstr "Gruppen"
 
-#: Userman.class.php:2988
+#: Userman.class.php:2989
 msgid "password is required."
 msgstr "Passwort erforderlich."
 
@@ -1703,7 +1703,7 @@ msgstr "Passwort erforderlich."
 msgid "user"
 msgstr "Benutzer"
 
-#: Userman.class.php:2945
+#: Userman.class.php:2946
 msgid "username is required."
 msgstr "Benutzername erforderlich."
 
