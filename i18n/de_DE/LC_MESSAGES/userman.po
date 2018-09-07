@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-20 16:51-0400\n"
-"PO-Revision-Date: 2018-07-18 19:15+0000\n"
+"PO-Revision-Date: 2018-08-25 12:01+0000\n"
 "Last-Translator: Bastian Mertgen <b.mertgen@bastian-mertgen.de>\n"
 "Language-Team: German <http://*/projects/freepbx/userman/de/>\n"
 "Language: de_DE\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2.19.1\n"
+"X-Generator: Weblate 3.0.1\n"
 
 #: views/groups.php:36 views/users.php:33
 #, php-format
@@ -38,6 +38,10 @@ msgid ""
 "iSymphony and RestAPI are examples of these type of modules. In %s 12, the "
 "new User Control Panel also uses User Manager."
 msgstr ""
+"%s-User-Manger ersetzt mehrere Module, die versucht haben, Benutzer "
+"unabhängig von Nebenstellen zu erzeugen und zu verwalten. Module wie "
+"iSymphony und RestAPI sind Beispiele hierfür. In %s 12 verwendet das neue ‚"
+"User Control Panel‘ ebenfalls den User-Manager."
 
 #: Userman.class.php:2909
 #, php-format
@@ -70,7 +74,7 @@ msgstr "Aktion"
 
 #: views/welcome.php:114
 msgid "Active"
-msgstr ""
+msgstr "Aktiv"
 
 #: views/welcome.php:35 views/welcome.php:72 views/welcome.php:103
 msgid "Add"
@@ -82,7 +86,7 @@ msgstr "Gerät hinzufügen"
 
 #: views/rnav.php:40
 msgid "Add Directory"
-msgstr ""
+msgstr "Verzeichnis hinzufügen"
 
 #: Userman.class.php:854
 msgid "Add Extension"
@@ -94,7 +98,7 @@ msgstr "Gruppe hinzufügen"
 
 #: functions.inc/auth/Auth.php:70
 msgid "Add Group is not defined"
-msgstr ""
+msgstr "„Gruppe hinzufügen“ ist nicht definiert"
 
 #: views/rnav.php:7 views/users.php:5
 msgid "Add User"
@@ -102,7 +106,7 @@ msgstr "Benutzer hinzufügen"
 
 #: functions.inc/auth/Auth.php:62
 msgid "Add User is not defined"
-msgstr ""
+msgstr "„Benutzer hinzufügen“ ist nicht definiert"
 
 #: functions.inc/auth/modules/Voicemail.php:85
 #, php-format
@@ -119,11 +123,11 @@ msgstr "Administrationszugriff"
 
 #: views/groups.php:34 views/users.php:31
 msgid "Advanced"
-msgstr ""
+msgstr "erweitert"
 
 #: views/welcome.php:44 views/welcome.php:78
 msgid "All Directories"
-msgstr ""
+msgstr "Alle Verzeichnisse"
 
 #: Userman.class.php:1389
 msgid "All Users"
@@ -138,6 +142,8 @@ msgstr "%s Administrator Login erlauben"
 #: functions.inc/auth/modules/Freepbx.php:215
 msgid "An Unknown error occured while trying to update user data"
 msgstr ""
+"Beim Versuch, Benutzerdaten zu aktualisieren, ist ein unbekannter Fehler "
+"aufgetreten"
 
 #: Userman.class.php:855
 msgid "Apply Changes Bar"
@@ -174,7 +180,6 @@ msgstr "Automatisch generierter Benutzer zu neuem Nebenstellengerät"
 
 #: views/msad.php:117 views/msad2.php:143 views/openldap.php:188
 #: views/openldap2.php:121
-#, fuzzy
 msgid "Base DN"
 msgstr "Basis-DN"
 
@@ -227,11 +232,11 @@ msgstr "Benutzermanager Benutzer erstellen"
 
 #: views/groups.php:240 views/users.php:610
 msgid "Date Format"
-msgstr ""
+msgstr "Datumsformat"
 
 #: views/groups.php:196 views/users.php:560
 msgid "Date and Time Format"
-msgstr ""
+msgstr "Datums- und Zeitformat"
 
 #: views/welcome.php:116
 msgid "Default"
@@ -306,6 +311,10 @@ msgid ""
 "in the order you'd like. User logins will match based on the first directory "
 "then if no match was found waterfall down the list in the order chosen below"
 msgstr ""
+"Sie können die Reihenfolge der Verzeichnisse ändern, indem Sie die Einträge "
+"anklicken und die gewünschte Reihenfolge ziehen. Benutzeranmeldungen werden "
+"der Reihe nach mit den Verzeichnissen abgeglichen bis eine Übereinstimmung "
+"gefunden wird"
 
 #: Userman.class.php:2867 Userman.class.php:2868 views/openldap.php:144
 #: views/users.php:275 views/welcome.php:56
@@ -317,6 +326,8 @@ msgid ""
 "Display Name. Used in User Control Panel and Contact Manager to display a "
 "customized user name"
 msgstr ""
+"Anzeigename. Wird im ‚User Control Panel‘ und im Kontakt-Manager verwendet, "
+"um einen angepassten Benutzernamen anzuzeigen"
 
 #: views/msad.php:95 views/msad2.php:121
 msgid "Domain"
@@ -324,7 +335,7 @@ msgstr "Domäne"
 
 #: views/msad2.php:194 views/openldap2.php:172
 msgid "Don't Create"
-msgstr ""
+msgstr "Nicht erzeugen"
 
 #: views/groups.php:3
 msgid "Edit Group"
@@ -340,7 +351,7 @@ msgstr "E-Mail "
 
 #: views/users.php:435
 msgid "Email Address"
-msgstr "E-Mail Adresse"
+msgstr "E-Mail-Adresse"
 
 #: views/general.php:128
 msgid "Email Body"
@@ -356,19 +367,19 @@ msgstr "Betreff"
 
 #: views/directories.php:69
 msgid "Enable Directory"
-msgstr ""
+msgstr "Verzeichnis aktivieren"
 
 #: views/quickCreate.php:25
 msgid "Enable User Manager for this extension"
-msgstr ""
+msgstr "User-Manager für diese Erweiterung aktivieren"
 
 #: Userman.class.php:1014
 msgid "Error: No id provided"
-msgstr ""
+msgstr "Fehler: Es wurde keine ID angegeben"
 
 #: Userman.class.php:1053
 msgid "Error: You should never see this"
-msgstr ""
+msgstr "Fehler: Sie sollten dies nie sehen"
 
 #: views/msad.php:139 views/openldap.php:210
 msgid "Extension Link Attribute"
@@ -376,7 +387,7 @@ msgstr ""
 
 #: assets/js/userman.js:370
 msgid "False"
-msgstr ""
+msgstr "Falsch"
 
 #: views/users.php:531
 msgid "Fax Phone Number"
@@ -389,7 +400,7 @@ msgstr "Vorname"
 
 #: Console/Userman.class.php:23
 msgid "Force syncronization"
-msgstr ""
+msgstr "Synchronisation erzwingen"
 
 #: Userman.class.php:1318 Userman.class.php:1866
 msgid "GID was not numeric"
@@ -423,7 +434,7 @@ msgstr "Gruppe '%s' existiert nicht"
 
 #: views/msad2.php:711 views/openldap2.php:665
 msgid "Group DN"
-msgstr ""
+msgstr "Gruppen-DN"
 
 #: views/groups.php:82
 msgid "Group Description"
@@ -448,6 +459,9 @@ msgid ""
 "the order you'd like. Groups with a lower number for priority take priority "
 "(EG 0 is higher than 1)"
 msgstr ""
+"Sie können die Reihenfolge der Gruppen ändern, indem Sie die Einträge "
+"anklicken und die gewünschte Reihenfolge ziehen. Gruppen mit einer kleineren "
+"Nummer haben eine höhere Priorität (0 ist z.B. höher priorisiert als 1)"
 
 #: functions.inc/auth/modules/Freepbx.php:139
 #: functions.inc/auth/modules/Msad2.php:398
@@ -470,7 +484,7 @@ msgstr "Gruppe existiert bereits"
 
 #: views/msad2.php:704
 msgid "Group configuration"
-msgstr ""
+msgstr "Gruppenkonfiguration"
 
 #: views/msad2.php:777 views/openldap2.php:731
 msgid "Group members attribute"
@@ -509,6 +523,8 @@ msgid ""
 "Groups that this user is a part of. You can add and remove this user from "
 "groups in this view as well"
 msgstr ""
+"Gruppen, denen dieser Benutzer angehört. Sie können in dieser Ansicht auch "
+"die Gruppenmitglischaften dieses Benutzers ändern"
 
 #: views/users.php:507
 msgid "Home Phone Number"
@@ -524,11 +540,11 @@ msgstr "Hostname"
 
 #: views/msad2.php:33 views/openldap2.php:33
 msgid "Host(s)"
-msgstr ""
+msgstr "Host(s)"
 
 #: Console/Userman.class.php:33
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #: Userman.class.php:1300
 msgid "ID was not numeric"
@@ -581,7 +597,7 @@ msgstr ""
 #: Userman.class.php:123
 #, php-format
 msgid "Imported %s directory"
-msgstr ""
+msgstr "Verzeichnis %s importiert"
 
 #: views/welcome.php:16
 #, php-format
@@ -610,15 +626,15 @@ msgstr "Ungültiger Benutzer"
 #: functions.inc/auth/modules/Openldap2.php:374
 #: functions.inc/auth/modules/Openldap2.php:400
 msgid "LDAP is in Read Only Mode. Addition denied"
-msgstr ""
+msgstr "LDAP befindet sich im Nur-lesen-Modus. Hinzufügen verweigert"
 
 #: views/groups.php:105 views/users.php:371
 msgid "Language"
-msgstr ""
+msgstr "Sprache"
 
 #: views/groups.php:125 views/users.php:391
 msgid "Language for this user"
-msgstr ""
+msgstr "Sprache für diesen Benutzer"
 
 #: Userman.class.php:2863 Userman.class.php:2864 views/users.php:251
 #: views/welcome.php:58
@@ -635,7 +651,7 @@ msgstr "Link zu einem Standard Benutzer"
 
 #: functions.inc/guihooks.php:224
 msgid "Link to a Different Default User:"
-msgstr ""
+msgstr "Verweis auf einen anderen Standard-Benutzer:"
 
 #: functions.inc/guihooks.php:180
 msgid "Linked"
@@ -664,7 +680,7 @@ msgstr "Benutzerliste"
 
 #: Console/Userman.class.php:24
 msgid "List directories"
-msgstr ""
+msgstr "Verzeichnisse auflisten"
 
 #: views/users.php:29
 msgid "Login Details"
@@ -676,17 +692,17 @@ msgstr "Login Name"
 
 #: views/msad2.php:216 views/openldap2.php:194
 msgid "Manage groups locally"
-msgstr ""
+msgstr "Gruppen lokal verwalten"
 
 #: views/groups.php:280
 #, php-format
 msgid "May this group log in to the %s Administration Pages?"
-msgstr ""
+msgstr "Darf sich diese Gruppe an der %s-Verwaltungsseite anmelden?"
 
 #: views/directories.php:84 views/users.php:654
 #, php-format
 msgid "May this user log in to the %s Administration Pages?"
-msgstr ""
+msgstr "Darf sich dieser Benutzer an der %s-Verwaltungsseite anmelden?"
 
 #: functions.inc/auth/modules/Msad2.php:152
 msgid "Microsoft Active Directory"
@@ -694,7 +710,7 @@ msgstr "Microsoft Active Directory"
 
 #: functions.inc/auth/modules/Msad.php:133
 msgid "Microsoft Active Directory (Legacy)"
-msgstr ""
+msgstr "Microsoft Active Directory (Legacy)"
 
 #: Userman.class.php:2639
 msgid "Migrated user from voicemail"
@@ -721,6 +737,9 @@ msgid ""
 "New groups created in this directory will be local and not saved to the LDAP "
 "directory. Groups synchronised from the remote directory will be read-only."
 msgstr ""
+"In diesem Verzeichnis können nur lokale Gruppen angelegt werden, die nicht "
+"im LDAP-Verzeichnis gespeichert werden. Die Gruppen, die aus dem entfernten "
+"Verzeichnis synchronisiert werden, sind nur lesbar."
 
 #: views/directories.php:76 views/general.php:32 views/general.php:61
 #: views/groups.php:272 views/groups.php:297 views/msad2.php:223
@@ -746,7 +765,7 @@ msgstr "nicht Verbunden"
 #: functions.inc/auth/modules/Openldap.php:181
 #: functions.inc/auth/modules/Openldap2.php:192
 msgid "Not all of the connection parameters have been filled out"
-msgstr ""
+msgstr "Es wurden nicht alle Verbindungsparameter ausgefüllt"
 
 #: Userman.class.php:2687
 msgid "Obfuscated. To reset use the reset link in this email"
@@ -758,7 +777,7 @@ msgstr "OpenLDAP-Verzeichnis"
 
 #: functions.inc/auth/modules/Openldap.php:145
 msgid "OpenLDAP Directory (Legacy)"
-msgstr ""
+msgstr "OpenLDAP-Verzeichnis (Legacy)"
 
 #: views/msad2.php:182 views/openldap2.php:160
 msgid "Operational Settings"
@@ -770,7 +789,7 @@ msgstr "Andere Einstellungen"
 
 #: Userman.class.php:144 Userman.class.php:1369
 msgid "PBX Internal Directory"
-msgstr ""
+msgstr "Internes Verzeichnis der Telefonanlage"
 
 #: Userman.class.php:2846 views/msad.php:73 views/msad2.php:99
 #: views/openldap.php:100 views/openldap2.php:99 views/passwordmodal.php:16
@@ -792,7 +811,7 @@ msgstr "Passwort darf nicht leer sein"
 
 #: assets/js/userman.js:178 assets/js/userman.js:200
 msgid "Please fill all missing fields"
-msgstr ""
+msgstr "Bitte füllen Sie alle fehlenden Angaben aus"
 
 #: functions.inc/guihooks.php:233 functions.inc/guihooks.php:277
 msgid "Please select a valid username for New User Creation"
@@ -800,7 +819,7 @@ msgstr "Bitte wählen Sie einen gültigen Benutzernamen für den neuen Benutzer"
 
 #: Userman.class.php:2930 Userman.class.php:3013
 msgid "Please set a default directory in User Manager"
-msgstr ""
+msgstr "Bitte stellen Sie im User-Manager ein Standardverzeichnis ein"
 
 #: views/msad.php:29 views/msad2.php:55 views/openldap.php:29
 #: views/openldap2.php:55
@@ -821,7 +840,7 @@ msgstr "Primäre Nebenstelle"
 
 #: views/users.php:132
 msgid "Primary Group"
-msgstr ""
+msgstr "Primäre Grupppe"
 
 #: Userman.class.php:2852 views/users.php:194
 msgid "Primary Linked Extension"
@@ -863,12 +882,12 @@ msgstr ""
 #: functions.inc/guihooks.php:223 functions.inc/guihooks.php:228
 #: functions.inc/guihooks.php:275
 msgid "Select User Directory:"
-msgstr ""
+msgstr "Wählen Sie ein Benutzerverzeichnis:"
 
 #: functions.inc/guihooks.php:223 functions.inc/guihooks.php:228
 #: functions.inc/guihooks.php:275
 msgid "Select a user directory"
-msgstr ""
+msgstr "Wählen Sie ein Benutzerverzeichnis"
 
 #: functions.inc/guihooks.php:224 functions.inc/guihooks.php:229
 msgid ""
@@ -928,7 +947,7 @@ msgstr "Status"
 
 #: Userman.class.php:526
 msgid "Submit"
-msgstr "Bestätigen"
+msgstr "Absenden"
 
 #: Userman.class.php:520
 msgid "Submit & Send Email to User"
@@ -941,10 +960,11 @@ msgstr "Synchronisation"
 #: Console/Userman.class.php:22
 msgid "Syncronize a single directory by id (obtained from --list)"
 msgstr ""
+"Ein einzelnes Verzeichnis nach ID synchronisieren (durch „--list“ erhalten)"
 
 #: Console/Userman.class.php:21
 msgid "Syncronize all directories"
-msgstr ""
+msgstr "Alle Verzeichnisse synchronisieren"
 
 #: views/general.php:140
 #, php-format
