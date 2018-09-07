@@ -2739,11 +2739,12 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 
 	/**
 	 * Send an email to a user
-	 * @param int $id      The user ID
-	 * @param string $subject The email subject
-	 * @param string $body    The email body
+	 * @param int $id           The user ID
+	 * @param string $subject   The email subject
+	 * @param string $body      The email body
+	 * @param string $forceType Type of email text or html 
 	 */
-	public function sendEmail($id,$subject,$body) {
+	public function sendEmail($id,$subject,$body,$forceType = null) {
 		$user = $this->getUserByID($id);
 		if(empty($user) || empty($user['email'])) {
 			return false;
@@ -2766,7 +2767,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 
 		$from = !empty($femail) ? $femail : get_current_user() . '@' . gethostname();
 
-		$mailtype = $this->getGlobalsetting('mailtype');
+		$mailtype = (isset($forceType)) ? $forceType : $this->getGlobalsetting('mailtype');
 		$mailtype = $mailtype === 'html' ? 'html' : 'text';
 
 		$email->set_mailtype($mailtype);
