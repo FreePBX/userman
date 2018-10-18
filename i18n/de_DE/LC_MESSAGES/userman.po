@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-07 15:48-0400\n"
-"PO-Revision-Date: 2018-10-17 15:00+0000\n"
+"PO-Revision-Date: 2018-10-19 14:00+0000\n"
 "Last-Translator: Bastian Mertgen <b.mertgen@bastian-mertgen.de>\n"
 "Language-Team: German <http://*/projects/freepbx/userman/de/>\n"
 "Language: de_DE\n"
@@ -23,7 +23,7 @@ msgstr ""
 #: views/groups.php:36 views/users.php:33
 #, php-format
 msgid "%s Administration GUI"
-msgstr "%s Administrations Oberfläche"
+msgstr "%s Administrationsoberfläche"
 
 #: functions.inc/auth/modules/Freepbx.php:24
 #, php-format
@@ -38,10 +38,10 @@ msgid ""
 "iSymphony and RestAPI are examples of these type of modules. In %s 12, the "
 "new User Control Panel also uses User Manager."
 msgstr ""
-"%s-User-Manger ersetzt mehrere Module, die versucht haben, Benutzer "
-"unabhängig von Nebenstellen zu erzeugen und zu verwalten. Module wie "
-"iSymphony und RestAPI sind Beispiele hierfür. In %s 12 verwendet das neue "
-"‚User Control Panel‘ ebenfalls den User-Manager."
+"Die %s-Benutzerverwaltung ersetzt mehrere Module, die versucht haben, "
+"Benutzer unabhängig von Nebenstellen zu erzeugen und zu verwalten. Module "
+"wie iSymphony und RestAPI sind Beispiele hierfür. In %s 12 verwendet das "
+"neue „User Control Panel“ ebenfalls die Benutzerverwaltung."
 
 #: Userman.class.php:2910
 #, php-format
@@ -775,7 +775,7 @@ msgstr "Nein"
 #: Userman.class.php:191 functions.inc/guihooks.php:174
 #: functions.inc/guihooks.php:241 views/msad2.php:12 views/openldap2.php:12
 msgid "None"
-msgstr "Keine*r"
+msgstr "Kein*e"
 
 #: functions.inc/auth/modules/Msad.php:147
 #: functions.inc/auth/modules/Msad2.php:166
@@ -1245,7 +1245,7 @@ msgstr ""
 #: views/directories.php:37
 #, php-format
 msgid "The authentication engine to use"
-msgstr ""
+msgstr "Die Authentifizierungs-Engine, die verwendet werden soll"
 
 #: views/msad.php:129 views/msad2.php:155
 msgid "The base DN. Usually in the format of CN=Users,DC=domain,DC=local"
@@ -1288,10 +1288,12 @@ msgstr ""
 #: views/msad2.php:767 views/openldap2.php:721
 msgid "The filter to use when searching group objects."
 msgstr ""
+"Der Filter, der bei der Suche nach Gruppenobjekten verwendet werden soll."
 
 #: views/msad2.php:366 views/openldap2.php:344
 msgid "The filter to use when searching user objects."
 msgstr ""
+"Der Filter, der bei der Suche nach Benutzerobjekten verwendet werden soll."
 
 #: views/users.php:575
 msgid ""
@@ -1299,6 +1301,10 @@ msgid ""
 "locale aware. If left blank this will use the group/system format. For more "
 "formats please see: http://momentjs.com/docs/#/displaying/format/"
 msgstr ""
+"Das Format, in dem Daten und Zeiten angezeigt werden sollen. Der "
+"Standardwert „llll“ berücksichtigt das Gebietsschema. Wird hier nichts "
+"angegeben, wird das Gruppen-/System-Format verwendet. Für weitere Formate "
+"schauen Sie bitte unter http://momentjs.com/docs/#/displaying/format/ nach"
 
 #: views/groups.php:208
 msgid ""
@@ -1306,6 +1312,10 @@ msgid ""
 "locale aware. If left blank this will use the system format. For more "
 "formats please see: http://momentjs.com/docs/#/displaying/format/"
 msgstr ""
+"Das Format, in dem Daten und Zeiten angezeigt werden sollen. Der "
+"Standardwert „llll“ berücksichtigt das Gebietsschema. Wird hier nichts "
+"angegeben, wird das System-Format verwendet. Für weitere Formate schauen Sie "
+"bitte unter http://momentjs.com/docs/#/displaying/format/ nach"
 
 #: views/users.php:625
 msgid ""
@@ -1313,6 +1323,10 @@ msgid ""
 "left blank this will use the group/system format. For more formats please "
 "see: http://momentjs.com/docs/#/displaying/format/"
 msgstr ""
+"Das Format, in dem Daten und Zeiten angezeigt werden sollen. Der "
+"Standardwert „l“ berücksichtigt das Gebietsschema. Wird hier nichts "
+"angegeben, wird das Gruppen-/System-Format verwendet. Für weitere Formate "
+"schauen Sie bitte unter http://momentjs.com/docs/#/displaying/format/ nach"
 
 #: views/groups.php:252
 msgid ""
@@ -1320,6 +1334,10 @@ msgid ""
 "left blank this will use the system format. For more formats please see: "
 "http://momentjs.com/docs/#/displaying/format/"
 msgstr ""
+"Das Format, in dem Daten und Zeiten angezeigt werden sollen. Der "
+"Standardwert „l“ berücksichtigt das Gebietsschema. Wird hier nichts "
+"angegeben, wird das System-Format verwendet. Für weitere Formate schauen Sie "
+"bitte unter http://momentjs.com/docs/#/displaying/format/ nach"
 
 #: views/users.php:600
 msgid ""
@@ -1327,6 +1345,10 @@ msgid ""
 "If left blank this will use the group/system format. For more formats please "
 "see: http://momentjs.com/docs/#/displaying/format/"
 msgstr ""
+"Das Format, in dem Daten und Zeiten angezeigt werden sollen. Der "
+"Standardwert „LT“ berücksichtigt das Gebietsschema. Wird hier nichts "
+"angegeben, wird das Gruppen-/System-Format verwendet. Für weitere Formate "
+"schauen Sie bitte unter http://momentjs.com/docs/#/displaying/format/ nach"
 
 #: views/groups.php:230
 msgid ""
@@ -1334,6 +1356,10 @@ msgid ""
 "If left blank this will use the system format. For more formats please see: "
 "http://momentjs.com/docs/#/displaying/format/"
 msgstr ""
+"Das Format, in dem Daten und Zeiten angezeigt werden sollen. Der "
+"Standardwert „LT“ berücksichtigt das Gebietsschema. Wird hier nichts "
+"angegeben, wird das System-Format verwendet. Für weitere Formate schauen Sie "
+"bitte unter http://momentjs.com/docs/#/displaying/format/ nach"
 
 #: views/general.php:93
 #, php-format
@@ -1341,46 +1367,48 @@ msgid ""
 "The hostname used for email. If left blank the default value of '%s' will be "
 "used"
 msgstr ""
+"Der Rechnername für den E-Mail-Versand. Wird dieses Feld leer gelassen, wird "
+"der Standardwert ‚%s‘ verwendet"
 
 #: views/users.php:471
 msgid "The user's cell (mobile) phone number."
-msgstr ""
+msgstr "Die Mobilfunknummer des Benutzers."
 
 #: views/users.php:335
 msgid "The user's company."
-msgstr ""
+msgstr "Die Firma des Benutzers."
 
 #: views/users.php:359
 msgid "The user's department."
-msgstr ""
+msgstr "Die Abteilung des Benutzers."
 
 #: views/users.php:543
 msgid "The user's fax phone number."
-msgstr ""
+msgstr "Die Faxnummer des Benutzers."
 
 #: views/users.php:239
 msgid "The user's first name."
-msgstr ""
+msgstr "Der Vorname des Benutzers."
 
 #: views/users.php:519
 msgid "The user's home phone number."
-msgstr ""
+msgstr "Die private Telefonnummer des Benutzers."
 
 #: views/users.php:263
 msgid "The user's last name."
-msgstr ""
+msgstr "Der Nachname des Benutzers."
 
 #: views/users.php:120
 msgid "The user's password."
-msgstr ""
+msgstr "Das Passwort des Benutzers."
 
 #: views/users.php:311
 msgid "The user's title."
-msgstr ""
+msgstr "Der Titel des Bnutzers."
 
 #: views/users.php:495
 msgid "The user's work phone number."
-msgstr ""
+msgstr "Die dienstliche Telefonnummer des Benutzers."
 
 #: views/voicemail.php:19
 msgid "The voicemail context to get users from"
@@ -1388,7 +1416,7 @@ msgstr ""
 
 #: Userman.class.php:294
 msgid "There was an error saving the configuration"
-msgstr ""
+msgstr "Beim Speichern der Konfiguration trat ein Fehler auf"
 
 #: userman.i18n.php:8
 msgid ""
@@ -1396,16 +1424,22 @@ msgid ""
 "User Account that can be used by other applications for login or API "
 "purposes."
 msgstr ""
+"Dieses Modul verwaltet alle Benutzer der Telefonanlage. Es erlaubt einem "
+"Administrator, ein Benutzerkonto anzulegen, das von anderen Anwendungen zur "
+"Anmeldung oder für den Zugriff auf API-Funktionen verwendet werden kann."
 
 #: Userman.class.php:3007 Userman.class.php:3071
 msgid "This authentication driver does not allow importing"
-msgstr ""
+msgstr "Dieser Authentifizierungstreiber erlaubt keinen Import"
 
 #: Userman.class.php:1389
 msgid ""
 "This group was created on install and is automatically assigned to new "
 "users. This can be disabled in User Manager Settings"
 msgstr ""
+"Diese Gruppe wurde bei der Installation erzeugt und wird neuen Benutzern "
+"automatisch zugeordnet. Dieses Verhalten kann in den Einstellungen der "
+"Benutzerverwaltung deaktiviert werden"
 
 #: views/users.php:210
 msgid ""
@@ -1413,10 +1447,14 @@ msgid ""
 "single user can only be linked to one extension, and one extension can only "
 "be linked to a single user."
 msgstr ""
+"Dies ist die Nebenstelle, mit der dieser Benutzer auf der Nebenstellenseite "
+"verknüpft ist. Ein Benutzer kann immer nur mit einer Nebenstelle verknüpft "
+"sein und eine Nebenstelle kann ebenfalls immer niur mit einem Benutzer "
+"verknüpft sein."
 
 #: views/users.php:71
 msgid "This is the name that the user will use when logging in."
-msgstr ""
+msgstr "Dies ist der Name, mit dem der Benutzer sich anmelden wird."
 
 #: views/directories.php:112
 #, php-format
@@ -1439,18 +1477,21 @@ msgid ""
 "users. An example is ou=Users. If no value is supplied, the subtree search "
 "will start from the base DN."
 msgstr ""
+"Dieser Wert wird in Verbindung mit dem Basis-DN beim Suchen und Laden von "
+"Benutzern verwendet. Ein Beispiel ist „ou=Benutzer“. Wird hier nichts "
+"eingetragen, beginnt die rekursive Suche am Basis-DN."
 
 #: views/groups.php:218 views/users.php:585
 msgid "Time Format"
-msgstr ""
+msgstr "Zeitformat"
 
 #: views/groups.php:137 views/users.php:403
 msgid "Timezone"
-msgstr ""
+msgstr "Zeitzone"
 
 #: views/groups.php:157 views/users.php:423
 msgid "Timezone for this user"
-msgstr ""
+msgstr "Die Zeitzone dieses Benutzers"
 
 #: views/users.php:299
 msgid "Title"
