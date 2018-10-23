@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-07 15:48-0400\n"
-"PO-Revision-Date: 2018-10-19 14:00+0000\n"
+"PO-Revision-Date: 2018-10-24 01:00+0000\n"
 "Last-Translator: Bastian Mertgen <b.mertgen@bastian-mertgen.de>\n"
 "Language-Team: German <http://*/projects/freepbx/userman/de/>\n"
 "Language: de_DE\n"
@@ -1463,6 +1463,9 @@ msgid ""
 "Internal Directory. For the %s Internal Directory this setting will be "
 "ignored."
 msgstr ""
+"Diese Einstellung gilt nur für andere Authentifizierungs-Engines als das "
+"interne %s Verzeichnis. Für das interne %s Verzeichnis wird diese "
+"Einstellung ignoriert."
 
 #: views/msad2.php:723 views/openldap2.php:677
 msgid ""
@@ -1470,6 +1473,9 @@ msgid ""
 "groups. An example is ou=Groups. If no value is supplied, the subtree search "
 "will start from the base DN."
 msgstr ""
+"Dieser Wert (z.B. ou=Groups) wird zusätzlich zum Basis-DN verwendet, wenn "
+"nach Gruppen gesucht wird. Wird kein Wert angegeben, beginnt die Suche am "
+"Basis-DN."
 
 #: views/msad2.php:322 views/openldap2.php:300
 msgid ""
@@ -1712,7 +1718,7 @@ msgstr "Attribut für den Nachnamen des Benutzers"
 
 #: views/msad2.php:399
 msgid "User name RDN attribute"
-msgstr ""
+msgstr "RDN-Attribut des Benutzernamens"
 
 #: views/msad2.php:376 views/openldap2.php:354
 msgid "User name attribute"
