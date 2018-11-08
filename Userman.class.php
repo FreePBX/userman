@@ -2941,74 +2941,81 @@ class Userman extends FreePBX_Helpers implements BMO {
 					return array("status" => false, "message" => _("Please set a default directory in User Manager"));
 				}
 				if($this->getAuthPermission($directory['id'], 'addUser')) {
-					foreach ($rawData as $data) {
-						if (empty($data['username'])) {
-							return array("status" => false, "message" => _("username is required."));
-						}
-						if (empty($data['default_extension'])) {
-							return array("status" => false, "message" => _("default_extension is required."));
+					if(is_array($rawData)){
+						foreach ($rawData as $data) {
+							if (empty($data['username'])) {
+								return array("status" => false, "message" => _("username is required."));
+							}
+							if (empty($data['default_extension'])) {
+								return array("status" => false, "message" => _("default_extension is required."));
+							}
+
+							$username = $data['username'];
+							$default_extension = $data['default_extension'];
+							$description = !empty($data['description']) ? $data['description'] : null;
+
+							$extraData = array(
+								'fname' => isset($data['fname']) ? $data['fname'] : null,
+								'lname' => isset($data['lname']) ? $data['lname'] : null,
+								'displayname' => isset($data['displayname']) ? $data['displayname'] : null,
+								'title' => isset($data['title']) ? $data['title'] : null,
+								'company' => isset($data['company']) ? $data['company'] : null,
+								'department' => isset($data['department']) ? $data['department'] : null,
+								'email' => isset($data['email']) ? $data['email'] : null,
+								'cell' => isset($data['cell']) ? $data['cell'] : null,
+								'work' => isset($data['work']) ? $data['work'] : null,
+								'home' => isset($data['home']) ? $data['home'] : null,
+								'fax' => isset($data['fax']) ? $data['fax'] : null,
+							);
+
+							$existing = $this->getUserByUsername($username,$directory['id']);
+							if(!$replaceExisting && $existing) {
+								return array("status" => false, "message" => _("User already exists"));
+							}
+							if ($existing) {
+								try {
+									$status = $this->updateUser($existing['id'], $username, $username, $default_extension, $description, $extraData, !empty($data['password']) ? $data['password'] : null);
+								} catch (Exception $e) {
+									return array("status" => false, "message" => $e->getMessage());
+								}
+								if (!$status['status']) {
+									$ret = array(
+										'status' => false,
+										'message' => $status['message'],
+									);
+									return $ret;
+								}
+							} else {
+								if (empty($data['password']) && empty($data['encrypted_password'])) {
+									return array("status" => false, "message" => _("password is required."));
+								}
+								try {
+									$status = $this->addUser($username, !empty($data['encrypted_password']) ? $data['encrypted_password'] : $data['password'], $default_extension, $description, $extraData, !empty($data['encrypted_password']) ? false : true);
+								} catch (Exception $e) {
+									return array("status" => false, "message" => $e->getMessage());
+								}
+								if (!$status['status']) {
+									$ret = array(
+										'status' => false,
+										'message' => $status['message'],
+									);
+									return $ret;
+								}
+							}
+
+							break;
 						}
 
-						$username = $data['username'];
-						$default_extension = $data['default_extension'];
-						$description = !empty($data['description']) ? $data['description'] : null;
-
-						$extraData = array(
-							'fname' => isset($data['fname']) ? $data['fname'] : null,
-							'lname' => isset($data['lname']) ? $data['lname'] : null,
-							'displayname' => isset($data['displayname']) ? $data['displayname'] : null,
-							'title' => isset($data['title']) ? $data['title'] : null,
-							'company' => isset($data['company']) ? $data['company'] : null,
-							'department' => isset($data['department']) ? $data['department'] : null,
-							'email' => isset($data['email']) ? $data['email'] : null,
-							'cell' => isset($data['cell']) ? $data['cell'] : null,
-							'work' => isset($data['work']) ? $data['work'] : null,
-							'home' => isset($data['home']) ? $data['home'] : null,
-							'fax' => isset($data['fax']) ? $data['fax'] : null,
+						needreload();
+						$ret = array(
+							'status' => true,
 						);
-
-						$existing = $this->getUserByUsername($username,$directory['id']);
-						if(!$replaceExisting && $existing) {
-							return array("status" => false, "message" => _("User already exists"));
-						}
-						if ($existing) {
-							try {
-								$status = $this->updateUser($existing['id'], $username, $username, $default_extension, $description, $extraData, !empty($data['password']) ? $data['password'] : null);
-							} catch (Exception $e) {
-								return array("status" => false, "message" => $e->getMessage());
-							}
-							if (!$status['status']) {
-								$ret = array(
-									'status' => false,
-									'message' => $status['message'],
-								);
-								return $ret;
-							}
-						} else {
-							if (empty($data['password']) && empty($data['encrypted_password'])) {
-								return array("status" => false, "message" => _("password is required."));
-							}
-							try {
-								$status = $this->addUser($username, !empty($data['encrypted_password']) ? $data['encrypted_password'] : $data['password'], $default_extension, $description, $extraData, !empty($data['encrypted_password']) ? false : true);
-							} catch (Exception $e) {
-								return array("status" => false, "message" => $e->getMessage());
-							}
-							if (!$status['status']) {
-								$ret = array(
-									'status' => false,
-									'message' => $status['message'],
-								);
-								return $ret;
-							}
-						}
-
-						break;
+					}else{
+						$ret = array(
+							'status' => false,
+							'message' => _("Empty data array."),
+						);
 					}
-
-					needreload();
-					$ret = array(
-						'status' => true,
-					);
 				} else {
 					$ret = array(
 						'status' => false,
