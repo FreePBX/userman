@@ -368,7 +368,7 @@ echo $heading;
 																<i class="fa fa-question-circle fpbx-help-icon" data-for="pbx_landing"></i>
 															</div>
 															<div class="col-md-9">															
-																<select id="pbx_landing" class="form-control" name="pbx_landing[]" >
+																<select id="pbx_landing" class="form-control" name="pbx_landing[]">
 																	<?php foreach($modules as $key => $val) {
 																		if($key == "wiki"){
 																			 continue;
