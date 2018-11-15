@@ -367,10 +367,11 @@ class Userman extends FreePBX_Helpers implements BMO {
 
 					$this->setGlobalSettingByGID($ret['id'],'pbx_low',$_POST['pbx_low']);
 					$this->setGlobalSettingByGID($ret['id'],'pbx_high',$_POST['pbx_high']);
-
+					$this->setGlobalSettingByGID($ret['id'],'pbx_landing',empty($_POST['pbx_landing'])? "dashboard": $_POST['pbx_landing'] );
 					$this->setGlobalSettingByGID($ret['id'],'pbx_modules',(!empty($_POST['pbx_modules']) ? $_POST['pbx_modules'] : array()));
 				break;
 				case 'user':
+
 					$directory = $request['directory'];
 					$username = !empty($request['username']) ? $request['username'] : '';
 					$password = !empty($request['password']) ? $request['password'] : '';
@@ -443,7 +444,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 
 						$this->setGlobalSettingByID($ret['id'],'pbx_low',$_POST['pbx_low']);
 						$this->setGlobalSettingByID($ret['id'],'pbx_high',$_POST['pbx_high']);
-
+						$this->setGlobalSettingByID($ret['id'],'pbx_landing',empty($_POST['pbx_landing'])? "dashboard": $_POST['pbx_landing']);
 						$this->setGlobalSettingByID($ret['id'],'pbx_modules',!empty($_POST['pbx_modules']) ? $_POST['pbx_modules'] : null);
 						if(!empty($_POST['groups'])) {
 							$groups = $this->getAllGroups();
@@ -700,6 +701,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 						"pbx_high" => empty($group) ? '' : $this->getGlobalSettingByGID($request['group'],'pbx_high'),
 						"pbx_login" => empty($group) ? false : $this->getGlobalSettingByGID($request['group'],'pbx_login'),
 						"pbx_admin" => empty($group) ? false : $this->getGlobalSettingByGID($request['group'],'pbx_admin'),
+						"pbx_landing" => empty($group) ? false : $this->getGlobalSettingByGID($request['group'],'pbx_landing'),
 						"brand" => $this->brand,
 						"users" => $users,
 						"modules" => $module_list,
@@ -762,6 +764,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 						"pbx_modules" => empty($request['user']) ? array() : $this->getGlobalSettingByID($request['user'],'pbx_modules'),
 						"pbx_low" => empty($request['user']) ? '' : $this->getGlobalSettingByID($request['user'],'pbx_low'),
 						"pbx_high" => empty($request['user']) ? '' : $this->getGlobalSettingByID($request['user'],'pbx_high'),
+						"pbx_landing" => empty($request['user']) ? '' : $this->getGlobalSettingByID($request['user'],'pbx_landing'),
 						"pbx_login" => empty($request['user']) ? false : $this->getGlobalSettingByID($request['user'],'pbx_login',true),
 						"pbx_admin" => empty($request['user']) ? false : $this->getGlobalSettingByID($request['user'],'pbx_admin',true),
 						"modules" => $module_list,
@@ -981,7 +984,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 				$sort = json_decode($_POST['sort'],true);
 				$sql = "UPDATE ".$this->directoryTable." SET `order` = ? WHERE `id` = ?";
 				$sth = $this->db->prepare($sql);
-				dbug($sort);
+				
 				foreach($sort as $order => $gid) {
 					$sth->execute(array($order,$gid));
 				}
