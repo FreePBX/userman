@@ -705,6 +705,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 					$directory = $_GET['directory'];
 					$usage_html = '';
 				}
+				$dir = $this->getDirectoryByID($directory);
 				$groups = $this->getAllGroups($directory);
 				$extrauserdetails = $this->getExtraUserDetailsDisplay($user);
 				$fpbxusers = array();
@@ -2638,7 +2639,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * @param int $id           The user ID
 	 * @param string $subject   The email subject
 	 * @param string $body      The email body
-	 * @param string $forceType Type of email text or html 
+	 * @param string $forceType Type of email text or html
 	 */
 	public function sendEmail($id,$subject,$body,$forceType = null) {
 		$user = $this->getUserByID($id);
