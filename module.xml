@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>14.0.3.46</version>
+	<version>14.0.3.47</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -10,6 +10,7 @@
 		This Module manages all PBX users. It allows an Administrator to create a User Account that can be used by other applications for login or API purposes.
 	</description>
 	<changelog>
+		*14.0.3.47* FREEPBX-18752 - improving help text 
 		*14.0.3.46* Display user locks
 		*14.0.3.45* Bugfix/FREEPBX-17069 dashboard ucp accessible 
 		*14.0.3.44* Added optional parameter forceType to sendEmail function 
