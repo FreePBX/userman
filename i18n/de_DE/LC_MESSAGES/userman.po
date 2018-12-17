@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-21 15:20-0500\n"
+"POT-Creation-Date: 2018-12-17 12:55+0530\n"
 "PO-Revision-Date: 2018-10-24 01:00+0000\n"
 "Last-Translator: Bastian Mertgen <b.mertgen@bastian-mertgen.de>\n"
 "Language-Team: German <http://*/projects/freepbx/userman/de/>\n"
@@ -921,8 +921,15 @@ msgstr "Art der sicheren Verbindung"
 msgid "Select User Directory:"
 msgstr "Wählen Sie ein Benutzerverzeichnis:"
 
-#: views/groups.php:386 views/users.php:761
+#: views/groups.php:386
 msgid "Select a landing page that will be used by default."
+msgstr ""
+
+#: views/users.php:761
+msgid ""
+"Select a landing page that will be used by default.This settings will be "
+"overridden by Group setting if Allow PBXact Administration Login set to "
+"Inherit."
 msgstr ""
 
 #: functions.inc/guihooks.php:223 functions.inc/guihooks.php:228
@@ -955,8 +962,11 @@ msgid "Select the Admin Sections this group should have access to."
 msgstr "Wählen Sie die Admin-Bereiche, auf die diese Gruppe zugreifen darf."
 
 #: views/users.php:732
-msgid "Select the Admin Sections this user should have access to."
-msgstr "Wählen Sie die Admin-Bereiche, auf die dieser Benutzer zugreifen darf."
+msgid ""
+"Select the Admin Sections this user should have access to,This settings will "
+"be overridden by Group setting if Allow PBXact Administration Login set to "
+"Inherit."
+msgstr ""
 
 #: views/freepbx.php:23
 msgid "Select which groups new users are added to when they are created"
@@ -1884,6 +1894,10 @@ msgstr "Benutzername erforderlich."
 #: assets/js/userman.js:8
 msgid "users"
 msgstr "Benutzer"
+
+#~ msgid "Select the Admin Sections this user should have access to."
+#~ msgstr ""
+#~ "Wählen Sie die Admin-Bereiche, auf die dieser Benutzer zugreifen darf."
 
 #~ msgid "Database rename not completed"
 #~ msgstr "Datenbankumbenennung nicht abgeschlossen"

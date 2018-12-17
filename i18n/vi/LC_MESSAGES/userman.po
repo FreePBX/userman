@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-21 15:20-0500\n"
+"POT-Creation-Date: 2018-12-17 12:55+0530\n"
 "PO-Revision-Date: 2017-07-03 12:33-0400\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -865,8 +865,15 @@ msgstr ""
 msgid "Select User Directory:"
 msgstr ""
 
-#: views/groups.php:386 views/users.php:761
+#: views/groups.php:386
 msgid "Select a landing page that will be used by default."
+msgstr ""
+
+#: views/users.php:761
+msgid ""
+"Select a landing page that will be used by default.This settings will be "
+"overridden by Group setting if Allow PBXact Administration Login set to "
+"Inherit."
 msgstr ""
 
 #: functions.inc/guihooks.php:223 functions.inc/guihooks.php:228
@@ -892,7 +899,10 @@ msgid "Select the Admin Sections this group should have access to."
 msgstr ""
 
 #: views/users.php:732
-msgid "Select the Admin Sections this user should have access to."
+msgid ""
+"Select the Admin Sections this user should have access to,This settings will "
+"be overridden by Group setting if Allow PBXact Administration Login set to "
+"Inherit."
 msgstr ""
 
 #: views/freepbx.php:23
