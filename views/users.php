@@ -729,7 +729,7 @@ echo $usage_html;
 								</div>
 								<div class="row">
 									<div class="col-md-12">
-										<span id="pbx_modules-help" class="help-block fpbx-help-block"><?php echo _("Select the Admin Sections this user should have access to.")?></span>
+										<span id="pbx_modules-help" class="help-block fpbx-help-block"><?php echo _("Select the Admin Sections this user should have access to,This settings will be overridden by Group setting if Allow PBXact Administration Login set to Inherit.")?></span>
 									</div>
 								</div>
 							</div>
@@ -758,7 +758,7 @@ echo $usage_html;
 								</div>
 								<div class="row">
 									<div class="col-md-12">
-										<span id="pbx_landing-help" class="help-block fpbx-help-block"><?php echo _("Select a landing page that will be used by default.")?></span>
+										<span id="pbx_landing-help" class="help-block fpbx-help-block"><?php echo _("Select a landing page that will be used by default.This settings will be overridden by Group setting if Allow PBXact Administration Login set to Inherit.")?></span>
 									</div>
 								</div>
 							</div>				
