@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-21 15:17-0500\n"
+"POT-Creation-Date: 2018-12-17 12:53+0530\n"
 "PO-Revision-Date: 2016-12-21 00:22+0200\n"
 "Last-Translator: Alexander <alexander.schley@paranagua.pr.gov.br>\n"
 "Language-Team: Portuguese (Brazil) <http://weblate.freepbx.org/projects/"
@@ -898,8 +898,15 @@ msgstr ""
 msgid "Select User Directory:"
 msgstr ""
 
-#: views/groups.php:386 views/users.php:761
+#: views/groups.php:386
 msgid "Select a landing page that will be used by default."
+msgstr ""
+
+#: views/users.php:761
+msgid ""
+"Select a landing page that will be used by default.This settings will be "
+"overridden by Group setting if Allow PBXact Administration Login set to "
+"Inherit."
 msgstr ""
 
 #: functions.inc/guihooks.php:223 functions.inc/guihooks.php:228
@@ -932,9 +939,11 @@ msgid "Select the Admin Sections this group should have access to."
 msgstr "Selecione as Seções Administrativas a que este grupo deve ter acesso."
 
 #: views/users.php:732
-msgid "Select the Admin Sections this user should have access to."
+msgid ""
+"Select the Admin Sections this user should have access to,This settings will "
+"be overridden by Group setting if Allow PBXact Administration Login set to "
+"Inherit."
 msgstr ""
-"Selecione as Seções Administrativas a que este usuário deve ter acesso."
 
 #: views/freepbx.php:23
 msgid "Select which groups new users are added to when they are created"
@@ -1777,6 +1786,10 @@ msgstr "nome de usuário é necessário."
 #: assets/js/userman.js:8
 msgid "users"
 msgstr "usuários"
+
+#~ msgid "Select the Admin Sections this user should have access to."
+#~ msgstr ""
+#~ "Selecione as Seções Administrativas a que este usuário deve ter acesso."
 
 #~ msgid "Email Sent"
 #~ msgstr "E-mail Enviado"
