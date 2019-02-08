@@ -367,13 +367,13 @@ echo $heading;
 																<label class="control-label" for="pbx_landing"><?php echo _('Default Landing Page')?></label>
 																<i class="fa fa-question-circle fpbx-help-icon" data-for="pbx_landing"></i>
 															</div>
-															<div class="col-md-9">															
-																<select id="pbx_landing" class="form-control" name="pbx_landing[]">
-																	<?php foreach($modules as $key => $val) {
+															<div class="col-md-9">
+																<select id="pbx_landing" class="form-control" name="pbx_landing">
+																	<?php foreach($landing_page_list as $key => $val) {
 																		if($key == "wiki"){
 																			 continue;
 																		 } ?>
-																		<option value="<?php echo $key?>" <?php echo is_array($pbx_modules) && $pbx_landing[0]== $key ? 'selected' : '' ?>><?php echo $val['name']?></option>
+																		<option value="<?php echo $key?>" <?php echo $pbx_landing === $key ? 'selected' : '' ?>><?php echo $val['name']?></option>
 																	<?php } ?>
 																</select>
 															</div>
@@ -386,7 +386,7 @@ echo $heading;
 													<span id="pbx_landing-help" class="help-block fpbx-help-block"><?php echo _("Select a landing page that will be used by default.")?></span>
 												</div>
 											</div>
-										</div>	
+										</div>
 									</div>
 								<?php } ?>
 								<!--Module Specific -->
