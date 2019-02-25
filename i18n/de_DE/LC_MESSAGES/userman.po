@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-12-22 15:31-0500\n"
-"PO-Revision-Date: 2018-10-24 01:00+0000\n"
+"PO-Revision-Date: 2019-02-25 12:31+0000\n"
 "Last-Translator: Bastian Mertgen <b.mertgen@bastian-mertgen.de>\n"
 "Language-Team: German <http://*/projects/freepbx/userman/de/>\n"
 "Language: de_DE\n"
@@ -248,7 +248,7 @@ msgstr "Standardgruppe"
 
 #: views/groups.php:367 views/users.php:742
 msgid "Default Landing Page"
-msgstr ""
+msgstr "Standard-Startseite"
 
 #: Userman.class.php:533 views/welcome.php:38 views/welcome.php:75
 #: views/welcome.php:106 assets/js/userman.js:90 assets/js/userman.js:96
@@ -920,6 +920,7 @@ msgstr "Wählen Sie ein Benutzerverzeichnis:"
 #: views/groups.php:386
 msgid "Select a landing page that will be used by default."
 msgstr ""
+"Wählen Sie eine Startseite aus, die standardmäßig verwendet werden soll."
 
 #: views/users.php:761
 msgid ""
@@ -927,6 +928,9 @@ msgid ""
 "overridden by Group setting if Allow PBXact Administration Login set to "
 "Inherit."
 msgstr ""
+"Wählen Sie eine Startseite aus, die standardmäßig verwendet werden soll. "
+"Diese Einstellung wird durch die Gruppeneinstellungen überschrieben, falls „"
+"Anmeldung an der PBXact-Administration erlauben“ auf „erben“ gestellt ist."
 
 #: functions.inc/guihooks.php:223 functions.inc/guihooks.php:228
 #: functions.inc/guihooks.php:275
@@ -963,6 +967,10 @@ msgid ""
 "be overridden by Group setting if Allow PBXact Administration Login set to "
 "Inherit."
 msgstr ""
+"Wählen Sie die Administrationsbereiche, auf die dieser Benutzer Zugriff "
+"erhalten soll. Diese Einstellung wird durch die Gruppeneinstellungen "
+"überschrieben, falls „Anmeldung an der PBXact-Administration erlauben“ auf "
+"„erben“ gestellt ist."
 
 #: views/freepbx.php:23
 msgid "Select which groups new users are added to when they are created"
@@ -1430,7 +1438,7 @@ msgstr "Die dienstliche Telefonnummer des Benutzers."
 
 #: views/voicemail.php:19
 msgid "The voicemail context to get users from"
-msgstr ""
+msgstr "Der Voicemail-Kontext aus dem Benutzer abgerufen werden sollen"
 
 #: Userman.class.php:294
 msgid "There was an error saving the configuration"
@@ -1786,7 +1794,7 @@ msgstr "Bereich der sichtbaren Nebenstellen"
 
 #: functions.inc/auth/modules/Voicemail.php:160
 msgid "Voicemail is in Read Only Mode. Addition denied"
-msgstr ""
+msgstr "Voicemail befindet sich im Nur-lesen-Modus. Hinzufügen verweigert"
 
 #: Userman.class.php:810
 msgid "Warning"
