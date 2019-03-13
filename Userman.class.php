@@ -277,6 +277,14 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 			);
 			return true;
 		}
+		if(isset($request['action']) && $request['action'] == 'delgroup') {
+			$ret = $this->deleteGroupByGID($request['user']);
+			$this->message = array(
+				'message' => $ret['message'],
+				'type' => $ret['type']
+			);
+			return true;
+		}
 		if(isset($_POST['submittype'])) {
 			switch($_POST['type']) {
 				case 'directory':
