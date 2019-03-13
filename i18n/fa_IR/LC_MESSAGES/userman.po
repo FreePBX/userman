@@ -10,16 +10,15 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-29 16:52-0800\n"
-"PO-Revision-Date: 2016-05-20 11:30+0200\n"
-"Last-Translator: Media <mousavi.media@gmail.com>\n"
-"Language-Team: Persian (Iran) <http://weblate.freepbx.org/projects/freepbx/"
-"userman/fa_IR/>\n"
+"PO-Revision-Date: 2019-01-25 11:57+0000\n"
+"Last-Translator: Media Mousavi <mousavi.media@gmail.com>\n"
+"Language-Team: Persian <http://*/projects/freepbx/userman/fa/>\n"
 "Language: fa_IR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2.4\n"
+"X-Generator: Weblate 3.0.1\n"
 
 #: views/groups.php:29 views/users.php:29
 #, php-format
@@ -51,19 +50,19 @@ msgstr "اعتبار سنجی ناموفق رکوردهای %s"
 
 #: views/general.php:210
 msgid "1 Day"
-msgstr ""
+msgstr "۱ روز"
 
 #: views/general.php:208
 msgid "1 Hour"
-msgstr ""
+msgstr "۱ ساعت"
 
 #: views/general.php:207
 msgid "30 Minutes"
-msgstr ""
+msgstr "۳۰ دقیقه"
 
 #: views/general.php:209
 msgid "6 Hours"
-msgstr ""
+msgstr "۶ ساعت"
 
 #: views/users.php:90
 msgid "A brief description for this user."
@@ -108,7 +107,7 @@ msgstr "دسترسی مدیریت"
 
 #: views/groups.php:27 views/users.php:27
 msgid "Advanced"
-msgstr ""
+msgstr "پیشرفته"
 
 #: install.php:314
 msgid "All Users"
@@ -211,11 +210,11 @@ msgstr "تغیر نام بانک اطلاعات کامل نشد"
 
 #: views/groups.php:210 views/users.php:542
 msgid "Date Format"
-msgstr ""
+msgstr "فرمت تاریخ"
 
 #: views/groups.php:188 views/users.php:520
 msgid "Date and Time Format"
-msgstr ""
+msgstr "فرمت تاریخ و ساعت"
 
 #: views/freepbx.php:7
 msgid "Default Groups"
@@ -473,6 +472,10 @@ msgid ""
 "it will overwrite any manually linked extensions where this attribute "
 "extists!! (Try lowercase if it is not working.)"
 msgstr ""
+"If this is set then User Manager will use the defined attribute of the user "
+"from the OpenLDAP server as the extension link. NOTE: If this field is set "
+"it will overwrite any manually linked extensions where this attribute "
+"extists!! (Try lowercase if it is not working.)"
 
 #: views/welcome.php:16
 #, php-format
@@ -505,11 +508,11 @@ msgstr "LDAP در حالت فقط خواندنی است. افزودن ممنوع
 
 #: views/groups.php:97 views/users.php:331
 msgid "Language"
-msgstr ""
+msgstr "زبان"
 
 #: views/groups.php:117 views/users.php:351
 msgid "Language for this user"
-msgstr ""
+msgstr "زبان این کاربر"
 
 #: Userman.class.php:2209 Userman.class.php:2210 views/users.php:211
 #: views/welcome.php:53
@@ -606,7 +609,7 @@ msgstr "مبهم. برای بازنشانی از لینک موجود در ایم
 
 #: functions.inc/auth/modules/Openldap.php:140
 msgid "OpenLDAP Directory"
-msgstr ""
+msgstr "دایرکتوریOpenLDAP"
 
 #: views/users.php:34
 msgid "Other Settings"
@@ -786,11 +789,11 @@ msgstr ""
 
 #: assets/js/userman.js:258
 msgid "The Browser Language could not be determined"
-msgstr ""
+msgstr "زبان مرورگر قابل تشخیص نیست"
 
 #: assets/js/userman.js:278
 msgid "The Browser Timezone could not be determined"
-msgstr ""
+msgstr "منطقه زمانی مرورگر قابل تشخیص نیست"
 
 #: userman.i18n.php:18
 msgid ""
@@ -801,43 +804,44 @@ msgstr ""
 
 #: views/openldap.php:178
 msgid "The OpenLDAP Base-DN. Usually in the format of DC=example,DC=com"
-msgstr ""
+msgstr "The OpenLDAP Base-DN. Usually in the format of DC=example,DC=com"
 
 #: views/openldap.php:134
 msgid "The OpenLDAP User Identity. Usually is uid"
-msgstr ""
+msgstr "The OpenLDAP User Identity. Usually is uid"
 
 msgid "The OpenLDAP Display Name. Usually is displayname"
-msgstr ""
+msgstr "نام نمایشی OpenLDAP. معمولاً نام نمایشی است"
 
 #: views/openldap.php:156
 msgid ""
 "The OpenLDAP User-DN. Usually in the format of OU=people,DC=example,DC=com)"
 msgstr ""
+"The OpenLDAP User-DN. Usually in the format of OU=people,DC=example,DC=com)"
 
 #: views/openldap.php:19
 msgid "The OpenLDAP host"
-msgstr ""
+msgstr "میزبان OpenLDAP"
 
 #: views/openldap.php:112
 msgid "The OpenLDAP password"
-msgstr ""
+msgstr "رمز OpenLDAP"
 
 #: views/openldap.php:41
 msgid "The OpenLDAP port"
-msgstr ""
+msgstr "پورت OpenLDAP"
 
 #: views/openldap.php:90
 msgid "The OpenLDAP username"
-msgstr ""
+msgstr "نام کاربری OpenLDAP"
 
 #: assets/js/userman.js:268
 msgid "The PBX Language is not set"
-msgstr ""
+msgstr "زبان PBX تنظیم نشده است"
 
 #: assets/js/userman.js:288
 msgid "The PBX Timezone is not set"
-msgstr ""
+msgstr "منطقه زمانی PBX تنظیم نشده است"
 
 #: views/msad.php:107
 msgid "The active directory domain"
@@ -874,7 +878,7 @@ msgstr "وضعیت اتصال به سرور اکتیو دایرکتوری"
 
 #: views/openldap.php:222
 msgid "The connection status of the OpenLDAP Server"
-msgstr ""
+msgstr "وضعیت اتصال سرور OpenLDAP"
 
 #: views/users.php:407
 msgid ""
@@ -888,6 +892,9 @@ msgid ""
 "locale aware. If left blank this will use the group/system format. For more "
 "formats please see: http://momentjs.com/docs/#/displaying/format/"
 msgstr ""
+"The format dates and times should display in. The default of \"llll\" is "
+"locale aware. If left blank this will use the group/system format. For more "
+"formats please see: http://momentjs.com/docs/#/displaying/format/"
 
 #: views/groups.php:200
 msgid ""
@@ -895,6 +902,9 @@ msgid ""
 "locale aware. If left blank this will use the system format. For more "
 "formats please see: http://momentjs.com/docs/#/displaying/format/"
 msgstr ""
+"The format dates and times should display in. The default of \"llll\" is "
+"locale aware. If left blank this will use the system format. For more "
+"formats please see: http://momentjs.com/docs/#/displaying/format/"
 
 #: views/users.php:554
 msgid ""
@@ -902,6 +912,9 @@ msgid ""
 "left blank this will use the group/system format. For more formats please "
 "see: http://momentjs.com/docs/#/displaying/format/"
 msgstr ""
+"The format dates should display in. The default of \"l\" is locale aware. If "
+"left blank this will use the group/system format. For more formats please "
+"see: http://momentjs.com/docs/#/displaying/format/"
 
 #: views/groups.php:222
 msgid ""
@@ -909,6 +922,9 @@ msgid ""
 "left blank this will use the system format. For more formats please see: "
 "http://momentjs.com/docs/#/displaying/format/"
 msgstr ""
+"The format dates should display in. The default of \"l\" is locale aware. If "
+"left blank this will use the system format. For more formats please see: "
+"http://momentjs.com/docs/#/displaying/format/"
 
 #: views/users.php:576
 msgid ""
@@ -916,6 +932,9 @@ msgid ""
 "If left blank this will use the group/system format. For more formats please "
 "see: http://momentjs.com/docs/#/displaying/format/"
 msgstr ""
+"The format times should display in. The default of \"LT\" is locale aware. "
+"If left blank this will use the group/system format. For more formats please "
+"see: http://momentjs.com/docs/#/displaying/format/"
 
 #: views/groups.php:244
 msgid ""
@@ -923,6 +942,9 @@ msgid ""
 "If left blank this will use the system format. For more formats please see: "
 "http://momentjs.com/docs/#/displaying/format/"
 msgstr ""
+"The format times should display in. The default of \"LT\" is locale aware. "
+"If left blank this will use the system format. For more formats please see: "
+"http://momentjs.com/docs/#/displaying/format/"
 
 #: views/general.php:93
 #, php-format
@@ -983,6 +1005,9 @@ msgid ""
 "User Account that can be used by other applications for login or API "
 "purposes."
 msgstr ""
+"This Module manages all PBX users. It allows an Administrator to create a "
+"User Account that can be used by other applications for login or API "
+"purposes."
 
 #: Userman.class.php:2349 Userman.class.php:2409
 msgid "This authentication driver does not allow importing"
@@ -1021,15 +1046,15 @@ msgstr ""
 
 #: views/groups.php:232 views/users.php:564
 msgid "Time Format"
-msgstr ""
+msgstr "فرمت ساعت"
 
 #: views/groups.php:129 views/users.php:363
 msgid "Timezone"
-msgstr ""
+msgstr "منطقه زمانی"
 
 #: views/groups.php:149 views/users.php:383
 msgid "Timezone for this user"
-msgstr ""
+msgstr "منطقه زمانی این کاربر"
 
 #: views/users.php:259
 msgid "Title"
@@ -1063,11 +1088,11 @@ msgstr "به روزرسانی"
 
 #: views/groups.php:104 views/users.php:338
 msgid "Use Browser Language"
-msgstr ""
+msgstr "استفاده از زبان مرورگر"
 
 #: views/groups.php:136 views/users.php:370
 msgid "Use Browser Timezone"
-msgstr ""
+msgstr "استفاده از منطقه زمانی مرورگر"
 
 #: functions.inc/guihooks.php:123 functions.inc/guihooks.php:160
 msgid "Use Custom Username"
@@ -1075,23 +1100,23 @@ msgstr "استفاده از نام کاربری سفارشی"
 
 #: views/groups.php:107 views/users.php:341
 msgid "Use PBX Language"
-msgstr ""
+msgstr "استفاده از زبان PBX"
 
 #: views/groups.php:139 views/users.php:373
 msgid "Use PBX Timezone"
-msgstr ""
+msgstr "استفاده از منطقه زمانی PBX"
 
 #: views/groups.php:102
 msgid "Use System Language"
-msgstr ""
+msgstr "استفاده از زبان سیستم"
 
 #: views/groups.php:134
 msgid "Use System Timezone"
-msgstr ""
+msgstr "استفاده از منطقه زمانی سیستم"
 
 #: views/openldap.php:51 views/openldap.php:68
 msgid "Use TLS"
-msgstr ""
+msgstr "استفاده از TLS"
 
 #: functions.inc/auth/modules/Freepbx.php:108
 #: functions.inc/auth/modules/Freepbx.php:172
@@ -1106,7 +1131,7 @@ msgstr "کاربر '%s' موجود نیست"
 
 #: views/openldap.php:144
 msgid "User DN"
-msgstr ""
+msgstr "کاربر DN"
 
 #: views/users.php:26
 msgid "User Details"
@@ -1118,7 +1143,7 @@ msgstr "کاربر وجود ندارد"
 
 #: views/openldap.php:122
 msgid "User Identity"
-msgstr ""
+msgstr "هویت کاربر"
 
 msgid "Display Name"
 msgstr ""
