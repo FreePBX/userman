@@ -3,7 +3,7 @@ namespace FreePBX\modules\Userman;
 use FreePBX\modules\Backup as Base;
 class Restore Extends Base\RestoreBase{
   public function runRestore($jobid){
-    $configs = reset($this->getConfigs());
+    $configs = $this->getConfigs();
     $userman = $this->FreePBX->Userman;
     $configs['directories'] = is_array($configs['directories'])? $configs['directories']:[];
     $configs['usermanusers'] = is_array($configs['usermanusers'])? $configs['usermanusers']:[];
@@ -11,7 +11,7 @@ class Restore Extends Base\RestoreBase{
     $this->processData($userman, $configs);
   }
 
-  public function processLegacy($pdo, $data, $tables, $unknownTables, $tmpfiledir){
+  public function processLegacy($pdo, $data, $tables, $unknownTables){
       $tables = array_flip($tables+$unknownTables);
       if(!isset($tables['userman_users'])){
           return $this;
@@ -38,9 +38,25 @@ class Restore Extends Base\RestoreBase{
             $userman->addDirectory($dir['driver'], $dir['name'], $dir['active'], $dir['config']);
         }
         if ($configs['defaultdirectory']) {
-            $userman->setDefaultDirectory($configs['defaultdirectory']);
+            $userman->setDefaultDirectory($configs['defaultdirectory']['id']);
         }
-        $userman->bulkhandlerImport('usermangroups', $configs['usermangroups'], true);
-        $userman->bulkhandlerImport('usermanusers', $configs['usermanusers'], true);
-    }
+
+	if (is_array($configs['usermangroups'])) {
+		foreach($configs['usermangroups'] as $group) {
+			unset($grparray);
+			$grparray [] = $group;
+			$res = $userman->bulkhandlerImport('usermangroups', $grparray, true);
+			$this->log('Group restore staus for grp '. $group['groupname'] .'  '. $res['message']);
+		}
+	}
+
+	if (is_array($configs['usermanusers'])) {
+		foreach ($configs['usermanusers'] as $user) {
+			unset($userarray);
+			$userarray [] = $user;
+			$res = $userman->bulkhandlerImport('usermanusers', $userarray, true);
+			$this->log('user restore staus for user '. $user['username'] . ' '.$res['message']);
+		}
+	}
+  }
 }

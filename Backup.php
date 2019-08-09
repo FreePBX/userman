@@ -6,7 +6,7 @@ class Backup Extends Base\BackupBase{
     $userman = $this->FreePBX->Userman();
     $configs = [
         'usermanusers' => $userman->bulkhandlerExport('usermanusers'),
-        'usermangroups' => $userman->bulkhandlerExport('usermanugroups'),
+        'usermangroups' => $userman->bulkhandlerExport('usermangroups'),
         'directories' => $userman->getAllDirectories(),
         'defaultdirectory' => $userman->getDefaultDirectory()
     ];
