@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-18 15:02+0530\n"
+"POT-Creation-Date: 2019-08-19 16:54+0530\n"
 "PO-Revision-Date: 2016-12-21 00:22+0200\n"
 "Last-Translator: Alexander <alexander.schley@paranagua.pr.gov.br>\n"
 "Language-Team: Portuguese (Brazil) <http://weblate.freepbx.org/projects/"
@@ -863,6 +863,10 @@ msgstr "Ramal Linkado Primário"
 #: views/welcome.php:91
 msgid "Priority"
 msgstr "Prioridade"
+
+#: Restore.php:13
+msgid "Processing Legacy Userman tables"
+msgstr ""
 
 #: functions.inc/auth/modules/Voicemail.php:98
 #, php-format

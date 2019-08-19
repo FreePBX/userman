@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-18 15:02+0530\n"
+"POT-Creation-Date: 2019-08-19 16:54+0530\n"
 "PO-Revision-Date: 2018-10-24 01:00+0000\n"
 "Last-Translator: Bastian Mertgen <b.mertgen@bastian-mertgen.de>\n"
 "Language-Team: German <http://*/projects/freepbx/userman/de/>\n"
@@ -882,6 +882,10 @@ msgstr "Primäre verlinkte Nebenstelle"
 #: views/welcome.php:91
 msgid "Priority"
 msgstr "Priorität"
+
+#: Restore.php:13
+msgid "Processing Legacy Userman tables"
+msgstr ""
 
 #: functions.inc/auth/modules/Voicemail.php:98
 #, php-format
