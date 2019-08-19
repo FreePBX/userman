@@ -3199,4 +3199,14 @@ class Userman extends FreePBX_Helpers implements BMO {
 	}
 	return $this;
 	}
+	public function dumpData($pdo){
+		$data = [];
+		$data['userman_directories'] = $pdo->query('select * from userman_directories')->fetchAll(PDO::FETCH_ASSOC);
+		$data['userman_groups'] = $pdo->query('select * from userman_groups')->fetchAll(PDO::FETCH_ASSOC);
+		$data['userman_groups_settings'] = $pdo->query('select * from userman_groups_settings')->fetchAll(PDO::FETCH_ASSOC);
+		$data['userman_users'] = $pdo->query('select * from userman_users')->fetchAll(PDO::FETCH_ASSOC);
+		$data['userman_users_settings'] = $pdo->query('select * from userman_users_settings')->fetchAll(PDO::FETCH_ASSOC);
+		return $data;
+	}
+
 }
