@@ -17,10 +17,20 @@ class Restore Extends Base\RestoreBase{
 
 	public function processData($usermantables){
 		foreach ($usermantables as $table => $datas) {
-			if($table == 'userman_directories' || $table == 'userman_groups' || $table == 'userman_users') {
+			if ($table == 'userman_directories' || $table == 'userman_users') {
 				$this->addDataToTableFromArray($table,$datas);
 			}
-			if($table == 'userman_groups_settings' || $table == 'userman_users_settings') {
+
+			if ($table == 'userman_groups') {
+				$cleandata = [];
+				foreach($datas as $row) {
+					$row['users'] =  stripslashes($row['users']);
+					$cleandata[] = $row;
+				}
+				$this->addDataToTableFromArray($table,$cleandata);
+			}
+
+			if ($table == 'userman_groups_settings' || $table == 'userman_users_settings') {
 				unset($cleandata);
 				$cleandata = [];
 				foreach($datas as $row) {
