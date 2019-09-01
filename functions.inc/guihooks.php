@@ -219,6 +219,7 @@ JS;
 			$selarray = array_merge($selarray,$userarray);
 
 			if(!empty($userM)) {
+              	$passDisable = true;
 				$currentcomponent->addguielem($section, new gui_link('userman|'.$extdisplay, sprintf(_('Linked to User %s'),$userM['username']), '?display=userman&action=showuser&user='.$userM['id']),$category);
 				$currentcomponent->addguielem($section, new gui_selectbox('userman_directory', $allDirectories, $dirid, _('Select User Directory:'), _('Select a user directory'), false, 'frm_extensions_changeDirectory();'),$category);
 				$currentcomponent->addguielem($section, new gui_selectbox('userman_assign', $selarray, $userM['id'], _('Link to a Different Default User:'), _('Select a user that this extension should be linked to in User Manager, else select Create New User to have User Manager autogenerate a new user that will be linked to this extension'), false, 'frm_extensions_usermanChangeUsername();'),$category);
