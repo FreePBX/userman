@@ -9,16 +9,35 @@ class Restore Extends Base\RestoreBase{
 	}
 
 	public function processLegacy($pdo, $data, $tables, $unknownTables){
-		$usermandata = $this->FreePBX->Userman->dumpData($pdo);
+		$version = true;
+		$defaultDir = false;
+		if(version_compare_freepbx($this->getVersion(),"13","lt")) {
+			$version = false;
+			$directory = $this->FreePBX->Userman->getDefaultDirectory();
+			$defaultDir = $directory['id'];
+		}
+		$usermandata = $this->FreePBX->Userman->dumpData($pdo,$version);
 		$this->log(_("Processing Legacy Userman tables"));
-		$this->processData($usermandata);
+		$this->processData($usermandata,$defaultDir);
 		return $this;
 	}
 
-	public function processData($usermantables){
+	public function processData($usermantables,$defaultDir){
 		foreach ($usermantables as $table => $datas) {
 			if ($table == 'userman_directories' || $table == 'userman_users') {
-				$this->addDataToTableFromArray($table,$datas);
+				if($defaultDir) {
+					$addDir = array("auth" => $defaultDir);
+					$datawithDir = array();
+					foreach ($datas as $data) {
+						$datawithDir[] = array_merge($data,$addDir);
+					}
+				}
+				if($defaultDir) {
+					$this->addDataToTableFromArray($table,$datawithDir);
+				}
+				else {
+					$this->addDataToTableFromArray($table,$datas);
+				}
 			}
 
 			if ($table == 'userman_groups') {
