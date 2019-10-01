@@ -22,7 +22,7 @@ class Restore Extends Base\RestoreBase{
 		return $this;
 	}
 
-	public function processData($usermantables,$defaultDir){
+	public function processData($usermantables, $defaultDir = false){
 		foreach ($usermantables as $table => $datas) {
 			if ($table == 'userman_directories' || $table == 'userman_users') {
 				if($defaultDir) {
