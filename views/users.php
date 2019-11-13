@@ -42,9 +42,9 @@ echo $usage_html;
 					</div>
 					<form class="fpbx-submit" autocomplete="off" name="editM" id="editM" enctype="multipart/form-data" action="<?php echo $formaction ?>" method="post" <?php if(!empty($user['id'])) {?>data-fpbx-delete="config.php?display=userman&amp;action=deluser&amp;user=<?php echo $user['id']?>"<?php } ?> onsubmit="return true;">
 						<input type="hidden" name="type" value="user">
-						<input type="hidden" name="directory" value="<?php echo $directory ?>">
-						<input type="hidden" name="prevUsername" value="<?php echo !empty($user['username']) ? $user['username'] : ''; ?>">
-						<input type="hidden" name="user" value="<?php echo !empty($user['id']) ? $user['id'] : ''; ?>">
+						<input type="hidden" name="directory" value="<?php echo htmlentities($directory) ?>">
+						<input type="hidden" name="prevUsername" value="<?php echo !empty($user['username']) ? htmlentities($user['username']) : ''; ?>">
+						<input type="hidden" name="user" value="<?php echo !empty($user['id']) ? htmlentities($user['id']) : ''; ?>">
 						<input type="hidden" name="submittype" value="gui">
 						<div class="tab-content">
 						<!--Login Details -->
@@ -60,7 +60,7 @@ echo $usage_html;
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="username"></i>
 											</div>
 											<div class="col-md-9">
-												<input type="text" class="form-control" id="username" name="username" value="<?php echo !empty($user['username']) ? $user['username'] : ''; ?>" required pattern=".{1,255}" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
+												<input type="text" class="form-control" id="username" name="username" value="<?php echo !empty($user['username']) ? htmlentities($user['username']) : ''; ?>" required pattern=".{1,255}" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''; ?>>
 											</div>
 										</div>
 									</div>
@@ -84,7 +84,7 @@ echo $usage_html;
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="description"></i>
 											</div>
 											<div class="col-md-9">
-												<input type="text" class="form-control" id="description" name="description" value="<?php echo !empty($user['description']) ? $user['description'] : ''; ?>" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
+												<input type="text" class="form-control" id="description" name="description" value="<?php echo !empty($user['description']) ? htmlentities($user['description']) : ''; ?>" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
 											</div>
 										</div>
 									</div>
@@ -197,7 +197,7 @@ echo $usage_html;
 											<div class="col-md-9">
 												<select id="defaultextension" name="defaultextension" class="form-control">
 												<?php foreach($dfpbxusers as $dfpbxuser) {?>
-													<option value="<?php echo $dfpbxuser['ext']?>" <?php echo $dfpbxuser['selected'] ? 'selected' : '' ?>><?php echo $dfpbxuser['name']?> &lt;<?php echo $dfpbxuser['ext']?>&gt;</option>
+													<option value="<?php echo htmlentities($dfpbxuser['ext']); ?>" <?php echo $dfpbxuser['selected'] ? 'selected' : '' ?>><?php echo htmlentities($dfpbxuser['name']); ?> &lt;<?php echo htmlentities($dfpbxuser['ext']); ?>&gt;</option>
 												<?php } ?>
 												</select>
 											</div>
@@ -228,7 +228,7 @@ echo $usage_html;
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="fname"></i>
 											</div>
 											<div class="col-md-9">
-												<input type="text" class="form-control" id="fname" name="fname" value="<?php echo !empty($user['fname']) ? $user['fname'] : ''; ?>" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
+												<input type="text" class="form-control" id="fname" name="fname" value="<?php echo !empty($user['fname']) ? htmlentities($user['fname']) : '' ?>" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
 											</div>
 										</div>
 									</div>
@@ -252,7 +252,7 @@ echo $usage_html;
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="lname"></i>
 											</div>
 											<div class="col-md-9">
-												<input type="text" class="form-control" id="lname" name="lname" value="<?php echo !empty($user['lname']) ? $user['lname'] : ''; ?>" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
+												<input type="text" class="form-control" id="lname" name="lname" value="<?php echo !empty($user['lname']) ? htmlentities($user['lname']) : ''; ?>" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
 											</div>
 										</div>
 									</div>
@@ -276,7 +276,7 @@ echo $usage_html;
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="displayname"></i>
 											</div>
 											<div class="col-md-9">
-												<input type="text" class="form-control" id="displayname" name="displayname" value="<?php echo !empty($user['displayname']) ? $user['displayname'] : ''; ?>" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
+												<input type="text" class="form-control" id="displayname" name="displayname" value="<?php echo !empty($user['displayname']) ? htmlentities($user['displayname']) : ''; ?>" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
 											</div>
 										</div>
 									</div>
@@ -300,7 +300,7 @@ echo $usage_html;
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="title"></i>
 											</div>
 											<div class="col-md-9">
-												<input type="text" class="form-control" id="title" name="title" value="<?php echo !empty($user['title']) ? $user['title'] : ''; ?>" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
+												<input type="text" class="form-control" id="title" name="title" value="<?php echo !empty($user['title']) ? htmlentities($user['title']) : ''; ?>" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
 											</div>
 										</div>
 									</div>
@@ -324,7 +324,7 @@ echo $usage_html;
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="company"></i>
 											</div>
 											<div class="col-md-9">
-												<input type="text" class="form-control" id="company" name="company" value="<?php echo !empty($user['company']) ? $user['company'] : ''; ?>" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
+												<input type="text" class="form-control" id="company" name="company" value="<?php echo !empty($user['company']) ? htmlentities($user['company']) : ''; ?>" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
 											</div>
 										</div>
 									</div>
@@ -348,7 +348,7 @@ echo $usage_html;
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="department"></i>
 											</div>
 											<div class="col-md-9">
-												<input type="text" class="form-control" id="department" name="department" value="<?php echo !empty($user['department']) ? $user['department'] : ''; ?>" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
+												<input type="text" class="form-control" id="department" name="department" value="<?php echo !empty($user['department']) ? htmlentities($user['department']) : ''; ?>" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
 											</div>
 										</div>
 									</div>
@@ -436,7 +436,7 @@ echo $usage_html;
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="email"></i>
 											</div>
 											<div class="col-md-9">
-												<input type="text" class="form-control" id="email" name="email" value="<?php echo !empty($user['email']) ? $user['email'] : ''; ?>" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
+												<input type="text" class="form-control" id="email" name="email" value="<?php echo !empty($user['email']) ? htmlentities($user['email']) : ''; ?>" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
 											</div>
 										</div>
 									</div>
@@ -460,7 +460,7 @@ echo $usage_html;
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="cell"></i>
 											</div>
 											<div class="col-md-9">
-												<input type="tel" class="form-control" id="cell" name="cell" value="<?php echo !empty($user['cell']) ? $user['cell'] : ''; ?>" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
+												<input type="tel" class="form-control" id="cell" name="cell" value="<?php echo !empty($user['cell']) ? htmlentities($user['cell']) : ''; ?>" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
 											</div>
 										</div>
 									</div>
@@ -484,7 +484,7 @@ echo $usage_html;
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="work"></i>
 											</div>
 											<div class="col-md-9">
-												<input type="tel" class="form-control" id="work" name="work" value="<?php echo !empty($user['work']) ? $user['work'] : ''; ?>" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
+												<input type="tel" class="form-control" id="work" name="work" value="<?php echo !empty($user['work']) ? htmlentities($user['work']) : ''; ?>" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
 											</div>
 										</div>
 									</div>
@@ -508,7 +508,7 @@ echo $usage_html;
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="home"></i>
 											</div>
 											<div class="col-md-9">
-												<input type="tel" class="form-control" id="home" name="home" value="<?php echo !empty($user['home']) ? $user['home'] : ''; ?>" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
+												<input type="tel" class="form-control" id="home" name="home" value="<?php echo !empty($user['home']) ? htmlentities($user['home']) : ''; ?>" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
 											</div>
 										</div>
 									</div>
@@ -532,7 +532,7 @@ echo $usage_html;
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="fax"></i>
 											</div>
 											<div class="col-md-9">
-												<input type="tel" class="form-control" id="fax" name="fax" value="<?php echo !empty($user['fax']) ? $user['fax'] : ''; ?>" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
+												<input type="tel" class="form-control" id="fax" name="fax" value="<?php echo !empty($user['fax']) ? htmlentities($user['fax']) : ''; ?>" <?php echo !$permissions['modifyUser'] ? 'disabled' : ''?>>
 											</div>
 										</div>
 									</div>
@@ -692,7 +692,7 @@ echo $usage_html;
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="pbx_range"></i>
 												</div>
 												<div class="col-md-9">
-													<input name="pbx_low" type="number" min="0" class="form-control" style="display: inline;width:48%" value="<?php echo $pbx_low?>"> - <input name="pbx_high" type="number" min="1" class="form-control" style="display: inline;width:48%" value="<?php echo $pbx_high?>">
+													<input name="pbx_low" type="number" min="0" class="form-control" style="display: inline;width:48%" value="<?php echo htmlentities($pbx_low) ?>"> - <input name="pbx_high" type="number" min="1" class="form-control" style="display: inline;width:48%" value="<?php echo htmlentities($pbx_high) ?>">
 												</div>
 											</div>
 										</div>
@@ -719,7 +719,7 @@ echo $usage_html;
 															 if($key == "wiki"){
 																 continue;
 															 } ?>
-															<option value="<?php echo $key?>" <?php echo is_array($pbx_modules) && in_array($key,$pbx_modules) ? 'selected' : '' ?>><?php echo $val['name']?></option>
+															<option value="<?php echo $key?>" <?php echo is_array($pbx_modules) && in_array($key,$pbx_modules) ? 'selected' : '' ?>><?php echo htmlentities($val['name']) ?></option>
 														<?php } ?>
 													</select>
 												</div>
