@@ -9,15 +9,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-21 15:12-0500\n"
+"POT-Creation-Date: 2019-11-13 23:26+0530\n"
 "PO-Revision-Date: 2016-08-07 06:51+0200\n"
 "Last-Translator: Media <mousavi.media@gmail.com>\n"
 "Language-Team: Persian (Iran) <http://weblate.freepbx.org/projects/freepbx/"
 "userman/fa_IR/>\n"
+"Language: fa_IR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fa_IR\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 2.4\n"
 
@@ -1220,15 +1220,10 @@ msgstr ""
 
 #: userman.i18n.php:8
 msgid ""
-"This Module manages all FreePBX users\t\tIt allows an Administrator to "
-"create a User Account that can be used by other applications for login or "
-"API purposes.\t\tModules like iSymphony, Rest API and User Control Panel and "
-"FreePBX itself use this module to manage their users."
+"This Module manages all PBX users. It allows an Administrator to create a "
+"User Account that can be used by other applications for login or API "
+"purposes."
 msgstr ""
-"This Module manages all FreePBX users\t\tIt allows an Administrator to  "
-"create a User Account that can be used by other applications for login or "
-"API purposes.\t\tModules like iSymphony, Rest API and User Control Panel and "
-"FreePBX itself use this module to manage their users."
 
 #: Userman.class.php:2904 Userman.class.php:2968
 msgid "This authentication driver does not allow importing"
@@ -1487,8 +1482,8 @@ msgid "User updated"
 msgstr "کاربر به روز شد"
 
 #: functions.inc/guihooks.php:233 functions.inc/guihooks.php:277
-#: views/msad.php:51 views/msad2.php:77 views/openldap.php:51
-#: views/rnav.php:13 views/welcome.php:55
+#: views/msad.php:51 views/msad2.php:77 views/openldap.php:51 views/rnav.php:13
+#: views/welcome.php:55
 msgid "Username"
 msgstr "نام کاربری"
 
@@ -1612,6 +1607,17 @@ msgstr "نام کاربری احتیاج است."
 #: assets/js/userman.js:8
 msgid "users"
 msgstr "کاربران"
+
+#~ msgid ""
+#~ "This Module manages all FreePBX users\t\tIt allows an Administrator to "
+#~ "create a User Account that can be used by other applications for login or "
+#~ "API purposes.\t\tModules like iSymphony, Rest API and User Control Panel "
+#~ "and FreePBX itself use this module to manage their users."
+#~ msgstr ""
+#~ "This Module manages all FreePBX users\t\tIt allows an Administrator to  "
+#~ "create a User Account that can be used by other applications for login or "
+#~ "API purposes.\t\tModules like iSymphony, Rest API and User Control Panel "
+#~ "and FreePBX itself use this module to manage their users."
 
 #~ msgid "Database rename not completed"
 #~ msgstr "تغیر نام بانک اطلاعات کامل نشد"

@@ -9,15 +9,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-21 15:12-0500\n"
+"POT-Creation-Date: 2019-11-13 23:26+0530\n"
 "PO-Revision-Date: 2016-12-21 00:22+0200\n"
 "Last-Translator: Alexander <alexander.schley@paranagua.pr.gov.br>\n"
 "Language-Team: Portuguese (Brazil) <http://weblate.freepbx.org/projects/"
 "freepbx/userman/pt_BR/>\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: pt_BR\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 2.4\n"
 
@@ -1237,16 +1237,10 @@ msgstr ""
 
 #: userman.i18n.php:8
 msgid ""
-"This Module manages all FreePBX users\t\tIt allows an Administrator to "
-"create a User Account that can be used by other applications for login or "
-"API purposes.\t\tModules like iSymphony, Rest API and User Control Panel and "
-"FreePBX itself use this module to manage their users."
+"This Module manages all PBX users. It allows an Administrator to create a "
+"User Account that can be used by other applications for login or API "
+"purposes."
 msgstr ""
-"Este módulo gerencia todos os usuários do FreePBX \t\tPermite que um "
-"Administrador crie uma Conta de Usuário que pode ser usada por outros "
-"aplicativos para fins de login ou API.\t\t Módulos como iSymphony, Rest API "
-"e Painel de Controle do Usuário e FreePBX usam este módulo para gerenciar "
-"seus usuários."
 
 #: Userman.class.php:2904 Userman.class.php:2968
 msgid "This authentication driver does not allow importing"
@@ -1508,8 +1502,8 @@ msgid "User updated"
 msgstr "Usuário atualizado"
 
 #: functions.inc/guihooks.php:233 functions.inc/guihooks.php:277
-#: views/msad.php:51 views/msad2.php:77 views/openldap.php:51
-#: views/rnav.php:13 views/welcome.php:55
+#: views/msad.php:51 views/msad2.php:77 views/openldap.php:51 views/rnav.php:13
+#: views/welcome.php:55
 msgid "Username"
 msgstr "Nome de Usuário"
 
@@ -1635,6 +1629,18 @@ msgstr "nome de usuário é necessário."
 #: assets/js/userman.js:8
 msgid "users"
 msgstr "usuários"
+
+#~ msgid ""
+#~ "This Module manages all FreePBX users\t\tIt allows an Administrator to "
+#~ "create a User Account that can be used by other applications for login or "
+#~ "API purposes.\t\tModules like iSymphony, Rest API and User Control Panel "
+#~ "and FreePBX itself use this module to manage their users."
+#~ msgstr ""
+#~ "Este módulo gerencia todos os usuários do FreePBX \t\tPermite que um "
+#~ "Administrador crie uma Conta de Usuário que pode ser usada por outros "
+#~ "aplicativos para fins de login ou API.\t\t Módulos como iSymphony, Rest "
+#~ "API e Painel de Controle do Usuário e FreePBX usam este módulo para "
+#~ "gerenciar seus usuários."
 
 #~ msgid "Database rename not completed"
 #~ msgstr "Renomeação do banco de dados não concluída"
