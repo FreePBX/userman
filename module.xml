@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>15.0.19</version>
+	<version>15.0.20</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -10,6 +10,7 @@
 		This Module manages all PBX users. It allows an Administrator to create a User Account that can be used by other applications for login or API purposes.
 	</description>
 	<changelog>
+		*15.0.20* Resolving a few XSS vulnerabilities 
 		*15.0.19* FREEPBX-20579 Restoring legacy(FreePBX 12) Backup into FreePBX 15 system is giving sql error. 
 		*15.0.18* FREEPBX-20579 Restoring legacy(FreePBX 12) Backup into FreePBX 15 system is giving sql error "SQLSTATE[HY000]: General error: 1 no such table: userman_directories on line 3204 of file 
 		*15.0.17* Related to FREEPBX-20414: removed $jobid from runRestore() 
