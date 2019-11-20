@@ -562,7 +562,7 @@ echo $usage_html;
 												</div>
 												<div class="col-md-9">
 													<div class="input-group">
-														<input type="text" class="form-control" id="datetimeformat" name="datetimeformat" placeholder="llll" value="<?php echo !empty($user['datetimeformat']) ? $user['datetimeformat'] : ''; ?>">
+														<input type="text" class="form-control" id="datetimeformat" name="datetimeformat" placeholder="llll" value="<?php echo !empty($user['datetimeformat']) ? htmlentities($user['datetimeformat']) : ''; ?>">
 														<span class="input-group-addon" id="datetimeformat-now"></span>
 													</div>
 												</div>
@@ -587,7 +587,7 @@ echo $usage_html;
 												</div>
 												<div class="col-md-9">
 													<div class="input-group">
-														<input type="text" class="form-control" id="timeformat" name="timeformat" placeholder="LT" value="<?php echo !empty($user['timeformat']) ? $user['timeformat'] : ''; ?>">
+														<input type="text" class="form-control" id="timeformat" name="timeformat" placeholder="LT" value="<?php echo !empty($user['timeformat']) ? htmlentities($user['timeformat']) : ''; ?>">
 														<span class="input-group-addon" id="timeformat-now"></span>
 													</div>
 												</div>
@@ -612,7 +612,7 @@ echo $usage_html;
 												</div>
 												<div class="col-md-9">
 													<div class="input-group">
-														<input type="text" class="form-control" id="dateformat" name="dateformat" placeholder="l" value="<?php echo !empty($user['dateformat']) ? $user['dateformat'] : ''; ?>">
+														<input type="text" class="form-control" id="dateformat" name="dateformat" placeholder="l" value="<?php echo !empty($user['dateformat']) ? htmlentities($user['dateformat']) : ''; ?>">
 														<span class="input-group-addon" id="dateformat-now"></span>
 													</div>
 												</div>
