@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>14.0.7</version>
+	<version>14.0.8</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -10,6 +10,7 @@
 		This Module manages all PBX users. It allows an Administrator to create a User Account that can be used by other applications for login or API purposes.
 	</description>
 	<changelog>
+		*14.0.8* Fix comments from FREEI-845
 		*14.0.7* Resolving a few XSS vulnerabilities 
 		*14.0.6* Fixes FREEPBX-20337: added CSS class "confidential" to password input (FreePBX 14 backport) 
 		*14.0.5* Use job class instead of cron
