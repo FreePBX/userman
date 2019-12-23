@@ -269,7 +269,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * @param string $display The display name of the page
 	 */
 	public function doConfigPageInit($display) {
-		$request = $_REQUEST;
+		$request = freepbxGetSanitizedRequest();
 		if(isset($request['action']) && $request['action'] == 'deluser') {
 			$ret = $this->deleteUserByID($request['user']);
 			$this->message = array(
@@ -286,13 +286,13 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 			);
 			return true;
 		}
-		if(isset($_POST['submittype'])) {
-			switch($_POST['type']) {
+		if(isset($request['submittype'])) {
+			switch($request['type']) {
 				case 'directory':
 					$auths = array();
 					$config = false;
 					foreach($this->getDirectoryDrivers() as $auth) {
-						if($auth == $_POST['authtype']) {
+						if($auth == $request['authtype']) {
 							$class = 'FreePBX\modules\Userman\Auth\\'.$auth;
 							$config = $class::saveConfig($this, $this->FreePBX);
 							break;
@@ -305,11 +305,11 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 						);
 						return false;
 					}
-					$config['sync'] = !empty($_POST['sync']) ? $_POST['sync'] : '';
-					if(!empty($_POST['id'])) {
-						$id = $this->updateDirectory($_POST['id'], $_POST['name'], $_POST['enable'], $config);
+					$config['sync'] = !empty($request['sync']) ? $request['sync'] : '';
+					if(!empty($request['id'])) {
+						$id = $this->updateDirectory($request['id'], $request['name'], $request['enable'], $config);
 					} else {
-						$id = $this->addDirectory($_POST['authtype'], $_POST['name'], $_POST['enable'], $config);
+						$id = $this->addDirectory($request['authtype'], $request['name'], $request['enable'], $config);
 					}
 					if(method_exists($this->directories[$id],'sync')) {
 						$this->directories[$id]->sync();
@@ -358,16 +358,16 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 						}
 					}
 
-					$pbx_login = ($_POST['pbx_login'] == "true") ? true : false;
+					$pbx_login = ($request['pbx_login'] == "true") ? true : false;
 					$this->setGlobalSettingByGID($ret['id'],'pbx_login',$pbx_login);
 
-					$pbx_admin = ($_POST['pbx_admin'] == "true") ? true : false;
+					$pbx_admin = ($request['pbx_admin'] == "true") ? true : false;
 					$this->setGlobalSettingByGID($ret['id'],'pbx_admin',$pbx_admin);
 
-					$this->setGlobalSettingByGID($ret['id'],'pbx_low',$_POST['pbx_low']);
-					$this->setGlobalSettingByGID($ret['id'],'pbx_high',$_POST['pbx_high']);
-					$this->setGlobalSettingByGID($ret['id'],'pbx_landing', $_POST['pbx_landing']);
-					$this->setGlobalSettingByGID($ret['id'],'pbx_modules',(!empty($_POST['pbx_modules']) ? $_POST['pbx_modules'] : array()));
+					$this->setGlobalSettingByGID($ret['id'],'pbx_low',$request['pbx_low']);
+					$this->setGlobalSettingByGID($ret['id'],'pbx_high',$request['pbx_high']);
+					$this->setGlobalSettingByGID($ret['id'],'pbx_landing', $request['pbx_landing']);
+					$this->setGlobalSettingByGID($ret['id'],'pbx_modules',(!empty($request['pbx_modules']) ? $request['pbx_modules'] : array()));
 				break;
 				case 'user':
 
@@ -427,31 +427,31 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 						}
 					}
 					if(!empty($ret['status'])) {
-						if($_POST['pbx_login'] != "inherit") {
-							$pbx_login = ($_POST['pbx_login'] == "true") ? true : false;
+						if($request['pbx_login'] != "inherit") {
+							$pbx_login = ($request['pbx_login'] == "true") ? true : false;
 							$this->setGlobalSettingByID($ret['id'],'pbx_login',$pbx_login);
 						} else {
 							$this->setGlobalSettingByID($ret['id'],'pbx_login',null);
 						}
 
-						if($_POST['pbx_admin'] != "inherit") {
-							$pbx_admin = ($_POST['pbx_admin'] == "true") ? true : false;
+						if($request['pbx_admin'] != "inherit") {
+							$pbx_admin = ($request['pbx_admin'] == "true") ? true : false;
 							$this->setGlobalSettingByID($ret['id'],'pbx_admin',$pbx_admin);
 						} else {
 							$this->setGlobalSettingByID($ret['id'],'pbx_admin',null);
 						}
 
-						$this->setGlobalSettingByID($ret['id'],'pbx_low',$_POST['pbx_low']);
-						$this->setGlobalSettingByID($ret['id'],'pbx_high',$_POST['pbx_high']);
-						$this->setGlobalSettingByID($ret['id'],'pbx_landing',$_POST['pbx_landing']);
-						$this->setGlobalSettingByID($ret['id'],'pbx_modules',!empty($_POST['pbx_modules']) ? $_POST['pbx_modules'] : null);
-						if(!empty($_POST['groups'])) {
+						$this->setGlobalSettingByID($ret['id'],'pbx_low',$request['pbx_low']);
+						$this->setGlobalSettingByID($ret['id'],'pbx_high',$request['pbx_high']);
+						$this->setGlobalSettingByID($ret['id'],'pbx_landing',$request['pbx_landing']);
+						$this->setGlobalSettingByID($ret['id'],'pbx_modules',!empty($request['pbx_modules']) ? $request['pbx_modules'] : null);
+						if(!empty($request['groups'])) {
 							$groups = $this->getAllGroups();
 							foreach($groups as $group) {
-								if(in_array($group['id'],$_POST['groups']) && !in_array($ret['id'],$group['users'])) {
+								if(in_array($group['id'],$request['groups']) && !in_array($ret['id'],$group['users'])) {
 									$group['users'][] = $ret['id'];
 									$this->updateGroup($group['id'],$group['groupname'], $group['groupname'], $group['description'], $group['users'], true);
-								} elseif(!in_array($group['id'],$_POST['groups']) && in_array($ret['id'],$group['users'])) {
+								} elseif(!in_array($group['id'],$request['groups']) && in_array($ret['id'],$group['users'])) {
 									$group['users'] = array_diff($group['users'], array($ret['id']));
 									$this->updateGroup($group['id'],$group['groupname'], $group['groupname'], $group['description'], $group['users'], true);
 								}
@@ -464,7 +464,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 								$this->updateGroup($group['id'],$group['groupname'], $group['groupname'], $group['description'], $group['users'], true);
 							}
 						}
-						if(isset($_POST['submittype']) && $_POST['submittype'] == "guisend") {
+						if(isset($request['submittype']) && $request['submittype'] == "guisend") {
 							$data = $this->getUserByID($request['user']);
 							$this->sendWelcomeEmail($data['id'], $password);
 						}
@@ -480,7 +480,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 						'message' => _('Saved'),
 						'type' => 'success'
 					);
-					if(isset($_POST['sendemailtoall'])) {
+					if(isset($request['sendemailtoall'])) {
 						$this->sendWelcomeEmailToAll();
 					}
 				break;
@@ -632,7 +632,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 				}
 			}
 		}
-		$request = $_REQUEST;
+		$request = freepbxGetSanitizedRequest();
 		$action = !empty($request['action']) ? $request['action'] : '';
 		$html = '';
 
@@ -960,20 +960,20 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * Handle AJAX
 	 */
 	public function ajaxHandler(){
-		$request = $_REQUEST;
+		$request = freepbxGetSanitizedRequest();
 		switch($request['command']){
 			case "setlocales":
-				if(!empty($_SESSION['AMP_user']->id) && ($_SESSION['AMP_user']->id == $_POST['id'])) {
-					$_SESSION['AMP_user']->lang = !empty($_POST['language']) ? $_POST['language'] : $this->getLocaleSpecificSettingByUID($_POST['id'],"language");
-					$_SESSION['AMP_user']->tz = !empty($_POST['timezone']) ? $_POST['timezone'] : $this->getLocaleSpecificSettingByUID($_POST['id'],"timezone");
-					$_SESSION['AMP_user']->timeformat = !empty($_POST['timeformat']) ? $_POST['timeformat'] : $this->getLocaleSpecificSettingByUID($_POST['id'],"timeformat");
-					$_SESSION['AMP_user']->dateformat = !empty($_POST['dateformat']) ? $_POST['dateformat'] : $this->getLocaleSpecificSettingByUID($_POST['id'],"dateformat");
-					$_SESSION['AMP_user']->datetimeformat = !empty($_POST['datetimeformat']) ? $_POST['datetimeformat'] : $this->getLocaleSpecificSettingByUID($_POST['id'],"datetimeformat");
+				if(!empty($_SESSION['AMP_user']->id) && ($_SESSION['AMP_user']->id == $request['id'])) {
+					$_SESSION['AMP_user']->lang = !empty($request['language']) ? $request['language'] : $this->getLocaleSpecificSettingByUID($request['id'],"language");
+					$_SESSION['AMP_user']->tz = !empty($request['timezone']) ? $request['timezone'] : $this->getLocaleSpecificSettingByUID($request['id'],"timezone");
+					$_SESSION['AMP_user']->timeformat = !empty($request['timeformat']) ? $request['timeformat'] : $this->getLocaleSpecificSettingByUID($request['id'],"timeformat");
+					$_SESSION['AMP_user']->dateformat = !empty($request['dateformat']) ? $request['dateformat'] : $this->getLocaleSpecificSettingByUID($request['id'],"dateformat");
+					$_SESSION['AMP_user']->datetimeformat = !empty($request['datetimeformat']) ? $request['datetimeformat'] : $this->getLocaleSpecificSettingByUID($request['id'],"datetimeformat");
 				}
 				return array("status" => true);
 			break;
 			case "getGuihookInfo":
-				$directory = $this->getDirectoryByID($_POST['directory']);
+				$directory = $this->getDirectoryByID($request['directory']);
 				$users = $this->getAllUsers($directory['id']);
 				$groups = $this->getAllGroups($directory['id']);
 				$permissions = $this->getAuthAllPermissions($directory['id']);
@@ -985,14 +985,14 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 				);
 			break;
 			case "makeDefault":
-				$this->setDefaultDirectory($_POST['id']);
+				$this->setDefaultDirectory($request['id']);
 				return array("status" => true);
 			break;
 			case "getDirectories":
 				return $this->getAllDirectories();
 			break;
 			case "auth":
-				$out = $this->checkCredentials($_POST["username"],$_POST["password"]);
+				$out = $this->checkCredentials($request["username"],$request["password"]);
 				if($out) {
 					return array("status" => true);
 				} else {
@@ -1000,7 +1000,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 				}
 			break;
 			case "updateDirectorySort":
-				$sort = json_decode($_POST['sort'],true);
+				$sort = json_decode($request['sort'],true);
 				$sql = "UPDATE ".$this->directoryTable." SET `order` = ? WHERE `id` = ?";
 				$sth = $this->db->prepare($sql);
 
@@ -1009,7 +1009,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 				}
 				return array("status" => true);
 			case "updateGroupSort":
-				$sort = json_decode($_POST['sort'],true);
+				$sort = json_decode($request['sort'],true);
 				$sql = "UPDATE ".$this->groupTable." SET `priority` = ? WHERE `id` = ?";
 				$sth = $this->db->prepare($sql);
 				foreach($sort as $order => $gid) {
@@ -1630,7 +1630,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * @param {int} $id the user id of the deleted user
 	 */
 	private function delUser($id,$data) {
-		$request = $_REQUEST;
+		$request = freepbxGetSanitizedRequest();
 		$display = !empty($request['display']) ? $request['display'] : "";
 	}
 
@@ -1642,7 +1642,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * @param {int} $gid the group id of the deleted group
 	 */
 	private function delGroup($gid,$data) {
-		$request = $_REQUEST;
+		$request = freepbxGetSanitizedRequest();
 		$display = !empty($request['display']) ? $request['display'] : "";
 	}
 
@@ -2695,7 +2695,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 */
 	public function sendWelcomeEmail($id, $password =  null) {
 		global $amp_conf;
-		$request = $_REQUEST;
+		$request = freepbxGetSanitizedRequest();
 		$user = $this->getUserByID($id);
 		if(empty($user) || empty($user['email'])) {
 			return false;
