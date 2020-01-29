@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>15.0.22</version>
+	<version>16.0.1</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -10,32 +10,7 @@
 		This Module manages all PBX users. It allows an Administrator to create a User Account that can be used by other applications for login or API purposes.
 	</description>
 	<changelog>
-		*15.0.22* FREEI-932 some displayed info needs to be sanitized to prevent injected scripts from running 
-		*15.0.22* Fixing comments from FREEI-845
-		*15.0.21* Resolving a few XSS vulnerabilities 
-		*15.0.19* FREEPBX-20579 Restoring legacy(FreePBX 12) Backup into FreePBX 15 system is giving sql error. 
-		*15.0.18* FREEPBX-20579 Restoring legacy(FreePBX 12) Backup into FreePBX 15 system is giving sql error "SQLSTATE[HY000]: General error: 1 no such table: userman_directories on line 3204 of file 
-		*15.0.17* Related to FREEPBX-20414: removed $jobid from runRestore() 
-		*15.0.16* Fixes FREEPBX-20337: added CSS class "confidential" to password input (FreePBX 14 backport) 
-		*15.0.15* Fixes FREEPBX-20509: Disable Password field, if a user is currently linked 
-		*15.0.14* Fixes FREEPBX-20337: added CSS class "confidential" to password input 
-		*15.0.13* FREEPBX-20452 User groups under Usermanagement Users is not selected 
-		*15.0.12* FREEI-680 FREEI-679 Userman Backup Restore 15 and Legacy
-		*15.0.11* Fixing FREEPBX-20390 
-		*15.0.10* Adding Job class 
-		*15.0.9* Use lazy loading console commands
-		*15.0.8.2* FREEPBX-19572
-		*15.0.8.1* Fix backup
-		*15.0.8* fixing legacy restore
-		*15.0.7* Fix issues in backup
-		*15.0.6.2* FREEPBX-18752 - improving help text
-		*15.0.6.1* Display user locks
-		*15.0.6* Bugfix/FREEPBX-17069 dashboard ucp accessible
-		*15.0.5* Added optional parameter forceType to sendEmail function
-		*15.0.4* Rest Api
-		*15.0.3* Packaging of ver 15.0.3
-		*15.0.2* Fixing FREEPBX-17563 Importing userman groups issue
-		*15.0.1* FreePBX 15 backup
+		*16.0.1alpha* 16.0.1 alpha release
 	</changelog>
 	<info/>
 	<category>Admin</category>
@@ -162,7 +137,7 @@
 		</table>
 	</database>
 	<supported>
-		<version>15.0</version>
+		<version>16.0</version>
 	</supported>
 	<console>
 		<command>
