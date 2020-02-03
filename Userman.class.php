@@ -1010,7 +1010,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 				}
 			break;
 			case "updateDirectorySort":
-				$sort = json_decode($request['sort'],true);
+				$sort = json_decode(htmlspecialchars_decode($request['sort']),true);
 				$sql = "UPDATE ".$this->directoryTable." SET `order` = ? WHERE `id` = ?";
 				$sth = $this->db->prepare($sql);
 
@@ -1019,7 +1019,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 				}
 				return array("status" => true);
 			case "updateGroupSort":
-				$sort = json_decode($request['sort'],true);
+				$sort = json_decode(htmlspecialchars_decode($request['sort']),true);
 				$sql = "UPDATE ".$this->groupTable." SET `priority` = ? WHERE `id` = ?";
 				$sth = $this->db->prepare($sql);
 				foreach($sort as $order => $gid) {
