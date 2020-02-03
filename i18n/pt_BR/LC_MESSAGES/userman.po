@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-25 20:28-0400\n"
+"POT-Creation-Date: 2020-02-03 22:05+0530\n"
 "PO-Revision-Date: 2016-12-21 00:22+0200\n"
 "Last-Translator: Alexander <alexander.schley@paranagua.pr.gov.br>\n"
 "Language-Team: Portuguese (Brazil) <http://weblate.freepbx.org/projects/"
@@ -113,10 +113,6 @@ msgstr ""
 #, php-format
 msgid "Added Voicemail User %s"
 msgstr "Adicionado Usuário de Correio de Voz %s"
-
-#: userman.i18n.php:6
-msgid "Admin"
-msgstr "Administrador"
 
 #: views/groups.php:337 views/users.php:713
 msgid "Administration Access"
@@ -342,7 +338,7 @@ msgstr "Editar Grupo"
 msgid "Edit User"
 msgstr "Editar Usuário"
 
-#: userman.i18n.php:12
+#: userman.i18n.php:4
 msgid "Email "
 msgstr "E-mail "
 
@@ -1038,7 +1034,7 @@ msgstr ""
 msgid "The Browser Timezone could not be determined"
 msgstr ""
 
-#: userman.i18n.php:16
+#: userman.i18n.php:8
 msgid ""
 "The From: field for emails when using the user management email feature."
 msgstr ""
@@ -1346,13 +1342,6 @@ msgstr "O contexto do correio de voz dos usuários"
 msgid "There was an error saving the configuration"
 msgstr ""
 
-#: userman.i18n.php:8
-msgid ""
-"This Module manages all PBX users. It allows an Administrator to create a "
-"User Account that can be used by other applications for login or API "
-"purposes."
-msgstr ""
-
 #: Userman.class.php:3039 Userman.class.php:3103
 msgid "This authentication driver does not allow importing"
 msgstr "Esse controlador de autenticação não permite a importação"
@@ -1558,11 +1547,7 @@ msgstr ""
 msgid "User Identity"
 msgstr ""
 
-#: userman.i18n.php:4 userman.i18n.php:10
-msgid "User Management"
-msgstr "Gerenciador de Usuários"
-
-#: userman.i18n.php:14
+#: userman.i18n.php:6
 msgid "User Management Module"
 msgstr "Módulo de Gerenciador de Usuários"
 
@@ -1786,6 +1771,12 @@ msgstr "nome de usuário é necessário."
 #: assets/js/userman.js:8
 msgid "users"
 msgstr "usuários"
+
+#~ msgid "Admin"
+#~ msgstr "Administrador"
+
+#~ msgid "User Management"
+#~ msgstr "Gerenciador de Usuários"
 
 #~ msgid "Select the Admin Sections this user should have access to."
 #~ msgstr ""
