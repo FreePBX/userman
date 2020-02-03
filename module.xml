@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>15.0.22</version>
+	<version>15.0.23</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -10,6 +10,7 @@
 		This Module manages all PBX users. It allows an Administrator to create a User Account that can be used by other applications for login or API purposes.
 	</description>
 	<changelog>
+		*15.0.23* FREEI-1201 Ordering userman groups generates PHP error 
 		*15.0.22* FREEI-932 some displayed info needs to be sanitized to prevent injected scripts from running 
 		*15.0.22* Fixing comments from FREEI-845
 		*15.0.21* Resolving a few XSS vulnerabilities 
