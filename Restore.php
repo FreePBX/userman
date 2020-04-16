@@ -9,10 +9,15 @@ class Restore Extends Base\RestoreBase{
 	}
 
 	public function processLegacy($pdo, $data, $tables, $unknownTables){
-		$version = true;
+		$version = 14;
+		if(version_compare_freepbx($this->getVersion(),"13","lt") && version_compare_freepbx($this->getVersion(),"12","gt")) {
+			$version = 12;
+		}
+		if(version_compare_freepbx($this->getVersion(),"12","lt")) {
+			$version = 10;//super legacy 11,10
+		}
 		$defaultDir = false;
-		if(version_compare_freepbx($this->getVersion(),"13","lt")) {
-			$version = false;
+		if($version < 14) {
 			$directory = $this->FreePBX->Userman->getDefaultDirectory();
 			$defaultDir = $directory['id'];
 		}
