@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-03 22:06+0530\n"
+"POT-Creation-Date: 2020-04-16 12:34+0530\n"
 "PO-Revision-Date: 2018-10-24 01:00+0000\n"
 "Last-Translator: Bastian Mertgen <b.mertgen@bastian-mertgen.de>\n"
 "Language-Team: German <http://*/projects/freepbx/userman/de/>\n"
@@ -112,6 +112,10 @@ msgstr "„Benutzer hinzufügen“ ist nicht definiert"
 #, php-format
 msgid "Added Voicemail User %s"
 msgstr "Anrufbeantworter-Benutzer %s hinzugefügt"
+
+#: userman.i18n.php:6
+msgid "Admin"
+msgstr "Administrator"
 
 #: views/groups.php:337 views/users.php:713
 msgid "Administration Access"
@@ -345,7 +349,7 @@ msgstr "Gruppe bearbeiten"
 msgid "Edit User"
 msgstr "Benutzer bearbeiten"
 
-#: userman.i18n.php:4
+#: userman.i18n.php:12
 msgid "Email "
 msgstr "E-Mail "
 
@@ -879,7 +883,7 @@ msgstr "Primäre verlinkte Nebenstelle"
 msgid "Priority"
 msgstr "Priorität"
 
-#: Restore.php:20
+#: Restore.php:25
 msgid "Processing Legacy Userman tables"
 msgstr ""
 
@@ -1062,7 +1066,7 @@ msgstr "Die Browser-Sprache konnte nicht bestimmt werden"
 msgid "The Browser Timezone could not be determined"
 msgstr "Die Browser-Zeitzone konnte nicht bestimmt werden"
 
-#: userman.i18n.php:8
+#: userman.i18n.php:16
 msgid ""
 "The From: field for emails when using the user management email feature."
 msgstr ""
@@ -1440,6 +1444,16 @@ msgstr ""
 msgid "There was an error saving the configuration"
 msgstr "Beim Speichern der Konfiguration trat ein Fehler auf"
 
+#: userman.i18n.php:8
+msgid ""
+"This Module manages all PBX users. It allows an Administrator to create a "
+"User Account that can be used by other applications for login or API "
+"purposes."
+msgstr ""
+"Dieses Modul verwaltet alle Benutzer der Telefonanlage. Es erlaubt einem "
+"Administrator, ein Benutzerkonto anzulegen, das von anderen Anwendungen zur "
+"Anmeldung oder für den Zugriff auf API-Funktionen verwendet werden kann."
+
 #: Userman.class.php:3054 Userman.class.php:3118
 msgid "This authentication driver does not allow importing"
 msgstr "Dieser Authentifizierungstreiber erlaubt keinen Import"
@@ -1652,7 +1666,11 @@ msgstr "Attribut für die Private Telefonnummer des Benutzers"
 msgid "User Identity"
 msgstr "Benutzerkennung"
 
-#: userman.i18n.php:6
+#: userman.i18n.php:4 userman.i18n.php:10
+msgid "User Management"
+msgstr "Benutzerverwaltung"
+
+#: userman.i18n.php:14
 msgid "User Management Module"
 msgstr "Benutzerverwaltungs-Modul"
 
@@ -1880,22 +1898,6 @@ msgstr "Benutzername erforderlich."
 #: assets/js/userman.js:8
 msgid "users"
 msgstr "Benutzer"
-
-#~ msgid "Admin"
-#~ msgstr "Administrator"
-
-#~ msgid ""
-#~ "This Module manages all PBX users. It allows an Administrator to create a "
-#~ "User Account that can be used by other applications for login or API "
-#~ "purposes."
-#~ msgstr ""
-#~ "Dieses Modul verwaltet alle Benutzer der Telefonanlage. Es erlaubt einem "
-#~ "Administrator, ein Benutzerkonto anzulegen, das von anderen Anwendungen "
-#~ "zur Anmeldung oder für den Zugriff auf API-Funktionen verwendet werden "
-#~ "kann."
-
-#~ msgid "User Management"
-#~ msgstr "Benutzerverwaltung"
 
 #~ msgid "Select the Admin Sections this user should have access to."
 #~ msgstr ""
