@@ -51,7 +51,7 @@ abstract class Auth {
 
 	public function delGroupHook($gid, $data) {
 		$display = isset($_REQUEST['display']) ? $_REQUEST['display'] : "";
-		$this->FreePBX->Hooks->processHooksByClassMethod("FreePBX\\modules\\Userman", "UpdateGroup", array($gid, $display, $data));
+		$this->FreePBX->Hooks->processHooksByClassMethod("FreePBX\\modules\\Userman", "delGroup", array($gid, $display, $data));
 	}
 
 	public function getDefaultGroups() {
