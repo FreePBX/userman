@@ -31,7 +31,7 @@
 							<div role="tabpanel" id="users" class="tab-pane display active">
 								<div class="table-responsive">
 									<div id="toolbar-users">
-										<a href="config.php?display=userman&amp;action=adduser" id="add-users" class="btn btn-add hidden" data-type="users" data-section="users">
+										<a href="#" id="add-users" class="btn btn-add" disabled data-type="users" data-section="users" title="Select Directory to enable 'Add' Button">
 											<i class="fa fa-user-plus"></i> <span><?php echo _('Add')?></span>
 										</a>
 										<button id="remove-users" class="btn btn-danger btn-remove hidden" data-type="users" disabled data-section="users">
