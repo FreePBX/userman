@@ -1010,7 +1010,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 				}
 			break;
 			case "updateDirectorySort":
-				$sort = json_decode($request['sort'],true);
+				$sort = json_decode(htmlspecialchars_decode($request['sort']),true);
 				$sql = "UPDATE ".$this->directoryTable." SET `order` = ? WHERE `id` = ?";
 				$sth = $this->db->prepare($sql);
 
@@ -1019,7 +1019,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 				}
 				return array("status" => true);
 			case "updateGroupSort":
-				$sort = json_decode($request['sort'],true);
+				$sort = json_decode(htmlspecialchars_decode($request['sort']),true);
 				$sql = "UPDATE ".$this->groupTable." SET `priority` = ? WHERE `id` = ?";
 				$sth = $this->db->prepare($sql);
 				foreach($sort as $order => $gid) {
@@ -3201,17 +3201,21 @@ class Userman extends FreePBX_Helpers implements BMO {
 	}
 	public function dumpData($pdo, $version){
 		$data = [];
-		if ($version) {
+		if ($version == 14) { // 13 and 14 
 			$data['userman_directories'] = $pdo->query('select * from userman_directories')->fetchAll(PDO::FETCH_ASSOC);
 			$data['userman_groups'] = $pdo->query('select * from userman_groups')->fetchAll(PDO::FETCH_ASSOC);
 			$data['userman_groups_settings'] = $pdo->query('select * from userman_groups_settings')->fetchAll(PDO::FETCH_ASSOC);
 			$data['userman_users'] = $pdo->query('select * from userman_users')->fetchAll(PDO::FETCH_ASSOC);
 			$data['userman_users_settings'] = $pdo->query('select * from userman_users_settings')->fetchAll(PDO::FETCH_ASSOC);
 		}
-		else {
+		elseif($version == 12) { //  12 only
 			$data['userman_users'] = $pdo->query('select * from freepbx_users')->fetchAll(PDO::FETCH_ASSOC);
 			$data['userman_users_settings'] = $pdo->query('select * from freepbx_users_settings')->fetchAll(PDO::FETCH_ASSOC);
+		}else {
+			$data['userman_users'] = [];
+			$data['userman_users_settings'] = [];
 		}
+			
 		return $data;
 	}
 

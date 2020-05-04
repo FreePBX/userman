@@ -3,13 +3,13 @@
 # For licensing information, please see the file named LICENSE located in the module directory
 #
 # FreePBX language template for userman
-# Copyright (C) 2008-2019 Sangoma Technologies, Inc.
+# Copyright (C) 2008-2020 Sangoma Technologies, Inc.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-24 13:52+0530\n"
+"POT-Creation-Date: 2020-04-22 09:08+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -931,7 +931,7 @@ msgstr ""
 msgid "Priority"
 msgstr ""
 
-#: Restore.php:20
+#: Restore.php:25
 msgid "Processing Legacy Userman tables"
 msgstr ""
 

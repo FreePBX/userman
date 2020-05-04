@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-01 14:49+0530\n"
+"POT-Creation-Date: 2020-04-16 12:34+0530\n"
 "PO-Revision-Date: 2017-07-03 12:33-0400\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -831,7 +831,7 @@ msgstr ""
 msgid "Priority"
 msgstr ""
 
-#: Restore.php:20
+#: Restore.php:25
 msgid "Processing Legacy Userman tables"
 msgstr ""
 
