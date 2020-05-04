@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-22 09:07+0530\n"
+"POT-Creation-Date: 2020-05-04 23:46+0530\n"
 "PO-Revision-Date: 2019-02-25 12:31+0000\n"
 "Last-Translator: Bastian Mertgen <b.mertgen@bastian-mertgen.de>\n"
 "Language-Team: German <http://*/projects/freepbx/userman/de/>\n"
@@ -149,18 +149,18 @@ msgstr ""
 msgid "Apply Changes Bar"
 msgstr "Änderungen anwenden"
 
-#: assets/js/userman.js:142
+#: assets/js/userman.js:147
 msgid "Are you sure you want to make this directory the system default?"
 msgstr ""
 "Sind Sie sicher, dass Sie dieses Verzeichnis zum Systemstandard machen "
 "möchten?"
 
-#: assets/js/userman.js:85
+#: assets/js/userman.js:90
 #, perl-format
 msgid "Are you sure you wish to delete these %s?"
 msgstr "Wollen Sie diese %s wirklich löschen?"
 
-#: assets/js/userman.js:125
+#: assets/js/userman.js:130
 #, perl-format
 msgid "Are you sure you wish to delete this %s?"
 msgstr "Wollen Sie diesen %s wirklich löschen?"
@@ -251,11 +251,11 @@ msgid "Default Landing Page"
 msgstr "Standard-Startseite"
 
 #: Userman.class.php:542 views/welcome.php:38 views/welcome.php:75
-#: views/welcome.php:106 assets/js/userman.js:90 assets/js/userman.js:96
+#: views/welcome.php:106 assets/js/userman.js:95 assets/js/userman.js:101
 msgid "Delete"
 msgstr "Löschen"
 
-#: assets/js/userman.js:86
+#: assets/js/userman.js:91
 msgid "Deleting..."
 msgstr "Löschen..."
 
@@ -389,7 +389,7 @@ msgstr "Fehler: Sie sollten dies nie sehen"
 msgid "Extension Link Attribute"
 msgstr "Verknüpfungsattribut der Nebenstelle"
 
-#: assets/js/userman.js:370
+#: assets/js/userman.js:375
 msgid "False"
 msgstr "Falsch"
 
@@ -838,7 +838,7 @@ msgstr "Passwort für neue Benutzer"
 msgid "Password can not be blank"
 msgstr "Passwort darf nicht leer sein"
 
-#: assets/js/userman.js:178 assets/js/userman.js:200
+#: assets/js/userman.js:183 assets/js/userman.js:205
 msgid "Please fill all missing fields"
 msgstr "Bitte füllen Sie alle fehlenden Angaben aus"
 
@@ -1058,11 +1058,11 @@ msgstr ""
 msgid "The Active Directory secure connection type"
 msgstr "Art der sicheren Verbindung zum Active-Directory"
 
-#: assets/js/userman.js:435
+#: assets/js/userman.js:440
 msgid "The Browser Language could not be determined"
 msgstr "Die Browser-Sprache konnte nicht bestimmt werden"
 
-#: assets/js/userman.js:455
+#: assets/js/userman.js:460
 msgid "The Browser Timezone could not be determined"
 msgstr "Die Browser-Zeitzone konnte nicht bestimmt werden"
 
@@ -1127,11 +1127,11 @@ msgstr "Die Art der sicheren Verbindung für OpenLDAP"
 msgid "The OpenLDAP username"
 msgstr "Der OpenLDAP-Benutzername"
 
-#: assets/js/userman.js:445
+#: assets/js/userman.js:450
 msgid "The PBX Language is not set"
 msgstr "Die TK-Anlagen Sprache ist nicht definiert"
 
-#: assets/js/userman.js:465
+#: assets/js/userman.js:470
 msgid "The PBX Timezone is not set"
 msgstr "Die TK-Anlagen Zeitzone ist nicht definiert"
 
@@ -1529,7 +1529,7 @@ msgstr "Die Zeitzone dieses Benutzers"
 msgid "Title"
 msgstr "Titel"
 
-#: assets/js/userman.js:370
+#: assets/js/userman.js:375
 msgid "True"
 msgstr "Wahr"
 
@@ -1561,7 +1561,7 @@ msgstr "Attribut für die eindeutige Kennung"
 msgid "Update Group is not defined"
 msgstr "Zu aktualisierende Gruppe ist nicht definiert"
 
-#: views/passwordmodal.php:30 assets/js/userman.js:301
+#: views/passwordmodal.php:30 assets/js/userman.js:306
 msgid "Update Password"
 msgstr "Passwort aktualisieren"
 
@@ -1583,7 +1583,7 @@ msgstr "Benutzer aktualisiert"
 msgid "Updated Voicemail User %s"
 msgstr "Voicemail-Benutzer %s aktualisiert"
 
-#: assets/js/userman.js:305
+#: assets/js/userman.js:310
 msgid "Updating"
 msgstr "Aktualisiere"
 
