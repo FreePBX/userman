@@ -36,15 +36,20 @@ $("#directory-users").change(function() {
 		$("#table-users").bootstrapTable('refresh',{url: 'ajax.php?module=userman&command=getUsers'});
 		$("#table-users").bootstrapTable('showColumn','auth');
 		$("#remove-users").addClass("hidden");
-		$("#add-users").addClass("hidden");
+		$("#add-users").attr('disabled', true);
+		$("#add-users").attr("title", "Select Directory to enable 'Add' Button");
+		$("#add-users").attr("href", "#");
 	} else {
 		$("#add-users").attr("href","?display=userman&action=adduser&directory="+val);
 		$("#table-users").bootstrapTable('refresh',{url: 'ajax.php?module=userman&command=getUsers&directory='+$(this).val()});
 		$("#table-users").bootstrapTable('hideColumn','auth');
 		if(directoryMapValues[val].permissions.addUser) {
-			$("#add-users").removeClass("hidden");
+			$("#add-users").attr('disabled', false);
+			$("#add-users").removeAttr('title');
 		} else {
-			$("#add-users").addClass("hidden");
+			$("#add-users").attr('disabled', true);
+			$("#add-users").attr("title", "Select Directory to enable 'Add' Button");
+			$("#add-users").attr("href", "#");
 		}
 		if(directoryMapValues[val].permissions.removeUser) {
 			$("#remove-users").removeClass("hidden");
