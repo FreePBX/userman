@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-04 23:47+0530\n"
+"POT-Creation-Date: 2020-05-13 17:14+0530\n"
 "PO-Revision-Date: 2017-07-03 12:33-0400\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -142,16 +142,16 @@ msgstr ""
 msgid "Apply Changes Bar"
 msgstr ""
 
-#: assets/js/userman.js:147
+#: assets/js/userman.js:152
 msgid "Are you sure you want to make this directory the system default?"
 msgstr ""
 
-#: assets/js/userman.js:90
+#: assets/js/userman.js:95
 #, perl-format
 msgid "Are you sure you wish to delete these %s?"
 msgstr ""
 
-#: assets/js/userman.js:130
+#: assets/js/userman.js:135
 #, perl-format
 msgid "Are you sure you wish to delete this %s?"
 msgstr ""
@@ -242,11 +242,11 @@ msgid "Default Landing Page"
 msgstr ""
 
 #: Userman.class.php:552 views/welcome.php:38 views/welcome.php:75
-#: views/welcome.php:106 assets/js/userman.js:95 assets/js/userman.js:101
+#: views/welcome.php:106 assets/js/userman.js:100 assets/js/userman.js:106
 msgid "Delete"
 msgstr ""
 
-#: assets/js/userman.js:91
+#: assets/js/userman.js:96
 msgid "Deleting..."
 msgstr ""
 
@@ -378,7 +378,7 @@ msgstr ""
 msgid "Extension Link Attribute"
 msgstr ""
 
-#: assets/js/userman.js:375
+#: assets/js/userman.js:380
 msgid "False"
 msgstr ""
 
@@ -790,7 +790,7 @@ msgstr ""
 msgid "Password can not be blank"
 msgstr ""
 
-#: assets/js/userman.js:183 assets/js/userman.js:205
+#: assets/js/userman.js:188 assets/js/userman.js:210
 msgid "Please fill all missing fields"
 msgstr ""
 
@@ -984,11 +984,11 @@ msgstr ""
 msgid "The Active Directory secure connection type"
 msgstr ""
 
-#: assets/js/userman.js:440
+#: assets/js/userman.js:445
 msgid "The Browser Language could not be determined"
 msgstr ""
 
-#: assets/js/userman.js:460
+#: assets/js/userman.js:465
 msgid "The Browser Timezone could not be determined"
 msgstr ""
 
@@ -1046,11 +1046,11 @@ msgstr ""
 msgid "The OpenLDAP username"
 msgstr ""
 
-#: assets/js/userman.js:450
+#: assets/js/userman.js:455
 msgid "The PBX Language is not set"
 msgstr ""
 
-#: assets/js/userman.js:470
+#: assets/js/userman.js:475
 msgid "The PBX Timezone is not set"
 msgstr ""
 
@@ -1359,7 +1359,7 @@ msgstr ""
 msgid "Title"
 msgstr ""
 
-#: assets/js/userman.js:375
+#: assets/js/userman.js:380
 msgid "True"
 msgstr ""
 
@@ -1391,7 +1391,7 @@ msgstr ""
 msgid "Update Group is not defined"
 msgstr ""
 
-#: views/passwordmodal.php:30 assets/js/userman.js:306
+#: views/passwordmodal.php:30 assets/js/userman.js:311
 msgid "Update Password"
 msgstr ""
 
@@ -1413,7 +1413,7 @@ msgstr ""
 msgid "Updated Voicemail User %s"
 msgstr ""
 
-#: assets/js/userman.js:310
+#: assets/js/userman.js:315
 msgid "Updating"
 msgstr ""
 

@@ -35,11 +35,15 @@ $("#directory-users").change(function() {
 	if(val === '') {
 		$("#table-users").bootstrapTable('refresh',{url: 'ajax.php?module=userman&command=getUsers'});
 		$("#table-users").bootstrapTable('showColumn','auth');
-		$("#remove-users").addClass("hidden");
+		$("#remove-users").removeClass("hidden");
+		$("#remove-users").removeClass("btn-remove");
+		$("#remove-users").attr('disabled', true);
+		$("#remove-users").attr("title", "Select Directory to enable 'Delete' Button");
 		$("#add-users").attr('disabled', true);
 		$("#add-users").attr("title", "Select Directory to enable 'Add' Button");
 		$("#add-users").attr("href", "#");
 	} else {
+		$("#remove-users").removeAttr('title');
 		$("#add-users").attr("href","?display=userman&action=adduser&directory="+val);
 		$("#table-users").bootstrapTable('refresh',{url: 'ajax.php?module=userman&command=getUsers&directory='+$(this).val()});
 		$("#table-users").bootstrapTable('hideColumn','auth');
@@ -52,6 +56,7 @@ $("#directory-users").change(function() {
 			$("#add-users").attr("href", "#");
 		}
 		if(directoryMapValues[val].permissions.removeUser) {
+			$("#remove-users").addClass("btn-remove");
 			$("#remove-users").removeClass("hidden");
 		} else {
 			$("#remove-users").addClass("hidden");
@@ -81,7 +86,7 @@ $("#directory-groups").change(function() {
 		}
 	}
 });
-$(".btn-remove").click(function() {
+$(document).on('click', "button.btn-remove", function() {
 	var type = $(this).data("type"), btn = $(this), section = $(this).data("section");
 	var chosen = $("#table-"+section).bootstrapTable("getSelections");
 	$(chosen).each(function(){
