@@ -11,6 +11,7 @@
 		It allows an Administrator to create a User Account that can be used by other applications for login or API purposes.
 		Modules like iSymphony, Rest API and User Control Panel and FreePBX itself use this module to manage their users.
 	</description>
+  	<more-info>https://wiki.freepbx.org/display/FPG/User+Management+Module</more-info>
 	<changelog>
 		*13.0.76.44* Resolving a few XSS vulnerabilities 
 		*13.0.76.43* Display user locks
