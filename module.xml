@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>14.0.13</version>
+	<version>14.0.14</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -9,7 +9,9 @@
 	<description>
 		This Module manages all PBX users. It allows an Administrator to create a User Account that can be used by other applications for login or API purposes.
 	</description>
+  	<more-info>https://wiki.freepbx.org/display/FPG/User+Management+Module</more-info>
 	<changelog>
+		*14.0.14* Packaging of ver 14.0.14
 		*14.0.13* FREEI-1623 Userman Delete button GUI improvement 
 		*14.0.12* FREEI-1458 user manager: add instructions to select a directory to add users 
 		*14.0.11* Fixed typo when calling delete group hook 
