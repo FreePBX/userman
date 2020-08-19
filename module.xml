@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>13.0.76.44</version>
+	<version>13.0.76.45</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -13,6 +13,7 @@
 	</description>
   	<more-info>https://wiki.freepbx.org/display/FPG/User+Management+Module</more-info>
 	<changelog>
+		*13.0.76.45* Packaging of ver 13.0.76.45
 		*13.0.76.44* Resolving a few XSS vulnerabilities 
 		*13.0.76.43* Display user locks
 		*13.0.76.42* Added optional parameter forceType to sendEmail function 
