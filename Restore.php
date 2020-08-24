@@ -5,8 +5,15 @@ class Restore Extends Base\RestoreBase{
 
 	public function runRestore(){
 		$configs = $this->getConfigs();
-		$this->processData($configs['usermantables']);
 		$this->importKVStore($configs['kvstore']);
+		$this->importAdvancedSettings($configs['settings']);
+		$this->processData($configs['usermantables']);
+
+		// Recovery > Email Settings
+		$this->log(_("Importing Module XML userman"));
+		$sql = "REPLACE INTO module_xml (`id`, `data`) VALUES('userman_data', ?)";
+		$sth = $this->FreePBX->Database->prepare($sql);
+		$sth->execute(array(json_encode($configs['modulexml'])));
 	}
 
 	public function processLegacy($pdo, $data, $tables, $unknownTables){
