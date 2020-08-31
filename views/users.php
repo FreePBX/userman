@@ -228,7 +228,7 @@ echo $usage_html;
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="fname"></i>
 											</div>
 											<div class="col-md-9">
-												<input type="text" class="form-control" id="fname" name="fname" value="<?php echo !empty($user['fname']) ? htmlentities($user['fname']) : '' ?>" <?php echo !$permissions['modifyUser'] ? 'readonly' : ''?>>
+												<input type="text" class="form-control" id="fname" name="fname" value="<?php echo !empty($user['fname']) ? htmlentities($user['fname'],ENT_QUOTES,'UTF-8',FALSE) : '' ?>" <?php echo !$permissions['modifyUser'] ? 'readonly' : ''?>>
 											</div>
 										</div>
 									</div>
@@ -252,7 +252,7 @@ echo $usage_html;
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="lname"></i>
 											</div>
 											<div class="col-md-9">
-												<input type="text" class="form-control" id="lname" name="lname" value="<?php echo !empty($user['lname']) ? htmlentities($user['lname']) : ''; ?>" <?php echo !$permissions['modifyUser'] ? 'readonly' : ''?>>
+												<input type="text" class="form-control" id="lname" name="lname" value="<?php echo !empty($user['lname']) ? htmlentities($user['lname'],ENT_QUOTES,'UTF-8',FALSE) : ''; ?>" <?php echo !$permissions['modifyUser'] ? 'readonly' : ''?>>
 											</div>
 										</div>
 									</div>
