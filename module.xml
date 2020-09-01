@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>14.0.14</version>
+	<version>14.0.15</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -11,6 +11,7 @@
 	</description>
   	<more-info>https://wiki.freepbx.org/display/FPG/User+Management+Module</more-info>
 	<changelog>
+		*14.0.15* FREEI-2097 Handling quotes, if coming into username 
 		*14.0.14* Packaging of ver 14.0.14
 		*14.0.13* FREEI-1623 Userman Delete button GUI improvement 
 		*14.0.12* FREEI-1458 user manager: add instructions to select a directory to add users 
