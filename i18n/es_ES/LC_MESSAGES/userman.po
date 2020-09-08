@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-13 17:14+0530\n"
+"POT-Creation-Date: 2020-09-08 16:17+0000\n"
 "PO-Revision-Date: 2016-12-11 08:33+0200\n"
 "Last-Translator: Ernesto <ecasas@sangoma.com>\n"
 "Language-Team: Spanish <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -384,6 +384,10 @@ msgstr "Error: no se proveyó id"
 msgid "Error: You should never see this"
 msgstr "Error: No debería ver esto nunca"
 
+#: Backup.php:11
+msgid "Exporting Module XML userman"
+msgstr ""
+
 #: views/msad.php:139 views/openldap.php:210
 msgid "Extension Link Attribute"
 msgstr "Atributo de enlace de extensión"
@@ -609,6 +613,10 @@ msgstr ""
 #: Userman.class.php:134
 #, php-format
 msgid "Imported %s directory"
+msgstr ""
+
+#: Restore.php:15
+msgid "Importing Module XML userman"
 msgstr ""
 
 #: views/welcome.php:16
@@ -867,7 +875,7 @@ msgstr "Extensión Primaria Enlazada"
 msgid "Priority"
 msgstr "Prioridad"
 
-#: Restore.php:25
+#: Restore.php:38
 msgid "Processing Legacy Userman tables"
 msgstr ""
 
