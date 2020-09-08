@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-13 17:14+0530\n"
+"POT-Creation-Date: 2020-09-08 16:17+0000\n"
 "PO-Revision-Date: 2018-10-24 01:00+0000\n"
 "Last-Translator: Bastian Mertgen <b.mertgen@bastian-mertgen.de>\n"
 "Language-Team: German <http://*/projects/freepbx/userman/de/>\n"
@@ -389,6 +389,10 @@ msgstr "Fehler: Es wurde keine ID angegeben"
 msgid "Error: You should never see this"
 msgstr "Fehler: Sie sollten dies nie sehen"
 
+#: Backup.php:11
+msgid "Exporting Module XML userman"
+msgstr ""
+
 #: views/msad.php:139 views/openldap.php:210
 msgid "Extension Link Attribute"
 msgstr "Verknüpfungsattribut der Nebenstelle"
@@ -625,6 +629,10 @@ msgstr ""
 #, php-format
 msgid "Imported %s directory"
 msgstr "Verzeichnis %s importiert"
+
+#: Restore.php:15
+msgid "Importing Module XML userman"
+msgstr ""
 
 #: views/welcome.php:16
 #, php-format
@@ -883,7 +891,7 @@ msgstr "Primäre verlinkte Nebenstelle"
 msgid "Priority"
 msgstr "Priorität"
 
-#: Restore.php:25
+#: Restore.php:38
 msgid "Processing Legacy Userman tables"
 msgstr ""
 
