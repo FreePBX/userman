@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>16.0.6</version>
+	<version>16.0.7</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -11,6 +11,7 @@
 	</description>
   	<more-info>https://wiki.freepbx.org/display/FPG/User+Management+Module</more-info>
 	<changelog>
+		*16.0.7* FREEPBX-21782: Backup and restore all data modulo 
 		*16.0.6* Packaging of ver 16.0.6
 		*16.0.5* FREEPBX-20823: LDAP users, contact data is deleted 
 		*16.0.4* FREEI-1623 Userman Delete button GUI improvement 

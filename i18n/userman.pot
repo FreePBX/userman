@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-19 10:27+0000\n"
+"POT-Creation-Date: 2020-09-08 16:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -414,6 +414,10 @@ msgstr ""
 msgid "Error: You should never see this"
 msgstr ""
 
+#: Backup.php:11
+msgid "Exporting Module XML userman"
+msgstr ""
+
 #: views/msad.php:139
 #: views/openldap.php:210
 msgid "Extension Link Attribute"
@@ -644,6 +648,10 @@ msgstr ""
 #: Userman.class.php:134
 #, php-format
 msgid "Imported %s directory"
+msgstr ""
+
+#: Restore.php:15
+msgid "Importing Module XML userman"
 msgstr ""
 
 #: views/welcome.php:16
@@ -931,7 +939,7 @@ msgstr ""
 msgid "Priority"
 msgstr ""
 
-#: Restore.php:25
+#: Restore.php:38
 msgid "Processing Legacy Userman tables"
 msgstr ""
 
