@@ -5,6 +5,19 @@ class Restore Extends Base\RestoreBase{
 
 	public function runRestore(){
 		$configs = $this->getConfigs();
+
+		if ( in_array('kvstore',  $configs) ) { $this->importKVStore($configs['kvstore']); }
+		if ( in_array('settings', $configs) ) { $this->importAdvancedSettings($configs['settings']); }
+		
+		if ( in_array('modulexml', $configs) )
+		{
+			// Recovery > Email Settings
+			$this->log(_("Importing Module XML userman"));
+			$sql = "REPLACE INTO module_xml (`id`, `data`) VALUES('userman_data', ?)";
+			$sth = $this->FreePBX->Database->prepare($sql);
+			$sth->execute(array(json_encode($configs['modulexml'])));
+		}
+
 		$this->processData($configs['usermantables']);
 	}
 
