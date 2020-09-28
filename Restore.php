@@ -6,10 +6,10 @@ class Restore Extends Base\RestoreBase{
 	public function runRestore(){
 		$configs = $this->getConfigs();
 
-		if ( in_array('kvstore',  $configs) ) { $this->importKVStore($configs['kvstore']); }
-		if ( in_array('settings', $configs) ) { $this->importAdvancedSettings($configs['settings']); }
+		if ( array_key_exists('kvstore',  $configs) ) { $this->importKVStore($configs['kvstore']); }
+		if ( array_key_exists('settings', $configs) ) { $this->importAdvancedSettings($configs['settings']); }
 		
-		if ( in_array('modulexml', $configs) )
+		if ( array_key_exists('modulexml', $configs) )
 		{
 			// Recovery > Email Settings
 			$this->log(_("Importing Module XML userman"));
