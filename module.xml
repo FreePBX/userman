@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>15.0.33</version>
+	<version>15.0.34</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -11,6 +11,7 @@
 	</description>
   	<more-info>https://wiki.freepbx.org/display/FPG/User+Management+Module</more-info>
 	<changelog>
+		*15.0.34* FREEPBX-21901: fixed data recovery 
 		*15.0.33* FREEPBX-21902- Remove directory in table kvstore - v13 
 		*15.0.32* FREEPBX-21782: Backup and restore all data modulo 
 		*15.0.31* Packaging of ver 15.0.31
