@@ -1501,7 +1501,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array($id));
 
-		$this->setConfig("auth-settings",$id,false);
+		$this->setConfig("auth-settings",false,$id);
 		$this->loadActiveDirectories();
 		return true;
 	}
