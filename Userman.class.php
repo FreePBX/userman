@@ -386,6 +386,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 					$password = !empty($request['password']) ? $request['password'] : '';
 					$description = !empty($request['description']) ? $request['description'] : '';
 					$prevUsername = !empty($request['prevUsername']) ? $request['prevUsername'] : '';
+					$prevEmail = !empty($request['prevEmail']) ? $request['prevEmail'] : '';
 					$assigned = !empty($request['assigned']) ? $request['assigned'] : array();
 					$extraData = array(
 						'fname' => isset($request['fname']) ? $request['fname'] : null,
@@ -403,7 +404,8 @@ class Userman extends FreePBX_Helpers implements BMO {
 						'work' => isset($request['work']) ? $request['work'] : null,
 						'home' => isset($request['home']) ? $request['home'] : null,
 						'fax' => isset($request['fax']) ? $request['fax'] : null,
-						'displayname' => isset($request['displayname']) ? $request['displayname'] : null
+						'displayname' => isset($request['displayname']) ? $request['displayname'] : null,
+						'prevEmail' => $prevEmail
 					);
 					$default = !empty($request['defaultextension']) ? $request['defaultextension'] : 'none';
 					if($request['user'] == "") {
