@@ -1689,7 +1689,9 @@ class Userman extends FreePBX_Helpers implements BMO {
 			return array("status" => false, "message" => _("Directory is locked. Can not add user"));
 		}
 		$display = !empty($_REQUEST['display']) ? $_REQUEST['display'] : "";
-		$status = $this->directories[$directory]->addUser($username, $password, $default, $description, $extraData, $encrypt);
+		if(isset($this->directories[$directory])){
+			$status = $this->directories[$directory]->addUser($username, $password, $default, $description, $extraData, $encrypt);
+		}
 		if(!$status['status']) {
 			return $status;
 		}
