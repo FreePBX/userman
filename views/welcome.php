@@ -122,7 +122,7 @@
 							</div>
 							<div role="tabpane" id="settings" class="tab-pane display">
 								<div class="container-fluid">
-									<?php echo load_view(dirname(__FILE__).'/general.php', array("hostname" => $hostname, "host" => $host, "remoteips" => $remoteips, "sync" => $sync, "brand" => $brand, "auths" => $auths, "authtype" => $authtype, "autoEmail" => $autoEmail,"emailbody" => $emailbody, "emailsubject" => $emailsubject, "mailtype" => $mailtype)); ?>
+									<?php echo load_view(dirname(__FILE__).'/general.php', array("hostname" => $hostname, "host" => $host, "remoteips" => $remoteips, "sync" => $sync, "brand" => $brand, "auths" => $auths, "authtype" => $authtype, "autoEmail" => $autoEmail,"emailbody" => $emailbody, "emailsubject" => $emailsubject, "mailtype" => $mailtype, "pwdSettings" => json_decode($pwdSettings, true) )); ?>
 								</div>
 							</div>
 						</div>
