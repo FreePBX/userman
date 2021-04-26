@@ -185,7 +185,10 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	function password_policies($password = ""){
 		$error 			= $t = array();
 		$error_message 	= _("The rule: %s is applied in the password, min = %d, detected = %d");
-		$pwdSettings		= $this->getConfig("pwdSettings");
+		if(empty($pwdSettings)){
+			$this->setDefaultPwdSettings();
+			$pwdSettings	= $this->getConfig("pwdSettings");
+		}
 		$pwdSettings		= json_decode($pwdSettings, true);
 		extract($pwdSettings);
 		$rules 			= array("Length"        => array("enabled" => $pwd_length_enable, 		"min" => $pwd_length_value),
@@ -929,20 +932,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 				$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https" : "http";
 				$host = $protocol.'://'.$_SERVER["SERVER_NAME"];
 				if(empty($this->getConfig('pwdSettings'))){
-					$pwdSettings = array(	'pwd_length_enable' 	=> "yes",
-											'pwd_length_value' 		=> 8,
-											'pwd_uppercase_enable'	=> "yes",
-											'pwd_uppercase_value'	=> 1,
-											'pwd_lowercase_enable' 	=> "yes",
-											'pwd_lowercase_value'	=> 1,
-											'pwd_numeric_enable' 	=> "yes",
-											'pwd_numeric_value' 	=> 1,
-											'pwd_special_enable'	=> "yes",
-											'pwd_special_value' 	=> 1,
-											'pwd_punctuation_enable'=> "yes",
-											'pwd_punctuation_value' => 1,
-										);
-					$this->setConfig("pwdSettings", json_encode($pwdSettings));		
+					$this->setDefaultPwdSettings();
 				}
 				$html .= load_view(
 					dirname(__FILE__).'/views/welcome.php',
@@ -973,6 +963,23 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		}
 
 		return $html;
+	}
+
+	public function setDefaultPwdSettings(){
+		$pwdSettings = array(	'pwd_length_enable' 	=> "yes",
+								'pwd_length_value' 		=> 8,
+								'pwd_uppercase_enable'	=> "yes",
+								'pwd_uppercase_value'	=> 1,
+								'pwd_lowercase_enable' 	=> "yes",
+								'pwd_lowercase_value'	=> 1,
+								'pwd_numeric_enable' 	=> "yes",
+								'pwd_numeric_value' 	=> 1,
+								'pwd_special_enable'	=> "yes",
+								'pwd_special_value' 	=> 1,
+								'pwd_punctuation_enable'=> "yes",
+								'pwd_punctuation_value' => 1,
+							);
+		$this->setConfig("pwdSettings", json_encode($pwdSettings));		
 	}
 
 	public function getExtraUserDetailsDisplay($user) {
