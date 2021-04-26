@@ -928,6 +928,22 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 				$remoteips = is_array($remoteips) ? implode(",", $remoteips) : "";
 				$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https" : "http";
 				$host = $protocol.'://'.$_SERVER["SERVER_NAME"];
+				if(empty($this->getConfig('pwdSettings'))){
+					$pwdSettings = array(	'pwd_length_enable' 	=> "yes",
+											'pwd_length_value' 		=> 8,
+											'pwd_uppercase_enable'	=> "yes",
+											'pwd_uppercase_value'	=> 1,
+											'pwd_lowercase_enable' 	=> "yes",
+											'pwd_lowercase_value'	=> 1,
+											'pwd_numeric_enable' 	=> "yes",
+											'pwd_numeric_value' 	=> 1,
+											'pwd_special_enable'	=> "yes",
+											'pwd_special_value' 	=> 1,
+											'pwd_punctuation_enable'=> "yes",
+											'pwd_punctuation_value' => 1,
+										);
+					$this->setConfig("pwdSettings", json_encode($pwdSettings));		
+				}
 				$html .= load_view(
 					dirname(__FILE__).'/views/welcome.php',
 					array(
