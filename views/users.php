@@ -105,10 +105,11 @@ echo $usage_html;
 											<div class="form-group">
 												<div class="col-md-3">
 													<label class="control-label" for="password"><?php echo _("Password")?></label>
-													<i class="fa fa-question-circle fpbx-help-icon" data-for="password"></i>
+													<i class="fa fa-question-circle fpbx-help-icon" id="pwd-templates-show" data-for="password"></i>
 												</div>
 												<div class="col-md-9">
 													<input type="password" autocomplete="new-password" class="form-control password-meter" id="password" name="password" value="<?php echo !empty($user['password']) ? '******' : ''; ?>" required>
+													<div id="pwd-error"></div>
 												</div>
 											</div>
 										</div>
@@ -116,7 +117,10 @@ echo $usage_html;
 								</div>
 								<div class="row">
 									<div class="col-md-12">
-										<span id="password-help" class="help-block fpbx-help-block"><?php echo _("The user's password.")?></span>
+										<span id="password-help" class="help-block fpbx-help-block">
+											<?php echo _("The user's password.")?>
+											<div id="pwd-templates"></div>
+										</span>
 									</div>
 								</div>
 							</div>

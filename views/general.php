@@ -7,7 +7,7 @@
 		<div class="wrapper">
 			<ul class="nav nav-tabs list" role="tablist">
 				<li data-name="tab1" class="change-tab active"><a href="#tab1" aria-controls="tab1" role="tab" data-toggle="tab"><?php echo _("Email Settings")?></a></li>
-				<!--<li data-name="tab2" class="change-tab"><a href="#tab2" aria-controls="tab2" role="tab" data-toggle="tab"><?php echo _("Authentication Settings")?></a></li>-->
+				<li data-name="tab2" class="change-tab"><a href="#tab2" aria-controls="tab2" role="tab" data-toggle="tab"><?php echo _("Authentication Settings")?></a></li>
 			</ul>
 		</div>
 	</div>
@@ -142,8 +142,337 @@
 				</div>
 			</div>
 		</div>
+
+		<!--Authentication Settings-->
+		<?php
+			extract($pwdSettings);
+		?>
+		<div id="tab2" class="tab-pane display">
+			<h3><?php echo _("Password Policies")?></h3>
+			<!--Length-->
+			<div class="element-container">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="row">
+							<div class="form-group">
+								<div class="col-md-3">
+									<label class="control-label" for="pwd_length_enable"><?php echo _("Password Length")?></label>
+									<i class="fa fa-question-circle fpbx-help-icon" data-for="pwd_length_enable"></i>
+								</div>
+								<div class="col-md-9">
+									<div class="container-fluid">
+										<div class="row">
+											<div class="col-md-10">
+												<span class="radioset">
+													<input type="radio" id="pwd_length_enable-yes" name="pwd_length_enable" value="yes" <?php echo ($pwd_length_enable == "yes") ? "checked" : ""?>>
+													<label for="pwd_length_enable-yes"><?php echo _("Yes")?></label>
+													<input type="radio" id="pwd_length_enable-no" name="pwd_length_enable" value="no" <?php echo !($pwd_length_enable == "yes") ? "checked" : ""?>>
+													<label for="pwd_length_enable-no"><?php echo _("No")?></label>										
+												</span>
+											</div>
+											<div class="col-md-2">
+												<span>
+													<input class="form-control" type="number" name="pwd_length_value" min="1" value=<?php echo !($pwd_length_value) ? 8 : $pwd_length_value?>>
+												</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<span id="pwd_length_enable-help" class="help-block fpbx-help-block"><?php echo _("Enter the minimum password length.")."<br>"._("Enable or disable this rule Yes or No.")?></span>
+					</div>
+				</div>
+			</div>
+			<!--End of Length-->
+
+			<!--Uppercase-->
+            <div class="element-container">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="row">
+							<div class="form-group">
+								<div class="col-md-3">
+									<label class="control-label" for="pwd_uppercase_enable"><?php echo _("Uppercase")?></label>
+									<i class="fa fa-question-circle fpbx-help-icon" data-for="pwd_uppercase_enable"></i>
+								</div>
+								<div class="col-md-9">
+									<div class="container-fluid">
+										<div class="row">
+											<div class="col-md-10">
+												<span class="radioset">
+													<input type="radio" id="pwd_uppercase_enable-yes" name="pwd_uppercase_enable" value="yes" <?php echo ($pwd_uppercase_enable == "yes") ? "checked" : ""?>>
+													<label for="pwd_uppercase_enable-yes"><?php echo _("Yes")?></label>
+													<input type="radio" id="pwd_uppercase_enable-no" name="pwd_uppercase_enable" value="no" <?php echo !($pwd_uppercase_enable == "yes") ? "checked" : ""?>>
+													<label for="pwd_uppercase_enable-no"><?php echo _("No")?></label>										
+												</span>
+											</div>
+											<div class="col-md-2">
+												<span>
+													<input class="form-control" type="number" name="pwd_uppercase_value" min="1" value=<?php echo !($pwd_uppercase_value) ? 1 : $pwd_uppercase_value?>>
+												</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<span id="pwd_uppercase_enable-help" class="help-block fpbx-help-block"><?php echo _("Enter the minimum number of lowercase characters.")."<br>"._("Enable or disable this rule Yes or No.")?></span>
+					</div>
+				</div>
+			</div>
+			<!--End of Uppsercase-->	
+
+			<!--Lowercase-->
+			<div class="element-container">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="row">
+							<div class="form-group">
+								<div class="col-md-3">
+									<label class="control-label" for="pwd_lowercase_enable"><?php echo _("Lowercase")?></label>
+									<i class="fa fa-question-circle fpbx-help-icon" data-for="pwd_lowercase_enable"></i>
+								</div>
+								<div class="col-md-9">
+									<div class="container-fluid">
+										<div class="row">
+											<div class="col-md-10">
+												<span class="radioset">
+													<input type="radio" id="pwd_lowercase_enable-yes" name="pwd_lowercase_enable" value="yes" <?php echo ($pwd_lowercase_enable == "yes") ? "checked" : ""?>>
+													<label for="pwd_lowercase_enable-yes"><?php echo _("Yes")?></label>
+													<input type="radio" id="pwd_lowercase_enable-no" name="pwd_lowercase_enable" value="no" <?php echo !($pwd_lowercase_enable == "yes") ? "checked" : ""?>>
+													<label for="pwd_lowercase_enable-no"><?php echo _("No")?></label>										
+												</span>
+											</div>
+											<div class="col-md-2">
+												<span>
+													<input class="form-control" type="number" name="pwd_lowercase_value" min="1" value=<?php echo !($pwd_lowercase_value) ? 1 : $pwd_lowercase_value?>>
+												</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<span id="pwd_lowercase_enable-help" class="help-block fpbx-help-block"><?php echo _("Enter the minimum number of lowercase characters.")."<br>"._("Enable or disable this rule Yes or No.")?></span>
+					</div>
+				</div>
+			</div>
+			<!--End of Lowercase-->
+
+			<!--Numeric-->
+			<div class="element-container">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="row">
+							<div class="form-group">
+								<div class="col-md-3">
+									<label class="control-label" for="pwd_numeric_enable"><?php echo _("Numeric") ?></label>
+									<i class="fa fa-question-circle fpbx-help-icon" data-for="pwd_numeric_enable"></i>
+								</div>
+								<div class="col-md-9">
+									<div class="container-fluid">
+										<div class="row">
+											<div class="col-md-10">
+												<span class="radioset">
+													<input type="radio" id="pwd_numeric_enable-yes" name="pwd_numeric_enable" value="yes" <?php echo ($pwd_numeric_enable == "yes") ? "checked" : ""?>>
+													<label for="pwd_numeric_enable-yes"><?php echo _("Yes")?></label>
+													<input type="radio" id="pwd_numeric_enable-no" name="pwd_numeric_enable" value="no" <?php echo !($pwd_numeric_enable == "yes") ? "checked" : ""?>>
+													<label for="pwd_numeric_enable-no"><?php echo _("No")?></label>										
+												</span>
+											</div>
+											<div class="col-md-2">
+												<span>
+													<input class="form-control" type="number" name="pwd_numeric_value" min="1" value=<?php echo !($pwd_numeric_value) ? 1 : $pwd_numeric_value?>>
+												</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<span id="pwd_numeric_enable-help" class="help-block fpbx-help-block"><?php echo _("Enter the minimum number of numeric characters.")."<br>"._("Enable or disable this rule Yes or No.")?></span>
+					</div>
+				</div>
+			</div>
+			<!--End of Numeric-->
+
+			<!--Special-->
+			<div class="element-container">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="row">
+							<div class="form-group">
+								<div class="col-md-3">
+									<label class="control-label" for="pwd_special_enable"><?php echo _("Special")?></label>
+									<i class="fa fa-question-circle fpbx-help-icon" data-for="pwd_special_enable"></i>
+								</div>
+								<div class="col-md-9">
+									<div class="container-fluid">
+										<div class="row">
+											<div class="col-md-10">
+												<span class="radioset">
+													<input type="radio" id="pwd_special_enable-yes" name="pwd_special_enable" value="yes" <?php echo ($pwd_special_enable == "yes") ? "checked" : ""?>>
+													<label for="pwd_special_enable-yes"><?php echo _("Yes")?></label>
+													<input type="radio" id="pwd_special_enable-no" name="pwd_special_enable" value="no" <?php echo !($pwd_special_enable == "yes") ? "checked" : ""?>>
+													<label for="pwd_special_enable-no"><?php echo _("No")?></label>										
+												</span>
+											</div>
+											<div class="col-md-2">
+												<span>
+													<input class="form-control" type="number" name="pwd_special_value" min="1" value=<?php echo !($pwd_special_value) ? 1 : $pwd_special_value?>>
+												</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<span id="pwd_special_enable-help" class="help-block fpbx-help-block"><?php echo _("Enter the minimum number of special characters.")."<br>"._("Enable or disable this rule Yes or No.")?></span>
+					</div>
+				</div>
+			</div>
+			<!--END of Special-->
+
+			<!--Punctuation-->
+			<div class="element-container">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="row">
+							<div class="form-group">
+								<div class="col-md-3">
+									<label class="control-label" for="pwd_punctuation_enable"><?php echo _("Punctuation")?></label>
+									<i class="fa fa-question-circle fpbx-help-icon" data-for="pwd_punctuation_enable"></i>
+								</div>
+								<div class="col-md-9">
+									<div class="container-fluid">
+										<div class="row">
+											<div class="col-md-10">
+												<span class="radioset">
+													<input type="radio" id="pwd_punctuation_enable-yes" name="pwd_punctuation_enable" value="yes" <?php echo ($pwd_punctuation_enable == "yes") ? "checked" : ""?>>
+													<label for="pwd_punctuation_enable-yes"><?php echo _("Yes")?></label>
+													<input type="radio" id="pwd_punctuation_enable-no" name="pwd_punctuation_enable" value="no" <?php echo !($pwd_punctuation_enable == "yes") ? "checked" : ""?>>
+													<label for="pwd_punctuation_enable-no"><?php echo _("No")?></label>										
+												</span>
+											</div>
+											<div class="col-md-2">
+												<span>
+													<input class="form-control" type="number" name="pwd_punctuation_value" min="1" value=<?php echo !($pwd_punctuation_value) ? 1 : $pwd_punctuation_value?>>
+												</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<span id="pwd_punctuation_enable-help" class="help-block fpbx-help-block"><?php echo _("Enter the minimum number of punctuation characters.")."<br>"._("Enable or disable this rule Yes or No.")?></span>
+					</div>
+				</div>
+			</div>		
+			<!--End of Punctuation-->
+
+			<!--Threshold weak password-->
+			<div class="element-container">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="row">
+							<div class="form-group">
+								<div class="col-md-3">
+									<label class="control-label" for="pwd_threshold_enable"><?php echo _("Threshold Weak Password")?></label>
+									<i class="fa fa-question-circle fpbx-help-icon" data-for="pwd_threshold_enable"></i>
+								</div>
+								<div class="col-md-9">
+									<div class="container-fluid">
+										<div class="row">
+											<div class="col-md-10">
+												<span class="radioset">
+													<input type="radio" id="pwd_threshold_enable-yes" name="pwd_threshold_enable" value="yes" <?php echo ($pwd_threshold_enable == "yes") ? "checked" : ""?>>
+													<label for="pwd_threshold_enable-yes"><?php echo _("Yes")?></label>
+													<input type="radio" id="pwd_threshold_enable-no" name="pwd_threshold_enable" value="no" <?php echo !($pwd_threshold_enable == "yes") ? "checked" : ""?>>
+													<label for="pwd_threshold_enable-no"><?php echo _("No")?></label>										
+												</span>
+											</div>
+											<div class="col-md-2">
+												<span>
+													<input class="form-control" type="number" name="pwd_threshold_value" min="1" value=<?php echo !($pwd_threshold_value) ? 4 : $pwd_threshold_value?>>
+												</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<span id="pwd_threshold_enable-help" class="help-block fpbx-help-block"><?php echo _("Enter a password complexity threshold from 0 to 4, 0 being 'Really weak', and4 being 'Strong'.")."<br>"._("Enable or disable this rule Yes or No.")?></span>
+					</div>
+				</div>
+			</div>		
+			<!--End of Threshold weak password-->
+
+			<!--Test-->
+			<div class="element-container">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="row">
+							<div class="form-group">
+								<div class="col-md-3">
+									<label class="control-label" for="pwd_test_enable"><?php echo _("Test")?></label>
+									<i class="fa fa-question-circle fpbx-help-icon" id="pwd-templates-show" data-for="pws-test_enable"></i>
+								</div>
+								<div class="col-md-9">
+									<div class="container-fluid">
+										<input id="pwd_test" class="form-control password-meter" type="text" value="">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<span id="pws-test_enable-help" class="help-block fpbx-help-block">
+							<?php echo _("Enter a password to test.")?>
+							<div id="pwd-templates">
+							</div>
+						</span>
+					</div>
+				</div>
+			</div>
+			<!--End of Test-->
+
+			<div id="pwd-error">
+			</div>
+		</div>
 	</div>
 </form>
+
 <style>
 .setting-navs .scroller-left {
 	left: 41px;

@@ -19,6 +19,37 @@ if($("#directory").length) {
 		$("#submit").prop("disabled",true);
 	});
 }
+
+$("#pwd-templates-show").mouseenter(function(){
+	$.post( "ajax.php", {command: "pwdTest", module: "userman", pwd: ""}, function(data) {
+		if(data.templates){
+			Tcontent = "<div class='container'>";
+			$.each(data.templates, function(index, item) {
+				Tcontent += "<li>"+index+" - <b>"+item+"</b></li>";				
+			});
+			Tcontent += '</div>';
+			$("#pwd-templates").html(Tcontent);
+		}
+	});
+});
+$(".password-meter").keyup(function() {
+	$.post( "ajax.php", {command: "pwdTest", module: "userman", pwd: this.value }, function(data) {
+		if(data.status){
+			$("#pwd-error").html("");
+			$("#action-bar").show();
+		}
+		else{
+			error_content = '<div class="alert alert-warning" role="alert">';
+			$.each(data.error, function(index, item) {
+				error_content += "<li>"+item+"</li>";
+				
+			});
+			error_content += '</div>';
+			$("#pwd-error").html(error_content);
+			$("#action-bar").hide();
+		}
+	});
+});
 $("#email-users").click(function() {
 	$(this).prop("disabled",true);
 	$.post( "ajax.php", {command: "email", module: "userman", extensions: deleteExts.users}, function(data) {
