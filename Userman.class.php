@@ -185,6 +185,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	function password_policies($password = ""){
 		$error 			= $t = array();
 		$error_message 	= _("The rule: %s is applied in the password, min = %d, detected = %d");
+		$pwdsettings 	= $this->getConfig('pwdSettings');
 		if(empty($pwdSettings)){
 			$this->setDefaultPwdSettings();
 			$pwdSettings	= $this->getConfig("pwdSettings");
@@ -931,7 +932,8 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 				$remoteips = is_array($remoteips) ? implode(",", $remoteips) : "";
 				$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https" : "http";
 				$host = $protocol.'://'.$_SERVER["SERVER_NAME"];
-				if(empty($this->getConfig('pwdSettings'))){
+				$pwdsettings = $this->getConfig('pwdSettings');
+				if(empty($pwdsettings)){
 					$this->setDefaultPwdSettings();
 				}
 				$html .= load_view(
@@ -1949,14 +1951,16 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 			throw new \Exception(_("Previous Username can not be blank"));
 		}
 
-		$pwd = $this->password_policies($password);
-		if(!$pwd["status"]){
-			$error_content = '<div class="alert alert-warning" role="alert">';
-			foreach($pwd["error"] as $item => $error){
-				$error_content .= "<li> ".$item." - ".$error."</li>";
-			}
-			$error_content .= '</div>';
-			return array("status" => false, "message" => $error_content);
+		if($password != ""){
+			$pwd = $this->password_policies($password);
+			if(!$pwd["status"]){
+				$error_content = '<div class="alert alert-warning" role="alert">';
+				foreach($pwd["error"] as $item => $error){
+					$error_content .= "<li> ".$item." - ".$error."</li>";
+				}
+				$error_content .= '</div>';
+				return array("status" => false, "message" => $error_content);
+			}			
 		}
 
 		set_time_limit(0);
