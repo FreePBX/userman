@@ -297,6 +297,14 @@ class Userman extends FreePBX_Helpers implements BMO {
 			);
 			return true;
 		}
+		if(isset($request['action']) && $request['action'] == 'delucptemplate') {
+			$ret = $this->deleteUcpTemplateByID($request['template']);
+			$this->message = array(
+				'message' => $ret['message'],
+				'type' => $ret['type']
+			);
+			return true;
+		}
 		if(isset($request['submittype'])) {
 			switch($request['type']) {
 				case 'directory':
@@ -495,6 +503,18 @@ class Userman extends FreePBX_Helpers implements BMO {
 					);
 					if(isset($request['sendemailtoall'])) {
 						$this->sendWelcomeEmailToAll();
+					}
+				break;
+				case 'ucptemplate':
+					$templateData = array(
+						'templatename' => isset($request['templatename']) ? $request['templatename'] : null,
+						'description' => isset($request['description']) ? $request['description'] : null,
+					);
+					if(!empty($request['id'])) {
+						$templateData['id'] = $request['id'];
+						$this->updateUcpTemplate($templateData);
+					} else {
+						$this->addUcpTemplate($templateData);
 					}
 				break;
 			}
@@ -813,6 +833,20 @@ class Userman extends FreePBX_Helpers implements BMO {
 					)
 				);
 			break;
+			case 'adducptemplate':
+			case 'showucptemplate':
+				if($action == "showucptemplate" && !empty($request['template'])) {
+					$template = $this->getTemplateById($request['template']);
+				} else {
+					$template = [];
+				}
+				$html .= load_view(
+					dirname(__FILE__).'/views/ucptemplates.php',
+					array(
+						'template' => $template
+					)
+				);
+			break;
 			default:
 				$users = $this->getAllUsers();
 				$groups = $this->getAllGroups();
@@ -948,6 +982,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 			case "updatePassword":
 			case "delete":
 			case "email":
+			case "getUcpTemplates":
 				return true;
 			break;
 			case "setlocales":
@@ -1035,6 +1070,8 @@ class Userman extends FreePBX_Helpers implements BMO {
 			case "getGroups":
 				$directory = !empty($_GET['directory']) ? $_GET['directory'] : '';
 				return $this->getAllGroups($directory);
+			case "getUcpTemplates":
+				return $this->getAllUcpTemplates();
 			case "email":
 				//FREEPBX-15304 Send email to multiple selected users only sends to the first
 				$sendmail = false;
@@ -1089,6 +1126,13 @@ class Userman extends FreePBX_Helpers implements BMO {
 						$ret = array();
 						foreach($_REQUEST['extensions'] as $ext){
 							$ret[$ext] = $this->deleteDirectoryByID($ext);
+						}
+						return array('status' => true, 'message' => $ret);
+					break;
+					case 'ucptemplates':
+						$ret = array();
+						foreach($_REQUEST['extensions'] as $ext){
+							$ret[$ext] = $this->deleteUcpTemplateByID($ext);
 						}
 						return array('status' => true, 'message' => $ret);
 					break;
@@ -3247,4 +3291,46 @@ class Userman extends FreePBX_Helpers implements BMO {
 		return $data;
 	}
 
+	public function addUcpTemplate($addData){
+		$sql = "INSERT INTO userman_ucp_templates(`templatename`,`description`)VALUES(:name,:description)";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':name' => $addData['templatename'], ':description' => $addData['description']));
+		return true;
+	}
+
+	public function getTemplateById($id) {
+		$sql = "SELECT * from userman_ucp_templates Where id=:id";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':id' => $id));
+		$result = $sth->fetch(PDO::FETCH_ASSOC);
+		return $result;
+	}
+
+	public function updateUcpTemplate($editData){
+		$sql = "UPDATE userman_ucp_templates SET `templatename`=:name,`description`=:description Where id=:id";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':name' => $editData['templatename'], ':description' => $editData['description'], ':id' => $editData['id']));
+		return true;
+	}
+
+	public function getAllUcpTemplates() {
+		$sql = "SELECT * from userman_ucp_templates";
+		$sth = $this->db->prepare($sql);
+		$sth->execute();
+		$result = $sth->fetchAll(PDO::FETCH_ASSOC);
+		if(empty($result)) {
+			return [];
+		}
+		return $result;
+	}
+
+	public function deleteUcpTemplateByID($id) {
+		if(empty($id)) {
+			return array("status" => false, "type" => "danger", "message" => _("Template Does Not Exist"));
+		}
+		$sql = "DELETE from userman_ucp_templates Where id=:id";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':id' => $id));
+		return array("status" => true, "type" => "success", "message" => _("Template Successfully Deleted"));
+	}
 }
