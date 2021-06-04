@@ -13,6 +13,7 @@ use BMO;
 use FreePBX_Helpers;
 use PDO;
 use Exception;
+use Ramsey\Uuid\Uuid;
 class Userman extends FreePBX_Helpers implements BMO {
 	private $registeredFunctions = array();
 	private $message = '';
