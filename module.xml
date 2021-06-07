@@ -126,6 +126,26 @@
 				<column name="uid"/>
 			</key>
 		</table>
+		<table name="userman_template_settings">
+			<field name="tid" type="integer"/>
+			<field name="module" type="string" length="65"/>
+			<field name="key" type="string" length="190"/>
+			<field name="val" type="blob"/>
+			<field name="type" type="string" length="16" notnull="false"/>
+			<key name="index4" type="unique">
+				<column name="tid"/>
+				<column name="module"/>
+				<column name="key"/>
+			</key>
+			<key name="index2" type="index">
+				<column name="tid"/>
+				<column name="key"/>
+			</key>
+			<key name="index6" type="index">
+				<column name="module"/>
+				<column name="tid"/>
+			</key>
+		</table>
 		<table name="userman_groups">
 			<field name="id" type="integer" primarykey="true" autoincrement="true"/>
 			<field name="auth" type="string" length="150" default="freepbx" notnull="false"/>
