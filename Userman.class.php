@@ -1745,7 +1745,117 @@ class Userman extends FreePBX_Helpers implements BMO {
 		}
 		return $status;
 	}
-
+	/*
+	* This method will return the widgetsetting of a particular module
+	*( @param array $widget )
+	* $userid interger ( userman userid)
+	* return an array with widget settings
+	*/
+	private function getUserModulesSettingBasedOnTemplate($widget,$userid){
+		$widget['id'] = (string)Uuid::uuid4();
+		$moduleuc = ucfirst($widget['rawname']);
+		//call the module api to get the widgetlist
+		if(method_exists($this->FreePBX->$moduleuc,getWidgetListByModule)){
+			// we need to add some var to sent only the default extension details
+			$u = $this->getUserByID($userid);
+			$defaultextension = $u['default_extension'];
+			$widget = $this->FreePBX->$moduleuc->getWidgetListByModule($defaultextension);
+		}else {
+			dbug('method doesnot exist in '.$moduleuc);
+		}
+		return $widget;
+	}
+	/* Update users settings by the given template setting*/
+	public function updateUserUcpByTemplate($userid,$templateid){
+		$sql = "SELECT a.val, a.type,a.key FROM userman_template_settings a WHERE a.tid = :tid AND `key`='dashboards' ";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':tid' => $templateid));
+		$results = $sth->fetch(PDO::FETCH_ASSOC);
+		if($results) {
+			$this->removeUCPdashboardSettingByID($userid);
+			//we have all new dashbords ids here
+			$dashbords = json_decode($results['val'],true); dbug($dashbords);
+			$newdashbords = [];
+			foreach($dashbords as $dash){
+				$id = (string)Uuid::uuid4();
+				$widskey = 'dashboard-layout-'.$id;
+				$newdashbords[] = ['id'=>$id,'name'=>$dash['name']];
+				$layoutkey = 'dashboard-layout-'.$dash['id'];
+				$sql = "select * from userman_template_settings where tid=:tid AND `key`=:key ";
+				$sth = $this->db->prepare($sql);
+				$sth->execute(array(':tid' => $templateid,':key'=>$layoutkey));
+				$wids = $sth->fetch(PDO::FETCH_ASSOC);
+				unset($thiswidget);
+				$widgets = json_decode($wids['val'],true);dbug($widgets);
+				unset($allowedwidget);
+				$allowedwidget = [];
+				foreach($widgets as $widget){
+					$updatedwidget = $this->getUserModulesSettingBasedOnTemplate($widget,$userid);
+					$thiswidget[] = $updatedwidget;
+				}
+				$updatedwidgets = json_encode($thiswidget);
+				$sql = "INSERT INTO userman_users_settings(`uid`,`module`,`key`,`val`,`type`) VALUES(:uid,'ucp|Global',:key,:val,:type)";
+				$sth = $this->db->prepare($sql);
+				$sth->execute(array(':uid' => $userid, ':key' => $widskey,':val' => $updatedwidgets,':type'=>$wids['type']));
+			}
+			$dashboards = json_encode($newdashbords);
+			//insert the dasbord
+			$sql = "INSERT INTO userman_users_settings(`uid`,`module`,`key`,`val`,`type`) VALUES(:uid,'ucp|Global',:key,:val,:type)";
+			$sth = $this->db->prepare($sql);
+			$sth->execute(array(':uid' => $userid, ':key' => $results['key'],':val' => $dashboards,':type'=>$results['type']));
+			return ['status'=>true,'message'=> 'User UCP updated'];
+		}else {
+			return ['status'=>false,'message'=> 'No Dashboards created'];
+		}
+	}
+	public function removeUCPdashboardSettingByID($userid){dbug('called removeUCPdashboardSettingByID');
+		//remove all dashbord and its layout dashboards
+		$sql = "select * from userman_users_settings where uid=:uid AND `key`='dashboards' ";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':uid' => $userid));
+		$results = $sth->fetch(PDO::FETCH_ASSOC);
+		if($results) {
+			$dashbords = json_decode($results['val'],true);
+			if(is_array($dashbords)){
+				foreach($dashbords as $dash){
+					$id = $dash['id'];
+					$layoutkey = 'dashboard-layout-'.$id;
+					$sql = "DELETE from userman_users_settings where uid=:uid AND `key`=:key ";
+					$sth = $this->db->prepare($sql);
+					$sth->execute(array(':uid' => $userid,':key'=>$layoutkey));
+				}
+			}
+			$sql = "Delete from userman_users_settings where uid=:uid AND `key`='dashboards' ";
+			$sth = $this->db->prepare($sql);
+			$sth->execute(array(':uid' => $userid));
+		}
+	}
+	/*Add will delete and add
+	* This function will copy the uid UCP dashbord and widgets to  templatesettings
+	*/
+	public function addTemplateSettings($tempid,$uid){dbug('addTemplateSettings');
+		$sql = "SELECT a.val, a.type,a.key FROM ".$this->userSettingsTable."  a, ".$this->userTable." b WHERE b.id = a.uid AND b.id = :id AND a.module = 'ucp|Global'";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':id' => $uid));
+		$results = $sth->fetchAll(PDO::FETCH_ASSOC);
+		if(is_array($results)) {
+			$this->removeUcpTemplatesID($tempid);
+			foreach($results as $result){
+				$sql = "INSERT INTO userman_template_settings(`tid`,`module`,`key`,`val`,`type`) VALUES(:tid,'UCP',:key,:val,:type)";
+				$sth = $this->db->prepare($sql);
+				$sth->execute(array(':tid' => $tempid, ':key' => $result['key'],':val' => $result['val'],':type'=>$result['type']));
+			}
+			return ['status'=>true,'message'=> 'Template updated'];
+		}else {
+			return ['status'=>false,'message'=> 'Template Not updated'];
+		}
+	}
+	public function removeUcpTemplatesID($tid) {
+		$sql = "DELETE FROM userman_template_settings WHERE  `tid` = :tid ";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':tid' => $tid));
+		return true;
+	}
 	/**
 	 * Move User to Directory
 	 * This only works on directories which allow adding users
