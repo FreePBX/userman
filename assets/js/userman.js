@@ -19,6 +19,15 @@ if($("#directory").length) {
 		$("#submit").prop("disabled",true);
 	});
 }
+if($("#editT").length) {
+        $("#editT").submit(function(e) {
+                if($("#templatename").val().trim() === "") {
+                        return warnInvalid($("#templatename"),_("Template Name can not be blank!"));
+                }
+                $("#submit").prop("disabled",true);
+        });
+}
+
 $("#email-users").click(function() {
 	$(this).prop("disabled",true);
 	$.post( "ajax.php", {command: "email", module: "userman", extensions: deleteExts.users}, function(data) {
@@ -190,7 +199,7 @@ $("#submit").click(function(e) {
 		}
 	});
 	if(!invalid) {
-		if($("form.fpbx-submit").attr("name") === "directory") {
+		if($("form.fpbx-submit").attr("name") === "directory" || $("form.fpbx-submit").attr("name") === "editT") {
 			$(".fpbx-submit").submit();
 		} else {
 			setLocales(function() {
@@ -260,7 +269,7 @@ $( document ).ready(function() {
 		$('input[name="submit"]').removeClass('hidden');
 		$('input[name="reset"]').removeClass('hidden');
 		$('input[name="delete"]').removeClass('hidden');
-	}else if(params.action == 'addgroup' || params.action == 'showgroup' || params.action == 'adddirectory' || params.action == 'showdirectory') {
+	}else if(params.action == 'addgroup' || params.action == 'showgroup' || params.action == 'adddirectory' || params.action == 'showdirectory' || params.action == 'adducptemplate' ||  params.action == 'showucptemplate') {
 		$('input[name="submit"]').removeClass('hidden');
 		$('input[name="reset"]').removeClass('hidden');
 		$('input[name="delete"]').removeClass('hidden');
@@ -291,6 +300,11 @@ $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
 			$('input[name="reset"]').addClass('hidden');
 		break;
 		case "#groups":
+			$("#action-bar").addClass("hidden");
+			$('input[name="submit"]').addClass('hidden');
+			$('input[name="reset"]').addClass('hidden');
+		break;
+		case "#ucptemplates":
 			$("#action-bar").addClass("hidden");
 			$('input[name="submit"]').addClass('hidden');
 			$('input[name="reset"]').addClass('hidden');
@@ -482,3 +496,9 @@ $("#systemtz").on("click", function(e){
 $("#directory-side").on("click-row.bs.table", function(row, $element) {
 	window.location = "?display=userman&action=showdirectory&directory="+$element.id;
 });
+
+function ucptemplatesActions(value, row, index) {
+	var html = '<a href="?display=userman&amp;action=showucptemplate&amp;template='+row.id+'"><i class="fa fa-edit"></i></a>';
+	html += '<a class="clickable"><i class="fa fa-trash-o" data-section="ucptemplates" data-type="ucptemplates"  data-id="'+row.id+'"></i></a>';
+	return html;
+}

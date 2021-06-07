@@ -175,6 +175,11 @@
 			<field name="default" type="boolean" default="0"/>
 			<field name="locked" type="boolean" default="0"/>
 		</table>
+		<table name="userman_ucp_templates">
+			<field name="id" type="integer" primarykey="true" autoincrement="true"/>
+			<field name="templatename" type="string" length="150"/>
+			<field name="description" type="string" length="255" notnull="false"/>
+		</table>
 	</database>
 	<supported>
 		<version>15.0</version>
