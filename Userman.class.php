@@ -515,7 +515,9 @@ class Userman extends FreePBX_Helpers implements BMO {
 						$templateData['id'] = $request['id'];
 						$this->updateUcpTemplate($templateData);
 					} else {
-						$this->addUcpTemplate($templateData);
+						$id = $this->addUcpTemplate($templateData);
+						$uid = $request['userid'];
+						$this->addTemplateSettings($id,$uid);
 					}
 				break;
 			}
@@ -844,7 +846,8 @@ class Userman extends FreePBX_Helpers implements BMO {
 				$html .= load_view(
 					dirname(__FILE__).'/views/ucptemplates.php',
 					array(
-						'template' => $template
+						'template' => $template,
+						'users'=>$this->getAllUsers()
 					)
 				);
 			break;
@@ -3406,7 +3409,8 @@ class Userman extends FreePBX_Helpers implements BMO {
 		$sql = "INSERT INTO userman_ucp_templates(`templatename`,`description`)VALUES(:name,:description)";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':name' => $addData['templatename'], ':description' => $addData['description']));
-		return true;
+		$id = $this->db->lastInsertId();
+		return $id;
 	}
 
 	public function getTemplateById($id) {

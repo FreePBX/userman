@@ -59,6 +59,32 @@ echo $heading;
 								</div>
 							</div>
 						</div>
+						<div class="element-container">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="row">
+										<div class="form-group">
+											<div class="col-md-3">
+												<label class="control-label" for="group_users"><?php echo _('Import from Users')?></label>
+													<i class="fa fa-question-circle fpbx-help-icon" data-for="group_users"></i>
+											</div>
+											<div class="col-md-9">
+												<select id="userid" class="form-control" name="userid" >
+													<?php foreach($users as $user) {?>
+														<option value="<?php echo $user['id']?>"><?php echo $user['username']?></option>
+													<?php } ?>
+												</select>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-12">
+									<span id="group_users-help" class="help-block fpbx-help-block"><?php echo _("Import this user's  current dashbord setting from UCP")?></span>
+								</div>
+							</div>
+						</div>
 					</form>
 				</div>
 			</div>
