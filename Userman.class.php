@@ -422,6 +422,13 @@ class Userman extends FreePBX_Helpers implements BMO {
 						$ret = $this->addUserByDirectory($directory, $username, $password, $default, $description, $extraData);
 						if($ret['status']) {
 							$this->setGlobalSettingByID($ret['id'],'assigned',$assigned);
+							// assign the template if selected 
+							if($request['assign_template'] == true){
+								$tempid = $request['templateid'];
+								$this->updateUserUcpByTemplate($ret['id'],$tempid);
+							}else if($request['assign_template'] == 'inherit'){
+								//get the group settings using ID $ret['id'] @mohit  need to finsh this work
+							}
 							$this->message = array(
 								'message' => $ret['message'],
 								'type' => $ret['type']
@@ -434,6 +441,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 						}
 					} else {
 						$password = ($password != '******') ? $password : null;
+						//@mohit https://issues.freepbx.org/browse/FREEI-3419 
 						$ret = $this->updateUser($request['user'], $prevUsername, $username, $default, $description, $extraData, $password);
 						if($ret['status']) {
 							$this->setGlobalSettingByID($ret['id'],'assigned',$assigned);
