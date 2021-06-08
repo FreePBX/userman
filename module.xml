@@ -199,6 +199,7 @@
 			<field name="id" type="integer" primarykey="true" autoincrement="true"/>
 			<field name="templatename" type="string" length="150"/>
 			<field name="description" type="string" length="255" notnull="false"/>
+			<field name="default" type="boolean" default="0"/>
 		</table>
 	</database>
 	<supported>
