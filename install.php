@@ -12,7 +12,28 @@ if($freepbx->Config->get('AUTHTYPE') == '') {
 	\FreePBX::Database()->query($sql);
 	out("Added the AUTHTYPE settings");
 }
-
+// add default template if it is not added 
+$sql = "SHOW INDEXES FROM userman_ucp_templates";
+$sth = \FreePBX::Database()->prepare($sql);
+$sth->execute();
+$row = $sth->fetch(PDO::FETCH_ASSOC);
+if($row['Cardinality'] == 0){
+	out("Adding default template settings");
+	// add the defult template
+	$insert = "INSERT INTO userman_ucp_templates(`templatename`,`description`)VALUES('Default-Template','template with Vm and CDR')";
+	$sth = \FreePBX::Database()->prepare($insert);
+	$sth->execute();
+	//insert the template dashboard
+	$sql = "INSERT INTO userman_template_settings(`tid`,`module`,`key`,`val`,`type`) VALUES(:tid,'UCP',:key,:val,:type)";
+	$sth = \FreePBX::Database()->prepare($sql);
+	$sth->execute(array(':tid' => 1, ':key' => 'dashboards',':val' => '[{"id":"513cb28f-f834-4b66-8d36-4405bd302520","name":"default-template"}]',':type'=>'json-arr'));
+	//insert template settings
+	$sql = "INSERT INTO userman_template_settings(`tid`,`module`,`key`,`val`,`type`) VALUES(:tid,'UCP',:key,:val,:type)";
+	$sth = \FreePBX::Database()->prepare($sql);
+	$sth->execute(array(':tid' => 1, ':key' => 'dashboard-layout-513cb28f-f834-4b66-8d36-4405bd302520',':val' => '[{"id":"eac6afa4-2a21-43bc-9b4d-e34d06ceeaa6","widget_module_name":"Call History","name":"test1","rawname":"cdr","widget_type_id":104,"has_settings":false,"size_x":0,"size_y":0,"col":6,"row":7,"locked":false},{"id":"122acb19-b22f-4e71-9ba6-5e0f201c9142","widget_module_name":"Voicemail","name":"test1","rawname":"voicemail","widget_type_id":104,"has_settings":true,"size_x":6,"size_y":0,"col":6,"row":7,"locked":false}]',':type'=>''));	
+}else {
+	out("Default template already added");
+}
 //Change login type to usermanager if installed.
 if($freepbx->Config->get('AUTHTYPE') == "database") {
 	$freepbx->Config->update('AUTHTYPE','usermanager');
