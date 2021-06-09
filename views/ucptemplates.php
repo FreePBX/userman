@@ -70,6 +70,7 @@ echo $heading;
 											</div>
 											<div class="col-md-9">
 												<select id="userid" class="form-control" name="userid" >
+													<option value=""><?php echo _("Select a User /Template creator")?></option>
 													<?php foreach($users as $user) {?>
 														<option value="<?php echo $user['id']?>"><?php echo $user['username']?></option>
 													<?php } ?>

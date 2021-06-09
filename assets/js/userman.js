@@ -500,7 +500,8 @@ $("#directory-side").on("click-row.bs.table", function(row, $element) {
 });
 
 function ucptemplatesActions(value, row, index) {
-	var html = '<a href="?display=userman&amp;action=showucptemplate&amp;template='+row.id+'"><i class="fa fa-edit"></i></a>';
+	var html = '<a href="?display=userman&amp;action=showucptemplate&amp;template='+row.id+'" title="Reimport from a user"><i class="fa fa-edit"> </i></a>';
+	html += '<a class="clickable" href="?display=userman&amp;action=edittemplate&amp;template='+row.id+'" title="Edit Template"><i class="fa fa-eye"" data-section="ucptemplates" data-type="ucptemplates"  data-id="'+row.id+'"></i></a>';
 	html += '<a class="clickable"><i class="fa fa-trash-o" data-section="ucptemplates" data-type="ucptemplates"  data-id="'+row.id+'"></i></a>';
 	return html;
 }

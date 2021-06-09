@@ -1,8 +1,10 @@
 <?php switch($action) {
 	case "adduser":
+	case "showucptemplate":
 	case "showuser": ?>
 	<div id="toolbar-all">
 		<a href="?display=userman#users" class="btn btn-default"><i class="fa fa-list"></i> <?php echo _("List Users")?></a>
+		<a href="?display=userman#ucptemplates" class="btn btn-default"><i class="fa fa-list"></i> <?php echo _("List Templates")?></a>
 		<?php if($permissions['addUser']) { ?>
 			<a href="?display=userman&amp;action=adduser&amp;directory=<?php echo $directory?>" class="btn btn-default"><i class="fa fa-plus"></i> <?php echo _("Add User")?></a>
 		<?php } ?>
