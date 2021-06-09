@@ -138,6 +138,7 @@
 												<th data-checkbox="true"></th>
 												<th data-sortable="true" data-field="templatename"><?php echo _("Template Name") ?></th>
 												<th data-sortable="true" data-field="description"><?php echo _("Description") ?></th>
+												<th data-sortable="true" data-field="default" data-formatter="defaultformat"><?php echo _("Default") ?></th>
 												<th data-formatter="ucptemplatesActions"><?php echo _("Action") ?></th>
 											</tr>
 										</thead>

@@ -995,6 +995,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 			case "delete":
 			case "email":
 			case "getUcpTemplates":
+			case "makeTemplateDefault":
 				return true;
 			break;
 			case "setlocales":
@@ -1046,6 +1047,10 @@ class Userman extends FreePBX_Helpers implements BMO {
 			break;
 			case "makeDefault":
 				$this->setDefaultDirectory($request['id']);
+				return array("status" => true);
+			break;
+			case "makeTemplateDefault":
+				$this->setDefaultTemplate($request['id']);
 				return array("status" => true);
 			break;
 			case "getDirectories":
@@ -3456,4 +3461,14 @@ class Userman extends FreePBX_Helpers implements BMO {
 		$sth->execute(array(':id' => $id));
 		return array("status" => true, "type" => "success", "message" => _("Template Successfully Deleted"));
 	}
+
+	public function setDefaultTemplate($id) {
+		$sql = "UPDATE userman_ucp_templates SET `default` = 0";
+		$sth = $this->db->prepare($sql);
+		$sth->execute();
+		$sql = "UPDATE userman_ucp_templates SET `default` = 1 WHERE `id` = ?";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array($id));
+        }
+
 }

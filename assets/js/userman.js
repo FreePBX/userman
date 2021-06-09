@@ -158,6 +158,7 @@ $("table").on("post-body.bs.table", function () {
 $("#table-directories").on("post-body.bs.table", function () {
 	$(".default-check").click(function() {
 		var $this = this;
+		if($(this).data("from") == 'directory') {
 		if(confirm(_("Are you sure you want to make this directory the system default?"))) {
 			$.post("ajax.php?module=userman&command=makeDefault", {id: $(this).data("id")}, function( data ) {
 				if(data.status) {
@@ -167,6 +168,7 @@ $("#table-directories").on("post-body.bs.table", function () {
 					alert(data.message);
 				}
 			});
+		}
 		}
 	});
 });
@@ -441,7 +443,7 @@ if($("#datetimeformat-now").length) {
 }
 
 function defaultSelector(value, row, index) {
-	return '<div class="default-check '+(row.default == "1" ? 'check' : '')+'" data-id="'+row.id+'"><i class="fa fa-check" aria-hidden="true"></i></div>';
+	return '<div class="default-check '+(row.default == "1" ? 'check' : '')+'" data-id="'+row.id+'" data-from = "directory"><i class="fa fa-check" aria-hidden="true"></i></div>';
 }
 
 $("#user-side").on("click-row.bs.table", function(row, $element) {
@@ -502,3 +504,25 @@ function ucptemplatesActions(value, row, index) {
 	html += '<a class="clickable"><i class="fa fa-trash-o" data-section="ucptemplates" data-type="ucptemplates"  data-id="'+row.id+'"></i></a>';
 	return html;
 }
+
+function defaultformat(value, row, index) {
+	return '<div class="default-check '+(row.default == "1" ? 'check' : '')+'" data-id="'+row.id+'" data-from="template"><i class="fa fa-check" aria-hidden="true"></i></div>';
+}
+
+$("#table-ucptemplates").on("post-body.bs.table", function () {
+	$(".default-check").click(function() {
+		var $this = this;
+		if($(this).data("from") == 'template') {
+			if(confirm(_("Are you sure you want to make this template the default?"))) {
+				$.post("ajax.php?module=userman&command=makeTemplateDefault", {id: $(this).data("id")}, function( data ) {
+				if(data.status) {
+					$(".default-check").removeClass("check");
+						$($this).addClass("check");
+					} else {
+						alert(data.message);
+					}
+				});
+			}
+		}
+	});
+});
