@@ -1,6 +1,7 @@
 <?php switch($action) {
 	case "adduser":
 	case "showucptemplate":
+	case "adducptemplate" :
 	case "showuser": ?>
 	<div id="toolbar-all">
 		<a href="?display=userman#users" class="btn btn-default"><i class="fa fa-list"></i> <?php echo _("List Users")?></a>
