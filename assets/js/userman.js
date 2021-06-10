@@ -500,8 +500,9 @@ $("#directory-side").on("click-row.bs.table", function(row, $element) {
 });
 
 function ucptemplatesActions(value, row, index) {
+	var unlockKey = "'" + row.key + "'";
 	var html = '<a href="?display=userman&amp;action=showucptemplate&amp;template='+row.id+'" title="Reimport from a user"><i class="fa fa-edit"> </i></a>';
-	html += '<a class="clickable" href="?display=userman&amp;action=edittemplate&amp;unlockkey='+row.key+'&amp;template='+row.id+'" title="Edit Template"><i class="fa fa-eye"" data-section="ucptemplates" data-type="ucptemplates"  data-id="'+row.id+'"></i></a>';
+	html += '<a class="clickable" onclick="return redirectToUCP('+row.id+','+unlockKey+')" title="Edit Template"><i class="fa fa-eye"" data-section="ucptemplates" data-type="ucptemplates"  data-id="'+row.id+'"></i></a>';
 	html += '<a class="clickable"><i class="fa fa-trash-o" data-section="ucptemplates" data-type="ucptemplates"  data-id="'+row.id+'"></i></a>';
 	return html;
 }
@@ -527,3 +528,13 @@ $("#table-ucptemplates").on("post-body.bs.table", function () {
 		}
 	});
 });
+function redirectToUCP(id, key) {
+	$.post("ajax.php?module=userman&command=redirectUCP", {id: id, key: key}, function( data ) {
+		if(data.status) {
+			var url = `/ucp/index.php?unlockkey=`+key;
+			window.open(url, '_blank');
+		} else {
+			alert(data.message);
+		}
+	});
+}

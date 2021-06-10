@@ -1004,6 +1004,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 			case "email":
 			case "getUcpTemplates":
 			case "makeTemplateDefault":
+			case "redirectUCP":
 				return true;
 			break;
 			case "setlocales":
@@ -1060,6 +1061,21 @@ class Userman extends FreePBX_Helpers implements BMO {
 			case "makeTemplateDefault":
 				$this->setDefaultTemplate($request['id']);
 				return array("status" => true);
+			break;
+			case "redirectUCP":
+				if(!empty($request['id']) && !empty($request['key'])) {
+					$uID = $this->getUidFromUnlockkey($request['key']);
+					if(!empty($uID)) {
+						$ret = $this->updateUserUcpByTemplate($uID, $request['id']);
+						if($ret['status']) {
+							return array("status" => true);
+						} else {
+							return array("status" => false, 'message'=> 'Error! Something went wrong');
+						}
+					}
+					return array("status" => false, 'message'=> 'Error! Something went wrong');
+				}
+				return array("status" => false, 'message'=> 'Error! Something went wrong');
 			break;
 			case "getDirectories":
 				return $this->getAllDirectories();
@@ -1825,7 +1841,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 		$widget['id'] = (string)Uuid::uuid4();
 		$moduleuc = ucfirst($widget['rawname']);
 		//call the module api to get the widgetlist
-		if(method_exists($this->FreePBX->$moduleuc,getWidgetListByModule)){
+		if(method_exists($this->FreePBX->$moduleuc,'getWidgetListByModule')){
 			// we need to add some var to sent only the default extension details
 			$u = $this->getUserByID($userid);
 			$defaultextension = $u['default_extension'];
@@ -3472,6 +3488,9 @@ class Userman extends FreePBX_Helpers implements BMO {
 			return array("status" => false, "type" => "danger", "message" => _("Template Does Not Exist"));
 		}
 		$sql = "DELETE from userman_ucp_templates Where id=:id";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':id' => $id));
+		$sql = "DELETE from userman_template_settings Where tid=:id";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':id' => $id));
 		return array("status" => true, "type" => "success", "message" => _("Template Successfully Deleted"));
