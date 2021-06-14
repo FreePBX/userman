@@ -413,7 +413,7 @@
 													<input type="radio" id="pwd_threshold_enable-yes" name="pwd_threshold_enable" value="yes" <?php echo ($pwd_threshold_enable == "yes") ? "checked" : ""?>>
 													<label for="pwd_threshold_enable-yes"><?php echo _("Yes")?></label>
 													<input type="radio" id="pwd_threshold_enable-no" name="pwd_threshold_enable" value="no" <?php echo !($pwd_threshold_enable == "yes") ? "checked" : ""?>>
-													<label for="pwd_threshold_weak-no"><?php echo _("No")?></label>										
+													<label for="pwd_threshold_enable-no"><?php echo _("No")?></label>										
 												</span>
 											</div>
 											<div class="col-md-2">

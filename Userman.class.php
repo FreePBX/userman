@@ -610,7 +610,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 											'pwd_special_value' 	=> $request['pwd_special_value'],
 											'pwd_punctuation_enable'=> $request['pwd_punctuation_enable'],
 											'pwd_punctuation_value' => $request['pwd_punctuation_value'],
-											'pwd_threshold__enable'	=> $request['pwd_threshold__enable'],
+											'pwd_threshold_enable'	=> $request['pwd_threshold_enable'],
 											'pwd_threshold_value' 	=> $request['pwd_threshold_value'],
 										);
 					$this->setConfig("pwdSettings", json_encode($pwdSettings));				
