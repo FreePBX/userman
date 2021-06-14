@@ -21,7 +21,8 @@ if($("#directory").length) {
 }
 
 $("#pwd-templates-show").mouseenter(function(){
-	$.post( "ajax.php", {command: "pwdTest", module: "userman", pwd: ""}, function(data) {
+	threshold = zxcvbn(this.value, []);
+	$.post( "ajax.php", {command: "pwdTest", module: "userman", pwd: "", threshold: threshold.score}, function(data) {
 		if(data.templates){
 			Tcontent = "<div class='container'>";
 			$.each(data.templates, function(index, item) {
@@ -33,7 +34,8 @@ $("#pwd-templates-show").mouseenter(function(){
 	});
 });
 $(".password-meter").keyup(function() {
-	$.post( "ajax.php", {command: "pwdTest", module: "userman", pwd: this.value}, function(data) {
+	threshold = zxcvbn(this.value, []);
+	$.post( "ajax.php", {command: "pwdTest", module: "userman", pwd: this.value, threshold: threshold.score }, function(data) {
 		if(data.status){
 			$("#pwd-error").html("");
 			$("#action-bar").show();

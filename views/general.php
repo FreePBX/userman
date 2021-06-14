@@ -395,6 +395,47 @@
 			</div>		
 			<!--End of Punctuation-->
 
+			<!--Threshold weak password-->
+			<div class="element-container">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="row">
+							<div class="form-group">
+								<div class="col-md-3">
+									<label class="control-label" for="pwd_threshold_enable"><?php echo _("Threshold Weak Password")?></label>
+									<i class="fa fa-question-circle fpbx-help-icon" data-for="pwd_threshold_enable"></i>
+								</div>
+								<div class="col-md-9">
+									<div class="container-fluid">
+										<div class="row">
+											<div class="col-md-10">
+												<span class="radioset">
+													<input type="radio" id="pwd_threshold_enable-yes" name="pwd_threshold_enable" value="yes" <?php echo ($pwd_threshold_enable == "yes") ? "checked" : ""?>>
+													<label for="pwd_threshold_enable-yes"><?php echo _("Yes")?></label>
+													<input type="radio" id="pwd_threshold_enable-no" name="pwd_threshold_enable" value="no" <?php echo !($pwd_threshold_enable == "yes") ? "checked" : ""?>>
+													<label for="pwd_threshold_weak-no"><?php echo _("No")?></label>										
+												</span>
+											</div>
+											<div class="col-md-2">
+												<span>
+													<input class="form-control" type="number" name="pwd_threshold_value" min="1" value=<?php echo !($pwd_threshold_value) ? 4 : $pwd_threshold_value?>>
+												</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<span id="pwd_threshold_enable-help" class="help-block fpbx-help-block"><?php echo _("Enter a password complexity threshold from 0 to 4, 0 being 'Really weak', and4 being 'Strong'.")."<br>"._("Enable or disable this rule Yes or No.")?></span>
+					</div>
+				</div>
+			</div>		
+			<!--End of Threshold weak password-->
+
 			<!--Test-->
 			<div class="element-container">
 				<div class="row">

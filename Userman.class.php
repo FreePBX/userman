@@ -4,6 +4,8 @@
 //	Copyright 2013 Schmooze Com Inc.
 //
 namespace FreePBX\modules;
+include __DIR__.'/vendor/autoload.php';
+use ZxcvbnPhp\Zxcvbn as Zxcvbn;
 class Userman extends \FreePBX_Helpers implements \BMO {
 	private $registeredFunctions = array();
 	private $message = '';
@@ -182,7 +184,13 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 *         status = bool
 	 *         error  = array
 	 */
-	function password_policies($password = ""){
+	function password_policies($password = "", $threshold = false){
+		$zxcvbn 		= new Zxcvbn();
+		if($threshold == false){
+			$weak 			= $zxcvbn->passwordStrength($password, array());
+			$threshold		= $weak["score"];	
+		}
+
 		$error 			= $t = array();
 		$error_message 	= _("The rule: %s is applied in the password, min = %d, detected = %d");
 		$pwdsettings 	= $this->getConfig('pwdSettings');
@@ -198,6 +206,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 								"Numeric"       => array("enabled" => $pwd_numeric_enable, 		"min" => $pwd_numeric_value),
 								"Special"       => array("enabled" => $pwd_special_enable, 		"min" => $pwd_special_value),
 								"Punctuation"   => array("enabled" => $pwd_punctuation_enable, 	"min" => $pwd_punctuation_value),
+								"Threshold"		=> array("enabled" => $pwd_threshold_enable, 	"min" => $pwd_threshold_value),
 								);
 						
 		foreach($rules as $rule => $values){
@@ -283,6 +292,15 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 						}
 						if($occurP < $values["min"] && $values["min"] > 0 ){
 							$error["Punctuation"] = sprintf($error_message, "<b>$rule</b>", $values["min"], $occurP );
+							break;
+						}
+					}
+					break;	
+				case "Threshold":
+					if($values["enabled"] == "yes"){
+						if($threshold < $values["min"] && $values["min"] > 0 ){
+							$content = "<br><i>"._("(0 - being Really Weak, 4 - being Strong)")."</i>";
+							$error["Threshold"] = sprintf($error_message.$content, "<b>$rule</b>", $values["min"], $threshold );
 							break;
 						}
 					}
@@ -592,6 +610,8 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 											'pwd_special_value' 	=> $request['pwd_special_value'],
 											'pwd_punctuation_enable'=> $request['pwd_punctuation_enable'],
 											'pwd_punctuation_value' => $request['pwd_punctuation_value'],
+											'pwd_threshold__enable'	=> $request['pwd_threshold__enable'],
+											'pwd_threshold_value' 	=> $request['pwd_threshold_value'],
 										);
 					$this->setConfig("pwdSettings", json_encode($pwdSettings));				
 					$this->message = array(
@@ -980,6 +1000,8 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 								'pwd_special_value' 	=> 1,
 								'pwd_punctuation_enable'=> "yes",
 								'pwd_punctuation_value' => 1,
+								'pwd_threshold_enable'	=> "yes",
+								'pwd_threshold_value' 	=> 4,
 							);
 		$this->setConfig("pwdSettings", json_encode($pwdSettings));		
 	}
@@ -1076,10 +1098,10 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * Handle AJAX
 	 */
 	public function ajaxHandler(){
-		$request = $_REQUEST;
+		$request = freepbxGetSanitizedRequest();
 		switch($request['command']){
 			case "pwdTest":
-				return $this->password_policies($_POST['pwd']);
+				return $this->password_policies($_POST['pwd'], $_POST['threshold']);
 				break;
 			case "getGuihookInfo":
 				$directory = $this->getDirectoryByID($_POST['directory']);
