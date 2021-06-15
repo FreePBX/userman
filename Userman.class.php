@@ -1101,7 +1101,7 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$request = freepbxGetSanitizedRequest();
 		switch($request['command']){
 			case "pwdTest":
-				return $this->password_policies($_POST['pwd'], $_POST['threshold']);
+				return $this->password_policies($_POST['pwd']);
 				break;
 			case "getGuihookInfo":
 				$directory = $this->getDirectoryByID($_POST['directory']);
