@@ -346,6 +346,16 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 					} else {
 						$ret = $this->updateGroup($request['group'],$prevGroupname, $groupname, $description, $users, false, $extraData);
 						if($ret['status']) {
+							if ($this->FreePBX->Modules->checkStatus('endpoint')
+								&& method_exists($this->FreePBX->Endpoint(), 'getTemplateSettingsByIds'))
+							{
+								$res = $this->FreePBX->Endpoint->getTemplateSettingsByIds(array('use_native_apps'));
+								if (in_array(array('use_native_apps' => 1), $res)) {
+									$ret['message'] = $ret['message'] . "<br><br>" .
+										_("If any users in this group are using a Sangoma/Digium phone configured through Endpoint Manager, please rebuild their phone configuration and apply them if any Phone Apps settings have changed.");
+								}
+							}
+
 							$this->message = array(
 								'message' => $ret['message'],
 								'type' => $ret['type']
@@ -417,6 +427,16 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 						$password = ($password != '******') ? $password : null;
 						$ret = $this->updateUser($request['user'], $prevUsername, $username, $default, $description, $extraData, $password);
 						if($ret['status']) {
+							if ($this->FreePBX->Modules->checkStatus('endpoint')
+								&& method_exists($this->FreePBX->Endpoint(), 'getTemplateSettingsByIds'))
+							{
+								$res = $this->FreePBX->Endpoint->getTemplateSettingsByIds(array('use_native_apps'));
+								if (in_array(array('use_native_apps' => 1), $res)) {
+									$ret['message'] = $ret['message'] . "<br><br>" .
+										_("If this user is using a Sangoma/Digium phone configured through Endpoint Manager, please rebuild the phone configuration and apply it if any Phone Apps settings have changed.");
+								}
+							}
+
 							$this->setGlobalSettingByID($ret['id'],'assigned',$assigned);
 							$this->message = array(
 								'message' => $ret['message'],
