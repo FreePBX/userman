@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>16.0.13</version>
+	<version>16.0.14</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -11,6 +11,7 @@
 	</description>
   	<more-info>https://wiki.freepbx.org/display/FPG/User+Management+Module</more-info>
 	<changelog>
+		*16.0.14* FREEI-3528: remove restapps_rtapi_conferences rows for deleted user 
 		*16.0.13* FREEI-2691 Added condition to use password given in GQL query (addExtension/UpdateExtension) to access user control panel or else to generate a new random password 
 		*16.0.12* FREEI-3350: set /AMPUSER/ext/accountcode to each extension's userId 
 		*16.0.11* Packaging of ver 16.0.11
