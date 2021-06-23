@@ -1361,6 +1361,14 @@ class Userman extends FreePBX_Helpers implements BMO {
 			$this->astman->database_put("AMPUSER", $defaultExt . "/accountcode", '');
 		}
 
+		if ($this->FreePBX->Modules->checkStatus('sangomartapi')) {
+			$sql = "DELETE FROM restapps_rtapi_conferences WHERE userman_id = ?";
+			$sth = $this->db->prepare($sql);
+			try {
+				$sth->execute(array($id));
+			} catch(\Exception $e) {}
+		}
+
 		$this->callHooks('delUser',$status);
 		$this->delUser($id,$status);
 		return $status;
