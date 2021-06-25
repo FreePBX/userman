@@ -1357,7 +1357,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 
 		$defaultExt = $u['default_extension'];
 		$ampuAcctCode = $this->astman->database_get("AMPUSER", $defaultExt . "/accountcode");
-		if (preg_match('/^u\d/', $ampuAcctCode) && is_numeric($defaultExt)) {
+		if ($ampuAcctCode === 'u' . $id && is_numeric($defaultExt)) {
 			$this->astman->database_put("AMPUSER", $defaultExt . "/accountcode", '');
 		}
 
@@ -1924,10 +1924,14 @@ class Userman extends FreePBX_Helpers implements BMO {
 		}
 
 		$oldExt = $u['default_extension'];
-		if ($default === 'none' || $default != $oldExt) {
+		$ampuAcctCode = $this->astman->database_get("AMPUSER", $default . "/accountcode");
+		if (is_numeric($oldExt)
+			&& $ampuAcctCode === 'u' . $uid
+			&& ($default === 'none' || $default != $oldExt))
+		{
 			$this->astman->database_put("AMPUSER", $oldExt . "/accountcode", '');
 		}
-		$ampuAcctCode = $this->astman->database_get("AMPUSER", $default . "/accountcode");
+
 		if (empty($ampuAcctCode) && is_numeric($default)) {
 			$acctCode = 'u' . $status['id'];
 			$this->astman->database_put("AMPUSER", $default . "/accountcode", $acctCode);
