@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-06-23 02:54+0000\n"
+"POT-Creation-Date: 2021-06-26 05:46+0000\n"
 "PO-Revision-Date: 2016-12-11 08:33+0200\n"
 "Last-Translator: Ernesto <ecasas@sangoma.com>\n"
 "Language-Team: Spanish <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -45,7 +45,7 @@ msgstr ""
 "En %s 12, el nuevo Panel de Control también utiliza Administrador de "
 "usuarios."
 
-#: Userman.class.php:2994
+#: Userman.class.php:2998
 #, php-format
 msgid "%s records failed validation"
 msgstr "%s registros fallaron la validacion"
@@ -262,8 +262,8 @@ msgstr "Borrando..."
 msgid "Department"
 msgstr "Departamento"
 
-#: Userman.class.php:2940 Userman.class.php:2941 Userman.class.php:2966
-#: Userman.class.php:2967 views/rnav.php:14 views/rnav.php:31
+#: Userman.class.php:2944 Userman.class.php:2945 Userman.class.php:2970
+#: Userman.class.php:2971 views/rnav.php:14 views/rnav.php:31
 #: views/users.php:84 views/welcome.php:60 views/welcome.php:90
 msgid "Description"
 msgstr "Descripción"
@@ -300,7 +300,7 @@ msgstr ""
 msgid "Directory is locked. Can not add user"
 msgstr ""
 
-#: Userman.class.php:1974
+#: Userman.class.php:1978
 msgid "Directory is locked. Can not update group"
 msgstr ""
 
@@ -315,7 +315,7 @@ msgid ""
 "then if no match was found waterfall down the list in the order chosen below"
 msgstr ""
 
-#: Userman.class.php:2952 Userman.class.php:2953 views/openldap.php:144
+#: Userman.class.php:2956 Userman.class.php:2957 views/openldap.php:144
 #: views/users.php:276 views/welcome.php:56
 msgid "Display Name"
 msgstr "Nombre a Mostrar"
@@ -364,7 +364,7 @@ msgstr "Configuración de Correo"
 msgid "Email Subject"
 msgstr "Asunto del Correo"
 
-#: Userman.class.php:3090
+#: Userman.class.php:3094
 msgid "Empty data array."
 msgstr ""
 
@@ -400,7 +400,7 @@ msgstr ""
 msgid "Fax Phone Number"
 msgstr "Numero de teléfono de Fax"
 
-#: Userman.class.php:2944 Userman.class.php:2945 views/users.php:228
+#: Userman.class.php:2948 Userman.class.php:2949 views/users.php:228
 #: views/welcome.php:57
 msgid "First Name"
 msgstr "Primer Nombre"
@@ -409,7 +409,7 @@ msgstr "Primer Nombre"
 msgid "Force syncronization"
 msgstr ""
 
-#: Userman.class.php:1383 Userman.class.php:1950
+#: Userman.class.php:1383 Userman.class.php:1954
 msgid "GID was not numeric"
 msgstr "GID no fue numérico"
 
@@ -455,7 +455,7 @@ msgstr "Detalles de Grupo"
 msgid "Group Does Not Exist"
 msgstr "Grupo no existe"
 
-#: Userman.class.php:2962 Userman.class.php:2963 views/groups.php:60
+#: Userman.class.php:2966 Userman.class.php:2967 views/groups.php:60
 #: views/rnav.php:30 views/welcome.php:89
 msgid "Group Name"
 msgstr "Nombre del Grupo"
@@ -485,7 +485,7 @@ msgstr "Grupo eliminado correctamente"
 msgid "Group Successfully Updated"
 msgstr "Grupo actualizado correctamente"
 
-#: Userman.class.php:3127
+#: Userman.class.php:3131
 msgid "Group already exists"
 msgstr "Grupo ya existe"
 
@@ -660,7 +660,7 @@ msgstr ""
 msgid "Language for this user"
 msgstr ""
 
-#: Userman.class.php:2948 Userman.class.php:2949 views/users.php:252
+#: Userman.class.php:2952 Userman.class.php:2953 views/users.php:252
 #: views/welcome.php:58
 msgid "Last Name"
 msgstr "Apellido"
@@ -710,7 +710,7 @@ msgstr ""
 msgid "Login Details"
 msgstr "Detalles de Login"
 
-#: Userman.class.php:2926 Userman.class.php:2927 views/users.php:60
+#: Userman.class.php:2930 Userman.class.php:2931 views/users.php:60
 msgid "Login Name"
 msgstr "Nombre de Inicio de Sesión"
 
@@ -738,7 +738,7 @@ msgstr "Microsoft Active Directory"
 msgid "Microsoft Active Directory (Legacy)"
 msgstr ""
 
-#: Userman.class.php:2723
+#: Userman.class.php:2727
 msgid "Migrated user from voicemail"
 msgstr "Usuario Migrado desde Correo de Voz"
 
@@ -790,7 +790,7 @@ msgstr "No Conectado"
 msgid "Not all of the connection parameters have been filled out"
 msgstr "No todos los parámetros de conexión se han rellenado"
 
-#: Userman.class.php:2771
+#: Userman.class.php:2775
 msgid "Obfuscated. To reset use the reset link in this email"
 msgstr "Ofuscado. Para reiniciar use el vinculo de reinicio en este correo"
 
@@ -814,13 +814,13 @@ msgstr "Otros ajustes"
 msgid "PBX Internal Directory"
 msgstr ""
 
-#: Userman.class.php:2931 views/msad.php:73 views/msad2.php:99
+#: Userman.class.php:2935 views/msad.php:73 views/msad2.php:99
 #: views/openldap.php:100 views/openldap2.php:99 views/passwordmodal.php:16
 #: views/users.php:109
 msgid "Password"
 msgstr "Contraseña"
 
-#: Userman.class.php:2932
+#: Userman.class.php:2936
 msgid "Password - plaintext"
 msgstr "Contraseña - texto sin formato"
 
@@ -842,7 +842,7 @@ msgstr ""
 "Por favor seleccione un nombre de usuario valido para la Creación de Nuevo "
 "Usuario"
 
-#: Userman.class.php:3015 Userman.class.php:3103
+#: Userman.class.php:3019 Userman.class.php:3107
 msgid "Please set a default directory in User Manager"
 msgstr ""
 
@@ -851,7 +851,7 @@ msgstr ""
 msgid "Port"
 msgstr "Puerto"
 
-#: Userman.class.php:1953
+#: Userman.class.php:1957
 msgid "Previous Groupname can not be blank"
 msgstr "El nombre de grupo anterior no puede estar en blanco"
 
@@ -859,7 +859,7 @@ msgstr "El nombre de grupo anterior no puede estar en blanco"
 msgid "Previous Username can not be blank"
 msgstr "El usuario anterior no puede estar en blanco"
 
-#: Userman.class.php:2936
+#: Userman.class.php:2940
 msgid "Primary Extension"
 msgstr "Extensión Primaria"
 
@@ -867,7 +867,7 @@ msgstr "Extensión Primaria"
 msgid "Primary Group"
 msgstr ""
 
-#: Userman.class.php:2937 views/users.php:195
+#: Userman.class.php:2941 views/users.php:195
 msgid "Primary Linked Extension"
 msgstr "Extensión Primaria Enlazada"
 
@@ -987,7 +987,7 @@ msgstr "Enviar correo electrónico en la creación de nuevos usuarios externos"
 msgid "Set Password"
 msgstr "Configurar Contraseña"
 
-#: Userman.class.php:2769
+#: Userman.class.php:2773
 msgid "Set by your administrator"
 msgstr "Establecido por su administrador"
 
@@ -1375,7 +1375,7 @@ msgid ""
 "purposes."
 msgstr ""
 
-#: Userman.class.php:3096 Userman.class.php:3160
+#: Userman.class.php:3100 Userman.class.php:3164
 msgid "This authentication driver does not allow importing"
 msgstr "Este controlador de autenticación no permite la importación"
 
@@ -1592,7 +1592,7 @@ msgstr "Modulo de Gestión de Usuario"
 msgid "User Manager"
 msgstr "Gestor de Usuario"
 
-#: Userman.class.php:2908 Userman.class.php:2909 views/quickCreate.php:36
+#: Userman.class.php:2912 Userman.class.php:2913 views/quickCreate.php:36
 msgid "User Manager Groups"
 msgstr "Grupos de gestores de usuarios"
 
@@ -1600,7 +1600,7 @@ msgstr "Grupos de gestores de usuarios"
 msgid "User Manager Settings"
 msgstr "Configuración de Gestión de Usuario"
 
-#: Userman.class.php:2902 Userman.class.php:2903
+#: Userman.class.php:2906 Userman.class.php:2907
 msgid "User Manager Users"
 msgstr "Usuarios del Administrador de usuarios"
 
@@ -1624,7 +1624,7 @@ msgstr ""
 msgid "User Work Phone attribute"
 msgstr ""
 
-#: Userman.class.php:3047
+#: Userman.class.php:3051
 msgid "User already exists"
 msgstr "Usuario ya existe"
 
@@ -1761,11 +1761,11 @@ msgid ""
 "features that require a login"
 msgstr ""
 
-#: Userman.class.php:2814 views/general.php:108
+#: Userman.class.php:2818 views/general.php:108
 msgid "Your %brand% Account"
 msgstr "Su Cuenta %Brand%"
 
-#: Userman.class.php:3024
+#: Userman.class.php:3028
 msgid "default_extension is required."
 msgstr "default_extension es requerido."
 
@@ -1785,7 +1785,7 @@ msgstr "grupo"
 msgid "group Successfully Added"
 msgstr "Grupo agregado correctamente"
 
-#: Userman.class.php:3108
+#: Userman.class.php:3112
 msgid "groupname is required."
 msgstr "groupname es requerido."
 
@@ -1793,7 +1793,7 @@ msgstr "groupname es requerido."
 msgid "groups"
 msgstr "grupos"
 
-#: Userman.class.php:3064
+#: Userman.class.php:3068
 msgid "password is required."
 msgstr "contraseña es requerida."
 
@@ -1801,7 +1801,7 @@ msgstr "contraseña es requerida."
 msgid "user"
 msgstr "usuario"
 
-#: Userman.class.php:3021
+#: Userman.class.php:3025
 msgid "username is required."
 msgstr "username es requerido."
 
