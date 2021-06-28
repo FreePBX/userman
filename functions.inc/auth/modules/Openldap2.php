@@ -123,7 +123,7 @@ class Openldap2 extends Auth {
 		$this->config = array();
 		$this->config['id'] = !empty($config['id']) ? $config['id'] : '';
 		foreach($validKeys as $key => $value) {
-			if($key != "password") {
+			if($key != "password" and $key != "userobjectfilter") {
 				$this->config[$key] = (isset($c[$key])) ? strtolower($c[$key]) : strtolower($value);
 			} else {
 				$this->config[$key] = (isset($c[$key])) ? $c[$key] : '';
