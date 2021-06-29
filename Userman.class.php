@@ -27,7 +27,6 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	public function __construct($freepbx = null) {
 		$this->FreePBX = $freepbx;
 		$this->db = $freepbx->Database;
-		$this->astman = $freepbx->astman;
 		$this->brand = $this->FreePBX->Config->get("DASHBOARD_FREEPBX_BRAND");
 
 		if(!interface_exists('FreePBX\modules\Userman\Auth\Base')) {
@@ -1355,16 +1354,9 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 			throw new \Exception(_("ID was not numeric"));
 		}
 		set_time_limit(0);
-		$u = $this->getUserByID($id);
 		$status = $this->globalDirectory->deleteUserByID($id);
 		if(!$status['status']) {
 			return $status;
-		}
-
-		$defaultExt = $u['default_extension'];
-		$ampuAcctCode = $this->astman->database_get("AMPUSER", $defaultExt . "/accountcode");
-		if ($ampuAcctCode === 'u' . $id && is_numeric($defaultExt)) {
-			$this->astman->database_put("AMPUSER", $defaultExt . "/accountcode", '');
 		}
 
 		if ($this->FreePBX->Modules->checkStatus('sangomartapi')) {
@@ -1722,13 +1714,6 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 			return $status;
 		}
 
-		$ampuAcctCode = $this->astman->database_get("AMPUSER", $default . "/accountcode");
-		// If Core already set accountcode, don't change it
-		if (empty($ampuAcctCode) && is_numeric($default)) {
-			$acctCode = 'u' . $status['id'];
-			$this->astman->database_put("AMPUSER", $default . "/accountcode", $acctCode);
-		}
-
 		return $status;
 	}
 
@@ -1928,20 +1913,6 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 		$status = $this->directories[$u['auth']]->updateUser($uid, $prevUsername, $username, $default, $description, $extraData, $password, $nodisplay);
 		if(!$status['status']) {
 			return $status;
-		}
-
-		$oldExt = $u['default_extension'];
-		$ampuAcctCode = $this->astman->database_get("AMPUSER", $default . "/accountcode");
-		if (is_numeric($oldExt)
-			&& $ampuAcctCode === 'u' . $uid
-			&& ($default === 'none' || $default != $oldExt))
-		{
-			$this->astman->database_put("AMPUSER", $oldExt . "/accountcode", '');
-		}
-
-		if (empty($ampuAcctCode) && is_numeric($default)) {
-			$acctCode = 'u' . $status['id'];
-			$this->astman->database_put("AMPUSER", $default . "/accountcode", $acctCode);
 		}
 
 		return $status;
