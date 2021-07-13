@@ -19,6 +19,15 @@ if($("#directory").length) {
 		$("#submit").prop("disabled",true);
 	});
 }
+if($("#editT").length) {
+        $("#editT").submit(function(e) {
+                if($("#templatename").val().trim() === "") {
+                        return warnInvalid($("#templatename"),_("Template Name can not be blank!"));
+                }
+                $("#submit").prop("disabled",true);
+        });
+}
+
 $("#email-users").click(function() {
 	$(this).prop("disabled",true);
 	$.post( "ajax.php", {command: "email", module: "userman", extensions: deleteExts.users}, function(data) {
@@ -149,6 +158,7 @@ $("table").on("post-body.bs.table", function () {
 $("#table-directories").on("post-body.bs.table", function () {
 	$(".default-check").click(function() {
 		var $this = this;
+		if($(this).data("from") == 'directory') {
 		if(confirm(_("Are you sure you want to make this directory the system default?"))) {
 			$.post("ajax.php?module=userman&command=makeDefault", {id: $(this).data("id")}, function( data ) {
 				if(data.status) {
@@ -158,6 +168,7 @@ $("#table-directories").on("post-body.bs.table", function () {
 					alert(data.message);
 				}
 			});
+		}
 		}
 	});
 });
@@ -190,7 +201,7 @@ $("#submit").click(function(e) {
 		}
 	});
 	if(!invalid) {
-		if($("form.fpbx-submit").attr("name") === "directory") {
+		if($("form.fpbx-submit").attr("name") === "directory" || $("form.fpbx-submit").attr("name") === "editT") {
 			$(".fpbx-submit").submit();
 		} else {
 			setLocales(function() {
@@ -260,11 +271,16 @@ $( document ).ready(function() {
 		$('input[name="submit"]').removeClass('hidden');
 		$('input[name="reset"]').removeClass('hidden');
 		$('input[name="delete"]').removeClass('hidden');
-	}else if(params.action == 'addgroup' || params.action == 'showgroup' || params.action == 'adddirectory' || params.action == 'showdirectory') {
+	}else if(params.action == 'addgroup' || params.action == 'showgroup' || params.action == 'adddirectory' || params.action == 'showdirectory' || params.action == 'adducptemplate' ||  params.action == 'showucptemplate') {
 		$('input[name="submit"]').removeClass('hidden');
 		$('input[name="reset"]').removeClass('hidden');
 		$('input[name="delete"]').removeClass('hidden');
-	} else {
+	} else if(params.action == "showmembers"){
+		$('input[name="cancel"]').removeClass('hidden');
+		$('input[name="merge"]').removeClass('hidden');
+		$('input[name="rebuild"]').removeClass('hidden');
+	}
+	else {
 		$("#action-bar").addClass("hidden");
 	}
 
@@ -291,6 +307,11 @@ $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
 			$('input[name="reset"]').addClass('hidden');
 		break;
 		case "#groups":
+			$("#action-bar").addClass("hidden");
+			$('input[name="submit"]').addClass('hidden');
+			$('input[name="reset"]').addClass('hidden');
+		break;
+		case "#ucptemplates":
 			$("#action-bar").addClass("hidden");
 			$('input[name="submit"]').addClass('hidden');
 			$('input[name="reset"]').addClass('hidden');
@@ -427,7 +448,7 @@ if($("#datetimeformat-now").length) {
 }
 
 function defaultSelector(value, row, index) {
-	return '<div class="default-check '+(row.default == "1" ? 'check' : '')+'" data-id="'+row.id+'"><i class="fa fa-check" aria-hidden="true"></i></div>';
+	return '<div class="default-check '+(row.default == "1" ? 'check' : '')+'" data-id="'+row.id+'" data-from = "directory"><i class="fa fa-check" aria-hidden="true"></i></div>';
 }
 
 $("#user-side").on("click-row.bs.table", function(row, $element) {
@@ -481,4 +502,58 @@ $("#systemtz").on("click", function(e){
 
 $("#directory-side").on("click-row.bs.table", function(row, $element) {
 	window.location = "?display=userman&action=showdirectory&directory="+$element.id;
+});
+
+function ucptemplatesActions(value, row, index) {
+	var unlockKey = "'" + row.key + "'";
+	var html = '<a href="?display=userman&amp;action=showucptemplate&amp;template='+row.id+'" title="Reimport from a user"><i class="fa fa-edit"> </i></a>';
+	html += '<a class="clickable" onclick="return redirectToUCP('+row.id+','+unlockKey+')" title="Edit Template"><i class="fa fa-eye"" data-section="ucptemplates" data-type="ucptemplates"  data-id="'+row.id+'"></i></a>';
+	html += '<a href="?display=userman&amp;action=showmembers&amp;template='+row.id+'" title="Force Rebuild widgets"><i class="fa fa-refresh" data-section="ucptemplates" data-type="ucptemplates"  data-id="'+row.id+'"></i></a>';
+	html += '<a class="clickable" title="delete a template"><i class="fa fa-trash-o" data-section="ucptemplates" data-type="ucptemplates"  data-id="'+row.id+'"></i></a>';
+	return html;
+}
+function rowStyle(row, index){
+	var style = (row.hasupdated === "1") ? { css: { background: '#faebcc'} } : { css: { background: 'none'} }
+	return style;
+}
+function rebuildwidgets(id) {
+	if(confirm(_("Are you sure rebuild all Users widgets associated with this Template ?"))) {
+		$.post("ajax.php?module=userman&command=rebuildtemplate", {templateid: id}, function( data ) {
+			if(data.status) {
+				alert(data.message);
+			} else {
+				alert(data.message);
+			}
+		});
+	}
+}
+
+function redirectToUCP(id, key) {
+	$.post("ajax.php?module=userman&command=redirectUCP", {id: id, key: key}, function( data ) {
+		if(data.status) {
+			var url = `/ucp/index.php?unlockkey=`+key+'&templateid='+id;
+			window.open(url, '_blank');
+		} else {
+			alert(data.message);
+		}
+	});
+}
+$("#merge").click(function(e) {
+	$('fieldset#users_allow > span, textarea').each(function(){
+		$("#form_usertemplate").append('<input type="hidden" name="users_selected[]" value="'+$(this).data("userid") +'">');
+	});
+	$("#form_usertemplate").append('<input type="hidden" name="actiontype" id="actiontype" value="merge">');
+	$("#form_usertemplate").submit();
+});
+$("#rebuild").click(function(e) {
+	$('fieldset#users_allow > span, textarea').each(function(){console.log('usrid ='+$(this).data("userid"));
+	$("#form_usertemplate").append('<input type="hidden" name="users_selected[]" value="'+$(this).data("userid") +'">');
+	});
+	$("#form_usertemplate").append('<input type="hidden" name="actiontype" id="actiontype" value="rebuild">');
+	$("#form_usertemplate").submit();
+});
+$("#cancel").click(function(e) {
+	e.preventDefault();
+	e.stopPropagation();
+	window.location = '?display=userman#ucptemplates';
 });
