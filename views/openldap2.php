@@ -597,7 +597,7 @@
 							<i class="fa fa-question-circle fpbx-help-icon" data-for="openldap2-usercellphoneattr"></i>
 						</div>
 						<div class="col-md-9">
-							<input id="openldap2-usercellphoneattr" data-default="<?php echo $defaults['usercellphoneattr']?>" name="openldap2-usercellphoneattr" type="text" class="form-control" value="<?php echo isset($config['usercellphoneattr']) ? $config['userdcellphoneattr'] : $defaults['usercellphoneattr']?>">
+							<input id="openldap2-usercellphoneattr" data-default="<?php echo $defaults['usercellphoneattr']?>" name="openldap2-usercellphoneattr" type="text" class="form-control" value="<?php echo isset($config['usercellphoneattr']) ? $config['usercellphoneattr'] : $defaults['usercellphoneattr']?>">
 						</div>
 					</div>
 				</div>
