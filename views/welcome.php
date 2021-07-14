@@ -31,19 +31,19 @@
 							<div role="tabpanel" id="users" class="tab-pane display active">
 								<div class="table-responsive">
 									<div id="toolbar-users">
-										<a href="#" id="add-users" class="btn btn-add" disabled data-type="users" data-section="users" title="Select Directory to enable 'Add' Button">
+										<a href="<?php echo _(sizeof($directories)==1 ? '?display=userman&action=adduser&directory=1' : '#'); ?>" id="add-users" class="btn btn-add" data-type="users" data-section="users"<?php echo _(sizeof($directories)==1 ? '':' disabled title="Select Directory to enable \'Add\' Button"')?>>
 											<i class="fa fa-user-plus"></i> <span><?php echo _('Add')?></span>
 										</a>
-										<button id="remove-users" class="btn btn-danger" data-type="users" disabled data-section="users" title="Select Directory to enable 'Delete' Button">
+										<button id="remove-users" class="btn btn-danger<?php echo _(sizeof($directories)==1 ? ' btn-remove':''); ?>" disabled data-type="users" data-section="users"<?php echo _(sizeof($directories)==1 ? '':' disabled title="Select Directory to enable \'Delete\' Button"')?>>
 											<i class="fa fa-user-times"></i> <span><?php echo _('Delete')?></span>
 										</button>
 										<button id="email-users" class="btn btn-info btn-send" data-type="users" disabled data-section="users">
 											<i class="fa fa-envelope-o"></i> <span><?php echo _('Send Email')?></span>
 										</button>
 										<select id="directory-users" class="form-control" style="display: inline-block;width: inherit;">
-											<option value=""><?php echo _("All Directories")?></option>
+											<option value=""><?php echo _('All Directories')?></option>
 											<?php foreach($directories as $directory) {?>
-												<option value="<?php echo $directory['id']?>"><?php echo $directory['name']?></option>
+												<option value="<?php echo $directory['id']?>"<?php echo _(sizeof($directories)==1 ? ' selected':'')?>><?php echo $directory['name']?></option>
 											<?php } ?>
 										</select>
 									</div>
@@ -68,16 +68,16 @@
 								<div class="table-responsive">
 									<div class="alert alert-info"><?php echo _("Group Priorities can be changed by clicking and dragging groups around in the order you'd like. Groups with a lower number for priority take priority (EG 0 is higher than 1)")?></div>
 									<div id="toolbar-groups">
-										<a href="config.php?display=userman&amp;action=addgroup" id="add-groups" class="btn btn-add hidden" data-type="groupss" data-section="groups">
+										<a href="config.php?display=userman&amp;action=addgroup" id="add-groups" class="btn btn-add" data-type="groupss" data-section="groups"<?php echo _(sizeof($directories)==1 ? '':' disabled title="Select Directory to enable \'Add\' Button"')?>>
 											<i class="fa fa-user-plus"></i> <span><?php echo _('Add')?></span>
 										</a>
-										<button id="remove-groups" class="btn btn-danger btn-remove hidden" data-type="groups" disabled data-section="groups">
+										<button id="remove-groups" class="btn btn-danger btn-remove" data-type="groups" data-section="groups"<?php echo _(sizeof($directories)==1 ? 'disabled':' disabled title="Select Directory to enable \'Delete\' Button"')?>>
 											<i class="fa fa-user-times"></i> <span><?php echo _('Delete')?></span>
 										</button>
 										<select id="directory-groups" class="form-control" style="display: inline-block;width: inherit;">
 											<option value=""><?php echo _("All Directories")?></option>
 											<?php foreach($directories as $directory) {?>
-												<option value="<?php echo $directory['id']?>"><?php echo $directory['name']?></option>
+												<option value="<?php echo $directory['id']?>"<?php echo _(sizeof($directories)==1 ? " selected":'')?>><?php echo $directory['name']?></option>
 											<?php } ?>
 										</select>
 									</div>
