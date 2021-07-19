@@ -2052,8 +2052,13 @@ class Userman extends FreePBX_Helpers implements BMO {
 			return ['status'=>false,'message'=> 'Template Not updated'];
 		}
 	}
-	private function gettemplateCSVData($id){
-		$sql = "SELECT a.id,a.templatename,a.description,b.key,b.val,b.type FROM userman_ucp_templates a,userman_template_settings b Where a.id =b.tid AND id=:id";
+	private function gettemplateCSVData($id = ""){
+		if(empty($id)){
+			$sql = "SELECT a.id,a.templatename,a.description,b.key,b.val,b.type FROM userman_ucp_templates a,userman_template_settings b Where a.id =b.tid";
+		}
+		else{	
+			$sql = "SELECT a.id,a.templatename,a.description,b.key,b.val,b.type FROM userman_ucp_templates a,userman_template_settings b Where a.id =b.tid AND id=:id";
+		}		
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':id' => $id));
 		$result = $sth->fetchAll(PDO::FETCH_ASSOC);
@@ -3236,6 +3241,10 @@ class Userman extends FreePBX_Helpers implements BMO {
 				'description' => _('User Manager Groups')
 			);
 		}
+		$final['ucptemplates'] = array(
+				'name' => _('UCP Templates'),
+				'description' => _('UCP Templates')
+		);
 		return $final;
 	}
 
@@ -3296,6 +3305,34 @@ class Userman extends FreePBX_Helpers implements BMO {
 				);
 
 				return $headers;
+			case 'ucptemplates':
+				$headers = array(
+					'templatename' => array(
+						'required' => true,
+						'identifier' => _('Template Name'),
+						'description' => _('Template Name'),
+					),
+					'description' => array(
+						'identifier' => _('Description'),
+						'description' => _('Description'),
+					),
+					'template_1_key' => array(
+						'required' => true,
+						'identifier' => _('Key'),
+						'description' => _('template_1_key'),
+					),
+					'template_1_val' => array(
+						'required' => true,
+						'identifier' => _('Value'),
+						'description' => _('template_1_val'),
+					),
+					'template_1_type' => array(
+						'identifier' => _('Type'),
+						'description' => _('template_1_type'),
+					),
+				);
+				
+				return $headers;				
 		}
 	}
 
@@ -3488,6 +3525,35 @@ class Userman extends FreePBX_Helpers implements BMO {
 					);
 				}
 			break;
+			case 'ucptemplates':
+					foreach ($rawData as $data) {
+						if (empty($data['templatename'])) {
+							return array("status" => false, "message" => _("templatename is required."));
+						}
+								//checking if exists using template name
+						$existing = $this->getUCPTemplateByName($data);
+						if(!$replaceExisting && $existing) {
+							return array("status" => false, "message" => _("Template already exists"));
+						}
+						$grep = preg_grep('/^\D+_\d+/', array_keys($data));
+						if(!empty($grep) && is_array($grep)){
+							foreach ($grep as $key) {
+								if (preg_match('/^(.*)_(\d+)_(.*)$/', $key, $matches)) {
+									$extras[$matches[1]][$matches[2] - 1][$matches[3]] = $data[$key];
+								} else if (preg_match('/^(.*)_(\d+)$/', $key, $matches)) {
+									$extras[$matches[1]][$matches[2] - 1] = $data[$key];
+								}
+							}
+							if($existing){
+								//removing the existing one from db
+									$this->removeTemplateByName($existing['id']);
+							}
+							//inserting the template into DB
+							$this->addUcpTemplateViaCSV($data, $extras);
+						}
+					}
+								
+				break;			
 		}
 
 		return $ret;
@@ -3548,6 +3614,28 @@ class Userman extends FreePBX_Helpers implements BMO {
 			}
 
 			break;
+		case 'ucptemplates':
+			$ucptemp = $this->gettemplateCSVData();
+			$data = array();
+			$count = 1;
+			foreach($ucptemp as $key => $value){
+				if(array_key_exists($value['id'], $data)){
+					$count += 1;
+					$data[$value['id']] = array_merge($data[$value['id']],
+											['template_'.$count.'_key' => $value['key'], 'template_'.$count.'_val' => $value['val'], 'template_'.$count.'_type' => $value['type']]);
+				}
+				else{
+					$count=1;
+					$data[$value['id']] = array(
+						'templatename' => $value['templatename'],
+						'description' => $value['description'],
+						'template_'.$count.'_key' => $value['key'],
+						'template_'.$count.'_val' => $value['val'],
+						'template_'.$count.'_type' => $value['type'],
+					);
+				}
+			}
+			break;			
 		}
 		return $data;
 	}
@@ -3587,7 +3675,38 @@ class Userman extends FreePBX_Helpers implements BMO {
 			
 		return $data;
 	}
-
+	public function removeTemplateByName($id){
+		$delTemp = "DELETE FROM userman_ucp_templates WHERE id=:id";
+		$sth = $this->db->prepare($delTemp);
+		$sth->execute(array(':id' => $id));
+		$delSettings = "DELETE FROM userman_template_settings WHERE tid=:id";
+		$sth = $this->db->prepare($delSettings);
+		$sth->execute(array(':id' => $id));
+	}
+	public function getUCPTemplateByName($addData){
+		$search = "SELECT * from userman_ucp_templates Where templatename=:name";
+		$sth = $this->db->prepare($search);
+		$sth->execute(array(':name' => $addData['templatename']));
+		$result = $sth->fetch(PDO::FETCH_ASSOC);
+		return $result;
+	}
+	public function addUcpTemplateViaCSV($addData, $extras){		
+		//inserting into userman_ucp_templates
+		$sql = "INSERT INTO userman_ucp_templates(`templatename`,`description`,`importedfromuname`)VALUES(:name,:description,'importedfromcsv')";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':name' => $addData['templatename'], ':description' => $addData['description']));
+		$id = $this->db->lastInsertId();
+		//inserting into userman_template_settings
+		foreach ($extras as $key => $type) {
+			foreach ($type as $value) {
+				if(!empty($value['key']) || !empty($value['val']) || !empty($value['type'])){
+					$sql = "INSERT INTO userman_template_settings(`tid`,`module`,`key`,`val`,`type`) VALUES(:tid,'UCP',:key,:val,:type)";
+					$sth = $this->db->prepare($sql);
+					$sth->execute(array(':tid' => $id, ':key' => $value['key'],':val' => $value['val'],':type'=>$value['type']));
+				}
+			}								
+		}
+	}
 	public function addUcpTemplate($addData){
 		$sql = "INSERT INTO userman_ucp_templates(`templatename`,`description`,`importedfromuid`,`importedfromuname`,`defaultexten`)VALUES(:name,:description,:importedfromuid,:importedfromuname,:defaultexten)";
 		$sth = $this->db->prepare($sql);
