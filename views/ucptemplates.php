@@ -61,29 +61,83 @@ echo $heading;
 							</div>
 						</div>
 						<div class="element-container">
-							<div class="row">
-								<div class="col-md-12">
+							<div class="display"  id="create">
+								<div class="element-container">
 									<div class="row">
 										<div class="form-group">
-											<div class="col-md-3">
-												<label class="control-label" for="group_users"><?php echo _('Import from a User')?></label>
-													<i class="fa fa-question-circle fpbx-help-icon" data-for="group_users"></i>
+											<div class="col-md-6">
+												<label class="control-label" for="createtemp">
+													<?php echo _("Create Template Via") ?>
+												</label>
+												<i class="fa fa-question-circle fpbx-help-icon" data-for="createtemp"></i>
 											</div>
-											<div class="col-md-9">
-												<select id="userid" class="form-control" name="userid" >
-													<option value=""><?php echo _("Select a User /Template creator")?></option>
-													<?php foreach($users as $user) {?>
-														<option value="<?php echo $user['id']?>"><?php echo $user['username']?></option>
-													<?php } ?>
-												</select>
+											<div class="col-md-6">
+												<span class="radioset">
+													<input type="radio" name="createtemp" id="createtemp_import" value="import" CHECKED>
+													<label for="createtemp_import">
+													<?php echo _("Import from a User");?>
+													</label>
+													<input type="radio" name="createtemp" id="createtemp_create" value="create" >
+													<label for="createtemp_create">
+														<?php echo _("Create Using Template Creator");?>
+													</label>
+												</span>
+											</div>
+											<div class="row">
+												<div class="col-md-12">
+													<span id="createtemp-help" class="help-block fpbx-help-block">
+													<?php echo _("You can create a template via copy existing settings from a user Or You can create the template via help of template creator") ?>
+													</span>
+												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-							</div>
-							<div class="row">
-								<div class="col-md-12">
-									<span id="group_users-help" class="help-block fpbx-help-block"><?php echo _("Import this user's  current dashbord setting from UCP")?></span>
+								<div class="element-container" id="adminextdiv">
+									<div class="row">
+										<div class="col-md-12">
+											<div class="row">
+												<div class="form-group">
+													<div class="col-md-3">
+														<label class="control-label" for="group_users"><?php echo _('Import from a User')?></label>
+															<i class="fa fa-question-circle fpbx-help-icon" data-for="group_users"></i>
+													</div>
+													<div class="col-md-9">
+														<select id="userid" class="form-control" name="userid" >
+															<option value=""><?php echo _("Select a User")?></option>
+															<?php foreach($users as $user) {?>
+															<option value="<?php echo $user['id']?>"><?php echo $user['username']?></option>
+															<?php } ?>
+														</select>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-12">
+											<span id="group_users-help" class="help-block fpbx-help-block"><?php echo _("Import this user's  current dashbord setting from UCP")?></span>
+										</div>
+									</div>
+								</div>
+								<div class="element-container" id="tempcreatediv">
+									<div class="row">
+										<div class="col-md-12">
+											<div class="row">
+												<div class="form-group">
+													<div class="col-md-12">
+														<label for="createtemp_create"><?php
+														echo _("This will create a empty template now , you need to click on `eye` button once you submit this page, That will take you to UCP login where you can add template widgets ");
+													?></div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-12">
+											<span id="group_users-help" class="help-block fpbx-help-block"><?php echo _("Import this user's  current dashbord setting from UCP")?></span>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>

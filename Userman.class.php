@@ -547,7 +547,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 						$this->addTemplateSettings($request['id'],$uid);
 					} else {
 						$id = $this->addUcpTemplate($templateData);
-						$this->addTemplateSettings($id,$uid,$userdata['username']);
+						$this->addTemplateSettings($id,$uid,$userdata['username'],$request['createtemp']);
 					}
 				break;
 				case 'rebuilducp':
@@ -1906,6 +1906,10 @@ class Userman extends FreePBX_Helpers implements BMO {
 		$moduleuc = ucfirst($widget['rawname']);
 		$u = $this->getUserByID($userid);
 		$defaultextension = $u['default_extension'];
+		//when Rssfeeds comes the module name will be home. We can just retrun the same widget
+		if($moduleuc == 'Home'){
+			return $widget;
+		}
 		//call the module api to get the widgetlist
 		if(method_exists($this->FreePBX->$moduleuc,'getWidgetListByModule')){
 			$widget = $this->FreePBX->$moduleuc->getWidgetListByModule($defaultextension,$userid,$widget);
@@ -1970,6 +1974,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 				unset($thiswidget);
 				$thiswidget = [];
 				$widgets = json_decode($wids['val'],true);
+				$widgets = is_array($widgets)?$widgets:[];
 				unset($allowedwidget);
 				$allowedwidget = [];
 				foreach($widgets as $widget){
@@ -2028,29 +2033,31 @@ class Userman extends FreePBX_Helpers implements BMO {
 	/*Add will delete and add
 	* This function will copy the uid UCP dashbord and widgets to  templatesettings
 	*/
-	public function addTemplateSettings($tempid,$uid,$username=''){
+	public function addTemplateSettings($tempid,$uid,$username = '',$createtemp = 'import'){
 		$sql = "UPDATE userman_ucp_templates SET `hasupdated`=1 Where id=:id";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':id' => $tempid));
-		$sql = "SELECT a.val, a.type,a.key FROM ".$this->userSettingsTable."  a, ".$this->userTable." b WHERE b.id = a.uid AND b.id = :id AND a.module = 'ucp|Global'";
-		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':id' => $uid));
-		$results = $sth->fetchAll(PDO::FETCH_ASSOC);
-		if(is_array($results)) {
-			$this->removeUcpTemplatesID($tempid);
-			foreach($results as $result){
-				$sql = "INSERT INTO userman_template_settings(`tid`,`module`,`key`,`val`,`type`) VALUES(:tid,'UCP',:key,:val,:type)";
-				$sth = $this->db->prepare($sql);
-				$sth->execute(array(':tid' => $tempid, ':key' => $result['key'],':val' => $result['val'],':type'=>$result['type']));
-			}
-			if($username == 'FreePBXUCPTemplateCreator'){
-				//we want blank ucp page when we use FreePBXUCPTemplateCreator
+		if($createtemp =='import'){
+			$sql = "SELECT a.val, a.type,a.key FROM ".$this->userSettingsTable."  a, ".$this->userTable." b WHERE b.id = a.uid AND b.id = :id AND a.module = 'ucp|Global'";
+			$sth = $this->db->prepare($sql);
+			$sth->execute(array(':id' => $uid));
+			$results = $sth->fetchAll(PDO::FETCH_ASSOC);
+			if(is_array($results)) {
 				$this->removeUcpTemplatesID($tempid);
+				foreach($results as $result){
+					$sql = "INSERT INTO userman_template_settings(`tid`,`module`,`key`,`val`,`type`) VALUES(:tid,'UCP',:key,:val,:type)";
+					$sth = $this->db->prepare($sql);
+					$sth->execute(array(':tid' => $tempid, ':key' => $result['key'],':val' => $result['val'],':type'=>$result['type']));
+				}
 			}
 			return ['status'=>true,'message'=> 'Template updated'];
 		}else {
-			return ['status'=>false,'message'=> 'Template Not updated'];
+			if($createtemp != 'import'){
+				$this->removeUcpTemplatesID($tempid);
+				return ['status'=>true,'message'=> 'Template Created'];
+			}
 		}
+		return ['status'=>false,'message'=> 'Template Not updated'];
 	}
 	private function gettemplateCSVData($id = ""){
 		if(empty($id)){
@@ -3619,6 +3626,9 @@ class Userman extends FreePBX_Helpers implements BMO {
 			$data = array();
 			$count = 1;
 			foreach($ucptemp as $key => $value){
+				if($value['key'] =='allowLogin'){
+					continue;
+				}
 				if(array_key_exists($value['id'], $data)){
 					$count += 1;
 					$data[$value['id']] = array_merge($data[$value['id']],
@@ -3791,7 +3801,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 				if($row['val'] == 'disable' ){$val='enable';}
 				//disable allowLogin for template creator
 				if($row['key'] == 'allowLogin'){
-					$val = 0;
+					$val = 1;
 				}
 				$sth->execute(array($uid,$row['module'],$row['key'],$val,$row['type']));
 			}
@@ -4088,12 +4098,21 @@ class Userman extends FreePBX_Helpers implements BMO {
 				$layoutkey = 'dashboard-layout-'.$dash['id'];
 				$sth->execute(array(':tid' => $templateid,':key'=>$layoutkey));
 				$twids = $sth->fetch(PDO::FETCH_ASSOC);
-				$templatewidgets = json_decode($twids['val'],true);
+				$templatewidgetstoconvert = json_decode($twids['val'],true);
+				unset($templatewidgets);
+				foreach($templatewidgetstoconvert as $widget){
+					$updatedwidget = $this->getUserModulesSettingBasedOnTemplate($widget,$uid);
+					if(!$updatedwidget){
+						//this is not a valid widget for this user
+						continue;
+					}
+					$templatewidgets[] = $updatedwidget;
+				}
 				//get the user dashbord settings
-				$sql = "select * from userman_template_settings where tid=:tid AND `key`=:key ";
+				$sql = "select * from userman_users_settings where uid=:uid AND `key`=:key ";
 				$sth = $this->db->prepare($sql);
 				$layoutkey = 'dashboard-layout-'.$userdashbordid;
-				$sth->execute(array(':tid' => $templateid,':key'=>$layoutkey));
+				$sth->execute(array(':uid' => $uid,':key'=>$layoutkey));
 				$uwids = $sth->fetch(PDO::FETCH_ASSOC);
 				$userwidgets = json_decode($uwids['val'],true);
 				$mergedWidgets = $this->mergeUserSettings($userwidgets,$templatewidgets);

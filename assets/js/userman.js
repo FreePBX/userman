@@ -21,11 +21,16 @@ if($("#directory").length) {
 }
 if($("#editT").length) {
         $("#editT").submit(function(e) {
-                if($("#templatename").val().trim() === "") {
-                        return warnInvalid($("#templatename"),_("Template Name can not be blank!"));
-                }
-                $("#submit").prop("disabled",true);
-        });
+            if($("#templatename").val().trim() === "") {
+				return warnInvalid($("#templatename"),_("Template Name can not be blank!"));
+			}
+			if($("input[name='createtemp']:checked").val() == 'import') {
+				if($("#userid").val().trim() === "") {
+					return warnInvalid($("#userid"),_("Please select a user to import the settings !"));
+				}
+			}
+            $("#submit").prop("disabled",true);
+   });
 }
 
 $("#email-users").click(function() {
@@ -283,7 +288,9 @@ $( document ).ready(function() {
 	else {
 		$("#action-bar").addClass("hidden");
 	}
-
+	if(params.action == 'adducptemplate'){
+		$("#tempcreatediv").hide()
+	}
 	$(".nav-tabs a[href="+hash+"]").tab('show');
 	//we should be at the user tab by default so we will show add user.
 });
@@ -546,7 +553,7 @@ $("#merge").click(function(e) {
 	$("#form_usertemplate").submit();
 });
 $("#rebuild").click(function(e) {
-	$('fieldset#users_allow > span, textarea').each(function(){console.log('usrid ='+$(this).data("userid"));
+	$('fieldset#users_allow > span, textarea').each(function(){
 	$("#form_usertemplate").append('<input type="hidden" name="users_selected[]" value="'+$(this).data("userid") +'">');
 	});
 	$("#form_usertemplate").append('<input type="hidden" name="actiontype" id="actiontype" value="rebuild">');
@@ -557,3 +564,12 @@ $("#cancel").click(function(e) {
 	e.stopPropagation();
 	window.location = '?display=userman#ucptemplates';
 });
+$("input[name=createtemp]").change(function() {
+		if ($("input[name='createtemp']:checked").val() == 'import') {
+			$("#adminextdiv").show()
+			$("#tempcreatediv").hide()
+				} else {
+			$("#adminextdiv").hide()
+			$("#tempcreatediv").show()
+		}
+	});

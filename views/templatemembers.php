@@ -52,9 +52,9 @@ function showMiddle() {
 <script type='text/javascript'>
 
 	$(document).ready(function() {	
-	$("#form_usertemplate button").click(function(ev){
-});
-		Sortable.create(users_allow, {
+		$("#form_usertemplate button").click(function(ev){
+	});
+	Sortable.create(users_allow, {
 		group: 'usr',
 		multiDrag: true,
 		selectedClass: "selected",
@@ -67,26 +67,32 @@ function showMiddle() {
 		selectedClass: "selected",
 		filter: "legend",
 	});
-		$(window).resize(function() { set_height(); });
-		function set_height() {
+	$(window).resize(function() { set_height(); });
+	$('.dragitem').click(function(e){
+		$(this).addClass('filtered-item');
+	})
+	function set_height() {
 			var height = 0;
 			$("#tabs>.tab:visible").height('auto').each(function(){
 				console.log($(this).height());
 				height = $(this).height() > height ? $(this).height() : height;
 			}).height(height);
-		}
-		$('.toggle').click(function(e) {
+	}
+	$('.toggle').click(function(e) {
 		e.preventDefault();
 		var cmd=$(this).data('cmd');
 		var tabname = $(".nav-tabs .active").data('name');
 		var thistab = $('#'+tabname).children();
-		console.log(thistab.children());
 		var left = thistab.children('.left');
 		var right = thistab.children('.right');
 		if (cmd == 'allleft') {
-			right.children('span').each(function() { $(this).appendTo(left); });
+			let className = (right.children(".filtered-item").length > 0) ? ".filtered-item" : "span";
+			right.children(className).each(function() { $(this).appendTo(left); });
+			left.children().removeClass('filtered-item');
 		} else if (cmd == 'allright') {
-			left.children('span').each(function() { $(this).appendTo(right); });
+			let className = (left.children(".filtered-item").length > 0) ? ".filtered-item" : "span";
+			left.children(className).each(function() { $(this).appendTo(right); });
+			right.children().removeClass('filtered-item');
 		} else {
 			oldleft = left.children('span');
 			right.children('span').each(function() { $(this).appendTo(left); });
