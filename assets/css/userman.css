@@ -27,3 +27,43 @@
 #user-side tr, #group-side tr {
 		cursor: pointer;
 }
+legend {
+    text-align: center !important;
+}
+.dragitem {
+    white-space: normal !important;
+    background: #d7ebf9;
+    color: #0070a3;
+    cursor: move;
+    padding: 4px;
+    border: 1px solid;
+    border-radius: 4px;
+    word-wrap: break-word;
+    display: block;
+    width: 300px;
+    height: auto;
+    word-wrap: break-word;
+    overflow-x: auto;
+}
+fieldset>span{
+    margin: 5px;
+    display: inline-block;
+    text-align: left;
+}
+.selected{
+  background-color: #f9c7c8 !important;
+  border: solid red 1px !important;
+  z-index: 1 !important;
+}
+
+.left{
+	float: left;
+	margin-bottom: -99999px;
+	padding-bottom: 99999px;
+}
+
+.right {
+    float: left;
+    margin-bottom: -99999px;
+    padding-bottom: 99999px;
+}
