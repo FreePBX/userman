@@ -329,6 +329,10 @@ function userman_configprocess() {
 								$userman->sendWelcomeEmail($username, $password);
 							}
 						}
+						$tempid = $userman->getCombinedModuleSettingByID($ret['id'],'ucp|template','templateid');
+						if(!empty($tempid)) {
+							$userman->updateUserUcpByTemplate($ret['id'],$tempid);
+						}
 					} else {
 						echo "<script>alert('".$ret['message']."')</script>";
 						return false;

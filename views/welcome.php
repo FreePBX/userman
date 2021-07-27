@@ -26,6 +26,7 @@
 							<li role="presentation"><a href="#groups" aria-controls="groups" role="tab" data-toggle="tab"><?php echo _("Groups"); ?></a></li>
 							<li role="presentation"><a href="#directories" aria-controls="directories" role="tab" data-toggle="tab"><?php echo _("Directories"); ?></a></li>
 							<li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab"><?php echo _("Settings"); ?></a></li>
+							<li role="presentation"><a href="#ucptemplates" aria-controls="settings" role="tab" data-toggle="tab"><?php echo _("UCP Templates"); ?></a></li>
 						</ul>
 						<div class="tab-content">
 							<div role="tabpanel" id="users" class="tab-pane display active">
@@ -120,6 +121,34 @@
 									</table>
 								</div>
 							</div>
+							<div role="tabpanel" id="ucptemplates" class="tab-pane display">
+								<div class="table-responsive">
+									<div class="alert alert-info"><?php echo _("UCP Template association with users is done through Groups->UCP->General Or users->UCP->General. For More details ")?><a href="https://wiki.sangoma.com/display/FPG/UCP+User+Templates"> Wiki</a></div>
+									<div class="alert alert-warning">
+										<?php echo _("Template rows highlighted yellow have not been rebuilt since changes were made to the template.");?>
+										</div>
+
+									<div id="toolbar-ucptemplates">
+										<a href="?display=userman&amp;action=adducptemplate" id="add-ucptemplates" class="btn btn-add" data-type="ucptemplates" data-section="ucptemplates">
+											<i class="fa fa-user-plus"></i> <span><?php echo _('Add')?></span>
+										</a>
+										<button id="remove-ucptemplates" class="btn btn-danger btn-remove" data-type="ucptemplates" data-section="ucptemplates" disabled>
+											<i class="fa fa-user-times"></i> <span><?php echo _('Delete')?></span>
+										</button>
+									</div>
+									<table data-toolbar="#toolbar-ucptemplates" data-url="ajax.php?module=userman&amp;command=getUcpTemplates" data-cache="false" data-toggle="table" data-maintain-selected="true" data-show-columns="true" data-pagination="true" data-search="true" class="table table-striped" id="table-ucptemplates" data-type="ucptemplates" data-escape="true" data-row-style="rowStyle">
+										<thead>
+											<tr>
+												<th data-checkbox="true"></th>
+												<th data-sortable="true" data-field="templatename"><?php echo _("Template Name") ?></th>
+												<th data-sortable="true" data-field="description"><?php echo _("Description") ?></th>
+												<th data-sortable="true" data-field="importedfromuname"><?php echo _("Imported from ") ?></th>												
+												<th data-formatter="ucptemplatesActions"><?php echo _("Action") ?></th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+							</div>
 							<div role="tabpane" id="settings" class="tab-pane display">
 								<div class="container-fluid">
 									<?php echo load_view(dirname(__FILE__).'/general.php', array("hostname" => $hostname, "host" => $host, "remoteips" => $remoteips, "sync" => $sync, "brand" => $brand, "auths" => $auths, "authtype" => $authtype, "autoEmail" => $autoEmail,"emailbody" => $emailbody, "emailsubject" => $emailsubject, "mailtype" => $mailtype)); ?>
@@ -136,4 +165,4 @@
 <script>
 	var drivers = <?php echo json_encode($auths)?>;
 	var directoryMapValues = <?php echo json_encode($directoryMap)?>;
-	</script>
+</script>

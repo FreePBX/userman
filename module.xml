@@ -180,6 +180,35 @@
 			<field name="default" type="boolean" default="0"/>
 			<field name="locked" type="boolean" default="0"/>
 		</table>
+		<table name="userman_ucp_templates">
+			<field name="id" type="integer" primarykey="true" autoincrement="true"/>
+			<field name="templatename" type="string" length="150"/>
+			<field name="description" type="string" length="255" notnull="false"/>
+			<field name="importedfromuname" type="string" length="255" notnull="false"/>
+			<field name="importedfromuid" type="string" length="255" notnull="false"/>
+			<field name="defaultexten" type="string" length="255" notnull="false"/>
+			<field name="hasupdated" type="boolean" default="0"/>
+		</table>
+		<table name="userman_template_settings">
+			<field name="tid" type="integer"/>
+			<field name="module" type="string" length="65"/>
+			<field name="key" type="string" length="190"/>
+			<field name="val" type="blob"/>
+			<field name="type" type="string" length="16" notnull="false"/>
+			<key name="index4" type="unique">
+				<column name="tid"/>
+				<column name="module"/>
+				<column name="key"/>
+			</key>
+			<key name="index2" type="index">
+				<column name="tid"/>
+				<column name="key"/>
+			</key>
+			<key name="index6" type="index">
+				<column name="module"/>
+				<column name="tid"/>
+			</key>
+		</table>
 	</database>
 	<supported>
 		<version>15.0</version>

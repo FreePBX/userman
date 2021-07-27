@@ -13,6 +13,7 @@ use BMO;
 use FreePBX_Helpers;
 use PDO;
 use Exception;
+use Ramsey\Uuid\Uuid;
 class Userman extends FreePBX_Helpers implements BMO {
 	private $registeredFunctions = array();
 	private $message = '';
@@ -249,6 +250,10 @@ class Userman extends FreePBX_Helpers implements BMO {
 						}
 					}
 				}
+				$tempid = $this->getCombinedModuleSettingByID($ret['id'],'ucp|template','templateid');
+				if(!empty($tempid)) {
+					$this->updateUserUcpByTemplate($ret['id'],$tempid);
+				}
 			}
 		} elseif(isset($data['um-link'])) {
 			$ret = $this->getUserByID($data['um-link']);
@@ -294,6 +299,14 @@ class Userman extends FreePBX_Helpers implements BMO {
 		}
 		if(isset($request['action']) && $request['action'] == 'delgroup') {
 			$ret = $this->deleteGroupByGID($request['user']);
+			$this->message = array(
+				'message' => $ret['message'],
+				'type' => $ret['type']
+			);
+			return true;
+		}
+		if(isset($request['action']) && $request['action'] == 'delucptemplate') {
+			$ret = $this->deleteUcpTemplateByID($request['template']);
 			$this->message = array(
 				'message' => $ret['message'],
 				'type' => $ret['type']
@@ -423,6 +436,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 					);
 					$default = !empty($request['defaultextension']) ? $request['defaultextension'] : 'none';
 					if($request['user'] == "") {
+						$add = true;
 						$ret = $this->addUserByDirectory($directory, $username, $password, $default, $description, $extraData);
 						if($ret['status']) {
 							$this->setGlobalSettingByID($ret['id'],'assigned',$assigned);
@@ -436,7 +450,8 @@ class Userman extends FreePBX_Helpers implements BMO {
 								'type' => $ret['type']
 							);
 						}
-					} else {
+					} else { 
+						$add = false;
 						$password = ($password != '******') ? $password : null;
 						$ret = $this->updateUser($request['user'], $prevUsername, $username, $default, $description, $extraData, $password);
 						if($ret['status']) {
@@ -504,6 +519,25 @@ class Userman extends FreePBX_Helpers implements BMO {
 							$data = $this->getUserByID($request['user']);
 							$this->sendWelcomeEmail($data['id'], $password);
 						}
+						$prevtempid = $this->getConfig('template_id', $ret['id']);
+						//only on Add case we need to generate the widgets
+						if($add){
+							if($request['assign_template'] === 'true') {
+								$tempid = $request['templateid'];
+								if(!empty($tempid) && $prevtempid != $tempid) {
+									$this->updateUserUcpByTemplate($ret['id'],$tempid);
+								}
+							} elseif($request['assign_template'] === 'inherit') {
+								$tempid = $this->getCombinedModuleSettingByID($ret['id'],'ucp|template','templateid');
+								if(!empty($tempid) && $prevtempid != $tempid) {
+									$this->updateUserUcpByTemplate($ret['id'],$tempid);
+								}
+							}
+							if(!empty($tempid)) {
+							$this->setConfig('template_id', $tempid, $ret['id']);
+							}
+						}
+
 					}
 				break;
 				case 'general':
@@ -518,6 +552,41 @@ class Userman extends FreePBX_Helpers implements BMO {
 					);
 					if(isset($request['sendemailtoall'])) {
 						$this->sendWelcomeEmailToAll();
+					}
+				break;
+				case 'ucptemplate':
+					$uid = $request['userid'];
+					$userdata = $this->getUserByID($uid);
+					$templateData = array(
+						'templatename' => isset($request['templatename']) ? $request['templatename'] : null,
+						'description' => isset($request['description']) ? $request['description'] : null,
+						'importedfromuid' => isset($request['userid']) ? $request['userid'] : null,
+						'importedfromuname' => isset($userdata['username']) ? $userdata['username'] : null,
+						'defaultexten' => isset($userdata['default_extension']) ? $userdata['default_extension'] : null,
+					);
+					if(!empty($request['id'])) {
+						$templateData['id'] = $request['id'];
+						$this->updateUcpTemplate($templateData);
+						$this->addTemplateSettings($request['id'],$uid);
+					} else {
+						$id = $this->addUcpTemplate($templateData);
+						$this->addTemplateSettings($id,$uid,$userdata['username'],$request['createtemp']);
+					}
+				break;
+				case 'rebuilducp':
+					switch($request['actiontype']){
+						case 'rebuild' :
+							$users = is_array($request['users_selected'])?$request['users_selected']:[];
+							$userids = array_unique($users);
+							$templateid = $request['templateid'];
+							$this->rebuildtemplate($userids,$templateid);
+						break;
+						case 'merge':
+							$users = is_array($request['users_selected'])?$request['users_selected']:[];
+							$userids = array_unique($users);
+							$templateid = $request['templateid'];
+							$this->mergeTemplateWithExistingUserSettings($userids,$templateid);
+						break;
 					}
 				break;
 			}
@@ -560,6 +629,19 @@ class Userman extends FreePBX_Helpers implements BMO {
 		switch($request['display']) {
 			case 'userman':
 				$buttons = array(
+					'merge'=> array(
+						'name' => 'merge',
+						'id' => 'merge',
+						'value' => _("Merge With Existing Widgets"),
+						'class' => array('hidden')
+							),
+					'rebuild'=> array(
+						'name' => 'rebuild',
+						'id' => 'rebuild',
+						'type'=>'button',
+						'value' => _("Rebuild Widgets"),
+						'class' => array('hidden')
+							),
 					'submitsend' => array(
 						'name' => 'submitsend',
 						'id' => 'submitsend',
@@ -582,6 +664,12 @@ class Userman extends FreePBX_Helpers implements BMO {
 						'name' => 'reset',
 						'id' => 'reset',
 						'value' => _("Reset"),
+						'class' => array('hidden')
+					),
+					'cancel' => array(
+						'name' => 'cancel',
+						'id' => 'cancel',
+						'value' => _("Cancel"),
 						'class' => array('hidden')
 					),
 				);
@@ -621,11 +709,10 @@ class Userman extends FreePBX_Helpers implements BMO {
 						$permissions = $this->getAuthAllPermissions($request['directory']);
 					}
 				}
-
 				if(empty($request['action'])){
 					unset($buttons['submitsend']);
 				}
-			}
+		}
 		return $buttons;
 	}
 
@@ -836,6 +923,30 @@ class Userman extends FreePBX_Helpers implements BMO {
 					)
 				);
 			break;
+			case 'adducptemplate':
+			case 'showucptemplate':
+				if($action == "showucptemplate" && !empty($request['template'])) {
+					$template = $this->getTemplateById($request['template']);
+				} else {
+					$template = [];
+				}
+				$html .= load_view(
+					dirname(__FILE__).'/views/ucptemplates.php',
+					array(
+						'template' => $template,
+						'users'=>$this->getAllUsers()
+					)
+				);
+			break;
+			case 'showmembers':
+				$members = $this->getallMemberOfTemplate($request['template']);
+				$template = $this->getTemplateById($request['template']);
+				//lets change the hasupdated to 0
+				$sql = "UPDATE userman_ucp_templates SET `hasupdated`=0 Where id=:id";
+				$sth = $this->db->prepare($sql);
+				$sth->execute(array(':id' => $request['template']));
+				$html .= load_view(dirname(__FILE__).'/views/templatemembers.php', array('members'=>$members,'templateid'=>$request['template'],'name'=>$template['templatename']));
+				break;
 			default:
 				$users = $this->getAllUsers();
 				$groups = $this->getAllGroups();
@@ -971,6 +1082,9 @@ class Userman extends FreePBX_Helpers implements BMO {
 			case "updatePassword":
 			case "delete":
 			case "email":
+			case "getUcpTemplates":
+			case "redirectUCP":
+			case "rebuildtemplate":
 				return true;
 			break;
 			case "setlocales":
@@ -1024,6 +1138,25 @@ class Userman extends FreePBX_Helpers implements BMO {
 				$this->setDefaultDirectory($request['id']);
 				return array("status" => true);
 			break;
+			break;
+			case "redirectUCP":
+				if(!empty($request['id']) && !empty($request['key'])) {
+					$uID = $this->getUidFromUnlockkey($request['key']);
+					if(!empty($uID)) {
+						$ret = $this->updateUserUcpByTemplate($uID, $request['id']);
+						return array("status" => true);
+					}
+					return array("status" => false, 'message'=> 'Error! Something went wrong');
+				}
+				return array("status" => false, 'message'=> 'Error! Something went wrong');
+			break;
+			case "rebuildtemplate":
+				if(!empty($request['templateid'])){
+					return $this->rebuildtemplate($request['templateid']);
+				}else {
+					return ['status'=>false,'message'=>'TemplateID not valid'];
+				}
+			break;
 			case "getDirectories":
 				return $this->getAllDirectories();
 			break;
@@ -1058,6 +1191,8 @@ class Userman extends FreePBX_Helpers implements BMO {
 			case "getGroups":
 				$directory = !empty($_GET['directory']) ? $_GET['directory'] : '';
 				return $this->getAllGroups($directory);
+			case "getUcpTemplates":
+				return $this->getAllUcpTemplates();
 			case "email":
 				//FREEPBX-15304 Send email to multiple selected users only sends to the first
 				$sendmail = false;
@@ -1112,6 +1247,13 @@ class Userman extends FreePBX_Helpers implements BMO {
 						$ret = array();
 						foreach($_REQUEST['extensions'] as $ext){
 							$ret[$ext] = $this->deleteDirectoryByID($ext);
+						}
+						return array('status' => true, 'message' => $ret);
+					break;
+					case 'ucptemplates':
+						$ret = array();
+						foreach($_REQUEST['extensions'] as $ext){
+							$ret[$ext] = $this->deleteUcpTemplateByID($ext);
 						}
 						return array('status' => true, 'message' => $ret);
 					break;
@@ -1380,9 +1522,17 @@ class Userman extends FreePBX_Helpers implements BMO {
 				$sth->execute(array($id));
 			} catch(\Exception $e) {}
 		}
-
+		//delete the templatecreator 
+		$key = $this->getConfig('unlockkey','templatecreator');
+		$uid = $this->getConfig($key,'templatecreator');
+		if($uid == $id){
+			//remove unlockkey
+			$this->delConfig('unlockkey','templatecreator');
+			$this->delConfig($key,'templatecreator');
+		}
 		$this->callHooks('delUser',$status);
 		$this->delUser($id,$status);
+		$this->delConfig('template_id', $id);
 		return $status;
 	}
 
@@ -1762,7 +1912,188 @@ class Userman extends FreePBX_Helpers implements BMO {
 		}
 		return $status;
 	}
+	/*
+	* This method will return the widgetsetting of a particular module
+	*( @param array $widget )
+	* $userid interger ( userman userid)
+	* return an array with widget settings
+	*/
+	private function getUserModulesSettingBasedOnTemplate($widget,$userid){
+		$widget['id'] = (string)Uuid::uuid4();
+		$moduleuc = ucfirst($widget['rawname']);
+		$u = $this->getUserByID($userid);
+		$defaultextension = $u['default_extension'];
+		//when Rssfeeds comes the module name will be home. We can just retrun the same widget
+		if($moduleuc == 'Home'){
+			return $widget;
+		}
+		//call the module api to get the widgetlist
+		if(method_exists($this->FreePBX->$moduleuc,'getWidgetListByModule')){
+			$widget = $this->FreePBX->$moduleuc->getWidgetListByModule($defaultextension,$userid,$widget);
+			if(!$widget){
+				return false;
+			}else {
+				return $widget;
+			}
+		}else {
+			return $widget;
+		}
+		return false;
+	}
+	
+	/* Update users settings by the given template setting*/
+	public function updateUserUcpByTemplate($userid,$templateid){
+		//add the side bar dasboards and its widgets
+		$sql = "SELECT a.val, a.type,a.key FROM userman_template_settings a WHERE a.tid = :tid AND `key`='dashboard-simple-layout' ";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':tid' => $templateid));
+		$results = $sth->fetch(PDO::FETCH_ASSOC);
+		$this->removeUCPSideDashboardSettingByID($userid);
+		if($results) {
+			$dashbords = json_decode($results['val'],true);
+			$newsidedash = [];
+			foreach($dashbords as $dash){
+				$id = (string)Uuid::uuid4();
+				$name = $dash['name'];
+				$allowedwidget = [];
+				$updatedwidget = $this->getUserModulesSettingBasedOnTemplate($dash,$userid,$templateid);
+				if(!$updatedwidget){
+					//this is not a valid widget for this user
+					continue;
+				}
+				$newsidedash[] = $updatedwidget;
+			}
+			$sidedashboards = json_encode($newsidedash);
+			//insert sidebar dasboard widgets
+			$sql = "INSERT INTO userman_users_settings(`uid`,`module`,`key`,`val`,`type`) VALUES(:uid,'ucp|Global',:key,:val,:type)";
+			$sth = $this->db->prepare($sql);
+			$sth->execute(array(':uid' => $userid, ':key' => $results['key'],':val' => $sidedashboards,':type'=>$results['type']));
+		}
+		// Adding the main dashboards
+		$sql = "SELECT a.val, a.type,a.key FROM userman_template_settings a WHERE a.tid = :tid AND `key`='dashboards' ";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':tid' => $templateid));
+		$results = $sth->fetch(PDO::FETCH_ASSOC);
+		$this->removeUCPDashboardSettingByID($userid);
+		if($results) {
+			//we have all new dashboards ids here
+			$dashbords = json_decode($results['val'],true);
+			$newdashbords = [];
+			foreach($dashbords as $dash){
+				$id = (string)Uuid::uuid4();
+				$widskey = 'dashboard-layout-'.$id;
+				$newdashbords[] = ['id'=>$id,'name'=>$dash['name']];
+				$layoutkey = 'dashboard-layout-'.$dash['id'];
+				$sql = "select * from userman_template_settings where tid=:tid AND `key`=:key ";
+				$sth = $this->db->prepare($sql);
+				$sth->execute(array(':tid' => $templateid,':key'=>$layoutkey));
+				$wids = $sth->fetch(PDO::FETCH_ASSOC);
+				unset($thiswidget);
+				$thiswidget = [];
+				$widgets = json_decode($wids['val'],true);
+				$widgets = is_array($widgets)?$widgets:[];
+				unset($allowedwidget);
+				$allowedwidget = [];
+				foreach($widgets as $widget){
+					$updatedwidget = $this->getUserModulesSettingBasedOnTemplate($widget,$userid,$templateid);
+					if(!$updatedwidget){
+						//this is not a valid widget for this user
+						continue;
+					}
+					$thiswidget[] = $updatedwidget;
+				}
+				$updatedwidgets = json_encode($thiswidget);
+				$sql = "INSERT INTO userman_users_settings(`uid`,`module`,`key`,`val`,`type`) VALUES(:uid,'ucp|Global',:key,:val,:type)";
+				$sth = $this->db->prepare($sql);
+				$sth->execute(array(':uid' => $userid, ':key' => $widskey,':val' => $updatedwidgets,':type'=>$wids['type']));
+			}
+			$dashboards = json_encode($newdashbords);
+			//insert the dasbord
+			$sql = "INSERT INTO userman_users_settings(`uid`,`module`,`key`,`val`,`type`) VALUES(:uid,'ucp|Global',:key,:val,:type)";
+			$sth = $this->db->prepare($sql);
+			$sth->execute(array(':uid' => $userid, ':key' => $results['key'],':val' => $dashboards,':type'=>$results['type']));
+			return ['status'=>true,'message'=> 'User UCP updated'];
+		}else {
+			return ['status'=>false,'message'=> 'No_Dashboards_created'];
+		}
+	}
+	/*Remove the Side dashbord of a user */
+	public function removeUCPSideDashboardSettingByID($userid){
+		$sql = "Delete from userman_users_settings where uid=:uid AND `key`='dashboard-simple-layout' ";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':uid' => $userid));
+	}
 
+	/*Remove the Main dashbord of a user */
+	public function removeUCPDashboardSettingByID($userid){
+		//remove all dashbord and its layout dashboards
+		$sql = "select * from userman_users_settings where uid=:uid AND `key`='dashboards' ";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':uid' => $userid));
+		$results = $sth->fetch(PDO::FETCH_ASSOC);
+		if($results) {
+			$dashbords = json_decode($results['val'],true);
+			if(is_array($dashbords)){
+				foreach($dashbords as $dash){
+					$id = $dash['id'];
+					$layoutkey = 'dashboard-layout-'.$id;
+					$sql = "DELETE from userman_users_settings where uid=:uid AND `key`=:key ";
+					$sth = $this->db->prepare($sql);
+					$sth->execute(array(':uid' => $userid,':key'=>$layoutkey));
+				}
+			}
+			$sql = "Delete from userman_users_settings where uid=:uid AND `key`='dashboards' ";
+			$sth = $this->db->prepare($sql);
+			$sth->execute(array(':uid' => $userid));
+		}
+	}
+	/*Add will delete and add
+	* This function will copy the uid UCP dashbord and widgets to  templatesettings
+	*/
+	public function addTemplateSettings($tempid,$uid,$username = '',$createtemp = 'import'){
+		$sql = "UPDATE userman_ucp_templates SET `hasupdated`=1 Where id=:id";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':id' => $tempid));
+		if($createtemp =='import'){
+			$sql = "SELECT a.val, a.type,a.key FROM ".$this->userSettingsTable."  a, ".$this->userTable." b WHERE b.id = a.uid AND b.id = :id AND a.module = 'ucp|Global'";
+			$sth = $this->db->prepare($sql);
+			$sth->execute(array(':id' => $uid));
+			$results = $sth->fetchAll(PDO::FETCH_ASSOC);
+			if(is_array($results)) {
+				$this->removeUcpTemplatesID($tempid);
+				foreach($results as $result){
+					$sql = "INSERT INTO userman_template_settings(`tid`,`module`,`key`,`val`,`type`) VALUES(:tid,'UCP',:key,:val,:type)";
+					$sth = $this->db->prepare($sql);
+					$sth->execute(array(':tid' => $tempid, ':key' => $result['key'],':val' => $result['val'],':type'=>$result['type']));
+				}
+			}
+			return ['status'=>true,'message'=> 'Template updated'];
+		}else {
+			if($createtemp != 'import'){
+				$this->removeUcpTemplatesID($tempid);
+				return ['status'=>true,'message'=> 'Template Created'];
+			}
+		}
+		return ['status'=>false,'message'=> 'Template Not updated'];
+	}
+	private function gettemplateCSVData($id = ""){
+		if(empty($id)){
+			$sql = "SELECT a.id,a.templatename,a.description,b.key,b.val,b.type FROM userman_ucp_templates a,userman_template_settings b Where a.id =b.tid";
+		}
+		else{	
+			$sql = "SELECT a.id,a.templatename,a.description,b.key,b.val,b.type FROM userman_ucp_templates a,userman_template_settings b Where a.id =b.tid AND id=:id";
+		}		
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':id' => $id));
+		$result = $sth->fetchAll(PDO::FETCH_ASSOC);
+		return $result;
+	}
+	public function removeUcpTemplatesID($tid) {
+		$sql = "DELETE FROM userman_template_settings WHERE  `tid` = :tid ";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':tid' => $tid));
+		return true;
+	}
 	/**
 	 * Move User to Directory
 	 * This only works on directories which allow adding users
@@ -2227,6 +2558,28 @@ class Userman extends FreePBX_Helpers implements BMO {
 					$groupid = $group;
 					break;
 				}
+			}
+		}else {
+			// add the default extension also in the array if the setting is 'assigned'
+			if($setting =='assigned'){
+				$gsoutput = array();
+				$groups = $this->getGroupsByID($id);
+				foreach($groups as $group) {
+					$gs = $this->getModuleSettingByGID($group,$module,$setting,true,$cached);
+					if(!is_null($gs)) {
+						//Find and replace the word "self" with this users extension
+						if(is_array($gs) && in_array("self",$gs)) {
+							$i = array_search ("self", $gs);
+							$user = $this->getUserByID($id);
+							if($user['default_extension'] !== "none") {
+								$gs[$i] = $user['default_extension'];
+							}
+						}
+						$gsoutput = $gs;
+						break;
+					}
+				}
+				$output = array_merge($output,$gsoutput);
 			}
 		}
 		if($detailed) {
@@ -2902,6 +3255,10 @@ class Userman extends FreePBX_Helpers implements BMO {
 				'description' => _('User Manager Groups')
 			);
 		}
+		$final['ucptemplates'] = array(
+				'name' => _('UCP Templates'),
+				'description' => _('UCP Templates')
+		);
 		return $final;
 	}
 
@@ -2962,6 +3319,34 @@ class Userman extends FreePBX_Helpers implements BMO {
 				);
 
 				return $headers;
+			case 'ucptemplates':
+				$headers = array(
+					'templatename' => array(
+						'required' => true,
+						'identifier' => _('Template Name'),
+						'description' => _('Template Name'),
+					),
+					'description' => array(
+						'identifier' => _('Description'),
+						'description' => _('Description'),
+					),
+					'template_1_key' => array(
+						'required' => true,
+						'identifier' => _('Key'),
+						'description' => _('template_1_key'),
+					),
+					'template_1_val' => array(
+						'required' => true,
+						'identifier' => _('Value'),
+						'description' => _('template_1_val'),
+					),
+					'template_1_type' => array(
+						'identifier' => _('Type'),
+						'description' => _('template_1_type'),
+					),
+				);
+				
+				return $headers;				
 		}
 	}
 
@@ -3154,6 +3539,35 @@ class Userman extends FreePBX_Helpers implements BMO {
 					);
 				}
 			break;
+			case 'ucptemplates':
+					foreach ($rawData as $data) {
+						if (empty($data['templatename'])) {
+							return array("status" => false, "message" => _("templatename is required."));
+						}
+								//checking if exists using template name
+						$existing = $this->getUCPTemplateByName($data);
+						if(!$replaceExisting && $existing) {
+							return array("status" => false, "message" => _("Template already exists"));
+						}
+						$grep = preg_grep('/^\D+_\d+/', array_keys($data));
+						if(!empty($grep) && is_array($grep)){
+							foreach ($grep as $key) {
+								if (preg_match('/^(.*)_(\d+)_(.*)$/', $key, $matches)) {
+									$extras[$matches[1]][$matches[2] - 1][$matches[3]] = $data[$key];
+								} else if (preg_match('/^(.*)_(\d+)$/', $key, $matches)) {
+									$extras[$matches[1]][$matches[2] - 1] = $data[$key];
+								}
+							}
+							if($existing){
+								//removing the existing one from db
+									$this->removeTemplateByName($existing['id']);
+							}
+							//inserting the template into DB
+							$this->addUcpTemplateViaCSV($data, $extras);
+						}
+					}
+								
+				break;			
 		}
 
 		return $ret;
@@ -3214,6 +3628,31 @@ class Userman extends FreePBX_Helpers implements BMO {
 			}
 
 			break;
+		case 'ucptemplates':
+			$ucptemp = $this->gettemplateCSVData();
+			$data = array();
+			$count = 1;
+			foreach($ucptemp as $key => $value){
+				if($value['key'] =='allowLogin'){
+					continue;
+				}
+				if(array_key_exists($value['id'], $data)){
+					$count += 1;
+					$data[$value['id']] = array_merge($data[$value['id']],
+											['template_'.$count.'_key' => $value['key'], 'template_'.$count.'_val' => $value['val'], 'template_'.$count.'_type' => $value['type']]);
+				}
+				else{
+					$count=1;
+					$data[$value['id']] = array(
+						'templatename' => $value['templatename'],
+						'description' => $value['description'],
+						'template_'.$count.'_key' => $value['key'],
+						'template_'.$count.'_val' => $value['val'],
+						'template_'.$count.'_type' => $value['type'],
+					);
+				}
+			}
+			break;			
 		}
 		return $data;
 	}
@@ -3253,5 +3692,460 @@ class Userman extends FreePBX_Helpers implements BMO {
 			
 		return $data;
 	}
+	public function removeTemplateByName($id){
+		$delTemp = "DELETE FROM userman_ucp_templates WHERE id=:id";
+		$sth = $this->db->prepare($delTemp);
+		$sth->execute(array(':id' => $id));
+		$delSettings = "DELETE FROM userman_template_settings WHERE tid=:id";
+		$sth = $this->db->prepare($delSettings);
+		$sth->execute(array(':id' => $id));
+	}
+	public function getUCPTemplateByName($addData){
+		$search = "SELECT * from userman_ucp_templates Where templatename=:name";
+		$sth = $this->db->prepare($search);
+		$sth->execute(array(':name' => $addData['templatename']));
+		$result = $sth->fetch(PDO::FETCH_ASSOC);
+		return $result;
+	}
+	public function addUcpTemplateViaCSV($addData, $extras){		
+		//inserting into userman_ucp_templates
+		$sql = "INSERT INTO userman_ucp_templates(`templatename`,`description`,`importedfromuname`)VALUES(:name,:description,'importedfromcsv')";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':name' => $addData['templatename'], ':description' => $addData['description']));
+		$id = $this->db->lastInsertId();
+		//inserting into userman_template_settings
+		foreach ($extras as $key => $type) {
+			foreach ($type as $value) {
+				if(!empty($value['key']) || !empty($value['val']) || !empty($value['type'])){
+					$sql = "INSERT INTO userman_template_settings(`tid`,`module`,`key`,`val`,`type`) VALUES(:tid,'UCP',:key,:val,:type)";
+					$sth = $this->db->prepare($sql);
+					$sth->execute(array(':tid' => $id, ':key' => $value['key'],':val' => $value['val'],':type'=>$value['type']));
+				}
+			}								
+		}
+	}
+	public function addUcpTemplate($addData){
+		$sql = "INSERT INTO userman_ucp_templates(`templatename`,`description`,`importedfromuid`,`importedfromuname`,`defaultexten`)VALUES(:name,:description,:importedfromuid,:importedfromuname,:defaultexten)";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':name' => $addData['templatename'], ':description' => $addData['description'], ':importedfromuid' => $addData['importedfromuid'], ':importedfromuname' => $addData['importedfromuname'], ':defaultexten' => $addData['defaultexten']));
+		$id = $this->db->lastInsertId();
+		return $id;
+	}
 
+	public function getTemplateById($id) {
+		$sql = "SELECT * from userman_ucp_templates Where id=:id";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':id' => $id));
+		$result = $sth->fetch(PDO::FETCH_ASSOC);
+		return $result;
+	}
+
+	public function updateUcpTemplate($editData){
+		$sql = "UPDATE userman_ucp_templates SET `templatename`=:name,`importedfromuid`=:importedfromuid,`importedfromuname`=:importedfromuname,`defaultexten`=:defaultexten,`description`=:description,`hasupdated`=1 Where id=:id";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':name' => $editData['templatename'],':importedfromuid'=>$editData['importedfromuid'],':importedfromuname'=>$editData['importedfromuname'],':defaultexten'=>$editData['defaultexten'] ,':description' => $editData['description'], ':id' => $editData['id']));
+		return true;
+	}
+
+	public function getAllUcpTemplates() {
+		$sql = "SELECT * from userman_ucp_templates";
+		$sth = $this->db->prepare($sql);
+		$sth->execute();
+		$result = $sth->fetchAll(PDO::FETCH_ASSOC);
+		if(empty($result)) {
+			return [];
+		}
+		$results =[];
+		$key  =$this->getUnlockKeyTemplateCreator();
+		foreach($result as $row){
+			$row['key'] = $key;
+			$results[] = $row;
+		}
+		return $results;
+	}
+
+	public function deleteUcpTemplateByID($id) {
+		if(empty($id)) {
+			return array("status" => false, "type" => "danger", "message" => _("Template Does Not Exist"));
+		}
+		$sql = "DELETE from userman_ucp_templates Where id=:id";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':id' => $id));
+		$sql = "DELETE from userman_template_settings Where tid=:id";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':id' => $id));
+		return array("status" => true, "type" => "success", "message" => _("Template Successfully Deleted"));
+	}
+
+	/*Generate a User for Template creation,view/edit */
+	public function generateTemplateCreatorUser($unusedexten){
+		$directory = $this->getDefaultDirectory();
+		$ret = $this->addUserByDirectory($directory['id'], 'FreePBXUCPTemplateCreator', md5('1a2b3c@fd48jshs03123ld'), $unusedexten, _('Autogenerated user For Template Creation'), array('email' => '', 'displayname' => 'Template Creator'));
+		if($ret['status']) {
+			$directory = $directory['id'];
+			$uid = $ret['id'];
+			$groups = $this->getAllGroups();
+			foreach($groups as $group) {
+				if($group['id']==$directory && !in_array($uid,$group['users'])) {
+					$group['users'][] = $uid;
+					$this->updateGroup($group['id'],$group['groupname'], $group['groupname'], $group['description'], $group['users']);
+				}
+			}
+			//set all option to yes
+			$sql = "select * from userman_groups_settings WHERE `gid`=? AND `module` like 'ucp|%' ";
+			$sth = $this->db->prepare($sql);
+			$sth->execute(array($directory));
+			$result = $sth->fetchAll(PDO::FETCH_ASSOC);
+			foreach($result as $row){
+				if($row['key'] == 'assigned'){
+					continue;// we dont want  any specific extensions assigned, just want only default exten
+				}
+				$sql = "INSERT INTO userman_users_settings(`uid`,`module`,`key`,`val`,`type`)VALUES(?,?,?,?,?)";
+				$sth = $this->db->prepare($sql);
+				$val = $row['val'];
+				if($row['val'] == '0'){$val = 1;}
+				if($row['val'] == 'no'){ $val = 'yes';}
+				if($row['val'] == 'disable' ){$val='enable';}
+				//disable allowLogin for template creator
+				if($row['key'] == 'allowLogin'){
+					$val = 1;
+				}
+				$sth->execute(array($uid,$row['module'],$row['key'],$val,$row['type']));
+			}
+			return $uid;
+		}else{
+			//retun the existing FreePBXUCPTemplateCreator id 
+			$sql ="select id,default_extension from userman_users where username ='FreePBXUCPTemplateCreator'";
+			$sth = $this->db->prepare($sql);
+			$sth->execute();
+			$result = $sth->fetch(PDO::FETCH_ASSOC);
+			if($result['id']){
+				if($result['default_extension'] == $unusedexten){
+					return $result['id'];
+				} else {
+					$sql ="UPDATE userman_users SET `default_extension`= ?  where `id` = ?";
+					$sth = $this->db->prepare($sql);
+					$sth->execute(array($unusedexten,$result['id']));
+				}
+			}
+			return false;
+		}
+	}
+
+	/* set the key in kvstore for the template creator*/
+	public function getUnlockKeyTemplateCreator(){
+		$unusedexten = $this->getUnUsedextension();
+		$uid = $this->generateTemplateCreatorUser($unusedexten);
+		if(!$key = $this->getConfig('unlockkey','templatecreator')){
+			//we already generated 
+			$key = (string)Uuid::uuid4();
+			$this->setConfig('unlockkey',$key,'templatecreator');
+			$this->setConfig($key,$uid,'templatecreator');
+		}
+		return $key;
+	}
+
+	/*This will be called from ucp to login to ucp with key */
+	public function getUidFromUnlockkey($key){
+		$uid = $this->getConfig($key,'templatecreator');
+		return $uid;
+	}
+
+	/* get/create a virtual unused extension to associate with Template Creator*/
+	private function getUnUsedextension($exten = ''){
+		//get the virtual extension for the templatecreator
+		$sql = "SELECT extension,name FROM users WHERE name='FreePBXUCPTemplateCreator'";
+		$sth = $this->database->prepare($sql);
+		$sth->execute();
+		$result = $sth->fetch(PDO::FETCH_BOTH);
+		if(isset($result['extension'])){
+			return $result['extension'];
+		}
+		//We dont have the extension !! lets create a virtual extension
+		if($exten == ''){
+			$exten = 9919988;
+		}
+		$data['tech'] = 'virtual';
+		$data['extension'] = $exten;
+		$data['channel'] ='';
+		$data['name'] = 'FreePBXUCPTemplateCreator';
+		$data['outboundcid'] ='';
+		$data['email'] ='';
+		$data['fmfm'] = 'yes';
+		$data['um'] = 'no';
+		$data['vm'] = 'yes';
+		$data['vmpwd'] = $exten;
+		try {
+			$this->FreePBX->Core->processQuickCreate($data['tech'], $exten, $data);
+		}catch(Exception $e) {
+			$exten = $exten + 1;
+			$exten = $this->getUnUsedextension($exten);
+		}
+		return $exten;
+	}
+	function searchForId($id, $array) {
+		foreach ($array as $key => $val) {
+		if ($val['uid'] === $id) {
+           return $key;
+       }
+   }
+   return null;
+}
+
+	/* this is for reseting the template from UCP panel by the USER*/
+	public function resetUserTemplateFromUCP($userid){
+		$assigntemplate = $this->getCombinedModuleSettingByID($userid,'ucp|template','assigntemplate');
+		$templateid = $this->getCombinedModuleSettingByID($userid,'ucp|template','templateid');
+		if($assigntemplate == '0'){
+			//template not assigned to use
+			return ['status'=>false,'message'=> 'Template Not assigned'];
+		}
+		if($templateid > 0){
+			return $this->updateUserUcpByTemplate($userid,$templateid);
+		} else {
+			return ['status'=>false,'message'=> 'Template Not assigned'];
+		}
+	}
+
+	/* rebuild given users template settings*/
+	public function rebuildtemplate($users = array(),$tempid){
+		$count = 0;
+		foreach($users as $user){
+			$assigntemplate = $this->getCombinedModuleSettingByID($user,'ucp|template','assigntemplate');
+			$templateid = $this->getCombinedModuleSettingByID($user,'ucp|template','templateid');
+			if($assigntemplate == '0'){
+				continue;// template not assigned
+			}
+			if($templateid ==  $tempid){
+				$re = $this->updateUserUcpByTemplate($user,$tempid);
+				if($re['status']){
+					$count ++;
+				}
+			} 
+		}
+		if($count > 0){
+			return ['status'=>true,'message'=> $count.' User(s)  dashboard widgets reconfigured'];
+		}
+		return ['status'=>false,'message'=> 'widgets not reconfigured'];
+	}
+
+	/*
+	* Return all members associated with the template
+	*/
+	public function getallMemberOfTemplate($tempid){
+		$members = [];
+		$users = $this->getAllUsers();
+		$count = 0;
+		foreach($users as $user){
+			$assigntemplate = $this->getCombinedModuleSettingByID($user['id'],'ucp|template','assigntemplate');
+			$templateid = $this->getCombinedModuleSettingByID($user['id'],'ucp|template','templateid');
+			if($assigntemplate == '0'){
+				continue;// template not assigned
+			}
+			if($templateid ==  $tempid && $user['username'] !='FreePBXUCPTemplateCreator'){
+				$members[] = $user;
+			}
+		}
+		if(count($members) > 0){
+			return ['status'=>true,'members'=> $members];
+		}
+		return ['status'=>false,'message'=> 'Members Not found'];
+	}
+
+	/*
+	* Merge the existing  settings and tempalte settings
+	*/
+	public function mergeTemplateWithExistingUserSettings($userids,$tempid){
+		foreach($userids as $userid){
+			$assigntemplate = $this->getCombinedModuleSettingByID($userid,'ucp|template','assigntemplate');
+			$templateid = $this->getCombinedModuleSettingByID($userid,'ucp|template','templateid');
+			if($assigntemplate == '0'){
+				return ['status'=>false,'message'=> 'Template Not assigned'];
+			}
+			if($templateid ==  $tempid){// this user is already assigned with same template
+				return $this->ucpWidgetsCompaireAndUpdate($userid,$tempid);
+			} 
+		}
+		return ['status'=>false,'message'=> 'Members Not found'];
+	}
+	/*
+	* Compare and update the widgets
+	*/
+	private function ucpWidgetsCompaireAndUpdate($uid,$templateid){
+		//add the side bar dasboards and its widgets
+		$sql = "SELECT a.val, a.type,a.key FROM userman_template_settings a WHERE a.tid = :tid AND `key`='dashboard-simple-layout' ";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':tid' => $templateid));
+		$results = $sth->fetch(PDO::FETCH_ASSOC);
+		if($results) {
+			$usersidebar =  $this->getUCPSideDashboardSettingByID($uid);
+			$this->removeUCPSideDashboardSettingByID($uid);
+			$usersidebarwidgets = json_decode($usersidebar['val'],true);
+			$usersidebarwidgets = is_array($usersidebarwidgets)?$usersidebarwidgets:[];
+			$dashbords = json_decode($results['val'],true);
+			$dasboards = is_array($dasboards)?$dasboards:[];
+			$mergedSettings = $this->mergeUserSettings($usersidebarwidgets,$dashbords);
+			$newsidedash = [];
+			foreach($mergedSettings as $dash){
+				$id = (string)Uuid::uuid4();
+				$name = $dash['name'];
+				$updatedwidget = $this->getUserModulesSettingBasedOnTemplate($dash,$uid);
+				if(!$updatedwidget){
+					//this is not a valid widget for this user
+					continue;
+				}
+				$newsidedash[] = $updatedwidget;
+			}
+			$sidedashboards = json_encode($newsidedash);
+			//insert sidebar dasboard widgets
+			$sql = "INSERT INTO userman_users_settings(`uid`,`module`,`key`,`val`,`type`) VALUES(:uid,'ucp|Global',:key,:val,:type)";
+			$sth = $this->db->prepare($sql);
+			$sth->execute(array(':uid' => $uid, ':key' => $results['key'],':val' => $sidedashboards,':type'=>$results['type']));
+		}
+		// Adding the main dashboards
+		$sql = "SELECT a.val, a.type,a.key FROM userman_template_settings a WHERE a.tid = :tid AND `key`='dashboards' ";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':tid' => $templateid));
+		$results = $sth->fetch(PDO::FETCH_ASSOC);
+		if($results) {
+			$usermaindash =  $this->getUCPMainDashboardSettingByID($uid);
+			$userdash = json_decode($usermaindash['val'],true);
+			$userdash = is_array($userdash)?$userdash:[];
+			$tempdashbords = json_decode($results['val'],true);
+			$tempdashbords = is_array($tempdashbords)?$tempdashbords:[];
+			$mergedSettings = $this->mergeMainDashboards($userdash,$tempdashbords,$templateid,$uid);
+			$this->removeUCPDashboardSettingByID($uid);
+			$newdashbords = [];
+			foreach($mergedSettings['dashwidgets'] as $k => $dash){
+				$sql = "INSERT INTO userman_users_settings(`uid`,`module`,`key`,`val`,`type`) VALUES(:uid,'ucp|Global',:key,:val,:type)";
+				$sth = $this->db->prepare($sql);
+				$key = 'dashboard-layout-'.$k;
+				$jsonval = json_encode($dash);
+				$sth->execute(array(':uid' => $uid, ':key' => $key,':val' => $jsonval,':type'=>'NULL'));
+			}
+				//insert the dasbord
+			$sql = "INSERT INTO userman_users_settings(`uid`,`module`,`key`,`val`,`type`) VALUES(:uid,'ucp|Global',:key,:val,:type)";
+			$sth = $this->db->prepare($sql);
+			$dasboards = json_encode($mergedSettings['dashboard']);
+			$sth->execute(array(':uid' => $uid, ':key' => 'dashboards',':val' =>$dasboards ,':type'=>'json-arr'));
+			return ['status'=>true,'message'=> 'User UCP updated'];
+		}else {
+			return ['status'=>false,'message'=> 'No Dashboards created'];
+		}
+	}
+	private function getUCPSideDashboardSettingByID($uid){
+		$sql = "SELECT * FROM  userman_users_settings WHERE `uid`=:uid AND `module`='ucp|Global' AND `key`='dashboard-simple-layout'";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':uid' => $uid));
+		return $sth->fetch(PDO::FETCH_ASSOC);
+	}
+	private function getUCPMainDashboardSettingByID($uid){
+		$sql = "SELECT * FROM  userman_users_settings WHERE `uid`=:uid AND `module`='ucp|Global' AND `key`='dashboards'";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(':uid' => $uid));
+		return $sth->fetch(PDO::FETCH_ASSOC);
+	}
+	/* Merge the userssettings and templateSettings
+	* Preferece is for users settings
+	*/
+	private function mergeUserSettings($userSettings,$templateSettings){
+		$userSettings = is_array($userSettings)?$userSettings:[];
+		foreach($templateSettings as $wid){
+			$found = false;
+			foreach($userSettings as $uwid){
+				if($uwid['rawname'] == $wid['rawname']){
+					$found = true;
+				}
+			}
+			if(!$found){
+				//lets add to the settings
+				$userSettings[] = $wid;
+			}
+		}
+		return $userSettings;
+	}
+	/* merge the main Dashbord settings*/
+	private function mergeMainDashboards($userSettings=[],$templateSettings=[],$templateid,$uid){
+		$dashbords =[];
+		$dashbordsettings = [];
+		foreach($templateSettings as $dash){
+			$found = false;
+			foreach($userSettings as $udash){
+				if($udash['name'] == $dash['name']){
+					$found = true;
+					$userdashbordid = $udash['id'];
+				}
+			}
+			if(!$found){
+				$id = (string)Uuid::uuid4();
+				$dashbords[] = ['id'=>$id,'name'=>$dash['name']];
+				$layoutkey = 'dashboard-layout-'.$dash['id'];
+				$sql = "select * from userman_template_settings where tid=:tid AND `key`=:key ";
+				$sth = $this->db->prepare($sql);
+				$sth->execute(array(':tid' => $templateid,':key'=>$layoutkey));
+				$wids = $sth->fetch(PDO::FETCH_ASSOC);
+				unset($thiswidget);
+				$thiswidget = [];
+				$widgets = json_decode($wids['val'],true);
+				$widgets = is_array($widgets)?$widgets:[];
+				foreach($widgets as $widget){
+					$updatedwidget = $this->getUserModulesSettingBasedOnTemplate($widget,$uid);
+					if(!$updatedwidget){
+						//this is not a valid widget for this user
+						continue;
+					}
+					$thiswidget[] = $updatedwidget;
+				}
+				$dashbordsettings[$id] = $thiswidget;
+			}else {// found the same dashboard
+				$sql = "select * from userman_template_settings where tid=:tid AND `key`=:key ";
+				$sth = $this->db->prepare($sql);
+				$id = (string)Uuid::uuid4();
+				$dashbords[] = ['id'=>$id,'name'=>$dash['name']];
+				$layoutkey = 'dashboard-layout-'.$dash['id'];
+				$sth->execute(array(':tid' => $templateid,':key'=>$layoutkey));
+				$twids = $sth->fetch(PDO::FETCH_ASSOC);
+				$templatewidgetstoconvert = json_decode($twids['val'],true);
+				unset($templatewidgets);
+				foreach($templatewidgetstoconvert as $widget){
+					$updatedwidget = $this->getUserModulesSettingBasedOnTemplate($widget,$uid);
+					if(!$updatedwidget){
+						//this is not a valid widget for this user
+						continue;
+					}
+					$templatewidgets[] = $updatedwidget;
+				}
+				//get the user dashbord settings
+				$sql = "select * from userman_users_settings where uid=:uid AND `key`=:key ";
+				$sth = $this->db->prepare($sql);
+				$layoutkey = 'dashboard-layout-'.$userdashbordid;
+				$sth->execute(array(':uid' => $uid,':key'=>$layoutkey));
+				$uwids = $sth->fetch(PDO::FETCH_ASSOC);
+				$userwidgets = json_decode($uwids['val'],true);
+				$mergedWidgets = $this->mergeUserSettings($userwidgets,$templatewidgets);
+				$dashbordsettings[$id] = $mergedWidgets;
+			}
+		}
+		// we have merged based on templates ,Now Lets get the users widgets and 
+		foreach($userSettings as $udash){
+			$found = false;
+			foreach($dashbords as $key => $val){
+				if($udash['name'] == $val['name']){
+					$found = true;
+				}
+			}
+			if(!$found){
+				$sql = "select * from userman_users_settings where uid=:uid AND `key`=:key ";
+				$sth = $this->db->prepare($sql);
+				$id = $udash['id'];
+				$widskey = 'dashboard-layout-'.$id;
+				$dashbords[] = ['id'=>$id,'name'=>$udash['name']];
+				$sth->execute(array(':uid' => $uid,':key'=>$widskey));
+				$twids = $sth->fetch(PDO::FETCH_ASSOC);
+				$templatewidgets = json_decode($twids['val'],true);
+				$dashbordsettings[$id]= $templatewidgets;
+			}
+		}
+		return ['dashboard'=>$dashbords,'dashwidgets'=>$dashbordsettings];
+	}
 }
