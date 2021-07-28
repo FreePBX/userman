@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-06-30 05:22+0000\n"
+"POT-Creation-Date: 2021-07-28 02:51+0000\n"
 "PO-Revision-Date: 2016-12-21 00:22+0200\n"
 "Last-Translator: Alexander <alexander.schley@paranagua.pr.gov.br>\n"
 "Language-Team: Portuguese (Brazil) <http://weblate.freepbx.org/projects/"
@@ -44,7 +44,7 @@ msgstr ""
 "RestAPI são exemplos desse tipo de módulos. Em %s 12, o novo Painel de "
 "Controle de Usuários também utiliza o Gerenciador de Usuários."
 
-#: Userman.class.php:2974
+#: Userman.class.php:2981
 #, php-format
 msgid "%s records failed validation"
 msgstr "%s registros falharam a validação"
@@ -260,8 +260,8 @@ msgstr "Apagando..."
 msgid "Department"
 msgstr "Departamento"
 
-#: Userman.class.php:2920 Userman.class.php:2921 Userman.class.php:2946
-#: Userman.class.php:2947 views/rnav.php:14 views/rnav.php:31
+#: Userman.class.php:2927 Userman.class.php:2928 Userman.class.php:2953
+#: Userman.class.php:2954 views/rnav.php:14 views/rnav.php:31
 #: views/users.php:84 views/welcome.php:60 views/welcome.php:90
 msgid "Description"
 msgstr "Descrição"
@@ -313,7 +313,7 @@ msgid ""
 "then if no match was found waterfall down the list in the order chosen below"
 msgstr ""
 
-#: Userman.class.php:2932 Userman.class.php:2933 views/openldap.php:144
+#: Userman.class.php:2939 Userman.class.php:2940 views/openldap.php:144
 #: views/users.php:276 views/welcome.php:56
 msgid "Display Name"
 msgstr "Nome de Exibição"
@@ -390,7 +390,7 @@ msgstr ""
 msgid "Fax Phone Number"
 msgstr "Número de Telefone do Fax"
 
-#: Userman.class.php:2924 Userman.class.php:2925 views/users.php:228
+#: Userman.class.php:2931 Userman.class.php:2932 views/users.php:228
 #: views/welcome.php:57
 msgid "First Name"
 msgstr "Primeiro Nome"
@@ -445,7 +445,7 @@ msgstr "Detalhes de Grupo"
 msgid "Group Does Not Exist"
 msgstr "Grupo Não Existe"
 
-#: Userman.class.php:2942 Userman.class.php:2943 views/groups.php:60
+#: Userman.class.php:2949 Userman.class.php:2950 views/groups.php:60
 #: views/rnav.php:30 views/welcome.php:89
 msgid "Group Name"
 msgstr "Nome do Grupo"
@@ -475,7 +475,7 @@ msgstr "Grupo Eliminado com Êxito"
 msgid "Group Successfully Updated"
 msgstr "Grupo Atualizado com Sucesso"
 
-#: Userman.class.php:3102
+#: Userman.class.php:3109
 msgid "Group already exists"
 msgstr "Grupo já existe"
 
@@ -663,7 +663,7 @@ msgstr ""
 msgid "Language for this user"
 msgstr ""
 
-#: Userman.class.php:2928 Userman.class.php:2929 views/users.php:252
+#: Userman.class.php:2935 Userman.class.php:2936 views/users.php:252
 #: views/welcome.php:58
 msgid "Last Name"
 msgstr "Sobrenome"
@@ -713,7 +713,7 @@ msgstr ""
 msgid "Login Details"
 msgstr "Detalhes de Login"
 
-#: Userman.class.php:2906 Userman.class.php:2907 views/users.php:60
+#: Userman.class.php:2913 Userman.class.php:2914 views/users.php:60
 msgid "Login Name"
 msgstr "Nome de Login"
 
@@ -739,7 +739,7 @@ msgstr "Microsoft Active Directory"
 msgid "Microsoft Active Directory (Legacy)"
 msgstr ""
 
-#: Userman.class.php:2703
+#: Userman.class.php:2710
 msgid "Migrated user from voicemail"
 msgstr "Usuário Migrado do Correio de Voz"
 
@@ -791,7 +791,7 @@ msgstr "Não Conectado"
 msgid "Not all of the connection parameters have been filled out"
 msgstr "Nem todos os parâmetros de conexão foram preenchidos"
 
-#: Userman.class.php:2751
+#: Userman.class.php:2758
 msgid "Obfuscated. To reset use the reset link in this email"
 msgstr "Ofuscada. Para redefinir, use o link de redefinição neste e-mail"
 
@@ -815,13 +815,13 @@ msgstr "Outras Configurações"
 msgid "PBX Internal Directory"
 msgstr ""
 
-#: Userman.class.php:2911 views/msad.php:73 views/msad2.php:99
+#: Userman.class.php:2918 views/msad.php:73 views/msad2.php:99
 #: views/openldap.php:100 views/openldap2.php:99 views/passwordmodal.php:16
 #: views/users.php:109
 msgid "Password"
 msgstr "Senha"
 
-#: Userman.class.php:2912
+#: Userman.class.php:2919
 msgid "Password - plaintext"
 msgstr "Senha - texto sem formatação"
 
@@ -841,7 +841,7 @@ msgstr ""
 msgid "Please select a valid username for New User Creation"
 msgstr "Selecione um nome de usuário válido para a criação de novo usuário"
 
-#: Userman.class.php:2995 Userman.class.php:3078
+#: Userman.class.php:3002 Userman.class.php:3085
 msgid "Please set a default directory in User Manager"
 msgstr ""
 
@@ -858,7 +858,7 @@ msgstr "O nome de grupo anterior não pode ficar em branco"
 msgid "Previous Username can not be blank"
 msgstr "O nome de usuário anterior não pode ficar em branco"
 
-#: Userman.class.php:2916
+#: Userman.class.php:2923
 msgid "Primary Extension"
 msgstr "Ramal Primário"
 
@@ -866,7 +866,7 @@ msgstr "Ramal Primário"
 msgid "Primary Group"
 msgstr ""
 
-#: Userman.class.php:2917 views/users.php:195
+#: Userman.class.php:2924 views/users.php:195
 msgid "Primary Linked Extension"
 msgstr "Ramal Linkado Primário"
 
@@ -981,7 +981,7 @@ msgstr "Enviar E-mail para Criação de Novo Usuário Externo"
 msgid "Set Password"
 msgstr "Configurar Senha"
 
-#: Userman.class.php:2749
+#: Userman.class.php:2756
 msgid "Set by your administrator"
 msgstr "Definido pelo seu administrador"
 
@@ -1367,7 +1367,7 @@ msgid ""
 "purposes."
 msgstr ""
 
-#: Userman.class.php:3071 Userman.class.php:3135
+#: Userman.class.php:3078 Userman.class.php:3142
 msgid "This authentication driver does not allow importing"
 msgstr "Esse controlador de autenticação não permite a importação"
 
@@ -1584,7 +1584,7 @@ msgstr "Módulo de Gerenciador de Usuários"
 msgid "User Manager"
 msgstr "Gerenciador de Usuários"
 
-#: Userman.class.php:2888 Userman.class.php:2889 views/quickCreate.php:36
+#: Userman.class.php:2895 Userman.class.php:2896 views/quickCreate.php:36
 msgid "User Manager Groups"
 msgstr "Grupos de Gerenciadores de Usuários"
 
@@ -1592,7 +1592,7 @@ msgstr "Grupos de Gerenciadores de Usuários"
 msgid "User Manager Settings"
 msgstr "Configuração de Gerenciador de Usuários"
 
-#: Userman.class.php:2882 Userman.class.php:2883
+#: Userman.class.php:2889 Userman.class.php:2890
 msgid "User Manager Users"
 msgstr "Usuário do Gerenciador de Usuários"
 
@@ -1616,7 +1616,7 @@ msgstr ""
 msgid "User Work Phone attribute"
 msgstr ""
 
-#: Userman.class.php:3027
+#: Userman.class.php:3034
 msgid "User already exists"
 msgstr "Usuário já existe"
 
@@ -1753,11 +1753,11 @@ msgid ""
 "features that require a login"
 msgstr ""
 
-#: Userman.class.php:2794 views/general.php:108
+#: Userman.class.php:2801 views/general.php:108
 msgid "Your %brand% Account"
 msgstr "A sua conta %brand%"
 
-#: Userman.class.php:3003
+#: Userman.class.php:3010
 msgid "default_extension is required."
 msgstr "default_extension é necessário."
 
@@ -1777,7 +1777,7 @@ msgstr "grupo"
 msgid "group Successfully Added"
 msgstr "grupo Adicionado com Sucesso"
 
-#: Userman.class.php:3083
+#: Userman.class.php:3090
 msgid "groupname is required."
 msgstr "Nome do grupo é obrigatório."
 
@@ -1785,7 +1785,7 @@ msgstr "Nome do grupo é obrigatório."
 msgid "groups"
 msgstr "grupos"
 
-#: Userman.class.php:3045
+#: Userman.class.php:3052
 msgid "password is required."
 msgstr "senha é necessária."
 
@@ -1793,7 +1793,7 @@ msgstr "senha é necessária."
 msgid "user"
 msgstr "usuário"
 
-#: Userman.class.php:3000
+#: Userman.class.php:3007
 msgid "username is required."
 msgstr "nome de usuário é necessário."
 
