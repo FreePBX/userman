@@ -78,6 +78,10 @@ class Restore Extends Base\RestoreBase{
 				}
 				$this->addDataToTableFromArray($table,$cleandata);
 			}
+
+			if ($table == 'userman_template_settings' || $table == 'userman_ucp_templates') {
+				$this->addDataToTableFromArray($table, $datas);
+			}
 		}
 	}
 }
