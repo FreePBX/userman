@@ -2365,7 +2365,8 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * @return mixed false if nothing, else array
 	 */
 	public function getModuleSettingByID($uid,$module,$setting,$null=false,$cached=true) {
-		$settings = $this->getAllModuleUserSettings($cached,$module);
+		$settings = $this->getAllModuleUserSettings($cached);
+
 		if(isset($settings[$uid][$module][$setting])) {
 			return $settings[$uid][$module][$setting];
 		}
@@ -2377,22 +2378,14 @@ class Userman extends \FreePBX_Helpers implements \BMO {
 	 * Get all Module User Settings
 	 * @return array The settings as an ASSOC array
 	 */
-	private function getAllModuleUserSettings($cached = true,$module = '') {
+	private function getAllModuleUserSettings($cached = true) {
 		if($cached && !empty($this->moduleUserSettingsCache)) {
 			return $this->moduleUserSettingsCache;
 		}
-
-		if($module == ''){
-			$sql = "SELECT * FROM ".$this->userSettingsTable;
-			$sth = $this->db->prepare($sql);
-			$sth->execute();
-		}else{
-			$sql = "SELECT * FROM ".$this->userSettingsTable ." WHERE module = ?";
-			$sth = $this->db->prepare($sql);
-			$sth->execute(array($module));
-		}
-
-		$results = $sth->fetchAll(PDO::FETCH_ASSOC);
+		$sql = "SELECT * FROM ".$this->userSettingsTable;
+		$sth = $this->db->prepare($sql);
+		$sth->execute();
+		$results = $sth->fetchAll(\PDO::FETCH_ASSOC);
 		$final = array();
 		foreach($results as $r) {
 			$val = ($r['type'] == 'json-arr' && $this->isJson($r['val'])) ? json_decode($r['val'],true) : $r['val'];
