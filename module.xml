@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>15.0.45</version>
+	<version>15.0.46</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -11,6 +11,7 @@
 	</description>
   	<more-info>https://wiki.freepbx.org/display/FPG/User+Management+Module</more-info>
 	<changelog>
+		*15.0.46* FREEPBX-22700 FREEPBX-22702 UCP template install and Ldap directory issue 
 		*15.0.45* FREEI-3688 added condition to restore new ucp tables data ('userman_template_settings' and 'userman_ucp_templates') 
 		*15.0.44* Packaging of ver 15.0.44
 		*15.0.43* SMOBILE-294 select by module from userman-settings 
