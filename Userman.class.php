@@ -2751,7 +2751,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 		$sql = "SELECT * FROM ".$this->userSettingsTable;
 		$sth = $this->db->prepare($sql);
 		$sth->execute();
-		$results = $sth->fetchAll(PDO::FETCH_ASSOC);
+		$results = $sth->fetchAll(\PDO::FETCH_ASSOC);
 		$final = array();
 		foreach($results as $r) {
 			$val = ($r['type'] == 'json-arr' && $this->isJson($r['val'])) ? json_decode($r['val'],true) : $r['val'];
