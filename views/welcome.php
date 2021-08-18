@@ -31,7 +31,7 @@
 							<div role="tabpanel" id="users" class="tab-pane display active">
 								<div class="table-responsive">
 									<div id="toolbar-users">
-										<a href="<?php echo _(sizeof($directories)==1 ? '?display=userman&action=adduser&directory=1' : '#'); ?>" id="add-users" class="btn btn-add" data-type="users" data-section="users"<?php echo _(sizeof($directories)==1 ? '':' disabled title="Select Directory to enable \'Add\' Button"')?>>
+										<a href="<?php echo _(sizeof($directories)==1 ? '?display=userman&action=adduser&directory='.$directory['id'] : '#'); ?>" id="add-users" class="btn btn-add" data-type="users" data-section="users"<?php echo _(sizeof($directories)==1 ? '':' disabled title="Select Directory to enable \'Add\' Button"')?>>
 											<i class="fa fa-user-plus"></i> <span><?php echo _('Add')?></span>
 										</a>
 										<button id="remove-users" class="btn btn-danger<?php echo _(sizeof($directories)==1 ? ' btn-remove':''); ?>" disabled data-type="users" data-section="users"<?php echo _(sizeof($directories)==1 ? '':' disabled title="Select Directory to enable \'Delete\' Button"')?>>
