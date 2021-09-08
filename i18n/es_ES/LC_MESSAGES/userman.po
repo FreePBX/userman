@@ -10,9 +10,10 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-30 05:36+0000\n"
-"PO-Revision-Date: 2020-08-29 00:00+0000\n"
+"PO-Revision-Date: 2021-08-05 16:01+0000\n"
 "Last-Translator: Javier Pastor <jpastor@cerebelum.net>\n"
-"Language-Team: Spanish <http://*/projects/freepbx/userman/es/>\n"
+"Language-Team: Spanish <http://weblate.freepbx.org/projects/freepbx/userman/"
+"es/>\n"
 "Language: es_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -185,7 +186,7 @@ msgstr "DN Base"
 
 #: views/openldap2.php:77
 msgid "Bind DN or Username"
-msgstr ""
+msgstr "Bind DN o Usuario"
 
 #: views/users.php:460
 msgid "Cell Phone Number"
@@ -240,7 +241,7 @@ msgstr "Formato de fecha y hora"
 
 #: views/welcome.php:116
 msgid "Default"
-msgstr ""
+msgstr "Por defecto"
 
 #: views/freepbx.php:7
 msgid "Default Groups"
@@ -828,7 +829,7 @@ msgstr "Otros ajustes"
 
 #: Userman.class.php:145 Userman.class.php:1433
 msgid "PBX Internal Directory"
-msgstr ""
+msgstr "Directorio Interno de PBX"
 
 #: Userman.class.php:2911 views/msad.php:73 views/msad2.php:99
 #: views/openldap.php:100 views/openldap2.php:99 views/passwordmodal.php:16
@@ -943,6 +944,9 @@ msgid ""
 "overridden by Group setting if Allow PBXact Administration Login set to "
 "Inherit."
 msgstr ""
+"Seleccione una página de destino que se utilizará de forma predeterminada. "
+"Esta configuración será anulada por la configuración de Grupo si Permitir "
+"inicio de sesión de administración de PBXact configurado en Heredar."
 
 #: functions.inc/guihooks.php:223 functions.inc/guihooks.php:228
 #: functions.inc/guihooks.php:275
@@ -981,6 +985,10 @@ msgid ""
 "be overridden by Group setting if Allow PBXact Administration Login set to "
 "Inherit."
 msgstr ""
+"Seleccione las secciones de administración a las que este usuario debe tener "
+"acceso. Esta configuración será anulada por la configuración de grupo si "
+"Permitir inicio de sesión de administración de PBXact está configurado en "
+"Heredar."
 
 #: views/freepbx.php:23
 msgid "Select which groups new users are added to when they are created"
@@ -1063,7 +1071,7 @@ msgstr ""
 
 #: views/msad2.php:23
 msgid "The Active Directory secure connection type"
-msgstr ""
+msgstr "El tipo de conexión segura de Active Directory"
 
 #: assets/js/userman.js:445
 msgid "The Browser Language could not be determined"
@@ -1083,10 +1091,13 @@ msgstr ""
 #: views/msad2.php:745 views/openldap2.php:699
 msgid "The LDAP user object class type to use when loading groups."
 msgstr ""
+"El tipo de clase de objeto de usuario LDAP que se utilizará al cargar grupos."
 
 #: views/msad2.php:344 views/openldap2.php:322
 msgid "The LDAP user object class type to use when loading users."
 msgstr ""
+"El tipo de clase de objeto de usuario LDAP que se utilizará al cargar "
+"usuarios."
 
 #: views/openldap.php:200 views/openldap2.php:133
 msgid "The OpenLDAP Base-DN. Usually in the format of DC=example,DC=com"
@@ -1099,7 +1110,7 @@ msgstr ""
 
 #: views/openldap.php:134
 msgid "The OpenLDAP User Identity. Usually is uid"
-msgstr ""
+msgstr "La identidad de usuario de OpenLDAP. Usualmente es uid"
 
 #: views/openldap.php:178
 msgid ""
