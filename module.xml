@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>14.0.18.5</version>
+	<version>14.0.18.6</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -11,6 +11,7 @@
 	</description>
   	<more-info>https://wiki.freepbx.org/display/FPG/User+Management+Module</more-info>
 	<changelog>
+		*14.0.18.6* fixes FREEPBX-22635 
 		*14.0.18.5* SMOBILE-294 select by module from userman-settings 
 		*14.0.18.4* FREEI-3556 
 		*14.0.18.3* Packaging of ver 14.0.18.3
