@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-10 04:30+0000\n"
+"POT-Creation-Date: 2021-09-08 01:39+0000\n"
 "PO-Revision-Date: 2018-10-24 01:00+0000\n"
 "Last-Translator: Bastian Mertgen <b.mertgen@bastian-mertgen.de>\n"
 "Language-Team: German <http://*/projects/freepbx/userman/de/>\n"
@@ -2024,6 +2024,10 @@ msgstr ""
 #: Userman.class.php:3162 views/general.php:108
 msgid "Your %brand% Account"
 msgstr "Ihr %brand% Account"
+
+#: Restore.php:87
+msgid "created TemplateCreator "
+msgstr ""
 
 #: Userman.class.php:3404
 msgid "default_extension is required."

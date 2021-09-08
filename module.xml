@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>16.0.24</version>
+	<version>16.0.25</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -11,6 +11,7 @@
 	</description>
   	<more-info>https://wiki.freepbx.org/display/FPG/User+Management+Module</more-info>
 	<changelog>
+		*16.0.25* FREEPBX-22792 FreePBX 15 Updates and Contact Manager 
 		*16.0.24* FREEI-3765 Add a proper email for template creator 
 		*16.0.23* FREEPBX-22602: Don't transform search query to lowercase 
 		*16.0.22* FREEPBX-22700 FREEPBX-22702 UCP template install and Ldap directory issue 
