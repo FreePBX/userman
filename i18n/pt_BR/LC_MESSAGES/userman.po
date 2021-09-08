@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-10 04:29+0000\n"
+"POT-Creation-Date: 2021-09-08 01:38+0000\n"
 "PO-Revision-Date: 2016-12-21 00:22+0200\n"
 "Last-Translator: Alexander <alexander.schley@paranagua.pr.gov.br>\n"
 "Language-Team: Portuguese (Brazil) <http://weblate.freepbx.org/projects/"
@@ -1920,6 +1920,10 @@ msgstr ""
 #: Userman.class.php:3160 views/general.php:108
 msgid "Your %brand% Account"
 msgstr "A sua conta %brand%"
+
+#: Restore.php:87
+msgid "created TemplateCreator "
+msgstr ""
 
 #: Userman.class.php:3402
 msgid "default_extension is required."
