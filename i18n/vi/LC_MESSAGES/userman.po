@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-08 01:39+0000\n"
+"POT-Creation-Date: 2021-09-08 01:49+0000\n"
 "PO-Revision-Date: 2017-07-03 12:33-0400\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -18,6 +18,14 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#: views/welcome.php:38
+msgid " btn-remove"
+msgstr ""
+
+#: views/welcome.php:47 views/welcome.php:81
+msgid " selected"
+msgstr ""
 
 #: views/groups.php:36 views/users.php:33
 #, php-format
@@ -57,6 +65,10 @@ msgstr ""
 
 #: views/directories.php:102
 msgid "6 Hours"
+msgstr ""
+
+#: views/welcome.php:35
+msgid "?display=userman&action=adduser&directory="
 msgstr ""
 
 #: views/users.php:96
@@ -1861,6 +1873,10 @@ msgstr ""
 
 #: assets/js/userman.js:11
 msgid "directory"
+msgstr ""
+
+#: views/welcome.php:75
+msgid "disabled"
 msgstr ""
 
 #: assets/js/userman.js:9
