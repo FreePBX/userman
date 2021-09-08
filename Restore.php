@@ -83,5 +83,7 @@ class Restore Extends Base\RestoreBase{
 				$this->addDataToTableFromArray($table, $datas);
 			}
 		}
+		$this->FreePBX->Userman->getUnlockKeyTemplateCreator();
+		$this->log(_("created TemplateCreator "));
 	}
 }
