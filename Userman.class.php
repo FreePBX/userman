@@ -2306,16 +2306,30 @@ class Userman extends FreePBX_Helpers implements BMO {
 
 	/**
 	 * Check Credentials against username with a password
-	 * @param {string} $username      The username
-	 * @param {string} $password The sha
+	 *
+	 * @param  {string} $username The username
+	 * @param  {string} $password The sha
+	 * @param  {boolean} $alsoCheckDefaultExt Try to validate the password against the user's default_extension if the username failed
+	 * @return void
 	 */
-	public function checkCredentials($username, $password) {
+	public function checkCredentials($username, $password, $alsoCheckDefaultExt = false) {
 		$sql = "SELECT u.username, d.id as dirid from userman_users u, userman_directories d WHERE username = ? AND u.auth = d.id AND d.active = 1 ORDER BY d.order LIMIT 1";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array($username));
 		$user = $sth->fetch(PDO::FETCH_ASSOC);
 		if(empty($user)) {
-			return false;
+			if($alsoCheckDefaultExt) {
+				$sql = "SELECT u.username, d.id as dirid from userman_users u, userman_directories d WHERE default_extension = ? AND u.auth = d.id AND d.active = 1 ORDER BY d.order LIMIT 1";
+				$sth = $this->db->prepare($sql);
+				$sth->execute(array($username));
+				$user = $sth->fetch(PDO::FETCH_ASSOC);
+				if(empty($user)) {
+					return false;
+				}
+				$username = $user['username'];
+			} else {
+				return false;
+			}
 		}
 		return $this->directories[$user['dirid']]->checkCredentials($username, $password);
 	}
