@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-16 07:07+0000\n"
+"POT-Creation-Date: 2021-09-16 07:11+0000\n"
 "PO-Revision-Date: 2018-10-24 01:00+0000\n"
 "Last-Translator: Bastian Mertgen <b.mertgen@bastian-mertgen.de>\n"
 "Language-Team: German <http://*/projects/freepbx/userman/de/>\n"
@@ -19,10 +19,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 3.0.1\n"
-
-#: views/welcome.php:38
-msgid " btn-remove"
-msgstr ""
 
 #: views/welcome.php:47 views/welcome.php:81
 msgid " selected"
@@ -143,6 +139,10 @@ msgstr "Administrationszugriff"
 msgid "Advanced"
 msgstr "erweitert"
 
+#: assets/js/userman.js:195
+msgid "Alert"
+msgstr ""
+
 #: views/welcome.php:45 views/welcome.php:79
 msgid "All Directories"
 msgstr "Alle Verzeichnisse"
@@ -167,22 +167,22 @@ msgstr ""
 msgid "Apply Changes Bar"
 msgstr "Änderungen anwenden"
 
-#: assets/js/userman.js:527
+#: assets/js/userman.js:530
 msgid "Are you sure rebuild all Users widgets associated with this Template ?"
 msgstr ""
 
-#: assets/js/userman.js:167
+#: assets/js/userman.js:166
 msgid "Are you sure you want to make this directory the system default?"
 msgstr ""
 "Sind Sie sicher, dass Sie dieses Verzeichnis zum Systemstandard machen "
 "möchten?"
 
-#: assets/js/userman.js:109
+#: assets/js/userman.js:108
 #, perl-format
 msgid "Are you sure you wish to delete these %s?"
 msgstr "Wollen Sie diese %s wirklich löschen?"
 
-#: assets/js/userman.js:149
+#: assets/js/userman.js:148
 #, perl-format
 msgid "Are you sure you wish to delete this %s?"
 msgstr "Wollen Sie diesen %s wirklich löschen?"
@@ -289,14 +289,18 @@ msgid "Default Landing Page"
 msgstr ""
 
 #: Userman.class.php:660 views/welcome.php:39 views/welcome.php:76
-#: views/welcome.php:107 views/welcome.php:136 assets/js/userman.js:114
-#: assets/js/userman.js:120
+#: views/welcome.php:107 views/welcome.php:136 assets/js/userman.js:113
+#: assets/js/userman.js:119
 msgid "Delete"
 msgstr "Löschen"
 
-#: assets/js/userman.js:110
+#: assets/js/userman.js:109
 msgid "Deleting..."
 msgstr "Löschen..."
+
+#: assets/js/userman.js:195
+msgid "Deletion is not allowed if a selected item is read-only !!"
+msgstr ""
 
 #: views/users.php:348
 msgid "Department"
@@ -441,7 +445,7 @@ msgstr ""
 msgid "Extension Link Attribute"
 msgstr "Verknüpfungsattribut der Nebenstelle"
 
-#: assets/js/userman.js:408
+#: assets/js/userman.js:412
 msgid "False"
 msgstr "Falsch"
 
@@ -940,7 +944,7 @@ msgstr "Passwort für neue Benutzer"
 msgid "Password can not be blank"
 msgstr "Passwort darf nicht leer sein"
 
-#: assets/js/userman.js:204 assets/js/userman.js:226
+#: assets/js/userman.js:208 assets/js/userman.js:230
 msgid "Please fill all missing fields"
 msgstr "Bitte füllen Sie alle fehlenden Angaben aus"
 
@@ -1199,11 +1203,11 @@ msgstr ""
 msgid "The Active Directory secure connection type"
 msgstr "Art der sicheren Verbindung zum Active-Directory"
 
-#: assets/js/userman.js:473
+#: assets/js/userman.js:476
 msgid "The Browser Language could not be determined"
 msgstr "Die Browser-Sprache konnte nicht bestimmt werden"
 
-#: assets/js/userman.js:493
+#: assets/js/userman.js:496
 msgid "The Browser Timezone could not be determined"
 msgstr "Die Browser-Zeitzone konnte nicht bestimmt werden"
 
@@ -1268,11 +1272,11 @@ msgstr "Die Art der sicheren Verbindung für OpenLDAP"
 msgid "The OpenLDAP username"
 msgstr "Der OpenLDAP-Benutzername"
 
-#: assets/js/userman.js:483
+#: assets/js/userman.js:486
 msgid "The PBX Language is not set"
 msgstr "Die TK-Anlagen Sprache ist nicht definiert"
 
-#: assets/js/userman.js:503
+#: assets/js/userman.js:506
 msgid "The PBX Timezone is not set"
 msgstr "Die TK-Anlagen Zeitzone ist nicht definiert"
 
@@ -1691,7 +1695,7 @@ msgstr "Die Zeitzone dieses Benutzers"
 msgid "Title"
 msgstr "Titel"
 
-#: assets/js/userman.js:408
+#: assets/js/userman.js:412
 msgid "True"
 msgstr "Wahr"
 
@@ -1733,7 +1737,7 @@ msgstr "Attribut für die eindeutige Kennung"
 msgid "Update Group is not defined"
 msgstr "Zu aktualisierende Gruppe ist nicht definiert"
 
-#: views/passwordmodal.php:30 assets/js/userman.js:339
+#: views/passwordmodal.php:30 assets/js/userman.js:343
 msgid "Update Password"
 msgstr "Passwort aktualisieren"
 
@@ -1755,7 +1759,7 @@ msgstr "Benutzer aktualisiert"
 msgid "Updated Voicemail User %s"
 msgstr "Voicemail-Benutzer %s aktualisiert"
 
-#: assets/js/userman.js:343
+#: assets/js/userman.js:347
 msgid "Updating"
 msgstr "Aktualisiere"
 
