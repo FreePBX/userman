@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-16 07:06+0000\n"
+"POT-Creation-Date: 2021-09-16 07:11+0000\n"
 "PO-Revision-Date: 2016-12-21 00:22+0200\n"
 "Last-Translator: Alexander <alexander.schley@paranagua.pr.gov.br>\n"
 "Language-Team: Portuguese (Brazil) <http://weblate.freepbx.org/projects/"
@@ -20,10 +20,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 2.4\n"
-
-#: views/welcome.php:38
-msgid " btn-remove"
-msgstr ""
 
 #: views/welcome.php:47 views/welcome.php:81
 msgid " selected"
@@ -144,6 +140,10 @@ msgstr "Acesso Administração"
 msgid "Advanced"
 msgstr ""
 
+#: assets/js/userman.js:195
+msgid "Alert"
+msgstr ""
+
 #: views/welcome.php:45 views/welcome.php:79
 msgid "All Directories"
 msgstr ""
@@ -166,20 +166,20 @@ msgstr "Ocorreu um erro desconhecido ao tentar atualizar dados do usuário"
 msgid "Apply Changes Bar"
 msgstr "Barra Aplicar Alterações"
 
-#: assets/js/userman.js:527
+#: assets/js/userman.js:530
 msgid "Are you sure rebuild all Users widgets associated with this Template ?"
 msgstr ""
 
-#: assets/js/userman.js:167
+#: assets/js/userman.js:166
 msgid "Are you sure you want to make this directory the system default?"
 msgstr ""
 
-#: assets/js/userman.js:109
+#: assets/js/userman.js:108
 #, perl-format
 msgid "Are you sure you wish to delete these %s?"
 msgstr "Tem certeza de que deseja excluir estes %s?"
 
-#: assets/js/userman.js:149
+#: assets/js/userman.js:148
 #, perl-format
 msgid "Are you sure you wish to delete this %s?"
 msgstr "Tem certeza de que deseja excluir este %s?"
@@ -286,14 +286,18 @@ msgid "Default Landing Page"
 msgstr ""
 
 #: Userman.class.php:660 views/welcome.php:39 views/welcome.php:76
-#: views/welcome.php:107 views/welcome.php:136 assets/js/userman.js:114
-#: assets/js/userman.js:120
+#: views/welcome.php:107 views/welcome.php:136 assets/js/userman.js:113
+#: assets/js/userman.js:119
 msgid "Delete"
 msgstr "Apagar"
 
-#: assets/js/userman.js:110
+#: assets/js/userman.js:109
 msgid "Deleting..."
 msgstr "Apagando..."
+
+#: assets/js/userman.js:195
+msgid "Deletion is not allowed if a selected item is read-only !!"
+msgstr ""
 
 #: views/users.php:348
 msgid "Department"
@@ -434,7 +438,7 @@ msgstr ""
 msgid "Extension Link Attribute"
 msgstr "Atributo do Link de Ramal"
 
-#: assets/js/userman.js:408
+#: assets/js/userman.js:412
 msgid "False"
 msgstr ""
 
@@ -921,7 +925,7 @@ msgstr "Senha para Novo Usuário"
 msgid "Password can not be blank"
 msgstr "A senha não pode ficar em branco"
 
-#: assets/js/userman.js:204 assets/js/userman.js:226
+#: assets/js/userman.js:208 assets/js/userman.js:230
 msgid "Please fill all missing fields"
 msgstr ""
 
@@ -1179,11 +1183,11 @@ msgstr ""
 msgid "The Active Directory secure connection type"
 msgstr ""
 
-#: assets/js/userman.js:473
+#: assets/js/userman.js:476
 msgid "The Browser Language could not be determined"
 msgstr ""
 
-#: assets/js/userman.js:493
+#: assets/js/userman.js:496
 msgid "The Browser Timezone could not be determined"
 msgstr ""
 
@@ -1244,11 +1248,11 @@ msgstr ""
 msgid "The OpenLDAP username"
 msgstr "Nome de Usuário OpenLDAP"
 
-#: assets/js/userman.js:483
+#: assets/js/userman.js:486
 msgid "The PBX Language is not set"
 msgstr ""
 
-#: assets/js/userman.js:503
+#: assets/js/userman.js:506
 msgid "The PBX Timezone is not set"
 msgstr ""
 
@@ -1591,7 +1595,7 @@ msgstr ""
 msgid "Title"
 msgstr "Título"
 
-#: assets/js/userman.js:408
+#: assets/js/userman.js:412
 msgid "True"
 msgstr ""
 
@@ -1633,7 +1637,7 @@ msgstr ""
 msgid "Update Group is not defined"
 msgstr ""
 
-#: views/passwordmodal.php:30 assets/js/userman.js:339
+#: views/passwordmodal.php:30 assets/js/userman.js:343
 msgid "Update Password"
 msgstr "Atualizar Senha"
 
@@ -1655,7 +1659,7 @@ msgstr "Usuário Atualizado"
 msgid "Updated Voicemail User %s"
 msgstr "Usuário de Correio de Voz %s atualizado"
 
-#: assets/js/userman.js:343
+#: assets/js/userman.js:347
 msgid "Updating"
 msgstr "Atualizando"
 

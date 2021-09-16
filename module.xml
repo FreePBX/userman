@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>15.0.51</version>
+	<version>15.0.52</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -11,6 +11,7 @@
 	</description>
   	<more-info>https://wiki.freepbx.org/display/FPG/User+Management+Module</more-info>
 	<changelog>
+		*15.0.52* FREEPBX-22634 FREEPBX-22812 Unable to delete user from user manager without selecting a directory, Add button in Groups Tab allows to add a group if this one is disabled 
 		*15.0.51* SCD-15 modified the checkCredentials method to include default_extension/password validation besides username/password validation 
 		*15.0.50* Fixing FREEPBX-22635 
 		*15.0.49* FREEPBX-22792 FreePBX 15 Updates and Contact Manager 
