@@ -82,7 +82,6 @@ $("#directory-groups").change(function() {
 	if(val === '') {
 		$("#table-groups").bootstrapTable('refresh',{url: 'ajax.php?module=userman&command=getGroups'});
 		$("#table-groups").bootstrapTable('showColumn','auth');
-		$("#remove-groups").addClass("hidden");
 		$("#add-groups").addClass("hidden");
 	} else {
 		$("#add-groups").attr("href","?display=userman&action=addgroup&directory="+val);
@@ -183,6 +182,7 @@ $("table").on("page-change.bs.table", function () {
 	deleteExts.groups = [];
 });
 $("table").on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
+	$(".btn-remove").prop("disabled", false);
 	var toolbar = $(this).data("toolbar"),
 			button = $(toolbar).find(".btn-remove"),
 			buttone = $(toolbar).find(".btn-send"),
@@ -191,8 +191,12 @@ $("table").on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs
 	button.prop('disabled', !$("#"+id).bootstrapTable('getSelections').length);
 	buttone.prop('disabled', !$("#"+id).bootstrapTable('getSelections').length);
 	deleteExts[type] = $.map($("#"+id).bootstrapTable('getSelections'), function (row) {
+		if(row.auth in directoryMapValues && !directoryMapValues[row.auth].permissions.removeUser) {
+			fpbxToast(_("Deletion is not allowed if a selected item is read-only !!"),_("Alert"),'error');
+			$(".btn-remove").prop("disabled", true);
+		}
 		return row.id;
-  });
+  	});
 });
 
 $("#submit").click(function(e) {
@@ -410,7 +414,6 @@ function directoryActive(value, row, index) {
 
 function userActions(value, row, index) {
 	var html = '<a href="?display=userman&amp;action=showuser&amp;user='+row.id+'&amp;directory='+row.auth+'"><i class="fa fa-edit"></i></a>';
-
 	if(row.auth in directoryMapValues && directoryMapValues[row.auth].permissions.changePassword) {
 		html += '<a data-toggle="modal" data-pwuid="'+row.id+'" data-target="#setpw" id="pwmlink'+row.id+'" class="clickable"><i class="fa fa-key"></i></a>';
 	}
