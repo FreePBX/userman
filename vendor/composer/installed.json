@@ -1,5 +1,106 @@
 [
     {
+        "name": "adldap2/adldap2",
+        "version": "v7.0.15",
+        "version_normalized": "7.0.15.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/Adldap2/Adldap2.git",
+            "reference": "d40f983d58dbecd516856786474893c5fb4b7297"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/Adldap2/Adldap2/zipball/d40f983d58dbecd516856786474893c5fb4b7297",
+            "reference": "d40f983d58dbecd516856786474893c5fb4b7297",
+            "shasum": ""
+        },
+        "require": {
+            "ext-ldap": "*",
+            "illuminate/support": "~5.0",
+            "php": ">=5.5.9"
+        },
+        "require-dev": {
+            "mockery/mockery": "~0.9",
+            "phpunit/phpunit": "~4.8|~5.6"
+        },
+        "time": "2017-05-16T13:46:45+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Adldap\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Steve Bauman",
+                "email": "steven_bauman@outlook.com",
+                "role": "Developer"
+            }
+        ],
+        "description": "A PHP LDAP Package for Active Directory Manipulation.",
+        "keywords": [
+            "active directory",
+            "ad",
+            "adLDAP",
+            "adldap2",
+            "directory",
+            "ldap",
+            "windows"
+        ]
+    },
+    {
+        "name": "bjeavons/zxcvbn-php",
+        "version": "0.4.0",
+        "version_normalized": "0.4.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/bjeavons/zxcvbn-php.git",
+            "reference": "7a7e1130c74c715e84c60c27384f657e9574a933"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/bjeavons/zxcvbn-php/zipball/7a7e1130c74c715e84c60c27384f657e9574a933",
+            "reference": "7a7e1130c74c715e84c60c27384f657e9574a933",
+            "shasum": ""
+        },
+        "require": {
+            "php": "^5.6 || ^7.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "*",
+            "satooshi/php-coveralls": "*"
+        },
+        "time": "2018-07-23T05:05:36+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "ZxcvbnPhp\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "See contributors",
+                "homepage": "https://github.com/bjeavons/zxcvbn-php"
+            }
+        ],
+        "description": "Realistic password strength estimation PHP library based on Zxcvbn JS",
+        "homepage": "https://github.com/bjeavons/zxcvbn-php",
+        "keywords": [
+            "password",
+            "zxcvbn"
+        ]
+    },
+    {
         "name": "doctrine/inflector",
         "version": "v1.1.0",
         "version_normalized": "1.1.0.0",
@@ -115,74 +216,24 @@
         ]
     },
     {
-        "name": "paragonie/random_compat",
-        "version": "v2.0.10",
-        "version_normalized": "2.0.10.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/paragonie/random_compat.git",
-            "reference": "634bae8e911eefa89c1abfbf1b66da679ac8f54d"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/paragonie/random_compat/zipball/634bae8e911eefa89c1abfbf1b66da679ac8f54d",
-            "reference": "634bae8e911eefa89c1abfbf1b66da679ac8f54d",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.2.0"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "4.*|5.*"
-        },
-        "suggest": {
-            "ext-libsodium": "Provides a modern crypto API that can be used to generate random bytes."
-        },
-        "time": "2017-03-13T16:27:32+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "files": [
-                "lib/random.php"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Paragon Initiative Enterprises",
-                "email": "security@paragonie.com",
-                "homepage": "https://paragonie.com"
-            }
-        ],
-        "description": "PHP 5.x polyfill for random_bytes() and random_int() from PHP 7",
-        "keywords": [
-            "csprng",
-            "pseudorandom",
-            "random"
-        ]
-    },
-    {
         "name": "illuminate/contracts",
-        "version": "v5.4.19",
-        "version_normalized": "5.4.19.0",
+        "version": "v5.4.36",
+        "version_normalized": "5.4.36.0",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/contracts.git",
-            "reference": "ab2825726bee46a67c8cc66789852189dbef74a9"
+            "reference": "67f642e018f3e95fb0b2ebffc206c3200391b1ab"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/illuminate/contracts/zipball/ab2825726bee46a67c8cc66789852189dbef74a9",
-            "reference": "ab2825726bee46a67c8cc66789852189dbef74a9",
+            "url": "https://api.github.com/repos/illuminate/contracts/zipball/67f642e018f3e95fb0b2ebffc206c3200391b1ab",
+            "reference": "67f642e018f3e95fb0b2ebffc206c3200391b1ab",
             "shasum": ""
         },
         "require": {
             "php": ">=5.6.4"
         },
-        "time": "2017-03-29T13:17:47+00:00",
+        "time": "2017-08-26T23:56:53+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -210,21 +261,21 @@
     },
     {
         "name": "illuminate/support",
-        "version": "v5.4.19",
-        "version_normalized": "5.4.19.0",
+        "version": "v5.4.36",
+        "version_normalized": "5.4.36.0",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/support.git",
-            "reference": "b8cb37e15331c59da51c8ee5838038baa22d7955"
+            "reference": "feab1d1495fd6d38970bd6c83586ba2ace8f299a"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/illuminate/support/zipball/b8cb37e15331c59da51c8ee5838038baa22d7955",
-            "reference": "b8cb37e15331c59da51c8ee5838038baa22d7955",
+            "url": "https://api.github.com/repos/illuminate/support/zipball/feab1d1495fd6d38970bd6c83586ba2ace8f299a",
+            "reference": "feab1d1495fd6d38970bd6c83586ba2ace8f299a",
             "shasum": ""
         },
         "require": {
-            "doctrine/inflector": "~1.0",
+            "doctrine/inflector": "~1.1",
             "ext-mbstring": "*",
             "illuminate/contracts": "5.4.*",
             "paragonie/random_compat": "~1.4|~2.0",
@@ -238,7 +289,7 @@
             "symfony/process": "Required to use the composer class (~3.2).",
             "symfony/var-dumper": "Required to use the dd function (~3.2)."
         },
-        "time": "2017-04-09T14:34:57+00:00",
+        "time": "2017-08-15T13:25:41+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -268,36 +319,36 @@
         "homepage": "https://laravel.com"
     },
     {
-        "name": "adldap2/adldap2",
-        "version": "v7.0.15",
-        "version_normalized": "7.0.15.0",
+        "name": "paragonie/random_compat",
+        "version": "v2.0.20",
+        "version_normalized": "2.0.20.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/Adldap2/Adldap2.git",
-            "reference": "d40f983d58dbecd516856786474893c5fb4b7297"
+            "url": "https://github.com/paragonie/random_compat.git",
+            "reference": "0f1f60250fccffeaf5dda91eea1c018aed1adc2a"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/Adldap2/Adldap2/zipball/d40f983d58dbecd516856786474893c5fb4b7297",
-            "reference": "d40f983d58dbecd516856786474893c5fb4b7297",
+            "url": "https://api.github.com/repos/paragonie/random_compat/zipball/0f1f60250fccffeaf5dda91eea1c018aed1adc2a",
+            "reference": "0f1f60250fccffeaf5dda91eea1c018aed1adc2a",
             "shasum": ""
         },
         "require": {
-            "ext-ldap": "*",
-            "illuminate/support": "~5.0",
-            "php": ">=5.5.9"
+            "php": ">=5.2.0"
         },
         "require-dev": {
-            "mockery/mockery": "~0.9",
-            "phpunit/phpunit": "~4.8|~5.6"
+            "phpunit/phpunit": "4.*|5.*"
         },
-        "time": "2017-05-16T13:46:45+00:00",
+        "suggest": {
+            "ext-libsodium": "Provides a modern crypto API that can be used to generate random bytes."
+        },
+        "time": "2021-04-17T09:33:01+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
-            "psr-4": {
-                "Adldap\\": "src/"
-            }
+            "files": [
+                "lib/random.php"
+            ]
         },
         "notification-url": "https://packagist.org/downloads/",
         "license": [
@@ -305,20 +356,17 @@
         ],
         "authors": [
             {
-                "name": "Steve Bauman",
-                "email": "steven_bauman@outlook.com",
-                "role": "Developer"
+                "name": "Paragon Initiative Enterprises",
+                "email": "security@paragonie.com",
+                "homepage": "https://paragonie.com"
             }
         ],
-        "description": "A PHP LDAP Package for Active Directory Manipulation.",
+        "description": "PHP 5.x polyfill for random_bytes() and random_int() from PHP 7",
         "keywords": [
-            "active directory",
-            "ad",
-            "adLDAP",
-            "adldap2",
-            "directory",
-            "ldap",
-            "windows"
+            "csprng",
+            "polyfill",
+            "pseudorandom",
+            "random"
         ]
     }
 ]
