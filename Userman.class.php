@@ -980,6 +980,11 @@ class Userman extends FreePBX_Helpers implements BMO {
 				$autoEmail = is_null($autoEmail) ? true : $autoEmail;
 				$remoteips = $this->getConfig('remoteips');
 				$remoteips = is_array($remoteips) ? implode(",", $remoteips) : "";
+				$templatecreatorid = $this->getTemplateCreator();
+				$allgenratebutton = false;
+				if($templatecreatorid ==false){
+					$allgenratebutton = true;
+				}
 				$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https" : "http";
 				$host = $protocol.'://'.$_SERVER["SERVER_NAME"];
 				$html .= load_view(
@@ -1003,7 +1008,8 @@ class Userman extends FreePBX_Helpers implements BMO {
 						"emailbody" => $emailbody,
 						"emailsubject" => $emailsubject,
 						"mailtype" => $mailtype,
-						"dirwarn" => $dirwarn
+						"dirwarn" => $dirwarn,
+						"allgenratebutton" => $allgenratebutton
 					)
 				);
 			break;
@@ -1084,6 +1090,8 @@ class Userman extends FreePBX_Helpers implements BMO {
 			case "email":
 			case "getUcpTemplates":
 			case "redirectUCP":
+			case "generatetemplatecreator":
+			case "deletetemplatecreator":
 			case "rebuildtemplate":
 				return true;
 			break;
@@ -1140,15 +1148,24 @@ class Userman extends FreePBX_Helpers implements BMO {
 			break;
 			break;
 			case "redirectUCP":
-				if(!empty($request['id']) && !empty($request['key'])) {
+				if(!empty($request['id']) && $request['key'] != 'false') {
 					$uID = $this->getUidFromUnlockkey($request['key']);
 					if(!empty($uID)) {
 						$ret = $this->updateUserUcpByTemplate($uID, $request['id']);
 						return array("status" => true);
 					}
-					return array("status" => false, 'message'=> 'Error! Something went wrong');
+					return array("status" => false, 'message'=> 'Please Generate Generic Template to View /Edit Template');
+				}else if(!empty($request['id']) && $request['key'] == 'false') {
+					$uID = $this->getTemplateCreator();
+					$key = $this->getUnlockKeyTemplateCreator();
+					if($uID != false) {
+						$ret = $this->updateUserUcpByTemplate($uID, $request['id']);
+						return array("status" => true,'key'=>$key);
+					}
+					return array("status" => false, 'message'=> 'Please Create Generic Template to View /Edit Template');
+				}else {
+					return array("status" => false, 'message'=> 'Please Create Generic Template to View /Edit Template');
 				}
-				return array("status" => false, 'message'=> 'Error! Something went wrong');
 			break;
 			case "rebuildtemplate":
 				if(!empty($request['templateid'])){
@@ -1193,6 +1210,10 @@ class Userman extends FreePBX_Helpers implements BMO {
 				return $this->getAllGroups($directory);
 			case "getUcpTemplates":
 				return $this->getAllUcpTemplates();
+			case "deletetemplatecreator":
+				return $this->deletetemplatecreator();
+			case "generatetemplatecreator":
+				return $this->generatetemplatecreator();
 			case "email":
 				//FREEPBX-15304 Send email to multiple selected users only sends to the first
 				$sendmail = false;
@@ -3804,8 +3825,20 @@ class Userman extends FreePBX_Helpers implements BMO {
 		return !empty($dir['id']) ? $this->getDirectoryByID($dir['id']) :  $this->getDefaultDirectory();;
 	}
 
-	/*Generate a User for Template creation,view/edit */
-	public function generateTemplateCreatorUser($unusedexten){
+	/* delete template creator user */
+	public function deletetemplatecreator(){
+		$uid = $this->getTemplateCreator();
+		$unusedexten = $this->getUnUsedextension();
+		$this->FreePBX->Core->delDevice($unusedexten);
+		$this->FreePBX->Core->delUser($unusedexten);
+		$status = $this->deleteUserByID($uid);
+		$this->delConfig('unlockkey','templatecreator');
+		return ['status'=>$status,'message'=> 'Deleted User and Device'];
+	}
+
+/*Generate a User for Template creation,view/edit */
+	public function generateTemplateCreator(){
+		$unusedexten = $this->getUnUsedextension();
 		$directory = $this->getFreepbxDriverDirectory();
 		$groupid = 1;
 		$email = $this->getNotificationEmail();
@@ -3843,37 +3876,37 @@ class Userman extends FreePBX_Helpers implements BMO {
 				}
 				$sth->execute(array($uid,$row['module'],$row['key'],$val,$row['type']));
 			}
-			return $uid;
-		}else{
-			//retun the existing FreePBXUCPTemplateCreator id 
-			$sql ="select id,default_extension from userman_users where username ='FreePBXUCPTemplateCreator'";
-			$sth = $this->db->prepare($sql);
-			$sth->execute();
-			$result = $sth->fetch(PDO::FETCH_ASSOC);
-			if($result['id']){
-				if($result['default_extension'] == $unusedexten){
-					return $result['id'];
-				} else {
-					$sql ="UPDATE userman_users SET `default_extension`= ?  where `id` = ?";
-					$sth = $this->db->prepare($sql);
-					$sth->execute(array($unusedexten,$result['id']));
-				}
-			}
-			return false;
+			return ['status'=>true,'uid'=>$uid,'message'=>'User Created'];
+		}else {
+			return ['status'=>false,'message'=>'Not able to create User under'];
 		}
+	}
+
+	/*Generate a User for Template creation,view/edit */
+	public function getTemplateCreator(){
+		$sql ="select id,default_extension from userman_users where username ='FreePBXUCPTemplateCreator'";
+		$sth = $this->db->prepare($sql);
+		$sth->execute();
+		$result = $sth->fetch(PDO::FETCH_ASSOC);
+		if($result['id']){
+			return $result['id'];
+		}
+		return false;
 	}
 
 	/* set the key in kvstore for the template creator*/
 	public function getUnlockKeyTemplateCreator(){
-		$unusedexten = $this->getUnUsedextension();
-		$uid = $this->generateTemplateCreatorUser($unusedexten);
-		if(!$key = $this->getConfig('unlockkey','templatecreator')){
-			//we already generated 
-			$key = (string)Uuid::uuid4();
-			$this->setConfig('unlockkey',$key,'templatecreator');
-			$this->setConfig($key,$uid,'templatecreator');
+		$uid = $this->getTemplateCreator();
+		if($uid != false){
+			if(!$key = $this->getConfig('unlockkey','templatecreator')){
+				//we already generated
+				$key = (string)Uuid::uuid4();
+				$this->setConfig('unlockkey',$key,'templatecreator');
+				$this->setConfig($key,$uid,'templatecreator');
+			}
+			return $key;
 		}
-		return $key;
+		return false;
 	}
 
 	/*This will be called from ucp to login to ucp with key */
