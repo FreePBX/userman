@@ -21,7 +21,8 @@ class Userman extends Command {
 				new InputOption('syncall', null, InputOption::VALUE_NONE, _('Syncronize all directories')),
 				new InputOption('sync', null, InputOption::VALUE_REQUIRED, _('Syncronize a single directory by id (obtained from --list)')),
 				new InputOption('force', null, InputOption::VALUE_NONE, _('Force syncronization')),
-				new InputOption('list', null, InputOption::VALUE_NONE, _('List directories'))
+				new InputOption('list', null, InputOption::VALUE_NONE, _('List directories')),
+				new InputOption('deletegenerictemplate', null, InputOption::VALUE_NONE, _('Delete generic templates user'))
 			));
 	}
 	protected function execute(InputInterface $input, OutputInterface $output){
@@ -53,6 +54,18 @@ class Userman extends Command {
 				$this->syncDirectory($directory,$output,$force);
 			}
 			$this->removeLock();
+		}
+		if($input->getOption('deletegenerictemplate')) {
+			try {
+				$status = $userman->deletetemplatecreator();
+			} catch(\Exception $e) {
+				$output->writeln("\t<error>".$e->getMessage()."</error>");
+				$output->writeln("\t Already Deleted ");
+			}
+			if($status['status']){
+				$output->writeln("Removed the Generic Template User");
+			}
+			exit(-1);
 		}
 		if($input->getOption('sync')) {
 			$this->setLock();
