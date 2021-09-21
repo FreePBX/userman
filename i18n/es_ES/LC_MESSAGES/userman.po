@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-21 07:34+0000\n"
+"POT-Creation-Date: 2021-09-21 09:05+0000\n"
 "PO-Revision-Date: 2016-12-11 08:33+0200\n"
 "Last-Translator: Ernesto <ecasas@sangoma.com>\n"
 "Language-Team: Spanish <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -168,11 +168,11 @@ msgstr ""
 msgid "Apply Changes Bar"
 msgstr "Barra Aplicar Cambios"
 
-#: assets/js/userman.js:530
+#: assets/js/userman.js:534
 msgid "Are you sure rebuild all Users widgets associated with this Template ?"
 msgstr ""
 
-#: assets/js/userman.js:565
+#: assets/js/userman.js:569
 msgid "Are you sure to delete this Generic template ?"
 msgstr ""
 
@@ -456,7 +456,7 @@ msgstr ""
 msgid "Extension Link Attribute"
 msgstr "Atributo de enlace de extensión"
 
-#: assets/js/userman.js:412
+#: assets/js/userman.js:416
 msgid "False"
 msgstr ""
 
@@ -1203,11 +1203,11 @@ msgstr ""
 msgid "The Active Directory secure connection type"
 msgstr ""
 
-#: assets/js/userman.js:476
+#: assets/js/userman.js:480
 msgid "The Browser Language could not be determined"
 msgstr ""
 
-#: assets/js/userman.js:496
+#: assets/js/userman.js:500
 msgid "The Browser Timezone could not be determined"
 msgstr ""
 
@@ -1270,11 +1270,11 @@ msgstr ""
 msgid "The OpenLDAP username"
 msgstr "usuario OpenLDAP"
 
-#: assets/js/userman.js:486
+#: assets/js/userman.js:490
 msgid "The PBX Language is not set"
 msgstr ""
 
-#: assets/js/userman.js:506
+#: assets/js/userman.js:510
 msgid "The PBX Timezone is not set"
 msgstr ""
 
@@ -1617,7 +1617,7 @@ msgstr ""
 msgid "Title"
 msgstr "Titulo"
 
-#: assets/js/userman.js:412
+#: assets/js/userman.js:416
 msgid "True"
 msgstr ""
 
