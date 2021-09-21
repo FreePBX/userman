@@ -321,7 +321,7 @@ $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
 			$("#action-bar").addClass("hidden");
 			$('input[name="submit"]').addClass('hidden');
 			$('input[name="reset"]').addClass('hidden');
-			onlyOneGrous();
+			onlyOneGroup();
 		break;
 		case "#ucptemplates":
 			$("#action-bar").addClass("hidden");
@@ -390,7 +390,7 @@ $('#defaultextension').multiselect({
 	enableCaseInsensitiveFiltering: true
 });
 
-function onlyOneGrous(){
+function onlyOneGroup(){
 	if($("#directory-groups option").length == 2 && $("#directory-groups option:selected" ).text() != ""){
 		$("#add-groups").removeClass("hidden");
 	}	
