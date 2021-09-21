@@ -321,6 +321,7 @@ $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
 			$("#action-bar").addClass("hidden");
 			$('input[name="submit"]').addClass('hidden');
 			$('input[name="reset"]').addClass('hidden');
+			onlyOneGroup();
 		break;
 		case "#ucptemplates":
 			$("#action-bar").addClass("hidden");
@@ -337,7 +338,6 @@ $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
 //Making Password Modal work
 $(document).on("click", 'a[id^="pwmlink"]', function(){
 	var pwuid = $(this).data('pwuid');
-	console.log(pwuid);
 	$("#pwuid").val(pwuid);
 	$("#pwsub").attr("disabled", false);
 	$("#pwsub").html(_("Update Password"));
@@ -359,9 +359,7 @@ $("#pwsub").on("click", function(){
 		type: "GET",
 		dataType: "json",
 		success: function(data){
-			console.log(data);
-				button.html(data.message);
-
+			button.html(data.message);
 		},
 		error: function(xhr, status, e){
 			console.dir(xhr);
@@ -391,6 +389,12 @@ $('#defaultextension').multiselect({
 	enableFiltering: true,
 	enableCaseInsensitiveFiltering: true
 });
+
+function onlyOneGroup(){
+	if($("#directory-groups option").length == 2 && $("#directory-groups option:selected" ).text() != ""){
+		$("#add-groups").removeClass("hidden");
+	}	
+}
 
 function directoryMap(value, row, index) {
 	if (value in directoryMapValues) {
