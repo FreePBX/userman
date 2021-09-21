@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'ZxcvbnPhp\\' => array($vendorDir . '/bjeavons/zxcvbn-php/src'),
     'Illuminate\\Support\\' => array($vendorDir . '/illuminate/support'),
     'Illuminate\\Contracts\\' => array($vendorDir . '/illuminate/contracts'),
     'Adldap\\' => array($vendorDir . '/adldap2/adldap2/src'),
