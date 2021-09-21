@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-21 07:38+0000\n"
+"POT-Creation-Date: 2021-09-21 09:07+0000\n"
 "PO-Revision-Date: 2018-10-24 01:00+0000\n"
 "Last-Translator: Bastian Mertgen <b.mertgen@bastian-mertgen.de>\n"
 "Language-Team: German <http://*/projects/freepbx/userman/de/>\n"
@@ -167,11 +167,11 @@ msgstr ""
 msgid "Apply Changes Bar"
 msgstr "Änderungen anwenden"
 
-#: assets/js/userman.js:530
+#: assets/js/userman.js:534
 msgid "Are you sure rebuild all Users widgets associated with this Template ?"
 msgstr ""
 
-#: assets/js/userman.js:565
+#: assets/js/userman.js:569
 msgid "Are you sure to delete this Generic template ?"
 msgstr ""
 
@@ -461,7 +461,7 @@ msgstr ""
 msgid "Extension Link Attribute"
 msgstr "Verknüpfungsattribut der Nebenstelle"
 
-#: assets/js/userman.js:412
+#: assets/js/userman.js:416
 msgid "False"
 msgstr "Falsch"
 
@@ -1219,11 +1219,11 @@ msgstr ""
 msgid "The Active Directory secure connection type"
 msgstr "Art der sicheren Verbindung zum Active-Directory"
 
-#: assets/js/userman.js:476
+#: assets/js/userman.js:480
 msgid "The Browser Language could not be determined"
 msgstr "Die Browser-Sprache konnte nicht bestimmt werden"
 
-#: assets/js/userman.js:496
+#: assets/js/userman.js:500
 msgid "The Browser Timezone could not be determined"
 msgstr "Die Browser-Zeitzone konnte nicht bestimmt werden"
 
@@ -1288,11 +1288,11 @@ msgstr "Die Art der sicheren Verbindung für OpenLDAP"
 msgid "The OpenLDAP username"
 msgstr "Der OpenLDAP-Benutzername"
 
-#: assets/js/userman.js:486
+#: assets/js/userman.js:490
 msgid "The PBX Language is not set"
 msgstr "Die TK-Anlagen Sprache ist nicht definiert"
 
-#: assets/js/userman.js:506
+#: assets/js/userman.js:510
 msgid "The PBX Timezone is not set"
 msgstr "Die TK-Anlagen Zeitzone ist nicht definiert"
 
@@ -1711,7 +1711,7 @@ msgstr "Die Zeitzone dieses Benutzers"
 msgid "Title"
 msgstr "Titel"
 
-#: assets/js/userman.js:412
+#: assets/js/userman.js:416
 msgid "True"
 msgstr "Wahr"
 
