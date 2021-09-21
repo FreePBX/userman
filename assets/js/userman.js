@@ -541,6 +541,9 @@ function rebuildwidgets(id) {
 function redirectToUCP(id, key) {
 	$.post("ajax.php?module=userman&command=redirectUCP", {id: id, key: key}, function( data ) {
 		if(data.status) {
+			if(key == false){
+				key = data.key;
+			}
 			var url = `/ucp/index.php?unlockkey=`+key+'&templateid='+id;
 			window.open(url, '_blank');
 		} else {
@@ -548,6 +551,28 @@ function redirectToUCP(id, key) {
 		}
 	});
 }
+$("#generatetemplatecreator").click(function(e) {
+	$.post("ajax.php?module=userman&command=generatetemplatecreator", {}, function( data ) {
+		if(data.status) {
+			alert(data.message);
+			location.reload();
+		} else {
+			alert(data.message);
+		}
+	});
+});
+$("#deletetemplatecreator").click(function(e) {
+	if(confirm(_("Are you sure to delete this Generic template ?"))) {
+		$.post("ajax.php?module=userman&command=deletetemplatecreator", {}, function( data ) {
+			if(data.status) {
+				alert(data.message);
+				location.reload();
+			} else {
+				alert(data.message);
+			}
+		});
+	}
+});
 $("#merge").click(function(e) {
 	$('fieldset#users_allow > span, textarea').each(function(){
 		$("#form_usertemplate").append('<input type="hidden" name="users_selected[]" value="'+$(this).data("userid") +'">');
