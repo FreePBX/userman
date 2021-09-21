@@ -3888,7 +3888,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 		$sth = $this->db->prepare($sql);
 		$sth->execute();
 		$result = $sth->fetch(PDO::FETCH_ASSOC);
-		if($result['id']){
+		if(isset($result['id'])){
 			return $result['id'];
 		}
 		return false;
