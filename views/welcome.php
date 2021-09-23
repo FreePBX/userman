@@ -31,7 +31,7 @@
 							<div role="tabpanel" id="users" class="tab-pane display active">
 								<div class="table-responsive">
 									<div id="toolbar-users">
-										<a href="<?php echo _(sizeof($directories)==1 ? '?display=userman&action=adduser&directory='.$directory['id'] : '#'); ?>" id="add-users" class="btn btn-add" data-type="users" data-section="users"<?php echo _(sizeof($directories)==1 ? '':' disabled title="Select Directory to enable \'Add\' Button"')?>>
+										<a href="<?php echo _(sizeof($directories)==1 ? '?display=userman&action=adduser&directory='.$directoryOneId : '#'); ?>" id="add-users" class="btn btn-add" data-type="users" data-section="users"<?php echo _(sizeof($directories)==1 ? '':' disabled title="Select Directory to enable \'Add\' Button"')?>>
 											<i class="fa fa-user-plus"></i> <span><?php echo _('Add')?></span>
 										</a>
 										<button id="remove-users" class="btn btn-danger btn-remove" disabled data-type="users" data-section="users">
@@ -68,7 +68,7 @@
 								<div class="table-responsive">
 									<div class="alert alert-info"><?php echo _("Group Priorities can be changed by clicking and dragging groups around in the order you'd like. Groups with a lower number for priority take priority (EG 0 is higher than 1)")?></div>
 									<div id="toolbar-groups">
-										<a href="config.php?display=userman&amp;action=addgroup" id="add-groups" class="btn btn-add hidden" data-type="groupss" data-section="groups">
+										<a href="config.php?display=userman&amp;action=addgroup<?php echo _(sizeof($directories)==1 ? '&directory='.$directoryOneId : ''); ?>" id="add-groups" class="btn btn-add hidden" data-type="groupss" data-section="groups">
 											<i class="fa fa-user-plus"></i> <span><?php echo _('Add')?></span>
 										</a>
 										<button id="remove-groups" class="btn btn-danger btn-remove" data-type="groups" data-section="groups"<?php echo _(sizeof($directories)==1 ? 'disabled':' disabled title="Select Directory to enable \'Delete\' Button"')?>>

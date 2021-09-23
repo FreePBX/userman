@@ -32,6 +32,7 @@ $("#email-users").click(function() {
 });
 $("#directory-users").change(function() {
 	var val = $(this).val();
+	$("#remove-users").attr('disabled', true);
 	if(val === '') {
 		$("#table-users").bootstrapTable('refresh',{url: 'ajax.php?module=userman&command=getUsers'});
 		$("#table-users").bootstrapTable('showColumn','auth');
@@ -65,6 +66,7 @@ $("#directory-users").change(function() {
 });
 $("#directory-groups").change(function() {
 	var val = $(this).val();
+	$("#remove-groups").attr('disabled', true);
 	if(val === '') {
 		$("#table-groups").bootstrapTable('refresh',{url: 'ajax.php?module=userman&command=getGroups'});
 		$("#table-groups").bootstrapTable('showColumn','auth');
@@ -91,22 +93,24 @@ $(document).on('click', "button.btn-remove", function() {
 	$(chosen).each(function(){
 		deleteExts[type].push(this.id);
 	});
-	if(confirm(sprintf(_("Are you sure you wish to delete these %s?"),translations[type]))) {
-		btn.find("span").text(_("Deleting..."));
-		btn.prop("disabled", true);
-		$.post( "ajax.php", {command: "delete", module: "userman", extensions: deleteExts[type], type: type}, function(data) {
-			if(data.status) {
-				btn.find("span").text(_("Delete"));
-				$("#table-"+section).bootstrapTable('remove', {
-					field: "id",
-					values: deleteExts[type]
-				});
-			} else {
-				btn.find("span").text(_("Delete"));
-				btn.prop("disabled", true);
-				alert(data.message);
-			}
-		});
+	if($("#remove-"+type).prop("disabled") === false){ // <--- Fixe the Delete button issue with Chrome
+		if(confirm(sprintf(_("Are you sure you wish to delete these %s?"),translations[type]))) {
+			btn.find("span").text(_("Deleting..."));
+			btn.prop("disabled", true);
+			$.post( "ajax.php", {command: "delete", module: "userman", extensions: deleteExts[type], type: type}, function(data) {
+				if(data.status) {
+					btn.find("span").text(_("Delete"));
+					$("#table-"+section).bootstrapTable('remove', {
+						field: "id",
+						values: deleteExts[type]
+					});
+				} else {
+					btn.find("span").text(_("Delete"));
+					btn.prop("disabled", true);
+					alert(data.message);
+				}
+			});
+		}
 	}
 });
 $("#table-groups").on("reorder-row.bs.table", function (table,rows) {
@@ -166,18 +170,18 @@ $("table").on("page-change.bs.table", function () {
 	deleteExts.groups = [];
 });
 $("table").on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
-	$(".btn-remove").prop("disabled", false);
 	var toolbar = $(this).data("toolbar"),
 			button = $(toolbar).find(".btn-remove"),
 			buttone = $(toolbar).find(".btn-send"),
 			id = $(this).prop("id"),
 			type = $(this).data("type");
+	$("#remove-"+type).prop("disabled", false);
 	button.prop('disabled', !$("#"+id).bootstrapTable('getSelections').length);
 	buttone.prop('disabled', !$("#"+id).bootstrapTable('getSelections').length);
 	deleteExts[type] = $.map($("#"+id).bootstrapTable('getSelections'), function (row) {
 		if(row.auth in directoryMapValues && !directoryMapValues[row.auth].permissions.removeUser) {
 			fpbxToast(_("Deletion is not allowed if a selected item is read-only !!"),_("Alert"),'error');
-			$(".btn-remove").prop("disabled", true);
+			$("#remove-"+type).prop("disabled", true);
 		}
 		return row.id;
   	});
