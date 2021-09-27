@@ -987,11 +987,18 @@ class Userman extends FreePBX_Helpers implements BMO {
 				}
 				$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https" : "http";
 				$host = $protocol.'://'.$_SERVER["SERVER_NAME"];
+				$directoryOneId = "";
+                if(count($directories) == 1){
+                    foreach($directories as $dirone){
+                        $directoryOneId = $dirone["id"];
+                    }
+                }
 				$html .= load_view(
 					dirname(__FILE__).'/views/welcome.php',
 					array(
 						"directoryMap" => $directoryMap,
 						"directories" => $directories,
+						"directoryOneId" => $directoryOneId,
 						"auths" => $auths,
 						"hostname" => $hostname,
 						"host" => $host,
