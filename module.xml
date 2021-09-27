@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>15.0.54</version>
+	<version>15.0.55</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -11,6 +11,7 @@
 	</description>
   	<more-info>https://wiki.freepbx.org/display/FPG/User+Management+Module</more-info>
 	<changelog>
+		*15.0.55* FREEI-3979 FREEPBX-22855 Fixe mutiple issues with button and whoups errors 
 		*15.0.54* FREEPBX-22812 and FREEPBX-22828 
 		*15.0.53* FREEPBX-22828 Don't auto-create extension and user UCP template features 
 		*15.0.52* FREEPBX-22634 FREEPBX-22812 Unable to delete user from user manager without selecting a directory, Add button in Groups Tab allows to add a group if this one is disabled 
