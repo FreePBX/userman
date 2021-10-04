@@ -32,6 +32,7 @@ $("#email-users").click(function() {
 });
 $("#directory-users").change(function() {
 	var val = $(this).val();
+	$("#remove-users").attr('disabled', true);
 	if(val === '') {
 		$("#table-users").bootstrapTable('refresh',{url: 'ajax.php?module=userman&command=getUsers'});
 		$("#table-users").bootstrapTable('showColumn','auth');
@@ -65,10 +66,10 @@ $("#directory-users").change(function() {
 });
 $("#directory-groups").change(function() {
 	var val = $(this).val();
+	$("#remove-groups").attr('disabled', true);
 	if(val === '') {
 		$("#table-groups").bootstrapTable('refresh',{url: 'ajax.php?module=userman&command=getGroups'});
 		$("#table-groups").bootstrapTable('showColumn','auth');
-		$("#remove-groups").addClass("hidden");
 		$("#add-groups").addClass("hidden");
 	} else {
 		$("#add-groups").attr("href","?display=userman&action=addgroup&directory="+val);
@@ -92,22 +93,24 @@ $(document).on('click', "button.btn-remove", function() {
 	$(chosen).each(function(){
 		deleteExts[type].push(this.id);
 	});
-	if(confirm(sprintf(_("Are you sure you wish to delete these %s?"),translations[type]))) {
-		btn.find("span").text(_("Deleting..."));
-		btn.prop("disabled", true);
-		$.post( "ajax.php", {command: "delete", module: "userman", extensions: deleteExts[type], type: type}, function(data) {
-			if(data.status) {
-				btn.find("span").text(_("Delete"));
-				$("#table-"+section).bootstrapTable('remove', {
-					field: "id",
-					values: deleteExts[type]
-				});
-			} else {
-				btn.find("span").text(_("Delete"));
-				btn.prop("disabled", true);
-				alert(data.message);
-			}
-		});
+	if($("#remove-"+type).prop("disabled") === false){ // <--- Fixe the Delete button issue with Chrome
+		if(confirm(sprintf(_("Are you sure you wish to delete these %s?"),translations[type]))) {
+			btn.find("span").text(_("Deleting..."));
+			btn.prop("disabled", true);
+			$.post( "ajax.php", {command: "delete", module: "userman", extensions: deleteExts[type], type: type}, function(data) {
+				if(data.status) {
+					btn.find("span").text(_("Delete"));
+					$("#table-"+section).bootstrapTable('remove', {
+						field: "id",
+						values: deleteExts[type]
+					});
+				} else {
+					btn.find("span").text(_("Delete"));
+					btn.prop("disabled", true);
+					alert(data.message);
+				}
+			});
+		}
 	}
 });
 $("#table-groups").on("reorder-row.bs.table", function (table,rows) {
@@ -172,11 +175,16 @@ $("table").on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs
 			buttone = $(toolbar).find(".btn-send"),
 			id = $(this).prop("id"),
 			type = $(this).data("type");
+	$("#remove-"+type).prop("disabled", false);
 	button.prop('disabled', !$("#"+id).bootstrapTable('getSelections').length);
 	buttone.prop('disabled', !$("#"+id).bootstrapTable('getSelections').length);
 	deleteExts[type] = $.map($("#"+id).bootstrapTable('getSelections'), function (row) {
+		if(row.auth in directoryMapValues && !directoryMapValues[row.auth].permissions.removeUser) {
+			fpbxToast(_("Deletion is not allowed if a selected item is read-only !!"),_("Alert"),'error');
+			$("#remove-"+type).prop("disabled", true);
+		}
 		return row.id;
-  });
+  	});
 });
 
 $("#submit").click(function(e) {
@@ -294,6 +302,7 @@ $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
 			$("#action-bar").addClass("hidden");
 			$('input[name="submit"]').addClass('hidden');
 			$('input[name="reset"]').addClass('hidden');
+			onlyOneGroup();
 		break;
 		default:
 			return;
@@ -305,7 +314,6 @@ $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
 //Making Password Modal work
 $(document).on("click", 'a[id^="pwmlink"]', function(){
 	var pwuid = $(this).data('pwuid');
-	console.log(pwuid);
 	$("#pwuid").val(pwuid);
 	$("#pwsub").attr("disabled", false);
 	$("#pwsub").html(_("Update Password"));
@@ -327,9 +335,7 @@ $("#pwsub").on("click", function(){
 		type: "GET",
 		dataType: "json",
 		success: function(data){
-			console.log(data);
-				button.html(data.message);
-
+			button.html(data.message);
 		},
 		error: function(xhr, status, e){
 			console.dir(xhr);
@@ -360,6 +366,12 @@ $('#defaultextension').multiselect({
 	enableCaseInsensitiveFiltering: true
 });
 
+function onlyOneGroup(){
+	if($("#directory-groups option").length == 2 && $("#directory-groups option:selected" ).text() != ""){
+		$("#add-groups").removeClass("hidden");
+	}	
+}
+
 function directoryMap(value, row, index) {
 	if (value in directoryMapValues) {
 		return directoryMapValues[value].name;
@@ -382,7 +394,6 @@ function directoryActive(value, row, index) {
 
 function userActions(value, row, index) {
 	var html = '<a href="?display=userman&amp;action=showuser&amp;user='+row.id+'&amp;directory='+row.auth+'"><i class="fa fa-edit"></i></a>';
-
 	if(row.auth in directoryMapValues && directoryMapValues[row.auth].permissions.changePassword) {
 		html += '<a data-toggle="modal" data-pwuid="'+row.id+'" data-target="#setpw" id="pwmlink'+row.id+'" class="clickable"><i class="fa fa-key"></i></a>';
 	}
