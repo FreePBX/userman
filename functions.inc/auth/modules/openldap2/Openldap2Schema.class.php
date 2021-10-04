@@ -9,7 +9,8 @@ class Openldap2 extends OpenLDAP {
 	public function __construct($config) {
 		$this->config = $config;
 	}
-	public function objectClassUser() {
+	// objectClassPerson has to be used as adldap2 determines the objectClass of users with it
+	public function objectClassPerson() {
 		return $this->config['userobjectclass'];
 	}
 	public function accountName() {
