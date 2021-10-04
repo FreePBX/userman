@@ -32,7 +32,7 @@
 							<div role="tabpanel" id="users" class="tab-pane display active">
 								<div class="table-responsive">
 									<div id="toolbar-users">
-										<a href="<?php echo _(sizeof($directories)==1 ? '?display=userman&action=adduser&directory='.$directoryOneId : '#'); ?>" id="add-users" class="btn btn-add" data-type="users" data-section="users"<?php echo _(sizeof($directories)==1 ? '':' disabled title="Select Directory to enable \'Add\' Button"')?>>
+									<a href="<?php echo _(sizeof($directories)==1 ? '?display=userman&action=adduser&directory='.$directoryOneId : '#'); ?>" id="add-users" class="btn btn-add" data-type="users" data-section="users"<?php echo _(sizeof($directories)==1 ? '':' disabled title="Select Directory to enable \'Add\' Button"')?>>
 											<i class="fa fa-user-plus"></i> <span><?php echo _('Add')?></span>
 										</a>
 										<button id="remove-users" class="btn btn-danger btn-remove" disabled data-type="users" data-section="users">
@@ -135,16 +135,6 @@
 										<button id="remove-ucptemplates" class="btn btn-danger btn-remove" data-type="ucptemplates" data-section="ucptemplates" disabled>
 											<i class="fa fa-user-times"></i> <span><?php echo _('Delete')?></span>
 										</button>
-										<?php
-										if($allgenratebutton){ ?>
-											<button id="generatetemplatecreator" class="btn" >
-												<i class="fa fa-street-view"></i> <span><?php echo _('Create Generic Templates')?></span>
-											</button>
-										<?php }else { ?>
-											<button id="deletetemplatecreator" class="btn"   >
-												<i class="fa fa-street-view"></i> <span><?php echo _('Delete Generic Templates')?></span>
-											</button>
-										<?php   } ?>
 									</div>
 									<table data-toolbar="#toolbar-ucptemplates" data-url="ajax.php?module=userman&amp;command=getUcpTemplates" data-cache="false" data-toggle="table" data-maintain-selected="true" data-show-columns="true" data-pagination="true" data-search="true" class="table table-striped" id="table-ucptemplates" data-type="ucptemplates" data-escape="true" data-row-style="rowStyle">
 										<thead>
@@ -161,8 +151,7 @@
 							</div>
 							<div role="tabpane" id="settings" class="tab-pane display">
 								<div class="container-fluid">
-									<?php echo load_view(dirname(__FILE__).'/general.php', array("hostname" => $hostname, "host" => $host, "remoteips" => $remoteips, "sync" => $sync, "brand" => $brand, "auths" => $auths, "authtype" => $authtype, "autoEmail" => $autoEmail,"emailbody" => $emailbody, "emailsubject" => $emailsubject, "mailtype" => $mailtype)); ?>
-								</div>
+								<?php echo load_view(dirname(__FILE__).'/general.php', array("hostname" => $hostname, "host" => $host, "remoteips" => $remoteips, "sync" => $sync, "brand" => $brand, "auths" => $auths, "authtype" => $authtype, "autoEmail" => $autoEmail,"emailbody" => $emailbody, "emailsubject" => $emailsubject, "mailtype" => $mailtype, "pwdSettings" => json_decode($pwdSettings, true) )); ?></div>
 							</div>
 						</div>
 					</div>
