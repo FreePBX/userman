@@ -2,6 +2,6 @@
     "require": {
         "adldap2/adldap2": "^7.0",
         "hautelook/phpass": "^1.1",
-        "bjeavons/zxcvbn-php": "^0.4.0"
+	    "bjeavons/zxcvbn-php": "^0.4.0"
     }
 }
