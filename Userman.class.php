@@ -14,6 +14,7 @@ use FreePBX_Helpers;
 use PDO;
 use Exception;
 use Ramsey\Uuid\Uuid;
+use ZxcvbnPhp\Zxcvbn as Zxcvbn;
 class Userman extends FreePBX_Helpers implements BMO {
 	private $registeredFunctions = array();
 	private $message = '';
@@ -184,6 +185,149 @@ class Userman extends FreePBX_Helpers implements BMO {
 	}
 
 	public function writeConfig($conf){
+	}
+
+	/**
+	 * password_policies
+	 *
+	 * @param  array $rules
+	 * @param  sting $password
+	 * @return array 
+	 *         status = bool
+	 *         error  = array
+	 */
+	function password_policies($password = "", $threshold = false){
+		$zxcvbn 		= new Zxcvbn();
+		if($threshold == false){
+			$weak 			= $zxcvbn->passwordStrength($password, array());
+			$threshold		= $weak["score"];	
+		}
+
+		$error 			= $t = array();
+		$error_message 	= _("Password should contain minimum %d %s character(s), detected = %d");
+		$pwdSettings 	= $this->getConfig('pwdSettings');
+		if(empty($pwdSettings)){
+			$this->setDefaultPwdSettings();
+			$pwdSettings	= $this->getConfig("pwdSettings");
+		}
+		$pwdSettings		= json_decode($pwdSettings, true);
+		extract($pwdSettings);
+		$rules 			= array("Length"        => array("enabled" => $pwd_length_enable, 		"min" => $pwd_length_value),
+								"Uppercase"     => array("enabled" => $pwd_uppercase_enable,	"min" => $pwd_uppercase_value),
+								"Lowercase"     => array("enabled" => $pwd_lowercase_enable,	"min" => $pwd_lowercase_value),
+								"Numeric"       => array("enabled" => $pwd_numeric_enable, 		"min" => $pwd_numeric_value),
+								"Special"       => array("enabled" => $pwd_special_enable, 		"min" => $pwd_special_value),
+								"Punctuation"   => array("enabled" => $pwd_punctuation_enable, 	"min" => $pwd_punctuation_value),
+								"Threshold"		=> array("enabled" => $pwd_threshold_enable, 	"min" => $pwd_threshold_value),
+								);
+						
+		foreach($rules as $rule => $values){
+			/**
+			 * rule => enabled, min
+			 */
+			
+			switch($rule){
+				case "Length":
+					/* Lenght of password */
+					if($values["enabled"] == "yes" && (strlen($password) < $values["min"])){
+						$error["length"] = sprintf(_("Password should have minimum %d characters, detected = %d"), $values["min"], strlen($password));
+					}
+					break;
+				case "Uppercase":
+					/* Uppercase  */                
+					if($values["enabled"] == "yes"){
+						$t["Uppercase"]	= "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+						$template   = str_split($t["Uppercase"]);
+						$occurU     = 0;
+						foreach($template as $char){
+							$occurU += substr_count($password, $char);
+						}
+						if($occurU < $values["min"] && $values["min"] > 0 ){
+							$error["Uppercase"] = sprintf($error_message, $values["min"], "<b>$rule</b>", $occurU );
+							break;
+						}
+					}
+					break;
+				case "Lowercase":
+					/* Lowercase */
+					if($values["enabled"] == "yes"){
+						$t["Lowercase"] = "abcdefghijklmnopqrstuvwxyz";
+						$template   = str_split($t["Lowercase"]);
+						$occurL     = 0;
+						foreach($template as $char){
+							$occurL += substr_count($password, $char);
+						}
+						if($occurL < $values["min"] && 0 < $values["min"] ){
+							$error["Lowercase"] = sprintf($error_message, $values["min"], "<b>$rule</b>", $occurL);
+							break;
+						}
+					}
+					break;
+				case "Numeric":
+					/* Numeric */
+					if($values["enabled"] == "yes"){
+						$t["Numeric"] = "0123456789";
+						$template   =  str_split($t["Numeric"]);
+						$occurN     = 0;
+						foreach($template as $char){
+							$occurN += substr_count($password, strval($char));
+						} 
+						if($occurN < $values["min"] && 0 < $values["min"] ){
+							$error["Numeric"] = sprintf($error_message, $values["min"], "<b>$rule</b>", $occurN);
+							break;
+						}
+					}
+					break;
+				case "Special":
+					/* Special characters */
+					if($values["enabled"] == "yes"){
+						$t["Special"] = "\\/%*\$&(+-_@){}[]";
+						$template   =  str_split($t["Special"]);
+						$occurS     = 0;
+						foreach($template as $char){
+							$occurS += substr_count($password, $char);
+						}
+						if($occurS < $values["min"] && $values["min"] > 0 ){
+							$error["Special"] = sprintf($error_message, $values["min"], "<b>$rule</b>", $occurS );
+							break;
+						}
+					}
+					break;
+				case "Punctuation":
+					/* Punctuation characters */
+					if($values["enabled"] == "yes"){
+						$t["Punctuation"]	= ".,;: !?'";
+						$template 	= str_split($t["Punctuation"]);
+						$occurP     = 0;
+						foreach($template as $char){
+							$occurP += substr_count($password, $char);
+						}
+						if($occurP < $values["min"] && $values["min"] > 0 ){
+							$error["Punctuation"] = sprintf($error_message, $values["min"], "<b>$rule</b>", $occurP );
+							break;
+						}
+					}
+					break;	
+				case "Threshold":
+					if($values["enabled"] == "yes"){
+						if($threshold < $values["min"] && $values["min"] > 0 ){
+							$content = "<br><i>"._("(0 - being Really Weak, 4 - being Strong)")."</i>";
+							$error["Threshold"] = sprintf(_("Password should have minimum %s value of %d, detected = %d").$content, "<b>$rule</b>", $values["min"], $threshold );
+							break;
+						}
+					}
+					break;
+				default:
+					$error["default"] = sprintf(_("Cannot manage this rule: %s."), $rule);
+			}
+		}
+		$status = false;;
+
+		if(empty($error)){
+			$status = true;
+		}
+
+		return array("status" => $status, "error" => $error, "templates" => $t);
 	}
 
 	/**
@@ -546,6 +690,22 @@ class Userman extends FreePBX_Helpers implements BMO {
 					$this->setGlobalsetting('hostname', $request['hostname']);
 					$this->setGlobalsetting('autoEmail',($request['auto-email'] == "yes") ? 1 : 0);
 					$this->setGlobalsetting('mailtype',$request['mailtype']);
+					$pwdSettings = array(	'pwd_length_enable' 	=> $request['pwd_length_enable'],
+											'pwd_length_value' 		=> $request['pwd_length_value'],
+											'pwd_uppercase_enable'	=> $request['pwd_uppercase_enable'],
+											'pwd_uppercase_value'	=> $request['pwd_uppercase_value'],
+											'pwd_lowercase_enable' 	=> $request['pwd_lowercase_enable'],
+											'pwd_lowercase_value'	=> $request['pwd_lowercase_value'],
+											'pwd_numeric_enable' 	=> $request['pwd_numeric_enable'],
+											'pwd_numeric_value' 	=> $request['pwd_numeric_value'],
+											'pwd_special_enable'	=> $request['pwd_special_enable'],
+											'pwd_special_value' 	=> $request['pwd_special_value'],
+											'pwd_punctuation_enable'=> $request['pwd_punctuation_enable'],
+											'pwd_punctuation_value' => $request['pwd_punctuation_value'],
+											'pwd_threshold_enable'	=> $request['pwd_threshold_enable'],
+											'pwd_threshold_value' 	=> $request['pwd_threshold_value'],
+										);
+					$this->setConfig("pwdSettings", json_encode($pwdSettings));	
 					$this->message = array(
 						'message' => _('Saved'),
 						'type' => 'success'
@@ -993,6 +1153,10 @@ class Userman extends FreePBX_Helpers implements BMO {
                         $directoryOneId = $dirone["id"];
                     }
                 }
+				$pwdsettings = $this->getConfig('pwdSettings');
+				if(empty($pwdsettings)){
+					$this->setDefaultPwdSettings();
+				}
 				$html .= load_view(
 					dirname(__FILE__).'/views/welcome.php',
 					array(
@@ -1016,13 +1180,33 @@ class Userman extends FreePBX_Helpers implements BMO {
 						"emailsubject" => $emailsubject,
 						"mailtype" => $mailtype,
 						"dirwarn" => $dirwarn,
-						"allgenratebutton" => $allgenratebutton
+						"allgenratebutton" => $allgenratebutton,
+						"pwdSettings" => $this->getConfig('pwdSettings')
 					)
 				);
 			break;
 		}
 
 		return $html;
+	}
+
+	public function setDefaultPwdSettings(){
+		$pwdSettings = array(	'pwd_length_enable' 	=> "yes",
+								'pwd_length_value' 		=> 8,
+								'pwd_uppercase_enable'	=> "yes",
+								'pwd_uppercase_value'	=> 1,
+								'pwd_lowercase_enable' 	=> "yes",
+								'pwd_lowercase_value'	=> 1,
+								'pwd_numeric_enable' 	=> "yes",
+								'pwd_numeric_value' 	=> 1,
+								'pwd_special_enable'	=> "yes",
+								'pwd_special_value' 	=> 1,
+								'pwd_punctuation_enable'=> "yes",
+								'pwd_punctuation_value' => 1,
+								'pwd_threshold_enable'	=> "yes",
+								'pwd_threshold_value' 	=> 4,
+							);
+		$this->setConfig("pwdSettings", json_encode($pwdSettings));		
 	}
 
 	public function getExtraUserDetailsDisplay($user) {
@@ -1084,6 +1268,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 	 */
 	public function ajaxRequest($req, &$setting){
 		switch($req){
+			case "pwdTest":
 			case "getGuihookInfo":
 			case "makeDefault":
 			case "getDirectories":
@@ -1127,6 +1312,9 @@ class Userman extends FreePBX_Helpers implements BMO {
 	public function ajaxHandler(){
 		$request = freepbxGetSanitizedRequest();
 		switch($request['command']){
+			case "pwdTest":
+				return $this->password_policies($_POST['pwd']);
+			break;
 			case "setlocales":
 				if(!empty($_SESSION['AMP_user']->id) && ($_SESSION['AMP_user']->id == $request['id'])) {
 					$_SESSION['AMP_user']->lang = !empty($request['language']) ? $request['language'] : $this->getLocaleSpecificSettingByUID($request['id'],"language");
@@ -1548,7 +1736,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 			$sth = $this->db->prepare($sql);
 			try {
 				$sth->execute(array($id));
-			} catch(\Exception $e) {}
+			} catch(Exception $e) {}
 		}
 		//delete the templatecreator 
 		$key = $this->getConfig('unlockkey','templatecreator');
@@ -2270,6 +2458,19 @@ class Userman extends FreePBX_Helpers implements BMO {
 		if(empty($prevUsername)) {
 			throw new Exception(_("Previous Username can not be blank"));
 		}
+
+		if($password != ""){
+			$pwd = $this->password_policies($password);
+			if(!$pwd["status"]){
+				$error_content = '<div class="alert alert-warning" role="alert">';
+				foreach($pwd["error"] as $item => $error){
+					$error_content .= "<li> ".$item." - ".$error."</li>";
+				}
+				$error_content .= '</div>';
+				return array("status" => false, "message" => $error_content);
+			}			
+		}
+
 		set_time_limit(0);
 		/**
 		 * Coming from an adaptor that doesnt support username changes
@@ -2286,7 +2487,9 @@ class Userman extends FreePBX_Helpers implements BMO {
 		if(!$status['status']) {
 			return $status;
 		}
-
+		
+		$id = $status['id'];
+		
 		return $status;
 	}
 
