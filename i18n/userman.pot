@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 02:59+0000\n"
+"POT-Creation-Date: 2021-10-11 07:08+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -491,14 +491,13 @@ msgstr ""
 #: views/general.php:433
 msgid ""
 "Enter a password complexity threshold from 0 to 4, 0 being 'Really weak', "
-"and4 being 'Strong'."
+"and 4 being 'Strong'."
 msgstr ""
 
 #: views/general.php:461
 msgid "Enter a password to test."
 msgstr ""
 
-#: views/general.php:228
 #: views/general.php:269
 msgid "Enter the minimum number of lowercase characters."
 msgstr ""
@@ -513,6 +512,10 @@ msgstr ""
 
 #: views/general.php:351
 msgid "Enter the minimum number of special characters."
+msgstr ""
+
+#: views/general.php:228
+msgid "Enter the minimum number of uppercase characters."
 msgstr ""
 
 #: views/general.php:187
