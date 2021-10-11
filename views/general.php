@@ -225,7 +225,7 @@
 				</div>
 				<div class="row">
 					<div class="col-md-12">
-						<span id="pwd_uppercase_enable-help" class="help-block fpbx-help-block"><?php echo _("Enter the minimum number of lowercase characters.")."<br>"._("Enable or disable this rule Yes or No.")?></span>
+						<span id="pwd_uppercase_enable-help" class="help-block fpbx-help-block"><?php echo _("Enter the minimum number of uppercase characters.")."<br>"._("Enable or disable this rule Yes or No.")?></span>
 					</div>
 				</div>
 			</div>
@@ -430,7 +430,7 @@
 				</div>
 				<div class="row">
 					<div class="col-md-12">
-						<span id="pwd_threshold_enable-help" class="help-block fpbx-help-block"><?php echo _("Enter a password complexity threshold from 0 to 4, 0 being 'Really weak', and4 being 'Strong'.")."<br>"._("Enable or disable this rule Yes or No.")?></span>
+						<span id="pwd_threshold_enable-help" class="help-block fpbx-help-block"><?php echo _("Enter a password complexity threshold from 0 to 4, 0 being 'Really weak', and 4 being 'Strong'.")."<br>"._("Enable or disable this rule Yes or No.")?></span>
 					</div>
 				</div>
 			</div>		
