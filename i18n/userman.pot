@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-11 07:08+0000\n"
+"POT-Creation-Date: 2021-10-12 07:38+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -83,7 +83,7 @@ msgstr ""
 #: views/welcome.php:62
 #: views/welcome.php:93
 #: views/welcome.php:118
-#: views/welcome.php:146
+#: views/welcome.php:156
 msgid "Action"
 msgstr ""
 
@@ -271,6 +271,10 @@ msgstr ""
 msgid "Could not find the voicemail context"
 msgstr ""
 
+#: views/welcome.php:141
+msgid "Create Generic Templates"
+msgstr ""
+
 #: views/msad2.php:189
 #: views/openldap2.php:167
 msgid "Create Missing Extensions"
@@ -326,6 +330,10 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
+#: views/welcome.php:145
+msgid "Delete Generic Templates"
+msgstr ""
+
 #: Console/Userman.class.php:25
 msgid "Delete generic templates user"
 msgstr ""
@@ -353,7 +361,7 @@ msgstr ""
 #: views/users.php:84
 #: views/welcome.php:61
 #: views/welcome.php:91
-#: views/welcome.php:144
+#: views/welcome.php:154
 msgid "Description"
 msgstr ""
 
@@ -794,7 +802,7 @@ msgstr ""
 msgid "Imported %s directory"
 msgstr ""
 
-#: views/welcome.php:145
+#: views/welcome.php:155
 msgid "Imported from "
 msgstr ""
 
@@ -1309,7 +1317,7 @@ msgstr ""
 #: Userman.class.php:3571
 #: Userman.class.php:3572
 #: views/ucptemplates.php:25
-#: views/welcome.php:143
+#: views/welcome.php:153
 msgid "Template Name"
 msgstr ""
 

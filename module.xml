@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>15.0.57</version>
+	<version>15.0.58</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -11,6 +11,7 @@
 	</description>
   	<more-info>https://wiki.freepbx.org/display/FPG/User+Management+Module</more-info>
 	<changelog>
+		*15.0.58* Packaging of ver 15.0.58
 		*15.0.57* FREEI-4064 userman auth settings - adjust the help text for a some policies 
 		*15.0.56* FREEI-3161 Fixe conflicts for password policies, and tab button issues 
 		*15.0.55* FREEI-3979 FREEPBX-22855 Fixe mutiple issues with button and whoups errors 

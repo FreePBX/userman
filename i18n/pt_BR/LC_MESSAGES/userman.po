@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-11 07:08+0000\n"
+"POT-Creation-Date: 2021-10-12 07:38+0000\n"
 "PO-Revision-Date: 2016-12-21 00:22+0200\n"
 "Last-Translator: Alexander <alexander.schley@paranagua.pr.gov.br>\n"
 "Language-Team: Portuguese (Brazil) <http://weblate.freepbx.org/projects/"
@@ -86,7 +86,7 @@ msgid "A brief description for this user."
 msgstr "Uma breve descrição para este usuário."
 
 #: views/welcome.php:62 views/welcome.php:93 views/welcome.php:118
-#: views/welcome.php:146
+#: views/welcome.php:156
 msgid "Action"
 msgstr "Ação"
 
@@ -262,6 +262,10 @@ msgstr "Contexto"
 msgid "Could not find the voicemail context"
 msgstr "Não foi possível encontrar o contexto do correio de voz"
 
+#: views/welcome.php:141
+msgid "Create Generic Templates"
+msgstr ""
+
 #: views/msad2.php:189 views/openldap2.php:167
 msgid "Create Missing Extensions"
 msgstr ""
@@ -308,6 +312,10 @@ msgstr ""
 msgid "Delete"
 msgstr "Apagar"
 
+#: views/welcome.php:145
+msgid "Delete Generic Templates"
+msgstr ""
+
 #: Console/Userman.class.php:25
 msgid "Delete generic templates user"
 msgstr ""
@@ -327,7 +335,7 @@ msgstr "Departamento"
 #: Userman.class.php:3535 Userman.class.php:3536 Userman.class.php:3561
 #: Userman.class.php:3562 Userman.class.php:3575 Userman.class.php:3576
 #: views/rnav.php:18 views/rnav.php:35 views/users.php:84 views/welcome.php:61
-#: views/welcome.php:91 views/welcome.php:144
+#: views/welcome.php:91 views/welcome.php:154
 msgid "Description"
 msgstr "Descrição"
 
@@ -750,7 +758,7 @@ msgstr ""
 msgid "Imported %s directory"
 msgstr ""
 
-#: views/welcome.php:145
+#: views/welcome.php:155
 msgid "Imported from "
 msgstr ""
 
@@ -1233,7 +1241,7 @@ msgid "Template Does Not Exist"
 msgstr ""
 
 #: Userman.class.php:3571 Userman.class.php:3572 views/ucptemplates.php:25
-#: views/welcome.php:143
+#: views/welcome.php:153
 msgid "Template Name"
 msgstr ""
 
