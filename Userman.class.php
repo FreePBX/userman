@@ -1191,19 +1191,19 @@ class Userman extends FreePBX_Helpers implements BMO {
 	}
 
 	public function setDefaultPwdSettings(){
-		$pwdSettings = array(	'pwd_length_enable' 	=> "yes",
+		$pwdSettings = array(	'pwd_length_enable' 	=> "no",
 								'pwd_length_value' 		=> 8,
-								'pwd_uppercase_enable'	=> "yes",
+								'pwd_uppercase_enable'	=> "no",
 								'pwd_uppercase_value'	=> 1,
-								'pwd_lowercase_enable' 	=> "yes",
+								'pwd_lowercase_enable' 	=> "no",
 								'pwd_lowercase_value'	=> 1,
-								'pwd_numeric_enable' 	=> "yes",
+								'pwd_numeric_enable' 	=> "no",
 								'pwd_numeric_value' 	=> 1,
-								'pwd_special_enable'	=> "yes",
+								'pwd_special_enable'	=> "no",
 								'pwd_special_value' 	=> 1,
-								'pwd_punctuation_enable'=> "yes",
+								'pwd_punctuation_enable'=> "no",
 								'pwd_punctuation_value' => 1,
-								'pwd_threshold_enable'	=> "yes",
+								'pwd_threshold_enable'	=> "no",
 								'pwd_threshold_value' 	=> 4,
 							);
 		$this->setConfig("pwdSettings", json_encode($pwdSettings));		
