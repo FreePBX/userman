@@ -219,6 +219,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 								"Special"       => array("enabled" => $pwd_special_enable, 		"min" => $pwd_special_value),
 								"Punctuation"   => array("enabled" => $pwd_punctuation_enable, 	"min" => $pwd_punctuation_value),
 								"Threshold"		=> array("enabled" => $pwd_threshold_enable, 	"min" => $pwd_threshold_value),
+								"Note"          => array("enabled" => true)
 								);
 						
 		foreach($rules as $rule => $values){
@@ -315,6 +316,11 @@ class Userman extends FreePBX_Helpers implements BMO {
 							$error["Threshold"] = sprintf(_("Password should have minimum %s value of %d, detected = %d").$content, "<b>$rule</b>", $values["min"], $threshold );
 							break;
 						}
+					}
+					break;
+				case "Note":
+					if ($values["enabled"] == "yes") {
+						$error["Note"] = sprintf(_("These requirements can be adjusted in the Authentication Settings tab, found in User Manager's Settings."));
 					}
 					break;
 				default:
