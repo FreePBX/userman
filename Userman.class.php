@@ -320,7 +320,9 @@ class Userman extends FreePBX_Helpers implements BMO {
 					break;
 				case "Note":
 					if ($values["enabled"] == "yes") {
-						$error["Note"] = sprintf(_("These requirements can be adjusted in the Authentication Settings tab, found in User Manager's Settings."));
+						if(!empty($error)){
+							$error["Note"] = sprintf(_("These requirements can be adjusted in the Authentication Settings tab, found in User Manager's Settings."));
+						}
 					}
 					break;
 				default:
