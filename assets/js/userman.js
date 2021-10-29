@@ -34,7 +34,7 @@ $("#pwd-templates-show").mouseenter(function(){
 $(".password-meter").keyup(function() {
 	$.post( "ajax.php", {command: "pwdTest", module: "userman", pwd: this.value}, function(data) {
 		if(data.status){
-			$("#pwd-error").html("");
+			$(".pwd-error").html("");
 			$("#action-bar").show();
 		}
 		else{
@@ -43,8 +43,7 @@ $(".password-meter").keyup(function() {
 				error_content += "<li>"+item+"</li>";				
 			});
 			error_content += '</div>';
-			$("#pwd-error").html(error_content);
-			$("#action-bar").hide();
+			$(".pwd-error").html(error_content);
 		}
 	});
 });
@@ -392,7 +391,12 @@ $("#pwsub").on("click", function(){
 		type: "GET",
 		dataType: "json",
 		success: function(data){
-			button.html(data.message);
+			if(data.status){
+				button.html(data.message);
+			}else{
+				button.html(_('Update Password'));
+				button.attr("disabled", false);
+			}
 		},
 		error: function(xhr, status, e){
 			console.dir(xhr);
