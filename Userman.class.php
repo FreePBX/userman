@@ -499,7 +499,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 					$description = !empty($request['description']) ? $request['description'] : '';
 					$prevGroupname = !empty($request['prevGroupname']) ? $request['prevGroupname'] : '';
 					$directory = $request['directory'];
-					$users = !empty($request['users']) ? $request['users'] : array();
+					$users = !empty($request['users']) ? (gettype($request['users']) == 'string' ? explode(',',$request['users']) : $request['users']) : array();
 					$extraData = array(
 						'language' => isset($request['language']) ? $request['language'] : null,
 						'timezone' => isset($request['timezone']) ? $request['timezone'] : null,
