@@ -415,7 +415,15 @@ $('#group_users').multiselect({
 	includeSelectAllOption: true,
 	enableFiltering: true,
 	enableCaseInsensitiveFiltering: true,
-	selectAllValue: 'select-all-value'
+	selectAllValue: 'select-all-value',
+	onChange: function (element, checked) {
+		var users = $('#group_users option:selected');
+		var selected = [];
+		$(users).each(function (index, user) {
+			selected.push([$(this).val()]);
+		});
+		$("#users").val(selected.toString());
+	}
 });
 $('#defaultextension').multiselect({
 	maxHeight: 300,

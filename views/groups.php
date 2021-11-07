@@ -48,6 +48,7 @@ echo $heading;
 							<input type="hidden" name="prevGroupname" value="<?php echo !empty($group['groupname']) ? $group['groupname'] : ''; ?>">
 							<input type="hidden" name="group" value="<?php echo !empty($group['id']) ? $group['id'] : ''; ?>">
 							<input type="hidden" name="submittype" value="gui">
+							<input type="hidden" name="users" value="" id="users">
 							<div class="tab-content">
 								<!--Login Details -->
 								<div role="tabpanel" class="tab-pane active display" id="usermanlogin">
@@ -169,7 +170,7 @@ echo $heading;
 															<i class="fa fa-question-circle fpbx-help-icon" data-for="group_users"></i>
 														</div>
 														<div class="col-md-9">
-															<select id="group_users" class="form-control" name="users[]" multiple="multiple" <?php echo !$permissions['modifyGroup'] ? 'disabled' : ''?>>
+															<select id="group_users" class="form-control" multiple="multiple" <?php echo !$permissions['modifyGroup'] ? 'disabled' : ''?>>
 																<?php foreach($users as $user) {?>
 																	<option value="<?php echo $user['id']?>" <?php echo !empty($group['users']) && in_array($user['id'], $group['users']) ? 'selected' : '' ?>><?php echo $user['username']?></option>
 																<?php } ?>
