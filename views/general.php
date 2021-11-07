@@ -467,7 +467,7 @@
 			</div>
 			<!--End of Test-->
 
-			<div id="pwd-error">
+			<div class="pwd-error">
 			</div>
 		</div>
 	</div>

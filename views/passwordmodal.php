@@ -12,12 +12,17 @@
 						<div class="col-md-12">
 							<div class="row">
 								<div class="form-group">
-									<div class="col-md-3">
+									<div class="col-md-12">
 										<label class="control-label" for="password"><?php echo _("Password")?></label>
 									</div>
-									<div class="col-md-9">
+									<div class="col-md-12">
 										<input type="hidden" id="pwuid" value=''>
 										<input type="password" class="form-control password-meter" id="password" name="password" value="<?php echo !empty($user['password']) ? '******' : ''; ?>" required>
+									</div>
+									<div class="col-md-12 pt-3">
+										<br/>
+										<div class="pwd-error">
+										</div>
 									</div>
 								</div>
 							</div>
