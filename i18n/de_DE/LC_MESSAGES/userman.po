@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-07 02:02+0000\n"
+"POT-Creation-Date: 2021-11-07 02:09+0000\n"
 "PO-Revision-Date: 2018-10-24 01:00+0000\n"
 "Last-Translator: Bastian Mertgen <b.mertgen@bastian-mertgen.de>\n"
 "Language-Team: German <http://*/projects/freepbx/userman/de/>\n"
@@ -147,7 +147,7 @@ msgstr "Administrationszugriff"
 msgid "Advanced"
 msgstr "erweitert"
 
-#: assets/js/userman.js:228
+#: assets/js/userman.js:227
 msgid "Alert"
 msgstr ""
 
@@ -175,26 +175,26 @@ msgstr ""
 msgid "Apply Changes Bar"
 msgstr "Änderungen anwenden"
 
-#: assets/js/userman.js:575
+#: assets/js/userman.js:579
 msgid "Are you sure rebuild all Users widgets associated with this Template ?"
 msgstr ""
 
-#: assets/js/userman.js:610
+#: assets/js/userman.js:614
 msgid "Are you sure to delete this Generic template ?"
 msgstr ""
 
-#: assets/js/userman.js:199
+#: assets/js/userman.js:198
 msgid "Are you sure you want to make this directory the system default?"
 msgstr ""
 "Sind Sie sicher, dass Sie dieses Verzeichnis zum Systemstandard machen "
 "möchten?"
 
-#: assets/js/userman.js:140
+#: assets/js/userman.js:139
 #, perl-format
 msgid "Are you sure you wish to delete these %s?"
 msgstr "Wollen Sie diese %s wirklich löschen?"
 
-#: assets/js/userman.js:181
+#: assets/js/userman.js:180
 #, perl-format
 msgid "Are you sure you wish to delete this %s?"
 msgstr "Wollen Sie diesen %s wirklich löschen?"
@@ -238,7 +238,7 @@ msgstr ""
 msgid "Cell Phone Number"
 msgstr "Handynummer"
 
-#: views/passwordmodal.php:29
+#: views/passwordmodal.php:34
 msgid "Close"
 msgstr "Schließen"
 
@@ -310,8 +310,8 @@ msgid "Default Landing Page"
 msgstr ""
 
 #: Userman.class.php:828 views/welcome.php:39 views/welcome.php:76
-#: views/welcome.php:107 views/welcome.php:136 assets/js/userman.js:145
-#: assets/js/userman.js:151
+#: views/welcome.php:107 views/welcome.php:136 assets/js/userman.js:144
+#: assets/js/userman.js:150
 msgid "Delete"
 msgstr "Löschen"
 
@@ -323,11 +323,11 @@ msgstr ""
 msgid "Delete generic templates user"
 msgstr ""
 
-#: assets/js/userman.js:141
+#: assets/js/userman.js:140
 msgid "Deleting..."
 msgstr "Löschen..."
 
-#: assets/js/userman.js:228
+#: assets/js/userman.js:227
 msgid "Deletion is not allowed if a selected item is read-only !!"
 msgstr ""
 
@@ -514,7 +514,7 @@ msgstr ""
 msgid "Extension Link Attribute"
 msgstr "Verknüpfungsattribut der Nebenstelle"
 
-#: assets/js/userman.js:457
+#: assets/js/userman.js:461
 msgid "False"
 msgstr "Falsch"
 
@@ -1046,11 +1046,11 @@ msgstr ""
 msgid "Password should have minimum %s value of %d, detected = %d"
 msgstr ""
 
-#: assets/js/userman.js:241 assets/js/userman.js:263
+#: assets/js/userman.js:240 assets/js/userman.js:262
 msgid "Please fill all missing fields"
 msgstr "Bitte füllen Sie alle fehlenden Angaben aus"
 
-#: assets/js/userman.js:58
+#: assets/js/userman.js:57
 msgid "Please select a user to import the settings !"
 msgstr ""
 
@@ -1265,7 +1265,7 @@ msgstr ""
 msgid "Template Name"
 msgstr ""
 
-#: assets/js/userman.js:54
+#: assets/js/userman.js:53
 msgid "Template Name can not be blank!"
 msgstr ""
 
@@ -1317,11 +1317,11 @@ msgstr ""
 msgid "The Active Directory secure connection type"
 msgstr "Art der sicheren Verbindung zum Active-Directory"
 
-#: assets/js/userman.js:521
+#: assets/js/userman.js:525
 msgid "The Browser Language could not be determined"
 msgstr "Die Browser-Sprache konnte nicht bestimmt werden"
 
-#: assets/js/userman.js:541
+#: assets/js/userman.js:545
 msgid "The Browser Timezone could not be determined"
 msgstr "Die Browser-Zeitzone konnte nicht bestimmt werden"
 
@@ -1386,11 +1386,11 @@ msgstr "Die Art der sicheren Verbindung für OpenLDAP"
 msgid "The OpenLDAP username"
 msgstr "Der OpenLDAP-Benutzername"
 
-#: assets/js/userman.js:531
+#: assets/js/userman.js:535
 msgid "The PBX Language is not set"
 msgstr "Die TK-Anlagen Sprache ist nicht definiert"
 
-#: assets/js/userman.js:551
+#: assets/js/userman.js:555
 msgid "The PBX Timezone is not set"
 msgstr "Die TK-Anlagen Zeitzone ist nicht definiert"
 
@@ -1820,7 +1820,7 @@ msgstr "Die Zeitzone dieses Benutzers"
 msgid "Title"
 msgstr "Titel"
 
-#: assets/js/userman.js:457
+#: assets/js/userman.js:461
 msgid "True"
 msgstr "Wahr"
 
@@ -1862,7 +1862,7 @@ msgstr "Attribut für die eindeutige Kennung"
 msgid "Update Group is not defined"
 msgstr "Zu aktualisierende Gruppe ist nicht definiert"
 
-#: views/passwordmodal.php:30 assets/js/userman.js:376
+#: views/passwordmodal.php:35 assets/js/userman.js:375 assets/js/userman.js:397
 msgid "Update Password"
 msgstr "Passwort aktualisieren"
 
@@ -1884,7 +1884,7 @@ msgstr "Benutzer aktualisiert"
 msgid "Updated Voicemail User %s"
 msgstr "Voicemail-Benutzer %s aktualisiert"
 
-#: assets/js/userman.js:380
+#: assets/js/userman.js:379
 msgid "Updating"
 msgstr "Aktualisiere"
 

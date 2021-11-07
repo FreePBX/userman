@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>16.0.25.15</version>
+	<version>16.0.25.16</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -11,6 +11,7 @@
 	</description>
   	<more-info>https://wiki.freepbx.org/display/FPG/User+Management+Module</more-info>
 	<changelog>
+		*16.0.25.16* FREEI-4107 Fixed warning messages misaligned inside the pop-up window 
 		*16.0.25.15* FREEI-4025 Converted users post data from array to string before submitting form 
 		*16.0.25.14* FREEI-4063 Added condition to display note only when there are error messages 
 		*16.0.25.13* FREEI-4063 Added note about settings to password strength description 
