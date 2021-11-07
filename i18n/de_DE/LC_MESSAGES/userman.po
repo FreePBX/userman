@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-22 02:49+0000\n"
+"POT-Creation-Date: 2021-11-07 02:02+0000\n"
 "PO-Revision-Date: 2018-10-24 01:00+0000\n"
 "Last-Translator: Bastian Mertgen <b.mertgen@bastian-mertgen.de>\n"
 "Language-Team: German <http://*/projects/freepbx/userman/de/>\n"
@@ -139,7 +139,7 @@ msgstr "Anrufbeantworter-Benutzer %s hinzugefügt"
 msgid "Admin"
 msgstr "Administrator"
 
-#: views/groups.php:337 views/users.php:718
+#: views/groups.php:338 views/users.php:718
 msgid "Administration Access"
 msgstr "Administrationszugriff"
 
@@ -159,7 +159,7 @@ msgstr "Alle Verzeichnisse"
 msgid "All Users"
 msgstr "Alle Benutzer"
 
-#: views/groups.php:265 views/users.php:642
+#: views/groups.php:266 views/users.php:642
 #, php-format
 msgid "Allow %s Administration Login"
 msgstr "%s Administrator Login erlauben"
@@ -175,11 +175,11 @@ msgstr ""
 msgid "Apply Changes Bar"
 msgstr "Änderungen anwenden"
 
-#: assets/js/userman.js:567
+#: assets/js/userman.js:575
 msgid "Are you sure rebuild all Users widgets associated with this Template ?"
 msgstr ""
 
-#: assets/js/userman.js:602
+#: assets/js/userman.js:610
 msgid "Are you sure to delete this Generic template ?"
 msgstr ""
 
@@ -289,11 +289,11 @@ msgstr "Benutzermanager Benutzer erstellen"
 msgid "Create Using Template Creator"
 msgstr ""
 
-#: views/groups.php:240 views/users.php:615
+#: views/groups.php:241 views/users.php:615
 msgid "Date Format"
 msgstr "Datumsformat"
 
-#: views/groups.php:196 views/users.php:565
+#: views/groups.php:197 views/users.php:565
 msgid "Date and Time Format"
 msgstr "Datums- und Zeitformat"
 
@@ -305,7 +305,7 @@ msgstr "Standard"
 msgid "Default Groups"
 msgstr "Standardgruppe"
 
-#: views/groups.php:367 views/users.php:747
+#: views/groups.php:368 views/users.php:747
 msgid "Default Landing Page"
 msgstr ""
 
@@ -514,7 +514,7 @@ msgstr ""
 msgid "Extension Link Attribute"
 msgstr "Verknüpfungsattribut der Nebenstelle"
 
-#: assets/js/userman.js:449
+#: assets/js/userman.js:457
 msgid "False"
 msgstr "Falsch"
 
@@ -539,19 +539,19 @@ msgstr "Synchronisation erzwingen"
 msgid "GID was not numeric"
 msgstr "GID war nicht numerisch"
 
-#: views/groups.php:94
+#: views/groups.php:95
 msgid "Give the group a description"
 msgstr "Geben Sie der Gruppe eine Beschreibung"
 
-#: views/groups.php:72
+#: views/groups.php:73
 msgid "Give the group a name"
 msgstr "Geben Sie der Gruppe einen Namen"
 
-#: views/groups.php:290 views/users.php:669
+#: views/groups.php:291 views/users.php:669
 msgid "Grant Full Administration Rights"
 msgstr "Administratorvollzugriff"
 
-#: views/groups.php:305 views/users.php:686
+#: views/groups.php:306 views/users.php:686
 msgid ""
 "Grant full administration rights regardless of extension range or module "
 "access."
@@ -569,7 +569,7 @@ msgstr "Gruppe '%s' existiert nicht"
 msgid "Group DN"
 msgstr "Gruppen-DN"
 
-#: views/groups.php:82
+#: views/groups.php:83
 msgid "Group Description"
 msgstr "Beschreibung der Gruppe"
 
@@ -581,7 +581,7 @@ msgstr "Gruppendetails"
 msgid "Group Does Not Exist"
 msgstr "Gruppe existiert nicht"
 
-#: Userman.class.php:3567 Userman.class.php:3568 views/groups.php:60
+#: Userman.class.php:3567 Userman.class.php:3568 views/groups.php:61
 #: views/rnav.php:34 views/welcome.php:90
 msgid "Group Name"
 msgstr "Gruppenname"
@@ -819,11 +819,11 @@ msgstr ""
 msgid "LDAP is in Read Only Mode. Addition denied"
 msgstr "LDAP befindet sich im Nur-lesen-Modus. Hinzufügen verweigert"
 
-#: views/groups.php:105 views/users.php:376
+#: views/groups.php:106 views/users.php:376
 msgid "Language"
 msgstr "Sprache"
 
-#: views/groups.php:125 views/users.php:396
+#: views/groups.php:126 views/users.php:396
 msgid "Language for this user"
 msgstr "Sprache für diesen Benutzer"
 
@@ -893,7 +893,7 @@ msgstr ""
 msgid "Manage groups locally"
 msgstr "Gruppen lokal verwalten"
 
-#: views/groups.php:280
+#: views/groups.php:281
 #, php-format
 msgid "May this group log in to the %s Administration Pages?"
 msgstr "Darf sich diese Gruppe an der %s-Verwaltungsseite anmelden?"
@@ -951,7 +951,7 @@ msgstr ""
 #: views/directories.php:76 views/general.php:32 views/general.php:61
 #: views/general.php:170 views/general.php:211 views/general.php:252
 #: views/general.php:293 views/general.php:334 views/general.php:375
-#: views/general.php:416 views/groups.php:272 views/groups.php:297
+#: views/general.php:416 views/groups.php:273 views/groups.php:298
 #: views/msad2.php:223 views/openldap.php:59 views/openldap2.php:201
 #: views/quickCreate.php:16 views/users.php:649 views/users.php:676
 msgid "No"
@@ -1112,7 +1112,7 @@ msgstr "Voicemail-Benutzer %s entfernt"
 msgid "Reset"
 msgstr "Zurücksetzen"
 
-#: views/groups.php:327
+#: views/groups.php:328
 msgid ""
 "Restrict this groups's view to only Extensions, Ring Groups, and Queues "
 "within this range."
@@ -1145,7 +1145,7 @@ msgstr "Wählen Sie ein Benutzerverzeichnis:"
 msgid "Select a User"
 msgstr ""
 
-#: views/groups.php:386
+#: views/groups.php:387
 msgid "Select a landing page that will be used by default."
 msgstr ""
 
@@ -1181,7 +1181,7 @@ msgstr ""
 "Benutzerverwaltung verknüpft werden soll oder wählen Sie 'Keiner', um keine "
 "Zuordnung zu einem Benutzer anzulegen"
 
-#: views/groups.php:357
+#: views/groups.php:358
 msgid "Select the Admin Sections this group should have access to."
 msgstr "Wählen Sie die Admin-Bereiche, auf die diese Gruppe zugreifen darf."
 
@@ -1317,11 +1317,11 @@ msgstr ""
 msgid "The Active Directory secure connection type"
 msgstr "Art der sicheren Verbindung zum Active-Directory"
 
-#: assets/js/userman.js:513
+#: assets/js/userman.js:521
 msgid "The Browser Language could not be determined"
 msgstr "Die Browser-Sprache konnte nicht bestimmt werden"
 
-#: assets/js/userman.js:533
+#: assets/js/userman.js:541
 msgid "The Browser Timezone could not be determined"
 msgstr "Die Browser-Zeitzone konnte nicht bestimmt werden"
 
@@ -1386,11 +1386,11 @@ msgstr "Die Art der sicheren Verbindung für OpenLDAP"
 msgid "The OpenLDAP username"
 msgstr "Der OpenLDAP-Benutzername"
 
-#: assets/js/userman.js:523
+#: assets/js/userman.js:531
 msgid "The PBX Language is not set"
 msgstr "Die TK-Anlagen Sprache ist nicht definiert"
 
-#: assets/js/userman.js:543
+#: assets/js/userman.js:551
 msgid "The PBX Timezone is not set"
 msgstr "Die TK-Anlagen Zeitzone ist nicht definiert"
 
@@ -1599,7 +1599,7 @@ msgstr ""
 "angegeben, wird das Gruppen-/System-Format verwendet. Für weitere Formate "
 "schauen Sie bitte unter http://momentjs.com/docs/#/displaying/format/ nach"
 
-#: views/groups.php:208
+#: views/groups.php:209
 msgid ""
 "The format dates and times should display in. The default of \"llll\" is "
 "locale aware. If left blank this will use the system format. For more "
@@ -1621,7 +1621,7 @@ msgstr ""
 "angegeben, wird das Gruppen-/System-Format verwendet. Für weitere Formate "
 "schauen Sie bitte unter http://momentjs.com/docs/#/displaying/format/ nach"
 
-#: views/groups.php:252
+#: views/groups.php:253
 msgid ""
 "The format dates should display in. The default of \"l\" is locale aware. If "
 "left blank this will use the system format. For more formats please see: "
@@ -1643,7 +1643,7 @@ msgstr ""
 "angegeben, wird das Gruppen-/System-Format verwendet. Für weitere Formate "
 "schauen Sie bitte unter http://momentjs.com/docs/#/displaying/format/ nach"
 
-#: views/groups.php:230
+#: views/groups.php:231
 msgid ""
 "The format times should display in. The default of \"LT\" is locale aware. "
 "If left blank this will use the system format. For more formats please see: "
@@ -1804,15 +1804,15 @@ msgstr ""
 msgid "Threshold Weak Password"
 msgstr ""
 
-#: views/groups.php:218 views/users.php:590
+#: views/groups.php:219 views/users.php:590
 msgid "Time Format"
 msgstr "Zeitformat"
 
-#: views/groups.php:137 views/users.php:408
+#: views/groups.php:138 views/users.php:408
 msgid "Timezone"
 msgstr "Zeitzone"
 
-#: views/groups.php:157 views/users.php:428
+#: views/groups.php:158 views/users.php:428
 msgid "Timezone for this user"
 msgstr "Die Zeitzone dieses Benutzers"
 
@@ -1820,7 +1820,7 @@ msgstr "Die Zeitzone dieses Benutzers"
 msgid "Title"
 msgstr "Titel"
 
-#: assets/js/userman.js:449
+#: assets/js/userman.js:457
 msgid "True"
 msgstr "Wahr"
 
@@ -1892,11 +1892,11 @@ msgstr "Aktualisiere"
 msgid "Uppercase"
 msgstr ""
 
-#: views/groups.php:112 views/users.php:383
+#: views/groups.php:113 views/users.php:383
 msgid "Use Browser Language"
 msgstr "Sprache des Browsers verwenden"
 
-#: views/groups.php:144 views/users.php:415
+#: views/groups.php:145 views/users.php:415
 msgid "Use Browser Timezone"
 msgstr "Zeitzone des Browsers verwenden"
 
@@ -1904,19 +1904,19 @@ msgstr "Zeitzone des Browsers verwenden"
 msgid "Use Custom Username"
 msgstr "Benutzerdefinierten Benutzernamen verwenden"
 
-#: views/groups.php:115 views/users.php:386
+#: views/groups.php:116 views/users.php:386
 msgid "Use PBX Language"
 msgstr "Sprache der TK-Anlage verwenden"
 
-#: views/groups.php:147 views/users.php:418
+#: views/groups.php:148 views/users.php:418
 msgid "Use PBX Timezone"
 msgstr "Zeitzone der TK-Anlage verwenden"
 
-#: views/groups.php:110
+#: views/groups.php:111
 msgid "Use System Language"
 msgstr "Systemsprache verwenden"
 
-#: views/groups.php:142
+#: views/groups.php:143
 msgid "Use System Timezone"
 msgstr "System-Zeitzone verwenden"
 
@@ -2089,7 +2089,7 @@ msgstr "Benutzername kann nicht leer sein"
 msgid "Username/Password Can Not Be Blank!"
 msgstr "Benutzername/Passwort können nicht leer sein!"
 
-#: views/groups.php:168 views/welcome.php:25
+#: views/groups.php:169 views/welcome.php:25
 msgid "Users"
 msgstr "Benutzer"
 
@@ -2097,7 +2097,7 @@ msgstr "Benutzer"
 msgid "Value"
 msgstr ""
 
-#: views/groups.php:315 views/users.php:696
+#: views/groups.php:316 views/users.php:696
 msgid "Visible Extension Range"
 msgstr "Bereich der sichtbaren Nebenstellen"
 
@@ -2137,7 +2137,7 @@ msgstr ""
 msgid "Which groups this user is in"
 msgstr "In welchen Gruppen ist der Benutzer Mitglied"
 
-#: views/groups.php:184
+#: views/groups.php:185
 msgid "Which users are in this group"
 msgstr "Welche Benutzer sind in dieser Gruppe"
 
@@ -2148,7 +2148,7 @@ msgstr "Dienstliche Telefonnummer"
 #: views/directories.php:74 views/general.php:30 views/general.php:59
 #: views/general.php:168 views/general.php:209 views/general.php:250
 #: views/general.php:291 views/general.php:332 views/general.php:373
-#: views/general.php:414 views/groups.php:270 views/groups.php:295
+#: views/general.php:414 views/groups.php:271 views/groups.php:296
 #: views/msad2.php:221 views/openldap.php:57 views/openldap2.php:199
 #: views/quickCreate.php:14 views/users.php:647 views/users.php:674
 msgid "Yes"
