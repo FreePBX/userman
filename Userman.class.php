@@ -3083,12 +3083,14 @@ class Userman extends FreePBX_Helpers implements BMO {
 	 * @param mixed $value Can be an array, boolean or string or integer
 	 * @return mixed false if nothing, else array
 	 */
-	public function setModuleSettingByID($uid,$module,$setting,$value) {
+	public function setModuleSettingByID($uid,$module,$setting,$value,$emptyExistingCache = true) {
 		if(is_null($value)) {
 			$sql = "DELETE FROM ".$this->userSettingsTable." WHERE uid = :id AND module = :module AND `key` = :setting";
 			$sth = $this->db->prepare($sql);
 			$sth->execute(array(':id' => $uid, ':module' => $module, ':setting' => $setting));
-			$this->moduleUserSettingsCache = array();
+			if($emptyExistingCache){
+				$this->moduleUserSettingsCache = array();
+			}
 			return true;
 		}
 		if(is_bool($value)) {
@@ -3099,7 +3101,9 @@ class Userman extends FreePBX_Helpers implements BMO {
 		$sql = "REPLACE INTO ".$this->userSettingsTable." (`uid`, `module`, `key`, `val`, `type`) VALUES(:id, :module, :setting, :value, :type)";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':id' => $uid, ':module' => $module, ':setting' => $setting, ':value' => $value, ':type' => $type));
-		$this->moduleUserSettingsCache = array();
+		if($emptyExistingCache){
+			$this->moduleUserSettingsCache = array();
+		}
 		return true;
 	}
 
