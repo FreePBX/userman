@@ -2,7 +2,6 @@
 
 namespace Adldap;
 
-use Adldap\Schemas\SchemaInterface;
 use Adldap\Connections\ProviderInterface;
 use Adldap\Connections\ConnectionInterface;
 
@@ -11,16 +10,15 @@ interface AdldapInterface
     /**
      * Add a provider by the specified name.
      *
-     * @param ProviderInterface|array $configuration
-     * @param string                  $name
-     * @param ConnectionInterface     $connection
-     * @param SchemaInterface         $schema
-     *
-     * @return $this
+     * @param mixed               $configuration
+     * @param string              $name
+     * @param ConnectionInterface $connection
      *
      * @throws \InvalidArgumentException When an invalid type is given as the configuration argument.
+     *
+     * @return $this
      */
-    public function addProvider($configuration = [], $name, ConnectionInterface $connection = null, SchemaInterface $schema = null);
+    public function addProvider($configuration, $name, ConnectionInterface $connection = null);
 
     /**
      * Returns all of the connection providers.
@@ -30,7 +28,7 @@ interface AdldapInterface
     public function getProviders();
 
     /**
-     * Retrieves a Provider using it's specified name.
+     * Retrieves a Provider using its specified name.
      *
      * @param string $name
      *

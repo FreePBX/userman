@@ -235,11 +235,11 @@ class Openldap2 extends Auth {
 			$mySchema = new \App\Schemas\Openldap2($this->config);
 			$config = [
 				// Mandatory Configuration Options
-				'domain_controllers'    => 
+				'hosts'    => 
 					preg_split("/[ ,]/", $this->config['host']),
 				'base_dn'               => $this->config['basedn'],
-				'admin_username'        => $this->config['username'],
-				'admin_password'        => $this->config['password'],
+				'admin'        => $this->config['username'],
+				'password'        => $this->config['password'],
 
 				// Optional Configuration Options
 				'port'                  => $this->config['port'],

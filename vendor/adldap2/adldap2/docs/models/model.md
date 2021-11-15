@@ -1,28 +1,9 @@
-# Models
+# Creating / Updating
 
-- [Creating](#creating)
-    - [Available Make Methods](#available-make-methods)
-- [Saving](#saving)
-    - [Creating Manually](#creating-manually)
-    - [Updating Manually](#updating-manually)
-- [Checking Existence](#checking-existence)
-- [Attributes](#attributes)
-    - [Getting Attributes](#getting-attributes)
-    - [Using a Getter](#using-a-getter)
-        - [Available Getters](#available-getters-on-all-models)
-    - [Getting Dirty Attributes](#getting-dirty-modified-attributes)
-    - [Getting Original Attributes](#getting-original-unmodified-attributes)
-    - [Setting Attributes](#setting-attributes)
-    - [Creating Attributes](#creating-attributes)
-    - [Updating Attributes](#updating-attributes)
-    - [Removing Attributes](#removing-attributes)
-    - [Checking Attributes](#checking-attributes)
-        - [Checking Existence of Attributes](#checking-existence-of-attributes)
-        - [Counting the Models Attributes](#counting-the-models-attributes)
-        - [Checking if a Model is Writable](#checking-if-a-model-is-writable)
-    - [Force Re-Syncing Attributes](#force-re-syncing-a-models-attributes)
-- [Moving / Renaming](#moving--renaming)
-- [Deleting](#deleting)
+## Introduction
+
+Adldap2 implements the [ActiveRecord](https://en.wikipedia.org/wiki/Active_record_pattern) pattern.
+This means that each LDAP record in your directory is represented as it's own model instance.
 
 ## Creating
 
@@ -40,7 +21,7 @@ Or you can chain all methods if you'd prefer:
 $user = $provider->make()->user();
 ```
 
-### Available Make Methods:
+### Available Make Methods
 
 When calling a make method, all of them accept an `$attributes` parameter
 to fill the model with your specified attributes.
@@ -94,15 +75,15 @@ if ($user->save()) {
 }
 ```
 
-> **Note**: When a model is saved successfully (whether created or updated),
-> the models attributes are re-synced in the background from your AD.
+> **Note**: When a model is saved successfully (whether created or updated), the
+> models attributes are re-synced in the background from your LDAP server.
 > 
 > This allows you to perform other operations during the same
 > request that require an existing model.
 
 ### Creating (Manually)
 
-If you are sure the model **does not exist** already inside your AD, you can use the `create()` method:
+If you are sure the model **does not exist** already inside your LDAP directory, you can use the `create()` method:
 
 ```php
 $user = $provider->make()->user([
@@ -122,7 +103,7 @@ if ($user->create()) {
 
 ### Updating (Manually)
 
-If you are sure the model **does exist** already inside your AD, you can use the `update()` method:
+If you are sure the model **does exist** already inside your LDAP directory, you can use the `update()` method:
 
 ```php
 $user = $provider->search()->whereEquals('cn', 'John Doe')->firstOrFail();
@@ -140,7 +121,7 @@ if ($user->update()) {
 
 If you need to check the existence of a model, use the property `exists`.
 
-How does it know if the model exists in AD? Well, when models are constructed from
+How does it know if the model exists in your LDAP directory? Well, when models are constructed from
 search results, the `exists` property on the model is set to `true`.
 
 ```php
@@ -149,9 +130,7 @@ $user = $provider->search()->find('jdoe');
 $user->exists; // Returns true.
 
 if ($user->delete()) {
-
     $user->exists; // Returns false.
-
 }
 ```
 
@@ -165,16 +144,53 @@ $user = $provider->make()->user([
 $user->exists; // Returns false.
 
 if ($user->save()) {
-    
     $user->exists; // Returns true.
-    
 }
 ```
 
 ## Attributes
 
-Since all models extend from the base class `Adldap\Models\Model`, there are many
-useful methods that you can utilize on every model.
+Due to LDAPs multi-valued nature, all LDAP attributes inside a model have their own array.
+
+For example, a models attributes may contain the following:
+
+```php
+var_dump($user->getAttributes());
+
+// Returns:
+/*
+[
+    'cn' => [
+        0 => 'John Doe',
+    ],
+    'sn' => [
+        0 => 'Doe',
+    ],
+    'givenname' => [
+        0 => 'John'
+    ],
+    'useraccountcontrol' => [
+        0 => 512
+    ],
+    'mail' => [
+        0 => 'jdoe@acme.org',
+        1 => 'john-doe@acme.org',
+    ],
+    'memberof' => [
+        0 => 'cn=Accountants,ou=Groups,dc=acme,dc=org',
+        1 => 'cn=Employees,ou=Groups,dc=acme,dc=org',
+        2 => 'cn=Users,ou=Groups,dc=acme,dc=org',
+    ],
+]
+*/
+```
+
+You can notice in the above dumped array that each attribute contains
+its own array with a value assigned to the first key.
+
+Since all models extend from the base class `Adldap\Models\Model`, there
+are many useful methods that you can use on every model to easily
+retrieve these attributes you're looking for.
 
 ### Getting Attributes
 
@@ -213,13 +229,7 @@ For example, to retrieve a users email address, use the method `getEmail()`:
 $user->getEmail();
 ```
 
-Or to retrieve all of a users email addresses, use the method `getEmails()`:
-
-```php
-$user->getEmails();
-```
-
-##### Available Getters on All Models
+##### Other Methods
 
 The following methods are available on all returned models:
 
@@ -361,6 +371,23 @@ $user->fill([
 ]);
 ```
 
+#### Setting Boolean Attributes
+
+When setting boolean attribute values, you cannot use `0` / `1` / `true` / `false` as these
+are simply converted to integer values when saving and your LDAP server will
+likely return an error for doing so on certain attributes.
+
+You will need to use the string versions of the boolean (`'TRUE'` / `'FALSE'`) for the
+boolean attribute to be set properly on your LDAP server.
+
+Here's an example:
+
+```php
+$user->setFirstAttribute('msExchHideFromAddressLists', 'TRUE');
+
+$user->save();
+```
+
 ### Creating Attributes
 
 To create an attribute that does not exist on the model, you can set it like a regular property:
@@ -437,16 +464,12 @@ To see if a model contains an attribute, use the method `hasAttribute()`:
 ```php
 // Checking if a base attribute exists:
 if ($user->hasAttribute('mail')) {
-
     // This user contains an email address.
-
 }
 
 // Checking if a sub attribute exists, by key:
 if ($user->hasAttribute('mail', 1)) {
- 
     // This user contains a second email address.
- 
 }
 ```
 
@@ -460,15 +483,33 @@ $count = $user->countAttributes();
 var_dump($count); // Returns int
 ```
 
+#### Checking if a Model is contained in an OU
+
+To check if a model is located inside an OU, use the `inOu()` method:
+
+```php
+if ($model->inOu('User Accounts')) {
+    // This model is inside the 'User Accounts' OU.
+}
+```
+
+You can also use an OU model instance:
+
+```php
+$serviceAccounts = $provider->search()->ous()->find('Service Accounts');
+
+if ($model->inOu($serviceAccounts)) {
+    // This model is inside the 'Service Accounts' OU.
+}
+```
+
 #### Checking if a Model is Writable
 
 To check if the model can be written to, use the method `isWritable()`:
 
 ```php
 if ($model->isWritable()) {
-
     // You can modify this model.
-    
 }
 ```
 
@@ -480,42 +521,49 @@ If you need to forcefully re-sync a models attributes, use the method `syncRaw()
 $user->syncRaw();
 ```
 
-> **Note**: This will query your AD server for the current model, and re-synchronize
+> **Note**: This will query your LDAP server for the current model, and re-synchronize
 > it's attributes. This is only recommended if your creating / updating / deleting
 > attributes manually through your LDAP connection.
 
 ## Moving / Renaming
 
-To move a user from one DN or OU to another, use the `move($newRdn, $newParentDn)` method:
+To move a user from one DN or OU to another, use the `move()` method:
+
+> **Note**: The `move()` method is actually an alias for the `rename()` method.
 
 ```php
-// New Relative distinguished name.
-$newRdn = 'cn=John Doe';
-
 // New parent distiguished name.
 $newParentDn = 'OU=New Ou,DC=corp,DC=local';
 
-if ($user->move($newRdn, $newParentDn) {
+if ($user->move($newParentDn)) {
     // User was successfully moved to the new OU.
 }
 ```
 
-If you would like to keep the models old RDN along side their new RDN, pass in false in the last parameter:
+You can also provide a model to move the child model into:
 
 ```php
-// New Relative distinguished name.
-$newRdn = 'cn=John Doe';
+// New parent OU.
+$newParentOu = $provider->search()->ous()->find('Accounting');
 
+if ($user->move($newParentOu)) {
+    // User was successfully moved to the new OU.
+}
+```
+
+If you would like to keep the models old RDN along side their new RDN, pass in false in the second parameter:
+
+```php
 // New parent distiguished name.
 $newParentDn = 'OU=New Ou,DC=corp,DC=local';
 
-if ($user->move($newRdn, $newParentDn, $deleteOldRdn = false) {
+if ($user->move($newParentDn, $deleteOldRdn = false)) {
     // User was successfully moved to the new OU,
     // and their old RDN has been left in-tact.
 }
 ```
 
-To rename a users DN, just pass in their new relative distinguished name in the `rename($newRdn)` method:
+To rename a users DN, just pass in their new relative distinguished name in the `rename()` method:
 
 ```php
 $newRdn = 'cn=New Name';
@@ -524,8 +572,6 @@ if ($user->rename($newRdn)) {
     // User was successfully renamed.
 }
 ```
-
-> **Note**: The `rename()` method is actually an alias for the `move()` method.
 
 ## Deleting
 
@@ -541,4 +587,69 @@ if ($user->delete()) {
 
     echo $user->exists; // Returns false.
 }
+```
+
+## Extending
+
+> **Note**: This feature was introduced in `v8.0.0`.
+
+To use your own models, you will need to create a new [Schema](../schema.md).
+
+Once you have created your own schema, you must insert it inside the construct of your provider.
+
+Let's walk through this process.
+
+First we'll create our model we'd like to extend / override:
+
+> **Note**: Your custom model **must** extend from an existing Adldap2 model.
+> This is due to methods and attributes that only exist on these classes.
+
+```php
+namespace App\Ldap\Models;
+
+use Adldap\Models\User as Model;
+
+class User extends Model
+{
+    public function getCommonName()
+    {
+        // Overriding model method.
+    }
+}
+```
+
+Now, we'll create our custom schema and return our models class name:
+
+```php
+namespace App\Ldap\Schemas;
+
+use App\Ldap\Models\User;
+
+class LdapSchema extends ActiveDirectory
+{
+    public function userModel()
+    {
+        return User::class;
+    }
+}
+```
+
+Finally, when we create a provider, we need to insert our Schema into the configuration:
+
+```php
+$config = [
+    'hosts' => ['...'],
+    
+    'username' => 'admin',
+    'password' => 'P@ssword',
+    
+    'schema' => MyApp\LdapSchema::class,
+];
+
+$ad = new Adldap($config);
+
+$provider = $ad->connect();
+
+// If `jdoe` exists, your custom model will be returned.
+$user = $provider->search()->users()->find('jdoe');
 ```

@@ -6,14 +6,23 @@ use Adldap\Query\Builder;
 use Adldap\Schemas\ActiveDirectory;
 use Adldap\Schemas\SchemaInterface;
 
+/**
+ * Class Factory.
+ *
+ * Creates new LDAP models.
+ */
 class Factory
 {
     /**
+     * The LDAP query builder.
+     *
      * @var Builder
      */
     protected $query;
 
     /**
+     * The LDAP schema.
+     *
      * @var SchemaInterface
      */
     protected $schema;
@@ -46,6 +55,8 @@ class Factory
     /**
      * Sets the current schema.
      *
+     * If null is given, a default ActiveDirectory schema is set.
+     *
      * @param SchemaInterface|null $schema
      *
      * @return $this
@@ -66,7 +77,9 @@ class Factory
      */
     public function entry(array $attributes = [])
     {
-        return new Entry($attributes, $this->query);
+        $model = $this->schema->entryModel();
+
+        return new $model($attributes, $this->query);
     }
 
     /**
@@ -78,13 +91,10 @@ class Factory
      */
     public function user(array $attributes = [])
     {
-        return (new User($attributes, $this->query))
-            ->setAttribute($this->schema->objectClass(), [
-                $this->schema->top(),
-                $this->schema->person(),
-                $this->schema->organizationalPerson(),
-                $this->schema->user(),
-            ]);
+        $model = $this->schema->userModel();
+
+        return (new $model($attributes, $this->query))
+            ->setAttribute($this->schema->objectClass(), $this->schema->userObjectClasses());
     }
 
     /**
@@ -96,10 +106,30 @@ class Factory
      */
     public function ou(array $attributes = [])
     {
-        return (new OrganizationalUnit($attributes, $this->query))
+        $model = $this->schema->organizationalUnitModel();
+
+        return (new $model($attributes, $this->query))
             ->setAttribute($this->schema->objectClass(), [
                 $this->schema->top(),
                 $this->schema->organizationalUnit(),
+            ]);
+    }
+
+    /**
+     * Creates a new organizational unit instance.
+     *
+     * @param array $attributes
+     *
+     * @return Organization
+     */
+    public function organization(array $attributes = [])
+    {
+        $model = $this->schema->organizationModel();
+
+        return (new $model($attributes, $this->query))
+            ->setAttribute($this->schema->objectClass(), [
+                $this->schema->top(),
+                $this->schema->organization(),
             ]);
     }
 
@@ -112,7 +142,9 @@ class Factory
      */
     public function group(array $attributes = [])
     {
-        return (new Group($attributes, $this->query))
+        $model = $this->schema->groupModel();
+
+        return (new $model($attributes, $this->query))
             ->setAttribute($this->schema->objectClass(), [
                 $this->schema->top(),
                 $this->schema->objectCategoryGroup(),
@@ -128,8 +160,10 @@ class Factory
      */
     public function container(array $attributes = [])
     {
-        return (new Container($attributes, $this->query))
-            ->setAttribute($this->schema->objectClass(), $this->schema->organizationalUnit());
+        $model = $this->schema->containerModel();
+
+        return (new $model($attributes, $this->query))
+            ->setAttribute($this->schema->objectClass(), $this->schema->objectClassContainer());
     }
 
     /**
@@ -141,7 +175,9 @@ class Factory
      */
     public function contact(array $attributes = [])
     {
-        return (new User($attributes, $this->query))
+        $model = $this->schema->contactModel();
+
+        return (new $model($attributes, $this->query))
             ->setAttribute($this->schema->objectClass(), [
                 $this->schema->top(),
                 $this->schema->person(),
@@ -159,7 +195,9 @@ class Factory
      */
     public function computer(array $attributes = [])
     {
-        return (new Computer($attributes, $this->query))
+        $model = $this->schema->computerModel();
+
+        return (new $model($attributes, $this->query))
             ->setAttribute($this->schema->objectClass(), [
                 $this->schema->top(),
                 $this->schema->person(),

@@ -4,30 +4,37 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7e6ed4270cb9505d28277ad3d10d4e06",
+    "content-hash": "25e8406e7e7a5edb8d89253aea1f2808",
     "packages": [
         {
             "name": "adldap2/adldap2",
-            "version": "v7.0.15",
+            "version": "v10.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Adldap2/Adldap2.git",
-                "reference": "d40f983d58dbecd516856786474893c5fb4b7297"
+                "reference": "c2a8f72455d3438377d955fc0f4b9ed836b47463"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Adldap2/Adldap2/zipball/d40f983d58dbecd516856786474893c5fb4b7297",
-                "reference": "d40f983d58dbecd516856786474893c5fb4b7297",
+                "url": "https://api.github.com/repos/Adldap2/Adldap2/zipball/c2a8f72455d3438377d955fc0f4b9ed836b47463",
+                "reference": "c2a8f72455d3438377d955fc0f4b9ed836b47463",
                 "shasum": ""
             },
             "require": {
+                "ext-json": "*",
                 "ext-ldap": "*",
-                "illuminate/support": "~5.0",
-                "php": ">=5.5.9"
+                "illuminate/contracts": "~5.0|~6.0|~7.0|~8.0",
+                "php": ">=7.0",
+                "psr/log": "~1.0",
+                "psr/simple-cache": "~1.0",
+                "tightenco/collect": "~5.0|~6.0|~7.0|~8.0"
             },
             "require-dev": {
-                "mockery/mockery": "~0.9",
-                "phpunit/phpunit": "~4.8|~5.6"
+                "mockery/mockery": "~1.0",
+                "phpunit/phpunit": "~6.0|~7.0|~8.0"
+            },
+            "suggest": {
+                "ext-fileinfo": "fileinfo is required when retrieving user encoded thumbnails"
             },
             "type": "library",
             "autoload": {
@@ -46,7 +53,7 @@
                     "role": "Developer"
                 }
             ],
-            "description": "A PHP LDAP Package for Active Directory Manipulation.",
+            "description": "A PHP LDAP Package for humans.",
             "keywords": [
                 "active directory",
                 "ad",
@@ -57,10 +64,12 @@
                 "windows"
             ],
             "support": {
+                "docs": "https://github.com/Adldap2/Adldap2/blob/master/readme.md",
+                "email": "steven_bauman@outlook.com",
                 "issues": "https://github.com/Adldap2/Adldap2/issues",
                 "source": "https://github.com/Adldap2/Adldap2"
             },
-            "time": "2017-05-16T13:46:45+00:00"
+            "time": "2021-08-09T15:22:35+00:00"
         },
         {
             "name": "bjeavons/zxcvbn-php",
@@ -389,6 +398,107 @@
                 "source": "https://github.com/paragonie/random_compat"
             },
             "time": "2021-04-17T09:33:01+00:00"
+        },
+        {
+            "name": "psr/log",
+            "version": "1.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/log.git",
+                "reference": "d49695b909c3b7628b6289db5479a1c204601f11"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/d49695b909c3b7628b6289db5479a1c204601f11",
+                "reference": "d49695b909c3b7628b6289db5479a1c204601f11",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Log\\": "Psr/Log/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "https://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for logging libraries",
+            "homepage": "https://github.com/php-fig/log",
+            "keywords": [
+                "log",
+                "psr",
+                "psr-3"
+            ],
+            "support": {
+                "source": "https://github.com/php-fig/log/tree/1.1.4"
+            },
+            "time": "2021-05-03T11:20:27+00:00"
+        },
+        {
+            "name": "psr/simple-cache",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/simple-cache.git",
+                "reference": "408d5eafb83c57f6365a3ca330ff23aa4a5fa39b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/simple-cache/zipball/408d5eafb83c57f6365a3ca330ff23aa4a5fa39b",
+                "reference": "408d5eafb83c57f6365a3ca330ff23aa4a5fa39b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\SimpleCache\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interfaces for simple caching",
+            "keywords": [
+                "cache",
+                "caching",
+                "psr",
+                "psr-16",
+                "simple-cache"
+            ],
+            "support": {
+                "source": "https://github.com/php-fig/simple-cache/tree/master"
+            },
+            "time": "2017-10-23T01:57:42+00:00"
         }
     ],
     "packages-dev": [],

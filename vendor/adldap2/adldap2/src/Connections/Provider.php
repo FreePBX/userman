@@ -2,16 +2,25 @@
 
 namespace Adldap\Connections;
 
-use InvalidArgumentException;
+use Adldap\Adldap;
 use Adldap\Auth\Guard;
-use Adldap\Query\Builder;
+use Adldap\Query\Cache;
+use InvalidArgumentException;
 use Adldap\Auth\GuardInterface;
 use Adldap\Schemas\ActiveDirectory;
 use Adldap\Schemas\SchemaInterface;
+use Psr\SimpleCache\CacheInterface;
 use Adldap\Models\Factory as ModelFactory;
-use Adldap\Search\Factory as SearchFactory;
+use Adldap\Query\Factory as SearchFactory;
 use Adldap\Configuration\DomainConfiguration;
 
+/**
+ * Class Provider.
+ *
+ * Contains the LDAP connection and domain configuration to
+ * instantiate factories for retrieving and creating
+ * LDAP records as well as authentication (binding).
+ */
 class Provider implements ProviderInterface
 {
     /**
@@ -43,26 +52,29 @@ class Provider implements ProviderInterface
     protected $guard;
 
     /**
-     * {@inheritdoc}
+     * The providers cache instance.
+     *
+     * @var Cache|null
      */
-    public function __construct($configuration = [], ConnectionInterface $connection = null, SchemaInterface $schema = null)
-    {
-        $this->setConfiguration($configuration)
-            ->setConnection($connection)
-            ->setSchema($schema);
-    }
+    protected $cache;
 
     /**
      * {@inheritdoc}
      */
+    public function __construct($configuration = [], ConnectionInterface $connection = null)
+    {
+        $this->setConfiguration($configuration)
+            ->setConnection($connection);
+    }
+
+    /**
+     * Does nothing. Implemented in order to remain backwards compatible.
+     *
+     * @deprecated since v10.3.0
+     */
     public function __destruct()
     {
-        if (
-            $this->connection instanceof ConnectionInterface &&
-            $this->connection->isBound()
-        ) {
-            $this->connection->close();
-        }
+        //
     }
 
     /**
@@ -71,17 +83,25 @@ class Provider implements ProviderInterface
     public function setConfiguration($configuration = [])
     {
         if (is_array($configuration)) {
-            // Construct a configuration instance if an array is given.
             $configuration = new DomainConfiguration($configuration);
-        } elseif (!$configuration instanceof DomainConfiguration) {
-            $class = DomainConfiguration::class;
-
-            throw new InvalidArgumentException("Configuration must be either an array or instance of $class");
         }
 
-        $this->configuration = $configuration;
+        if ($configuration instanceof DomainConfiguration) {
+            $this->configuration = $configuration;
 
-        return $this;
+            $schema = $configuration->get('schema');
+
+            // We will update our schema here when our configuration is set.
+            $this->setSchema(new $schema());
+
+            return $this;
+        }
+
+        $class = DomainConfiguration::class;
+
+        throw new InvalidArgumentException(
+            "Configuration must be array or instance of $class"
+        );
     }
 
     /**
@@ -89,7 +109,7 @@ class Provider implements ProviderInterface
      */
     public function setConnection(ConnectionInterface $connection = null)
     {
-        // We'll create a standard connection if one isn't given.
+        // We will create a standard connection if one isn't given.
         $this->connection = $connection ?: new Ldap();
 
         // Prepare the connection.
@@ -97,7 +117,7 @@ class Provider implements ProviderInterface
 
         // Instantiate the LDAP connection.
         $this->connection->connect(
-            $this->configuration->get('domain_controllers'),
+            $this->configuration->get('hosts'),
             $this->configuration->get('port')
         );
 
@@ -120,6 +140,20 @@ class Provider implements ProviderInterface
     public function setGuard(GuardInterface $guard)
     {
         $this->guard = $guard;
+
+        return $this;
+    }
+
+    /**
+     * Sets the cache store.
+     *
+     * @param CacheInterface $store
+     *
+     * @return $this
+     */
+    public function setCache(CacheInterface $store)
+    {
+        $this->cache = new Cache($store);
 
         return $this;
     }
@@ -165,7 +199,11 @@ class Provider implements ProviderInterface
      */
     public function getDefaultGuard(ConnectionInterface $connection, DomainConfiguration $configuration)
     {
-        return new Guard($connection, $configuration);
+        $guard = new Guard($connection, $configuration);
+
+        $guard->setDispatcher(Adldap::getEventDispatcher());
+
+        return $guard;
     }
 
     /**
@@ -173,9 +211,8 @@ class Provider implements ProviderInterface
      */
     public function make()
     {
-        return $this->newModelFactory(
-            $this->search()->getQuery(),
-            $this->schema
+        return new ModelFactory(
+            $this->search()->newQuery()
         );
     }
 
@@ -184,11 +221,17 @@ class Provider implements ProviderInterface
      */
     public function search()
     {
-        return $this->newSearchFactory(
+        $factory = new SearchFactory(
             $this->connection,
             $this->schema,
             $this->configuration->get('base_dn')
         );
+
+        if ($this->cache) {
+            $factory->setCache($this->cache);
+        }
+
+        return $factory;
     }
 
     /**
@@ -220,34 +263,9 @@ class Provider implements ProviderInterface
     }
 
     /**
-     * Creates a new model factory.
-     *
-     * @param Builder         $builder
-     * @param SchemaInterface $schema
-     *
-     * @return ModelFactory
-     */
-    protected function newModelFactory(Builder $builder, SchemaInterface $schema)
-    {
-        return new ModelFactory($builder, $schema);
-    }
-
-    /**
-     * Creates a new search factory.
-     *
-     * @param ConnectionInterface $connection
-     * @param SchemaInterface     $schema
-     * @param string              $baseDn
-     *
-     * @return SearchFactory
-     */
-    protected function newSearchFactory(ConnectionInterface $connection, SchemaInterface $schema, $baseDn)
-    {
-        return new SearchFactory($connection, $schema, $baseDn);
-    }
-
-    /**
      * Prepares the connection by setting configured parameters.
+     *
+     * @throws \Adldap\Configuration\ConfigurationException When configuration options requested do not exist
      *
      * @return void
      */
@@ -263,8 +281,8 @@ class Provider implements ProviderInterface
             $this->configuration->get('custom_options'),
             [
                 LDAP_OPT_PROTOCOL_VERSION => $this->configuration->get('version'),
-                LDAP_OPT_NETWORK_TIMEOUT => $this->configuration->get('timeout'),
-                LDAP_OPT_REFERRALS => $this->configuration->get('follow_referrals')
+                LDAP_OPT_NETWORK_TIMEOUT  => $this->configuration->get('timeout'),
+                LDAP_OPT_REFERRALS        => $this->configuration->get('follow_referrals'),
             ]
         );
 

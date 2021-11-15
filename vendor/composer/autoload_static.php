@@ -16,6 +16,11 @@ class ComposerStaticInit268a4c9e6f4d2a15cc37d250ad62db1f
         array (
             'ZxcvbnPhp\\' => 10,
         ),
+        'P' => 
+        array (
+            'Psr\\SimpleCache\\' => 16,
+            'Psr\\Log\\' => 8,
+        ),
         'I' => 
         array (
             'Illuminate\\Support\\' => 19,
@@ -31,6 +36,14 @@ class ComposerStaticInit268a4c9e6f4d2a15cc37d250ad62db1f
         'ZxcvbnPhp\\' => 
         array (
             0 => __DIR__ . '/..' . '/bjeavons/zxcvbn-php/src',
+        ),
+        'Psr\\SimpleCache\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/simple-cache/src',
+        ),
+        'Psr\\Log\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
         ),
         'Illuminate\\Support\\' => 
         array (
