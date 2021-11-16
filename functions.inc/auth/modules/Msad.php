@@ -211,7 +211,7 @@ class Msad extends Auth {
 				'use_tls'               => $this->use_tls,
 				'hosts'    => [$this->host],
 				'base_dn'               => $this->dn,
-				'admin'        => $this->user,
+				'username'        => $this->user,
 				'password'        => $this->password,
 			];
 

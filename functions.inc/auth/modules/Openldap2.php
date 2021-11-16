@@ -238,7 +238,7 @@ class Openldap2 extends Auth {
 				'hosts'    => 
 					preg_split("/[ ,]/", $this->config['host']),
 				'base_dn'               => $this->config['basedn'],
-				'admin'        => $this->config['username'],
+				'username'        => $this->config['username'],
 				'password'        => $this->config['password'],
 
 				// Optional Configuration Options
