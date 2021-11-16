@@ -209,10 +209,10 @@ class Msad extends Auth {
 			$config = [
 				'account_suffix'        => $this->account_suffix,
 				'use_tls'               => $this->use_tls,
-				'domain_controllers'    => [$this->host],
+				'hosts'    => [$this->host],
 				'base_dn'               => $this->dn,
-				'admin_username'        => $this->user,
-				'admin_password'        => $this->password,
+				'admin'        => $this->user,
+				'password'        => $this->password,
 			];
 
 			$this->provider = new \Adldap\Connections\Provider($config);

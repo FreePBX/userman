@@ -2,18 +2,23 @@
 
 namespace Adldap\Models;
 
-use Adldap\Models\Traits\HasDescription;
-use Adldap\Models\Traits\HasLastLogonAndLogOff;
-use Adldap\Models\Traits\HasCriticalSystemObject;
-
+/**
+ * Class Computer.
+ *
+ * Represents an LDAP computer / server.
+ */
 class Computer extends Entry
 {
-    use HasCriticalSystemObject, HasDescription, HasLastLogonAndLogOff;
+    use Concerns\HasMemberOf;
+    use Concerns\HasDescription;
+    use Concerns\HasLastLogonAndLogOff;
+    use Concerns\HasUserAccountControl;
+    use Concerns\HasCriticalSystemObject;
 
     /**
      * Returns the computers operating system.
      *
-     * https://msdn.microsoft.com/en-us/library/ms679076(v=vs.85).aspx
+     * @link https://msdn.microsoft.com/en-us/library/ms679076(v=vs.85).aspx
      *
      * @return string
      */
@@ -25,7 +30,7 @@ class Computer extends Entry
     /**
      * Returns the computers operating system version.
      *
-     * https://msdn.microsoft.com/en-us/library/ms679079(v=vs.85).aspx
+     * @link https://msdn.microsoft.com/en-us/library/ms679079(v=vs.85).aspx
      *
      * @return string
      */
@@ -37,7 +42,7 @@ class Computer extends Entry
     /**
      * Returns the computers operating system service pack.
      *
-     * https://msdn.microsoft.com/en-us/library/ms679078(v=vs.85).aspx
+     * @link https://msdn.microsoft.com/en-us/library/ms679078(v=vs.85).aspx
      *
      * @return string
      */
@@ -59,9 +64,9 @@ class Computer extends Entry
     /**
      * Returns the computers bad password time.
      *
-     * https://msdn.microsoft.com/en-us/library/ms675243(v=vs.85).aspx
+     * @link https://msdn.microsoft.com/en-us/library/ms675243(v=vs.85).aspx
      *
-     * @return string
+     * @return int
      */
     public function getBadPasswordTime()
     {
@@ -71,9 +76,9 @@ class Computer extends Entry
     /**
      * Returns the computers account expiry date.
      *
-     * https://msdn.microsoft.com/en-us/library/ms675098(v=vs.85).aspx
+     * @link https://msdn.microsoft.com/en-us/library/ms675098(v=vs.85).aspx
      *
-     * @return string
+     * @return int
      */
     public function getAccountExpiry()
     {

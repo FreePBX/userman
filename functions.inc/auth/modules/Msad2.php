@@ -231,11 +231,11 @@ class Msad2 extends Auth {
 			$mySchema = new \App\Schemas\Msad2($this->config);
 			$config = [
 				// Mandatory Configuration Options
-				'domain_controllers'    => 
+				'hosts'    => 
 					preg_split("/[ ,]/", $this->config['host']),
 				'base_dn'               => $this->config['dn'],
-				'admin_username'        => $this->config['username'],
-				'admin_password'        => $this->config['password'],
+				'admin'        => $this->config['username'],
+				'password'        => $this->config['password'],
 
 				// Optional Configuration Options
 				'account_suffix'        => '@'.$this->config['domain'],

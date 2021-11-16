@@ -1,90 +1,47 @@
-# Adldap2
+<p align="center">
+<strong>:wave: Hey there! Looking for something even easier to use for LDAP integration in your PHP applications?</strong>
+</br>
+<h3 align="center">
+ 🎉 Introducing <a href="https://github.com/DirectoryTree/LdapRecord" target="_blank" title="LdapRecord GitHub Repository">LdapRecord</a> 🎉
+</h3>
+</p>
 
-[![Build Status](https://img.shields.io/travis/Adldap2/Adldap2.svg?style=flat-square)](https://travis-ci.org/Adldap2/Adldap2)
-[![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/adLDAP2/adLDAP2/master.svg?style=flat-square)](https://scrutinizer-ci.com/g/adLDAP2/adLDAP2/?branch=master)
-[![Total Downloads](https://img.shields.io/packagist/dt/adldap2/adldap2.svg?style=flat-square)](https://packagist.org/packages/adldap2/adldap2)
-[![Latest Stable Version](https://img.shields.io/packagist/v/adldap2/adldap2.svg?style=flat-square)](https://packagist.org/packages/adldap2/adldap2)
-[![License](https://img.shields.io/packagist/l/adldap2/adldap2.svg?style=flat-square)](https://packagist.org/packages/adldap2/adldap2)
+<p align="center">
+    <strong>
+        <a href="https://ldaprecord.com">LdapRecord</a> is the successor to Adldap2 - and comes with a ton of new features.
+    </strong> </br> Adldap2 will continue to be supported with bug fixes, <i>but will not receive new features.</i>
+</p>
 
-## Description
+<p align="center">
+ <strong>
+ <a href="https://stevebauman.ca/why-ldap-record/">Read Why</a>
+ </strong>
+</p>
 
-Working with Active Directory doesn't need to be hard. Adldap2 is a tested PHP package that provides LDAP
-authentication and Active Directory management tools using the Active Record pattern.
+<hr/>
 
-## Index
+<h1 align="center">Adldap2</h1>
 
- - [Quick Start](docs/quick-start.md)
- - [Configuration](docs/configuration.md)
- - [Connecting](docs/connecting.md)
- - [Authenticating](docs/authenticating.md)
- - [Query Builder (Searching)](docs/query-builder.md)
- - [Models](docs/models/model.md)
-    - [Computer](docs/models/computer.md)
-    - [Contact](docs/models/contact.md)
-    - [Container](docs/models/container.md)
-    - [Entry](docs/models/entry.md)
-    - [Group](docs/models/group.md)
-    - [Organizational Unit](docs/models/ou.md)
-    - [Printer](docs/models/printer.md)
-    - [RootDse](docs/models/root-dse.md)
-    - [User](docs/models/user.md)
- - [Working with Distinguished Names](docs/distinguished-names.md)
- - [Schema](docs/schema.md)
- - [Upgrading](docs/upgrading.md)
- - [Troubleshooting](docs/troubleshooting.md)
+<p align="center">
+    <a href="https://travis-ci.org/Adldap2/Adldap2"><img src="https://img.shields.io/travis/Adldap2/Adldap2.svg?style=flat-square"/></a>
+    <a href="https://scrutinizer-ci.com/g/Adldap2/Adldap2/?branch=master"><img src="https://img.shields.io/scrutinizer/g/adLDAP2/adLDAP2/master.svg?style=flat-square"/></a>
+    <a href="https://packagist.org/packages/adldap2/adldap2"><img src="https://img.shields.io/packagist/dt/adldap2/adldap2.svg?style=flat-square"/></a>
+    <a href="https://packagist.org/packages/adldap2/adldap2"><img src="https://img.shields.io/packagist/v/adldap2/adldap2.svg?style=flat-square"/></a>
+    <a href="https://packagist.org/packages/adldap2/adldap2"><img src="https://img.shields.io/packagist/l/adldap2/adldap2.svg?style=flat-square"/></a>
+</p>
 
-## Installation
+<p align="center">
+    Adldap2 is a PHP package that provides LDAP authentication and directory management tools using the <a href="https://en.wikipedia.org/wiki/Active_record_pattern">Active Record pattern</a>.
+</p>
 
-### Requirements
+<h4 align="center">
+    <a href="http://adldap2.github.io/Adldap2/#/?id=quick-start">Quickstart</a>
+    <span> · </span>
+    <a href="http://adldap2.github.io/Adldap2/">Documentation</a>
+</h4>
 
-To use Adldap2, your server must support:
+- **Up and running in minutes.** Effortlessly connect to your LDAP servers and start running queries & operations in a matter of minutes.
 
-- PHP 5.5.9 or greater
-- PHP LDAP Extension
-- An Active Directory Server
+- **Fluent query builder.** Building LDAP queries has never been so easy. Find the records you're looking for in a couple lines or less with a fluent interface.
 
-> **Note**: OpenLDAP support is experimental, success may vary.
-
-### Optional Requirements
-
-> **Note: Adldap makes use of `ldap_modify_batch()` for executing modifications to LDAP records**. Your server
-must be on **PHP >= 5.5.10 || >= 5.6.0** to make modifications.
-
-If your AD server requires SSL, your server must support the following libraries:
-
-- PHP SSL Libraries (http://php.net/openssl)
-
-### Installing
-
-Adldap2 utilizes composer for installation. Insert `"adldap2/adldap2": "7.0.*"` in your `composer.json` file:
-
-```json
-"require": {
-    "adldap2/adldap2": "7.0.*"
-},
-```
-
-Then run the `composer update` command in the root of your project.
-
-## Implementations
-
-- [Laravel](https://github.com/Adldap2/Adldap2-Laravel)
-- [Kohana](https://github.com/Adldap2/Adldap2-Kohana)
-
-## Versioning
-
-Adldap2 is versioned under the [Semantic Versioning](http://semver.org/) guidelines as much as possible.
-
-Releases will be numbered with the following format:
-
-`<major>.<minor>.<patch>`
-
-And constructed with the following guidelines:
-
-* Breaking backward compatibility bumps the major and resets the minor and patch.
-* New additions without breaking backward compatibility bumps the minor and resets the patch.
-* Bug fixes and misc changes bumps the patch.
-
-Minor versions are not maintained individually, and you're encouraged to upgrade through to the next minor version.
-
-Major versions are maintained individually through separate branches.
+- **Supercharged Active Record.** Create and modify LDAP records with ease. All LDAP records are individual models. Simply modify the attributes on the model and save it to persist the changes to your LDAP server.

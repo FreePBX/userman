@@ -1,10 +1,8 @@
 # The Printer Model
 
-## List of Available 'Getter' Methods:
+## Methods
 
 ```php
-$printer->getPrinterName();
-
 $printer->getPrinterName();
 
 $printer->getPrinterShareName();

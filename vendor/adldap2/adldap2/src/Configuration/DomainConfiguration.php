@@ -2,12 +2,14 @@
 
 namespace Adldap\Configuration;
 
+use Adldap\Schemas\ActiveDirectory;
 use Adldap\Connections\ConnectionInterface;
-use Adldap\Configuration\Validators\ArrayValidator;
-use Adldap\Configuration\Validators\StringValidator;
-use Adldap\Configuration\Validators\BooleanValidator;
-use Adldap\Configuration\Validators\IntegerValidator;
 
+/**
+ * Class DomainConfiguration.
+ *
+ * Contains an array of configuration options for a single LDAP connection.
+ */
 class DomainConfiguration
 {
     /**
@@ -19,7 +21,7 @@ class DomainConfiguration
      */
     protected $options = [
         // An array of LDAP hosts.
-        'domain_controllers' => [],
+        'hosts' => [],
 
         // The global LDAP operation timeout limit in seconds.
         'timeout' => 5,
@@ -30,8 +32,23 @@ class DomainConfiguration
         // The port to use for connecting to your hosts.
         'port' => ConnectionInterface::PORT,
 
+        // The schema to use for your LDAP connection.
+        'schema' => ActiveDirectory::class,
+
         // The base distinguished name of your domain.
         'base_dn' => '',
+
+        // The username to connect to your hosts with.
+        'username' => '',
+
+        // The password that is utilized with the above user.
+        'password' => '',
+
+        // The account prefix to use when authenticating users.
+        'account_prefix' => null,
+
+        // The account suffix to use when authenticating users.
+        'account_suffix' => null,
 
         // Whether or not to use SSL when connecting to your hosts.
         'use_ssl' => false,
@@ -41,24 +58,6 @@ class DomainConfiguration
 
         // Whether or not follow referrals is enabled when performing LDAP operations.
         'follow_referrals' => false,
-
-        // The account prefix to use when authenticating users.
-        'account_prefix' => '',
-
-        // The account suffix to use when authenticating users.
-        'account_suffix' => '',
-
-        // The username to connect to your hosts with.
-        'admin_username' => '',
-
-        // The password that is utilized with the above user.
-        'admin_password' => '',
-
-        // The account prefix to use when authenticating your admin account above.
-        'admin_account_prefix' => '',
-
-        // The account prefix to use when authenticating your admin account above.
-        'admin_account_suffix' => '',
 
         // Custom LDAP options that you'd like to utilize.
         'custom_options' => [],
@@ -91,7 +90,7 @@ class DomainConfiguration
      */
     public function set($key, $value)
     {
-        if($this->validate($key, $value)) {
+        if ($this->validate($key, $value)) {
             $this->options[$key] = $value;
         }
     }
@@ -103,9 +102,9 @@ class DomainConfiguration
      *
      * @param string $key
      *
-     * @return mixed
-     *
      * @throws ConfigurationException When the option specified does not exist.
+     *
+     * @return mixed
      */
     public function get($key)
     {
@@ -137,22 +136,24 @@ class DomainConfiguration
      * @param string $key
      * @param mixed  $value
      *
-     * @return bool
-     *
      * @throws ConfigurationException When an option value given is an invalid type.
+     *
+     * @return bool
      */
     protected function validate($key, $value)
     {
         $default = $this->get($key);
 
         if (is_array($default)) {
-            $validator = new ArrayValidator($key, $value);
+            $validator = new Validators\ArrayValidator($key, $value);
         } elseif (is_int($default)) {
-            $validator = new IntegerValidator($key, $value);
+            $validator = new Validators\IntegerValidator($key, $value);
         } elseif (is_bool($default)) {
-            $validator = new BooleanValidator($key, $value);
+            $validator = new Validators\BooleanValidator($key, $value);
+        } elseif (class_exists($default)) {
+            $validator = new Validators\ClassValidator($key, $value);
         } else {
-            $validator = new StringValidator($key, $value);
+            $validator = new Validators\StringOrNullValidator($key, $value);
         }
 
         return $validator->validate();
