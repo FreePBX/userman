@@ -642,3 +642,19 @@ $("input[name=createtemp]").change(function() {
 			$("#tempcreatediv").show()
 		}
 	});
+	
+//validating edit form 
+
+$("#editM").submit(function (e) {
+	e.preventDefault();
+	e.stopPropagation();
+	var invalid = false;
+	if ($("#editM .pwd-error").text().length > 0) {
+		invalid = true;
+		alert("Password did not match the password polices");
+		$('#editM').submit(false);
+	}
+	if(!invalid){
+		$('#editM')[0].submit();
+	}
+});

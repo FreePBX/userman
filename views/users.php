@@ -111,7 +111,7 @@ echo $usage_html;
 												</div>
 												<div class="col-md-9">
 													<input type="password" autocomplete="new-password" class="form-control password-meter" id="password" name="password" value="<?php echo !empty($user['password']) ? '******' : ''; ?>" required>
-													<div id="pwd-error"></div>
+													<div class="pwd-error"></div>
 												</div>
 											</div>
 										</div>
