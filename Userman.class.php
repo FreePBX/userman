@@ -2126,6 +2126,19 @@ class Userman extends FreePBX_Helpers implements BMO {
 		if(empty($password)) {
 			throw new Exception(_("Password can not be blank"));
 		}
+		
+		// validating password
+		$pwd = $this->password_policies($password);
+		if(!$pwd["status"]){
+			$error_content = '<div class="alert alert-warning" role="alert">';
+			$error_content .= "<li> Password did not match the password polices</li>";
+			foreach($pwd["error"] as $item => $error){
+				$error_content .= "<li> ".$item." - ".$error."</li>";
+			}
+			$error_content .= '</div>';
+			return array("status" => false, "message" => $error_content);
+		}			
+
 		set_time_limit(0);
 		$dir = $this->getDefaultDirectory();
 		if($dir['locked']) {
@@ -2473,6 +2486,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 			$pwd = $this->password_policies($password);
 			if(!$pwd["status"]){
 				$error_content = '<div class="alert alert-warning" role="alert">';
+				$error_content .= "<li> Password did not match the password polices</li>";
 				foreach($pwd["error"] as $item => $error){
 					$error_content .= "<li> ".$item." - ".$error."</li>";
 				}
