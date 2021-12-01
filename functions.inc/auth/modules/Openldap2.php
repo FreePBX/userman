@@ -235,20 +235,23 @@ class Openldap2 extends Auth {
 			$mySchema = new \App\Schemas\Openldap2($this->config);
 			$config = [
 				// Mandatory Configuration Options
-				'hosts'    => 
-					preg_split("/[ ,]/", $this->config['host']),
-				'base_dn'               => $this->config['basedn'],
-				'username'        => $this->config['username'],
-				'password'        => $this->config['password'],
+				'hosts'				=> preg_split("/[ ,]/", $this->config['host']),
+				'base_dn'    		=> $this->config['basedn'],
+				'username'      	=> $this->config['username'],
+				'password'      	=> $this->config['password'],
 
 				// Optional Configuration Options
-				'port'                  => $this->config['port'],
-				'follow_referrals'      => false,
-				'use_ssl'               => ($this->config['connection'] == 'ssl'),
-				'use_tls'               => ($this->config['connection'] == 'tls'),
-				'timeout'               => $this->timeout
+				// 'schema'			=> \Adldap\Schemas\OpenLDAP::class,
+				'schema'			=> \App\Schemas\Openldap2::class,
+				'port'            	=> $this->config['port'],
+				'follow_referrals'  => false,
+				'use_ssl'           => ($this->config['connection'] == 'ssl'),
+				'use_tls'           => ($this->config['connection'] == 'tls'),
+				'timeout'           => $this->timeout,
+				'version'          	=> 3
 			];
-			$this->provider = new \Adldap\Connections\Provider($config, $connection = null, $mySchema);
+			$this->provider = new \Adldap\Connections\Provider($config, $connection = null);
+			$this->provider->setSchema($mySchema);
 			$ad = new Adldap(array("default" => $config));
 			$ad->addProvider($this->provider, 'default');
 			try {
