@@ -30,6 +30,31 @@
 			<div class="row">
 				<div class="form-group">
 					<div class="col-md-3">
+						<label class="control-label" for="openldap2-version"><?php echo _("Protocol Version")?></label>
+						<i class="fa fa-question-circle fpbx-help-icon" data-for="openldap2-version"></i>
+					</div>
+					<div class="col-md-9">
+						<select id="openldap2-version" data-default="<?php echo $defaults['version']?>" name="openldap2-version" class="form-control">
+							<option value='3' <?php echo $config['version'] == '3' ? 'selected' : ''?>>3</option>
+							<option value='2' <?php echo $config['version'] == '2' ? 'selected' : ''?>>2</option>
+						</select>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<span id="openldap2-version-help" class="help-block fpbx-help-block"><?php echo _("Version of the connection protocol with the LDAP server")?></span>
+		</div>
+	</div>
+</div>
+<div class="element-container">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="row">
+				<div class="form-group">
+					<div class="col-md-3">
 						<label class="control-label" for="openldap2-host"><?php echo _("Host(s)")?></label>
 						<i class="fa fa-question-circle fpbx-help-icon" data-for="openldap2-host"></i>
 					</div>
@@ -741,6 +766,28 @@
 		<div class="row">
 			<div class="col-md-12">
 				<span id="openldap2-groupmemberattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field to use when loading the group members.")?></span>
+			</div>
+		</div>
+	</div>
+	<div class="element-container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="row">
+					<div class="form-group">
+						<div class="col-md-3">
+							<label class="control-label" for="openldap2-groupmemberidentifierattr"><?php echo _("Group Member Identifier Attribute")?></label>
+							<i class="fa fa-question-circle fpbx-help-icon" data-for="openldap2-groupmemberidentifierattr"></i>
+						</div>
+						<div class="col-md-9">
+							<input id="openldap2-groupmemberidentifierattr" data-default="<?php echo $defaults['groupmemberidentifierattr']?>" name="openldap2-groupmemberidentifierattr" type="text" class="form-control" value="<?php echo isset($config['groupmemberidentifierattr']) ? $config['groupmemberidentifierattr'] : $defaults['groupmemberidentifierattr']?>" required>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<span id="openldap2-groupmemberidentifierattr-help" class="help-block fpbx-help-block"><?php echo _("The attribute field that is used to find the users who are members of a group. ")?></span>
 			</div>
 		</div>
 	</div>
