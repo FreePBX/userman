@@ -656,7 +656,7 @@ abstract class Auth {
 		$displayname = isset($data['displayname']) ? $data['displayname'] : (!isset($data['displayname']) && !empty($defaults['displayname']) ? $defaults['displayname'] : null);
 		$department = isset($data['department']) ? $data['department'] : (!isset($data['department']) && !empty($defaults['department']) ? $defaults['department'] : null);
 		$description = isset($data['description']) ? $data['description'] : (!isset($data['description']) && !empty($defaults['description']) ? $defaults['description'] : null);
-		$primary_group = isset($data['primary_group']) ? $data['primary_group'] : (!isset($data['primary_group']) && !empty($defaults['primary_group']) ? $defaults['primary_group'] : null);
+		$primary_group = isset($data['primary_group']) && is_numeric($data['primary_group']) ? $data['primary_group'] : ( !isset($data['primary_group']) && !empty($defaults['primary_group']) ? $defaults['primary_group'] : null);
 
 		//special case
 		$language = (array_key_exists('language',$data) && !empty($data['language'])) ? $data['language'] : (!array_key_exists('language',$data) && !empty($defaults['language']) ? $defaults['language'] : null);
