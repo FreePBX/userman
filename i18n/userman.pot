@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-30 11:36+0000\n"
+"POT-Creation-Date: 2021-12-02 04:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -635,7 +635,7 @@ msgstr ""
 
 #: functions.inc/auth/modules/Freepbx.php:139
 #: functions.inc/auth/modules/Msad2.php:398
-#: functions.inc/auth/modules/Openldap2.php:398
+#: functions.inc/auth/modules/Openldap2.php:401
 #: functions.inc/auth/modules/Voicemail.php:183
 msgid "Group Successfully Added"
 msgstr ""
@@ -674,7 +674,7 @@ msgstr ""
 #: functions.inc/auth/modules/Msad.php:394
 #: functions.inc/auth/modules/Msad2.php:448
 #: functions.inc/auth/modules/Openldap.php:407
-#: functions.inc/auth/modules/Openldap2.php:448
+#: functions.inc/auth/modules/Openldap2.php:451
 msgid "Group updated"
 msgstr ""
 
@@ -840,8 +840,8 @@ msgstr ""
 #: functions.inc/auth/modules/Msad2.php:400
 #: functions.inc/auth/modules/Openldap.php:356
 #: functions.inc/auth/modules/Openldap.php:369
-#: functions.inc/auth/modules/Openldap2.php:374
-#: functions.inc/auth/modules/Openldap2.php:400
+#: functions.inc/auth/modules/Openldap2.php:377
+#: functions.inc/auth/modules/Openldap2.php:403
 msgid "LDAP is in Read Only Mode. Addition denied"
 msgstr ""
 
@@ -2092,7 +2092,7 @@ msgstr ""
 #: functions.inc/auth/modules/Msad.php:381
 #: functions.inc/auth/modules/Msad2.php:426
 #: functions.inc/auth/modules/Openldap.php:394
-#: functions.inc/auth/modules/Openldap2.php:426
+#: functions.inc/auth/modules/Openldap2.php:429
 #: functions.inc/auth/modules/Voicemail.php:208
 msgid "User updated"
 msgstr ""
