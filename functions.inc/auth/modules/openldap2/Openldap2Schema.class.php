@@ -57,4 +57,7 @@ class Openldap2 extends \Adldap\Schemas\OpenLDAP {
 	public function member() {
 		return $this->config['groupmemberattr'];
 	}
+	public function memberIdentifier() {
+		return $this->config['groupmemberidentifierattr'];
+	}
 }

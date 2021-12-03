@@ -60,9 +60,12 @@ class Openldap2 extends Auth {
 
 	private $limit = 900;
 
+	private $allowLdapProtocolVersion = array(2,3);
+
 	private static $serverDefaults = array(
 		'host' => '',
 		'port' => '389',
+		'version' => 3,
 		'basedn' => '',
 		'username' => '',
 		'password' => '',
@@ -100,7 +103,8 @@ class Openldap2 extends Auth {
 		'groupobjectclass' => 'groupOfUniqueNames', /** Object Class Group **/
 		'groupobjectfilter' => '(objectclass=posixGroup)', /** Group Object Filter **/
 		'groupmemberattr' => 'memberUid', /** member **/
-		'groupgidnumberattr' => 'gidNumber'
+		'groupgidnumberattr' => 'gidNumber',
+		'groupmemberidentifierattr' => 'uid' /** User Member Identificacion **/
 	);
 
 	private $userHooks = array(
@@ -225,6 +229,18 @@ class Openldap2 extends Auth {
 	}
 
 	/**
+	 * Validates if the protocol that has been specified is valid
+	 * @return integer version specified or if it was not correct the default value has been defined
+	 */
+	private function validateVerProtoLDAP($version) {
+		if (! is_numeric($version) || ! in_array($version, $this->allowLdapProtocolVersion) )
+		{
+			$version = self::$serverDefaults['version'];
+		}
+		return intval($version);
+	}
+
+	/**
 	 * Connect to the LDAP server
 	 */
 	public function connect($reconnect = false) {
@@ -248,7 +264,7 @@ class Openldap2 extends Auth {
 				'use_ssl'           => ($this->config['connection'] == 'ssl'),
 				'use_tls'           => ($this->config['connection'] == 'tls'),
 				'timeout'           => $this->timeout,
-				'version'          	=> 3
+				'version'          	=> $this->validateVerProtoLDAP($this->config['version']),
 			];
 			$this->provider = new \Adldap\Connections\Provider($config, $connection = null);
 			$this->provider->setSchema($mySchema);
@@ -536,14 +552,12 @@ class Openldap2 extends Auth {
 			throw new \Exception("Can only update groups over CLI");
 		}
 		$this->connect();
-		$userdn = !empty($this->config['userdn']) ? $this->config['userdn'].",".$this->config['basedn'] : $this->config['basedn'];
 		$groupdn = !empty($this->config['groupdnaddition']) ? $this->config['groupdnaddition'].",".$this->config['basedn'] : $this->config['basedn'];
 		$ldapuri = $this->buildldapuri($this->config['connection'], $this->config['host'], $this->config['port']);
 		$this->out("\t".'ldapsearch -w '.$this->config['password'].' -H "'.$ldapuri.'" -D "'.$this->config['username'].'" -b "'.$groupdn.'" -s sub "'.$this->config['groupobjectfilter'].'"');
 		$this->out("\tRetrieving all groups...");
 
 		$search = $this->ldap->search();
-		//(".$this->config['usermodifytimestampattr'].">=20010301000000Z)
 		$paginator = $search->in($groupdn)->rawFilter("(&".$this->config['groupobjectfilter']."(objectclass=".$this->config['groupobjectclass']."))")->select(["*",$this->config['groupgidnumberattr'],$this->config['descriptionattr'],$this->config['groupnameattr'], $this->config['externalidattr'], $this->config['groupmemberattr']])->paginate($this->limit, 1);
 		$results = $paginator->getResults();
 
@@ -569,8 +583,21 @@ class Openldap2 extends Auth {
 			$description = !is_null($result->getDescription()) ? $result->getDescription() : '';
 			$members = array();
 			$this->out("\tWorking on ".$groupname);
-			foreach($result->getMembers() as $member) {
-				$m = $this->getUserByUsername($member->getAccountName());
+
+			// The list of users is obtained directly from the class array, since the getMembers function does 
+			// not return the users if it is not used with the command "$provider->search()->groups()".
+			// Open issues: https://github.com/Adldap2/Adldap2/issues/794
+			if ($this->config['groupmemberidentifierattr'] == "uid") {
+				$getMembers = $result[$this->config['groupmemberattr']];
+			} else {
+				$getMembers = $result->getMembers();
+			}
+			foreach($getMembers as $member) {
+				if ($member instanceof \Adldap\Models\Group) {
+					$m = $this->getUserByUsername($member->getAccountName());
+				} else {
+					$m = $this->getUserByUsername($member);
+				}
 				if(!empty($m)) {
 					$this->out("\t\t\tAdding ".$m['username']." to group");
 					$members[] = $m['id'];
