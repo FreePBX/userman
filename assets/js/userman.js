@@ -62,6 +62,7 @@ if($("#editT").length) {
 }
 
 $("#email-users").click(function() {
+	var $this = this;
 	$(this).prop("disabled",true);
 	$.post( "ajax.php", {command: "email", module: "userman", extensions: deleteExts.users}, function(data) {
 		if(data.status) {
@@ -69,7 +70,7 @@ $("#email-users").click(function() {
 		} else {
 			alert(data.message);
 		}
-		$(this).prop("disabled",false);
+		$($this).prop("disabled",false);
 	});
 });
 $("#directory-users").change(function() {

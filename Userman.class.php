@@ -1346,9 +1346,14 @@ class Userman extends FreePBX_Helpers implements BMO {
 				);
 			break;
 			case "makeDefault":
-				$this->setDefaultDirectory($request['id']);
-				return array("status" => true);
-			break;
+				$newid = isset($request['id']) ? $request['id'] : null;
+				if (is_numeric($newid)) {
+					$this->setDefaultDirectory($request['id']);
+					$return = array("status" => true, 'message'=> _('Directory update successful'));
+				} else {
+					$return = array("status" => false, 'message'=> _('The Directory ID is not valid!'));
+				}
+				return $return;
 			break;
 			case "redirectUCP":
 				if(!empty($request['id']) && $request['key'] != 'false') {
