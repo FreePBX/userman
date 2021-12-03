@@ -20,7 +20,7 @@ if($("#directory").length) {
 	});
 }
 $("#pwd-templates-show").mouseenter(function(){
-	$.post( "ajax.php", {command: "pwdTest", module: "userman", pwd: ""}, function(data) {
+	$.post(window.FreePBX.ajaxurl, {command: "pwdTest", module: "userman", pwd: ""}, function(data) {
 		if(data.templates){
 			Tcontent = "<div class='container'>";
 			$.each(data.templates, function(index, item) {
@@ -32,7 +32,7 @@ $("#pwd-templates-show").mouseenter(function(){
 	});
 });
 $(".password-meter").keyup(function() {
-	$.post( "ajax.php", {command: "pwdTest", module: "userman", pwd: this.value}, function(data) {
+	$.post(window.FreePBX.ajaxurl, {command: "pwdTest", module: "userman", pwd: this.value}, function(data) {
 		if(data.status){
 			$(".pwd-error").html("");
 			$("#action-bar").show();
@@ -63,7 +63,7 @@ if($("#editT").length) {
 
 $("#email-users").click(function() {
 	$(this).prop("disabled",true);
-	$.post( "ajax.php", {command: "email", module: "userman", extensions: deleteExts.users}, function(data) {
+	$.post(window.FreePBX.ajaxurl, {command: "email", module: "userman", extensions: deleteExts.users}, function(data) {
 		if(data.status) {
 			alert(data.message);
 		} else {
@@ -76,7 +76,7 @@ $("#directory-users").change(function() {
 	var val = $(this).val();
 	$("#remove-users").attr('disabled', true);
 	if(val === '') {
-		$("#table-users").bootstrapTable('refresh',{url: 'ajax.php?module=userman&command=getUsers'});
+		$("#table-users").bootstrapTable('refresh',{url: window.FreePBX.ajaxurl + '?module=userman&command=getUsers'});
 		$("#table-users").bootstrapTable('showColumn','auth');
 		$("#remove-users").removeClass("hidden");
 		$("#remove-users").removeClass("btn-remove");
@@ -88,7 +88,7 @@ $("#directory-users").change(function() {
 	} else {
 		$("#remove-users").removeAttr('title');
 		$("#add-users").attr("href","?display=userman&action=adduser&directory="+val);
-		$("#table-users").bootstrapTable('refresh',{url: 'ajax.php?module=userman&command=getUsers&directory='+$(this).val()});
+		$("#table-users").bootstrapTable('refresh',{url: window.FreePBX.ajaxurl + '?module=userman&command=getUsers&directory='+$(this).val()});
 		$("#table-users").bootstrapTable('hideColumn','auth');
 		if(directoryMapValues[val].permissions.addUser) {
 			$("#add-users").attr('disabled', false);
@@ -110,12 +110,12 @@ $("#directory-groups").change(function() {
 	var val = $(this).val();
 	$("#remove-groups").attr('disabled', true);
 	if(val === '') {
-		$("#table-groups").bootstrapTable('refresh',{url: 'ajax.php?module=userman&command=getGroups'});
+		$("#table-groups").bootstrapTable('refresh',{url: window.FreePBX.ajaxurl + '?module=userman&command=getGroups'});
 		$("#table-groups").bootstrapTable('showColumn','auth');
 		$("#add-groups").addClass("hidden");
 	} else {
 		$("#add-groups").attr("href","?display=userman&action=addgroup&directory="+val);
-		$("#table-groups").bootstrapTable('refresh',{url: 'ajax.php?module=userman&command=getGroups&directory='+$(this).val()});
+		$("#table-groups").bootstrapTable('refresh',{url: window.FreePBX.ajaxurl + '?module=userman&command=getGroups&directory='+$(this).val()});
 		$("#table-groups").bootstrapTable('hideColumn','auth');
 		if(directoryMapValues[val].permissions.addGroup) {
 			$("#add-groups").removeClass("hidden");
@@ -139,7 +139,7 @@ $(document).on('click', "button.btn-remove", function() {
 		if(confirm(sprintf(_("Are you sure you wish to delete these %s?"),translations[type]))) {
 			btn.find("span").text(_("Deleting..."));
 			btn.prop("disabled", true);
-			$.post( "ajax.php", {command: "delete", module: "userman", extensions: deleteExts[type], type: type}, function(data) {
+			$.post( window.FreePBX.ajaxurl, {command: "delete", module: "userman", extensions: deleteExts[type], type: type}, function(data) {
 				if(data.status) {
 					btn.find("span").text(_("Delete"));
 					$("#table-"+section).bootstrapTable('remove', {
@@ -160,7 +160,7 @@ $("#table-groups").on("reorder-row.bs.table", function (table,rows) {
 	$.each(rows, function(k, v) {
 		order[k] = v.id;
 	});
-	$.post( "ajax.php", {command: "updateGroupSort", module: "userman", sort: JSON.stringify(order)}, function(data) {
+	$.post( window.FreePBX.ajaxurl, {command: "updateGroupSort", module: "userman", sort: JSON.stringify(order)}, function(data) {
 		$("#table-groups").bootstrapTable('refresh');
 	});
 });
@@ -169,7 +169,7 @@ $("#table-directories").on("reorder-row.bs.table", function (table,rows) {
 	$.each(rows, function(k, v) {
 		order[k] = v.id;
 	});
-	$.post( "ajax.php", {command: "updateDirectorySort", module: "userman", sort: JSON.stringify(order)}, function(data) {
+	$.post( window.FreePBX.ajaxurl, {command: "updateDirectorySort", module: "userman", sort: JSON.stringify(order)}, function(data) {
 		$("#table-directories").bootstrapTable('refresh');
 	});
 });
@@ -178,7 +178,7 @@ $("table").on("post-body.bs.table", function () {
 	$("table .fa-trash-o").click(function() {
 		var id = $(this).data("id"), section = $(this).data("section"), type = $(this).parents("table").data("type"), trans = $(this).data("type");
 		if(confirm(sprintf(_("Are you sure you wish to delete this %s?"),translations[trans]))) {
-			$.post( "ajax.php", {command: "delete", module: "userman", extensions: [id], type: type}, function(data) {
+			$.post( window.FreePBX.ajaxurl, {command: "delete", module: "userman", extensions: [id], type: type}, function(data) {
 				if(data.status) {
 					$("#table-"+section).bootstrapTable('remove', {
 						field: "id",
@@ -194,9 +194,10 @@ $("table").on("post-body.bs.table", function () {
 $("#table-directories").on("post-body.bs.table", function () {
 	$(".default-check").click(function() {
 		var $this = this;
+		var id = $(this).data("id");
 		if($(this).data("from") == 'directory') {
 		if(confirm(_("Are you sure you want to make this directory the system default?"))) {
-			$.post("ajax.php?module=userman&command=makeDefault", {id: $(this).data("id")}, function( data ) {
+			$.post( window.FreePBX.ajaxurl, {command: "makeDefault", module: "userman", id: id}, function( data ) {
 				if(data.status) {
 					$(".default-check").removeClass("check");
 					$($this).addClass("check");
@@ -288,7 +289,7 @@ function setLocales(callback) {
 		id: id,
 		type: type
 	};
-	$.post( "ajax.php", data, function(data) {
+	$.post( window.FreePBX.ajaxurl, data, function(data) {
 		if(data.status) {
 			if(typeof callback === "function") {
 				callback();
@@ -381,7 +382,7 @@ $("#pwsub").on("click", function(){
 	var uid = $("#pwuid").val();
 	var pass = $("#password").val();
 	$.ajax({
-		url: "ajax.php",
+		url: window.FreePBX.ajaxurl,
 		data: {
 			module:'userman',
 			command:'updatePassword',
@@ -577,7 +578,7 @@ function rowStyle(row, index){
 }
 function rebuildwidgets(id) {
 	if(confirm(_("Are you sure rebuild all Users widgets associated with this Template ?"))) {
-		$.post("ajax.php?module=userman&command=rebuildtemplate", {templateid: id}, function( data ) {
+		$.post(window.FreePBX.ajaxurl, {command: "rebuildtemplate", module: "userman", templateid: id}, function( data ) {
 			if(data.status) {
 				alert(data.message);
 			} else {
@@ -588,7 +589,7 @@ function rebuildwidgets(id) {
 }
 
 function redirectToUCP(id, key) {
-	$.post("ajax.php?module=userman&command=redirectUCP", {id: id, key: key}, function( data ) {
+	$.post(window.FreePBX.ajaxurl, {command: "redirectUCP", module: "userman", id: id, key: key}, function( data ) {
 		if(data.status) {
 			if(key == false){
 				key = data.key;
@@ -601,7 +602,7 @@ function redirectToUCP(id, key) {
 	});
 }
 $("#generatetemplatecreator").click(function(e) {
-	$.post("ajax.php?module=userman&command=generatetemplatecreator", {}, function( data ) {
+	$.post(window.FreePBX.ajaxurl, {command: "generatetemplatecreator", module: "userman"}, function( data ) {
 		if(data.status) {
 			alert(data.message);
 			location.reload();
@@ -612,7 +613,7 @@ $("#generatetemplatecreator").click(function(e) {
 });
 $("#deletetemplatecreator").click(function(e) {
 	if(confirm(_("Are you sure to delete this Generic template ?"))) {
-		$.post("ajax.php?module=userman&command=deletetemplatecreator", {}, function( data ) {
+		$.post(window.FreePBX.ajaxurl, {command: "deletetemplatecreator", module: "userman"}, function( data ) {
 			if(data.status) {
 				alert(data.message);
 				location.reload();
@@ -642,14 +643,14 @@ $("#cancel").click(function(e) {
 	window.location = '?display=userman#ucptemplates';
 });
 $("input[name=createtemp]").change(function() {
-		if ($("input[name='createtemp']:checked").val() == 'import') {
-			$("#adminextdiv").show()
-			$("#tempcreatediv").hide()
-				} else {
-			$("#adminextdiv").hide()
-			$("#tempcreatediv").show()
-		}
-	});
+	if ($("input[name='createtemp']:checked").val() == 'import') {
+		$("#adminextdiv").show()
+		$("#tempcreatediv").hide()
+			} else {
+		$("#adminextdiv").hide()
+		$("#tempcreatediv").show()
+	}
+});
 	
 //validating edit form 
 
