@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-03 04:03+0000\n"
+"POT-Creation-Date: 2021-12-06 03:25+0000\n"
 "PO-Revision-Date: 2017-07-03 12:33-0400\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: views/welcome.php:47 views/welcome.php:81
+#: views/welcome.php:42 views/welcome.php:76
 msgid " selected"
 msgstr ""
 
@@ -33,7 +33,7 @@ msgstr ""
 msgid "%s Internal Directory"
 msgstr ""
 
-#: views/welcome.php:15
+#: views/welcome.php:9
 #, php-format
 msgid ""
 "%s User Manager is taking the place of several modules which have attempted "
@@ -42,12 +42,17 @@ msgid ""
 "new User Control Panel also uses User Manager."
 msgstr ""
 
+#: Userman.class.php:4234
+#, php-format
+msgid "%s User(s)  dashboard widgets reconfigured"
+msgstr ""
+
 #: Userman.class.php:3641
 #, php-format
 msgid "%s records failed validation"
 msgstr ""
 
-#: views/welcome.php:72
+#: views/welcome.php:67
 msgid "&directory="
 msgstr ""
 
@@ -55,23 +60,23 @@ msgstr ""
 msgid "(0 - being Really Weak, 4 - being Strong)"
 msgstr ""
 
-#: views/directories.php:103
+#: views/directories.php:113
 msgid "1 Day"
 msgstr ""
 
-#: views/directories.php:101
+#: views/directories.php:111
 msgid "1 Hour"
 msgstr ""
 
-#: views/directories.php:100
+#: views/directories.php:110
 msgid "30 Minutes"
 msgstr ""
 
-#: views/directories.php:102
+#: views/directories.php:112
 msgid "6 Hours"
 msgstr ""
 
-#: views/welcome.php:35
+#: views/welcome.php:30
 msgid "?display=userman&action=adduser&directory="
 msgstr ""
 
@@ -79,17 +84,17 @@ msgstr ""
 msgid "A brief description for this user."
 msgstr ""
 
-#: views/welcome.php:62 views/welcome.php:93 views/welcome.php:118
-#: views/welcome.php:156
+#: views/welcome.php:57 views/welcome.php:88 views/welcome.php:113
+#: views/welcome.php:151
 msgid "Action"
 msgstr ""
 
-#: views/welcome.php:115
+#: views/welcome.php:110
 msgid "Active"
 msgstr ""
 
-#: views/welcome.php:36 views/welcome.php:73 views/welcome.php:104
-#: views/welcome.php:133
+#: views/welcome.php:31 views/welcome.php:68 views/welcome.php:99
+#: views/welcome.php:128
 msgid "Add"
 msgstr ""
 
@@ -97,7 +102,7 @@ msgstr ""
 msgid "Add Device"
 msgstr ""
 
-#: views/rnav.php:44
+#: views/directories.php:5 views/rnav.php:44
 msgid "Add Directory"
 msgstr ""
 
@@ -142,11 +147,7 @@ msgstr ""
 msgid "Advanced"
 msgstr ""
 
-#: assets/js/userman.js:227
-msgid "Alert"
-msgstr ""
-
-#: views/welcome.php:45 views/welcome.php:79
+#: views/welcome.php:40 views/welcome.php:74
 msgid "All Directories"
 msgstr ""
 
@@ -168,24 +169,15 @@ msgstr ""
 msgid "Apply Changes Bar"
 msgstr ""
 
-#: assets/js/userman.js:579
-msgid "Are you sure rebuild all Users widgets associated with this Template ?"
+#: assets/js/userman.js:589
+msgid "Are you sure rebuild all Users widgets associated with this Template?"
 msgstr ""
 
-#: assets/js/userman.js:614
-msgid "Are you sure to delete this Generic template ?"
-msgstr ""
-
-#: assets/js/userman.js:198
+#: assets/js/userman.js:205
 msgid "Are you sure you want to make this directory the system default?"
 msgstr ""
 
-#: assets/js/userman.js:139
-#, perl-format
-msgid "Are you sure you wish to delete these %s?"
-msgstr ""
-
-#: assets/js/userman.js:180
+#: assets/js/userman.js:182
 #, perl-format
 msgid "Are you sure you wish to delete this %s?"
 msgstr ""
@@ -256,7 +248,7 @@ msgstr ""
 msgid "Could not find the voicemail context"
 msgstr ""
 
-#: views/welcome.php:141
+#: views/welcome.php:136
 msgid "Create Generic Templates"
 msgstr ""
 
@@ -288,7 +280,7 @@ msgstr ""
 msgid "Date and Time Format"
 msgstr ""
 
-#: views/welcome.php:117
+#: views/welcome.php:112
 msgid "Default"
 msgstr ""
 
@@ -300,13 +292,12 @@ msgstr ""
 msgid "Default Landing Page"
 msgstr ""
 
-#: Userman.class.php:828 views/welcome.php:39 views/welcome.php:76
-#: views/welcome.php:107 views/welcome.php:136 assets/js/userman.js:144
-#: assets/js/userman.js:150
+#: Userman.class.php:828 views/welcome.php:34 views/welcome.php:71
+#: views/welcome.php:102 views/welcome.php:131 assets/js/userman.js:150
 msgid "Delete"
 msgstr ""
 
-#: views/welcome.php:145
+#: views/welcome.php:140
 msgid "Delete Generic Templates"
 msgstr ""
 
@@ -314,12 +305,8 @@ msgstr ""
 msgid "Delete generic templates user"
 msgstr ""
 
-#: assets/js/userman.js:140
-msgid "Deleting..."
-msgstr ""
-
-#: assets/js/userman.js:227
-msgid "Deletion is not allowed if a selected item is read-only !!"
+#: Userman.class.php:4068
+msgid "Deleted User and Device"
 msgstr ""
 
 #: views/users.php:352
@@ -328,8 +315,8 @@ msgstr ""
 
 #: Userman.class.php:3559 Userman.class.php:3560 Userman.class.php:3585
 #: Userman.class.php:3586 Userman.class.php:3599 Userman.class.php:3600
-#: views/rnav.php:18 views/rnav.php:35 views/users.php:84 views/welcome.php:61
-#: views/welcome.php:91 views/welcome.php:154
+#: views/rnav.php:18 views/rnav.php:35 views/users.php:84 views/welcome.php:56
+#: views/welcome.php:86 views/welcome.php:149
 msgid "Description"
 msgstr ""
 
@@ -337,23 +324,23 @@ msgstr ""
 msgid "Description attribute"
 msgstr ""
 
-#: views/welcome.php:27
+#: views/welcome.php:22
 msgid "Directories"
 msgstr ""
 
-#: views/welcome.php:55 views/welcome.php:89
+#: views/welcome.php:50 views/welcome.php:84
 msgid "Directory"
 msgstr ""
 
-#: views/directories.php:47 views/rnav.php:49
+#: views/directories.php:57 views/rnav.php:49
 msgid "Directory Name"
 msgstr ""
 
-#: views/directories.php:117
+#: views/directories.php:127
 msgid "Directory Settings"
 msgstr ""
 
-#: views/directories.php:16
+#: views/directories.php:26
 msgid "Directory Type"
 msgstr ""
 
@@ -373,7 +360,7 @@ msgstr ""
 msgid "Directory is locked. Can not update user"
 msgstr ""
 
-#: views/welcome.php:101
+#: views/welcome.php:96
 msgid ""
 "Directory order can be changed by clicking and dragging directories around "
 "in the order you'd like. User logins will match based on the first directory "
@@ -381,7 +368,7 @@ msgid ""
 msgstr ""
 
 #: Userman.class.php:3571 Userman.class.php:3572 views/openldap.php:144
-#: views/users.php:280 views/welcome.php:57
+#: views/users.php:280 views/welcome.php:52
 msgid "Display Name"
 msgstr ""
 
@@ -397,6 +384,10 @@ msgstr ""
 
 #: views/msad2.php:194 views/openldap2.php:197
 msgid "Don't Create"
+msgstr ""
+
+#: views/directories.php:3
+msgid "Edit Directory"
 msgstr ""
 
 #: views/groups.php:3
@@ -423,6 +414,11 @@ msgstr ""
 msgid "Email Body"
 msgstr ""
 
+#: Userman.class.php:1434
+#, php-format
+msgid "Email Sent to users: %s"
+msgstr ""
+
 #: views/general.php:9 views/general.php:16
 msgid "Email Settings"
 msgstr ""
@@ -435,7 +431,7 @@ msgstr ""
 msgid "Empty data array."
 msgstr ""
 
-#: views/directories.php:69
+#: views/directories.php:79
 msgid "Enable Directory"
 msgstr ""
 
@@ -499,7 +495,7 @@ msgstr ""
 msgid "Extension Link Attribute"
 msgstr ""
 
-#: assets/js/userman.js:461
+#: assets/js/userman.js:470
 msgid "False"
 msgstr ""
 
@@ -508,7 +504,7 @@ msgid "Fax Phone Number"
 msgstr ""
 
 #: Userman.class.php:3563 Userman.class.php:3564 views/users.php:232
-#: views/welcome.php:58
+#: views/welcome.php:53
 msgid "First Name"
 msgstr ""
 
@@ -569,11 +565,11 @@ msgid "Group Member Identifier Attribute"
 msgstr ""
 
 #: Userman.class.php:3581 Userman.class.php:3582 views/groups.php:61
-#: views/rnav.php:34 views/welcome.php:90
+#: views/rnav.php:34 views/welcome.php:85
 msgid "Group Name"
 msgstr ""
 
-#: views/welcome.php:70
+#: views/welcome.php:65
 msgid ""
 "Group Priorities can be changed by clicking and dragging groups around in "
 "the order you'd like. Groups with a lower number for priority take priority "
@@ -581,7 +577,7 @@ msgid ""
 msgstr ""
 
 #: functions.inc/auth/modules/Freepbx.php:139
-#: functions.inc/auth/modules/Msad2.php:398
+#: functions.inc/auth/modules/Msad2.php:399
 #: functions.inc/auth/modules/Openldap2.php:417
 #: functions.inc/auth/modules/Voicemail.php:183
 msgid "Group Successfully Added"
@@ -616,7 +612,7 @@ msgid "Group object filter"
 msgstr ""
 
 #: functions.inc/auth/modules/Msad.php:394
-#: functions.inc/auth/modules/Msad2.php:448
+#: functions.inc/auth/modules/Msad2.php:449
 #: functions.inc/auth/modules/Openldap.php:407
 #: functions.inc/auth/modules/Openldap2.php:467
 msgid "Group updated"
@@ -631,7 +627,7 @@ msgid "Groupname can not be blank"
 msgstr ""
 
 #: functions.inc/guihooks.php:236 functions.inc/guihooks.php:280
-#: views/users.php:164 views/welcome.php:26
+#: views/users.php:164 views/welcome.php:21
 msgid "Groups"
 msgstr ""
 
@@ -734,7 +730,7 @@ msgstr ""
 msgid "Imported %s directory"
 msgstr ""
 
-#: views/welcome.php:155
+#: views/welcome.php:150
 msgid "Imported from "
 msgstr ""
 
@@ -742,7 +738,7 @@ msgstr ""
 msgid "Importing Module XML userman"
 msgstr ""
 
-#: views/welcome.php:16
+#: views/welcome.php:10
 #, php-format
 msgid ""
 "In %s User Manager you can create users that have access to Extensions or "
@@ -766,8 +762,8 @@ msgstr ""
 
 #: functions.inc/auth/modules/Msad.php:343
 #: functions.inc/auth/modules/Msad.php:356
-#: functions.inc/auth/modules/Msad2.php:374
-#: functions.inc/auth/modules/Msad2.php:400
+#: functions.inc/auth/modules/Msad2.php:375
+#: functions.inc/auth/modules/Msad2.php:401
 #: functions.inc/auth/modules/Openldap.php:356
 #: functions.inc/auth/modules/Openldap.php:369
 #: functions.inc/auth/modules/Openldap2.php:393
@@ -784,7 +780,7 @@ msgid "Language for this user"
 msgstr ""
 
 #: Userman.class.php:3567 Userman.class.php:3568 views/users.php:256
-#: views/welcome.php:59
+#: views/welcome.php:54
 msgid "Last Name"
 msgstr ""
 
@@ -804,7 +800,7 @@ msgstr ""
 msgid "Linked"
 msgstr ""
 
-#: views/welcome.php:60
+#: views/welcome.php:55
 msgid "Linked Extension"
 msgstr ""
 
@@ -854,13 +850,17 @@ msgstr ""
 msgid "May this group log in to the %s Administration Pages?"
 msgstr ""
 
-#: views/directories.php:84 views/users.php:659
+#: views/directories.php:94 views/users.php:659
 #, php-format
 msgid "May this user log in to the %s Administration Pages?"
 msgstr ""
 
 #: views/templatemembers.php:33
 msgid "Members"
+msgstr ""
+
+#: Userman.class.php:4259 Userman.class.php:4276
+msgid "Members Not found"
 msgstr ""
 
 #: Userman.class.php:803
@@ -883,7 +883,7 @@ msgstr ""
 msgid "Module Core is disabled. Please enable it"
 msgstr ""
 
-#: Console/Userman.class.php:34 views/welcome.php:114
+#: Console/Userman.class.php:34 views/welcome.php:109
 msgid "Name"
 msgstr ""
 
@@ -891,7 +891,7 @@ msgstr ""
 msgid "Name can not be blank!"
 msgstr ""
 
-#: views/directories.php:99
+#: views/directories.php:109
 msgid "Never"
 msgstr ""
 
@@ -901,13 +901,22 @@ msgid ""
 "directory. Groups synchronised from the remote directory will be read-only."
 msgstr ""
 
-#: views/directories.php:76 views/general.php:32 views/general.php:61
+#: views/directories.php:86 views/general.php:32 views/general.php:61
 #: views/general.php:170 views/general.php:211 views/general.php:252
 #: views/general.php:293 views/general.php:334 views/general.php:375
 #: views/general.php:416 views/groups.php:273 views/groups.php:298
 #: views/msad2.php:223 views/openldap.php:59 views/openldap2.php:226
 #: views/quickCreate.php:16 views/users.php:649 views/users.php:676
+#: assets/js/userman.js:183 assets/js/userman.js:206 assets/js/userman.js:590
 msgid "No"
+msgstr ""
+
+#: Userman.class.php:4340
+msgid "No Dashboards created"
+msgstr ""
+
+#: Userman.class.php:2256
+msgid "No_Dashboards_created"
 msgstr ""
 
 #: Userman.class.php:355 functions.inc/guihooks.php:174
@@ -920,6 +929,10 @@ msgstr ""
 #: functions.inc/auth/modules/Openldap.php:159
 #: functions.inc/auth/modules/Openldap2.php:174
 msgid "Not Connected"
+msgstr ""
+
+#: Userman.class.php:4113
+msgid "Not able to create User under"
 msgstr ""
 
 #: functions.inc/auth/modules/Msad.php:169
@@ -983,6 +996,10 @@ msgstr ""
 msgid "Password can not be blank"
 msgstr ""
 
+#: assets/js/userman.js:671
+msgid "Password did not match the password polices"
+msgstr ""
+
 #: Userman.class.php:207
 #, php-format
 msgid "Password should contain minimum %d %s character(s), detected = %d"
@@ -998,8 +1015,12 @@ msgstr ""
 msgid "Password should have minimum %s value of %d, detected = %d"
 msgstr ""
 
-#: assets/js/userman.js:240 assets/js/userman.js:262
-msgid "Please fill all missing fields"
+#: Userman.class.php:1370
+msgid "Please Create Generic Template to View /Edit Template"
+msgstr ""
+
+#: Userman.class.php:1360
+msgid "Please Generate Generic Template to View /Edit Template"
 msgstr ""
 
 #: assets/js/userman.js:57
@@ -1039,7 +1060,7 @@ msgstr ""
 msgid "Primary Linked Extension"
 msgstr ""
 
-#: views/welcome.php:92
+#: views/welcome.php:87
 msgid "Priority"
 msgstr ""
 
@@ -1141,7 +1162,7 @@ msgstr ""
 msgid "Select which groups new users are added to when they are created"
 msgstr ""
 
-#: views/welcome.php:42
+#: views/welcome.php:37
 msgid "Send Email"
 msgstr ""
 
@@ -1161,7 +1182,7 @@ msgstr ""
 msgid "Set by your administrator"
 msgstr ""
 
-#: views/welcome.php:28
+#: views/welcome.php:23
 msgid "Settings"
 msgstr ""
 
@@ -1182,7 +1203,7 @@ msgstr ""
 msgid "Submit & Send Email to User"
 msgstr ""
 
-#: views/directories.php:94
+#: views/directories.php:104
 msgid "Synchronize"
 msgstr ""
 
@@ -1194,6 +1215,10 @@ msgstr ""
 msgid "Syncronize all directories"
 msgstr ""
 
+#: Userman.class.php:2313
+msgid "Template Created"
+msgstr ""
+
 #: views/ucptemplates.php:47
 msgid "Template Description"
 msgstr ""
@@ -1203,12 +1228,20 @@ msgid "Template Does Not Exist"
 msgstr ""
 
 #: Userman.class.php:3595 Userman.class.php:3596 views/ucptemplates.php:25
-#: views/welcome.php:153
+#: views/welcome.php:148
 msgid "Template Name"
 msgstr ""
 
 #: assets/js/userman.js:53
 msgid "Template Name can not be blank!"
+msgstr ""
+
+#: Userman.class.php:4208 Userman.class.php:4213 Userman.class.php:4270
+msgid "Template Not assigned"
+msgstr ""
+
+#: Userman.class.php:2316
+msgid "Template Not updated"
 msgstr ""
 
 #: Userman.class.php:4046
@@ -1219,10 +1252,18 @@ msgstr ""
 msgid "Template already exists"
 msgstr ""
 
-#: views/welcome.php:128
+#: views/welcome.php:123
 msgid ""
 "Template rows highlighted yellow have not been rebuilt since changes were "
 "made to the template."
+msgstr ""
+
+#: Userman.class.php:2309
+msgid "Template updated"
+msgstr ""
+
+#: Userman.class.php:1377
+msgid "TemplateID not valid"
 msgstr ""
 
 #: views/general.php:446
@@ -1251,11 +1292,11 @@ msgstr ""
 msgid "The Active Directory secure connection type"
 msgstr ""
 
-#: assets/js/userman.js:525
+#: assets/js/userman.js:534
 msgid "The Browser Language could not be determined"
 msgstr ""
 
-#: assets/js/userman.js:545
+#: assets/js/userman.js:554
 msgid "The Browser Timezone could not be determined"
 msgstr ""
 
@@ -1313,11 +1354,11 @@ msgstr ""
 msgid "The OpenLDAP username"
 msgstr ""
 
-#: assets/js/userman.js:535
+#: assets/js/userman.js:544
 msgid "The PBX Language is not set"
 msgstr ""
 
-#: assets/js/userman.js:555
+#: assets/js/userman.js:564
 msgid "The PBX Timezone is not set"
 msgstr ""
 
@@ -1432,7 +1473,7 @@ msgstr ""
 msgid "The attribute field to use when loading the users groups."
 msgstr ""
 
-#: views/directories.php:37
+#: views/directories.php:47
 #, php-format
 msgid "The authentication engine to use"
 msgstr ""
@@ -1459,7 +1500,7 @@ msgid ""
 "The directory for this user is currently locked while updates are being run"
 msgstr ""
 
-#: views/directories.php:59
+#: views/directories.php:69
 msgid "The directory name"
 msgstr ""
 
@@ -1615,7 +1656,7 @@ msgstr ""
 msgid "This is the name that the user will use when logging in."
 msgstr ""
 
-#: views/directories.php:112
+#: views/directories.php:122
 #, php-format
 msgid ""
 "This setting only applies to authentication engines other than the %s "
@@ -1664,21 +1705,21 @@ msgstr ""
 msgid "Title"
 msgstr ""
 
-#: assets/js/userman.js:461
+#: assets/js/userman.js:470
 msgid "True"
 msgstr ""
 
-#: Userman.class.php:3613 views/welcome.php:116
+#: Userman.class.php:3613 views/welcome.php:111
 msgid "Type"
 msgstr ""
 
-#: views/welcome.php:126
+#: views/welcome.php:121
 msgid ""
 "UCP Template association with users is done through Groups->UCP->General Or "
 "users->UCP->General. For More details "
 msgstr ""
 
-#: Userman.class.php:3528 Userman.class.php:3529 views/welcome.php:29
+#: Userman.class.php:3528 Userman.class.php:3529 views/welcome.php:24
 msgid "UCP Templates"
 msgstr ""
 
@@ -1706,7 +1747,7 @@ msgstr ""
 msgid "Update Group is not defined"
 msgstr ""
 
-#: views/passwordmodal.php:35 assets/js/userman.js:375 assets/js/userman.js:397
+#: views/passwordmodal.php:35 assets/js/userman.js:384 assets/js/userman.js:406
 msgid "Update Password"
 msgstr ""
 
@@ -1728,7 +1769,7 @@ msgstr ""
 msgid "Updated Voicemail User %s"
 msgstr ""
 
-#: assets/js/userman.js:379
+#: assets/js/userman.js:388
 msgid "Updating"
 msgstr ""
 
@@ -1785,6 +1826,10 @@ msgstr ""
 
 #: views/msad2.php:554 views/openldap2.php:533
 msgid "User Company attribute"
+msgstr ""
+
+#: Userman.class.php:4111
+msgid "User Created"
 msgstr ""
 
 #: views/msad2.php:310 views/openldap.php:166 views/openldap2.php:313
@@ -1855,6 +1900,10 @@ msgstr ""
 msgid "User Title attribute"
 msgstr ""
 
+#: Userman.class.php:2254 Userman.class.php:4338
+msgid "User UCP updated"
+msgstr ""
+
 #: views/msad2.php:620 views/openldap2.php:599
 msgid "User Work Phone attribute"
 msgstr ""
@@ -1908,7 +1957,7 @@ msgid "User object filter"
 msgstr ""
 
 #: functions.inc/auth/modules/Msad.php:381
-#: functions.inc/auth/modules/Msad2.php:426
+#: functions.inc/auth/modules/Msad2.php:427
 #: functions.inc/auth/modules/Openldap.php:394
 #: functions.inc/auth/modules/Openldap2.php:445
 #: functions.inc/auth/modules/Voicemail.php:208
@@ -1917,7 +1966,7 @@ msgstr ""
 
 #: functions.inc/guihooks.php:234 functions.inc/guihooks.php:278
 #: views/msad.php:51 views/msad2.php:77 views/openldap.php:78 views/rnav.php:17
-#: views/welcome.php:56
+#: views/welcome.php:51
 msgid "Username"
 msgstr ""
 
@@ -1933,7 +1982,7 @@ msgstr ""
 msgid "Username/Password Can Not Be Blank!"
 msgstr ""
 
-#: views/groups.php:169 views/welcome.php:25
+#: views/groups.php:169 views/welcome.php:20
 msgid "Users"
 msgstr ""
 
@@ -1957,7 +2006,8 @@ msgstr ""
 msgid "Warning"
 msgstr ""
 
-#: views/welcome.php:10
+#: views/welcome.php:11
+#, php-format
 msgid "What is User Manager"
 msgstr ""
 
@@ -1987,12 +2037,13 @@ msgstr ""
 msgid "Work Phone Number"
 msgstr ""
 
-#: views/directories.php:74 views/general.php:30 views/general.php:59
+#: views/directories.php:84 views/general.php:30 views/general.php:59
 #: views/general.php:168 views/general.php:209 views/general.php:250
 #: views/general.php:291 views/general.php:332 views/general.php:373
 #: views/general.php:414 views/groups.php:271 views/groups.php:296
 #: views/msad2.php:221 views/openldap.php:57 views/openldap2.php:224
 #: views/quickCreate.php:14 views/users.php:647 views/users.php:674
+#: assets/js/userman.js:183 assets/js/userman.js:206 assets/js/userman.js:590
 msgid "Yes"
 msgstr ""
 
@@ -2024,7 +2075,7 @@ msgstr ""
 msgid "directory"
 msgstr ""
 
-#: views/welcome.php:75
+#: views/welcome.php:70
 msgid "disabled"
 msgstr ""
 
@@ -2074,4 +2125,8 @@ msgstr ""
 
 #: assets/js/userman.js:8
 msgid "users"
+msgstr ""
+
+#: Userman.class.php:4236
+msgid "widgets not reconfigured"
 msgstr ""
