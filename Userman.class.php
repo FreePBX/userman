@@ -105,9 +105,9 @@ class Userman extends FreePBX_Helpers implements BMO {
 				$freepbxCron->remove($cron);
 			}
 		}
-		$this->FreePBX->Job->addClass('userman', 'syncall', 'FreePBX\modules\Userman\Job', '*/15 * * * *');
-		//$freepbxCron->addLine("*/15 * * * * ".$AMPSBIN."/fwconsole userman --syncall -q");
-
+		//$this->FreePBX->Job->addClass('userman', 'syncall', 'FreePBX\modules\Userman\Job', '*/15 * * * *');
+		$this->FreePBX->Job->remove('userman', 'syncall');
+		$freepbxCron->addLine("*/15 * * * * [ -e ".$AMPSBIN."/fwconsole ] && sleep $((RANDOM%30)) && ".$AMPSBIN."/fwconsole userman --syncall -q");
 		$auth = $this->getConfig('auth');
 
 		$check = array(
@@ -1362,7 +1362,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 						$ret = $this->updateUserUcpByTemplate($uID, $request['id']);
 						return array("status" => true);
 					}
-					return array("status" => false, 'message'=> 'Please Generate Generic Template to View /Edit Template');
+					return array("status" => false, 'message' => _('Please Generate Generic Template to View /Edit Template'));
 				}else if(!empty($request['id']) && $request['key'] == 'false') {
 					$uID = $this->getTemplateCreator();
 					$key = $this->getUnlockKeyTemplateCreator();
@@ -1370,16 +1370,16 @@ class Userman extends FreePBX_Helpers implements BMO {
 						$ret = $this->updateUserUcpByTemplate($uID, $request['id']);
 						return array("status" => true,'key'=>$key);
 					}
-					return array("status" => false, 'message'=> 'Please Create Generic Template to View /Edit Template');
+					return array("status" => false, 'message' => ('Please Create Generic Template to View /Edit Template'));
 				}else {
-					return array("status" => false, 'message'=> 'Please Create Generic Template to View /Edit Template');
+					return array("status" => false, 'message' => _('Please Create Generic Template to View /Edit Template'));
 				}
 			break;
 			case "rebuildtemplate":
 				if(!empty($request['templateid'])){
 					return $this->rebuildtemplate($request['templateid']);
 				}else {
-					return ['status'=>false,'message'=>'TemplateID not valid'];
+					return ['status'=>false,'message' => _('TemplateID not valid')];
 				}
 			break;
 			case "getDirectories":
@@ -1436,7 +1436,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 				}
 				if($sendmail){
 					$list = implode(",",$maillist);
-					return array('status' => true,"message" => _("Email Sent to users : $list"));
+					return array('status' => true, "message" => sprintf(_("Email Sent to users: %s"), $list));
 				}
 				return array('status' => false, "message" => _("Invalid User"));
 
@@ -2256,9 +2256,9 @@ class Userman extends FreePBX_Helpers implements BMO {
 			$sql = "INSERT INTO userman_users_settings(`uid`,`module`,`key`,`val`,`type`) VALUES(:uid,'ucp|Global',:key,:val,:type)";
 			$sth = $this->db->prepare($sql);
 			$sth->execute(array(':uid' => $userid, ':key' => $results['key'],':val' => $dashboards,':type'=>$results['type']));
-			return ['status'=>true,'message'=> 'User UCP updated'];
+			return ['status'=>true, 'message' => _('User UCP updated')];
 		}else {
-			return ['status'=>false,'message'=> 'No_Dashboards_created'];
+			return ['status'=>false, 'message' => _('No_Dashboards_created')];
 		}
 	}
 	/*Remove the Side dashbord of a user */
@@ -2311,14 +2311,14 @@ class Userman extends FreePBX_Helpers implements BMO {
 					$sth->execute(array(':tid' => $tempid, ':key' => $result['key'],':val' => $result['val'],':type'=>$result['type']));
 				}
 			}
-			return ['status'=>true,'message'=> 'Template updated'];
+			return ['status'=>true, 'message' => _('Template updated')];
 		}else {
 			if($createtemp != 'import'){
 				$this->removeUcpTemplatesID($tempid);
-				return ['status'=>true,'message'=> 'Template Created'];
+				return ['status'=>true, 'message' => _('Template Created')];
 			}
 		}
-		return ['status'=>false,'message'=> 'Template Not updated'];
+		return ['status'=>false, 'message' => _('Template Not updated')];
 	}
 	private function gettemplateCSVData($id = ""){
 		if(empty($id)){
@@ -3088,12 +3088,14 @@ class Userman extends FreePBX_Helpers implements BMO {
 	 * @param mixed $value Can be an array, boolean or string or integer
 	 * @return mixed false if nothing, else array
 	 */
-	public function setModuleSettingByID($uid,$module,$setting,$value) {
+	public function setModuleSettingByID($uid,$module,$setting,$value,$emptyExistingCache = true) {
 		if(is_null($value)) {
 			$sql = "DELETE FROM ".$this->userSettingsTable." WHERE uid = :id AND module = :module AND `key` = :setting";
 			$sth = $this->db->prepare($sql);
 			$sth->execute(array(':id' => $uid, ':module' => $module, ':setting' => $setting));
-			$this->moduleUserSettingsCache = array();
+			if($emptyExistingCache){
+				$this->moduleUserSettingsCache = array();
+			}
 			return true;
 		}
 		if(is_bool($value)) {
@@ -3104,7 +3106,9 @@ class Userman extends FreePBX_Helpers implements BMO {
 		$sql = "REPLACE INTO ".$this->userSettingsTable." (`uid`, `module`, `key`, `val`, `type`) VALUES(:id, :module, :setting, :value, :type)";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':id' => $uid, ':module' => $module, ':setting' => $setting, ':value' => $value, ':type' => $type));
-		$this->moduleUserSettingsCache = array();
+		if($emptyExistingCache){
+			$this->moduleUserSettingsCache = array();
+		}
 		return true;
 	}
 
@@ -4070,7 +4074,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 		$this->FreePBX->Core->delUser($unusedexten);
 		$status = $this->deleteUserByID($uid);
 		$this->delConfig('unlockkey','templatecreator');
-		return ['status'=>$status,'message'=> 'Deleted User and Device'];
+		return ['status'=>$status, 'message' => _('Deleted User and Device')];
 	}
 
 /*Generate a User for Template creation,view/edit */
@@ -4113,9 +4117,9 @@ class Userman extends FreePBX_Helpers implements BMO {
 				}
 				$sth->execute(array($uid,$row['module'],$row['key'],$val,$row['type']));
 			}
-			return ['status'=>true,'uid'=>$uid,'message'=>'User Created'];
+			return ['status'=>true, 'uid'=>$uid, 'message' => _('User Created')];
 		}else {
-			return ['status'=>false,'message'=>'Not able to create User under'];
+			return ['status'=>false, 'message' => _('Not able to create User under')];
 		}
 	}
 
@@ -4210,12 +4214,12 @@ class Userman extends FreePBX_Helpers implements BMO {
 		$templateid = $this->getCombinedModuleSettingByID($userid,'ucp|template','templateid');
 		if($assigntemplate == '0'){
 			//template not assigned to use
-			return ['status'=>false,'message'=> 'Template Not assigned'];
+			return ['status'=>false, 'message' => _('Template Not assigned')];
 		}
 		if($templateid > 0){
 			return $this->updateUserUcpByTemplate($userid,$templateid);
 		} else {
-			return ['status'=>false,'message'=> 'Template Not assigned'];
+			return ['status'=>false, 'message' => _('Template Not assigned')];
 		}
 	}
 
@@ -4236,9 +4240,9 @@ class Userman extends FreePBX_Helpers implements BMO {
 			} 
 		}
 		if($count > 0){
-			return ['status'=>true,'message'=> $count.' User(s)  dashboard widgets reconfigured'];
+			return ['status'=>true, 'message' => sprintf(_('%s User(s)  dashboard widgets reconfigured'), $count)];
 		}
-		return ['status'=>false,'message'=> 'widgets not reconfigured'];
+		return ['status'=>false, 'message' => _('widgets not reconfigured')];
 	}
 
 	/*
@@ -4261,7 +4265,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 		if(count($members) > 0){
 			return ['status'=>true,'members'=> $members];
 		}
-		return ['status'=>false,'message'=> 'Members Not found'];
+		return ['status'=>false, 'message' => _('Members Not found')];
 	}
 
 	/*
@@ -4272,13 +4276,13 @@ class Userman extends FreePBX_Helpers implements BMO {
 			$assigntemplate = $this->getCombinedModuleSettingByID($userid,'ucp|template','assigntemplate');
 			$templateid = $this->getCombinedModuleSettingByID($userid,'ucp|template','templateid');
 			if($assigntemplate == '0'){
-				return ['status'=>false,'message'=> 'Template Not assigned'];
+				return ['status'=>false, 'message' => _('Template Not assigned')];
 			}
 			if($templateid ==  $tempid){// this user is already assigned with same template
 				return $this->ucpWidgetsCompaireAndUpdate($userid,$tempid);
 			} 
 		}
-		return ['status'=>false,'message'=> 'Members Not found'];
+		return ['status'=>false, 'message' => _('Members Not found')];
 	}
 	/*
 	* Compare and update the widgets
@@ -4340,9 +4344,9 @@ class Userman extends FreePBX_Helpers implements BMO {
 			$sth = $this->db->prepare($sql);
 			$dasboards = json_encode($mergedSettings['dashboard']);
 			$sth->execute(array(':uid' => $uid, ':key' => 'dashboards',':val' =>$dasboards ,':type'=>'json-arr'));
-			return ['status'=>true,'message'=> 'User UCP updated'];
+			return ['status'=>true, 'message' => _('User UCP updated')];
 		}else {
-			return ['status'=>false,'message'=> 'No Dashboards created'];
+			return ['status'=>false, 'message' => _('No Dashboards created')];
 		}
 	}
 	private function getUCPSideDashboardSettingByID($uid){
