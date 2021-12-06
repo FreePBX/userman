@@ -231,13 +231,13 @@ class Msad2 extends Auth {
 			$mySchema = new \App\Schemas\Msad2($this->config);
 			$config = [
 				// Mandatory Configuration Options
-				'hosts'    => 
-					preg_split("/[ ,]/", $this->config['host']),
-				'base_dn'               => $this->config['dn'],
+				'hosts'    		  => preg_split("/[ ,]/", $this->config['host']),
+				'base_dn'         => $this->config['dn'],
 				'username'        => $this->config['username'],
 				'password'        => $this->config['password'],
 
 				// Optional Configuration Options
+				'schema'				=> \App\Schemas\Msad2::class,
 				'account_suffix'        => '@'.$this->config['domain'],
 				'admin_account_suffix'  => '@'.$this->config['domain'],
 				'port'                  => $this->config['port'],
@@ -246,7 +246,8 @@ class Msad2 extends Auth {
 				'use_tls'               => ($this->config['connection'] == 'tls'),
 				'timeout'               => $this->timeout
 			];
-			$this->provider = new \Adldap\Connections\Provider($config, $connection = null, $mySchema);
+			$this->provider = new \Adldap\Connections\Provider($config, $connection = null);
+			$this->provider->setSchema($mySchema);
 			$ad = new Adldap(array("default" => $config));
 			$ad->addProvider($this->provider, 'default');
 			try {

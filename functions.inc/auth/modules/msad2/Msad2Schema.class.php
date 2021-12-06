@@ -1,13 +1,11 @@
 <?php
 namespace App\Schemas;
 
-use Adldap\Schemas\ActiveDirectory;
-
-class Msad2 extends ActiveDirectory {
+class Msad2 extends \Adldap\Schemas\ActiveDirectory {
 	private $config;
 
-	public function __construct($config) {
-		$this->config = $config;
+	public function __construct($config = null) {
+		$this->config = ((is_null($config)) ? array() : $config);
 	}
     // objectClassPerson has to be used as adldap2 determines the objectClass of users with it
 	public function objectClassPerson() {
