@@ -78,9 +78,9 @@ $("#directory-users").change(function() {
 		$("#remove-users").removeClass("hidden");
 		$("#remove-users").removeClass("btn-remove");
 		$("#remove-users").attr('disabled', true);
-		$("#remove-users").attr("title", "Select Directory to enable 'Delete' Button");
+		$("#remove-users").attr("title", _("Select Directory to enable 'Delete' Button"));
 		$("#add-users").attr('disabled', true);
-		$("#add-users").attr("title", "Select Directory to enable 'Add' Button");
+		$("#add-users").attr("title", _("Select Directory to enable 'Add' Button"));
 		$("#add-users").attr("href", "#");
 	} else {
 		$("#remove-users").removeAttr('title');
@@ -92,7 +92,7 @@ $("#directory-users").change(function() {
 			$("#add-users").removeAttr('title');
 		} else {
 			$("#add-users").attr('disabled', true);
-			$("#add-users").attr("title", "Select Directory to enable 'Add' Button");
+			$("#add-users").attr("title", _("Select Directory to enable 'Add' Button"));
 			$("#add-users").attr("href", "#");
 		}
 		if(directoryMapValues[val].permissions.removeUser) {
