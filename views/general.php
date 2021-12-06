@@ -82,7 +82,7 @@
 									<i class="fa fa-question-circle fpbx-help-icon" data-for="hostname"></i>
 								</div>
 								<div class="col-md-9">
-									<input type="text" class="form-control" id="hostname" name="hostname" value="<?php echo !empty($hostname) ? $hostname : ""?>" >
+									<input type="text" class="form-control" id="hostname" name="hostname" placeholder="<?php echo $host; ?>" value="<?php echo !empty($hostname) ? $hostname : ""?>" >
 								</div>
 							</div>
 						</div>

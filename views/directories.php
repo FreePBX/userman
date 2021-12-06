@@ -1,9 +1,19 @@
+<?php
+if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'showdirectory'){
+	$heading = '<h1>' . _("Edit Directory") . '</h1>';
+}else{
+	$heading = '<h1>' . _("Add Directory") . '</h1>';
+}
+$formaction = 'config.php?display=userman#directories';
+
+echo $heading;
+?>
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-sm-12">
 			<div class="fpbx-container">
 				<div class="display full-border">
-					<form autocomplete="off" class="fpbx-submit" id="directory" name="directory" action="config.php?display=userman#directories" method="post" onsubmit="return">
+					<form autocomplete="off" class="fpbx-submit" id="directory" name="directory" action="<?php echo $formaction; ?>" method="post" onsubmit="return">
 						<input type="hidden" name="type" value="directory">
 						<input type="hidden" name="submittype" value="gui">
 						<input type="hidden" name="id" value="<?php echo !empty($config['id']) ? $config['id'] : ''?>">
