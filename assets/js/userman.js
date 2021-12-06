@@ -62,14 +62,11 @@ if($("#editT").length) {
 }
 
 $("#email-users").click(function() {
+	var $this = this;
 	$(this).prop("disabled",true);
 	$.post(window.FreePBX.ajaxurl, {command: "email", module: "userman", extensions: deleteExts.users}, function(data) {
-		if(data.status) {
-			alert(data.message);
-		} else {
-			alert(data.message);
-		}
-		$(this).prop("disabled",false);
+		fpbxToast(data.message, '', (data.status ? "success" : "error"));
+		$($this).prop("disabled",false);
 	});
 });
 $("#directory-users").change(function() {
@@ -81,9 +78,9 @@ $("#directory-users").change(function() {
 		$("#remove-users").removeClass("hidden");
 		$("#remove-users").removeClass("btn-remove");
 		$("#remove-users").attr('disabled', true);
-		$("#remove-users").attr("title", "Select Directory to enable 'Delete' Button");
+		$("#remove-users").attr("title", _("Select Directory to enable 'Delete' Button"));
 		$("#add-users").attr('disabled', true);
-		$("#add-users").attr("title", "Select Directory to enable 'Add' Button");
+		$("#add-users").attr("title", _("Select Directory to enable 'Add' Button"));
 		$("#add-users").attr("href", "#");
 	} else {
 		$("#remove-users").removeAttr('title');
@@ -95,7 +92,7 @@ $("#directory-users").change(function() {
 			$("#add-users").removeAttr('title');
 		} else {
 			$("#add-users").attr('disabled', true);
-			$("#add-users").attr("title", "Select Directory to enable 'Add' Button");
+			$("#add-users").attr("title", _("Select Directory to enable 'Add' Button"));
 			$("#add-users").attr("href", "#");
 		}
 		if(directoryMapValues[val].permissions.removeUser) {
@@ -136,23 +133,27 @@ $(document).on('click', "button.btn-remove", function() {
 		deleteExts[type].push(this.id);
 	});
 	if($("#remove-"+type).prop("disabled") === false){ // <--- Fixe the Delete button issue with Chrome
-		if(confirm(sprintf(_("Are you sure you wish to delete these %s?"),translations[type]))) {
-			btn.find("span").text(_("Deleting..."));
-			btn.prop("disabled", true);
-			$.post( window.FreePBX.ajaxurl, {command: "delete", module: "userman", extensions: deleteExts[type], type: type}, function(data) {
-				if(data.status) {
-					btn.find("span").text(_("Delete"));
-					$("#table-"+section).bootstrapTable('remove', {
-						field: "id",
-						values: deleteExts[type]
-					});
-				} else {
-					btn.find("span").text(_("Delete"));
-					btn.prop("disabled", true);
-					alert(data.message);
-				}
-			});
-		}
+		fpbxConfirm(
+			sprintf(_("Are you sure you wish to delete these %s?"), translations[type]),
+			_("Yes"), _("No"),
+			function() {
+				btn.find("span").text(_("Deleting..."));
+				btn.prop("disabled", true);
+				$.post( window.FreePBX.ajaxurl, {command: "delete", module: "userman", extensions: deleteExts[type], type: type}, function(data) {
+					if(data.status) {
+						btn.find("span").text(_("Delete"));
+						$("#table-"+section).bootstrapTable('remove', {
+							field: "id",
+							values: deleteExts[type]
+						});
+					} else {
+						btn.find("span").text(_("Delete"));
+						btn.prop("disabled", true);
+						fpbxToast(data.message, '', 'error');
+					}
+				});
+			}
+		);
 	}
 });
 $("#table-groups").on("reorder-row.bs.table", function (table,rows) {
@@ -177,18 +178,22 @@ $("table").on("post-body.bs.table", function () {
 	$("table .fa-trash-o").off("click");
 	$("table .fa-trash-o").click(function() {
 		var id = $(this).data("id"), section = $(this).data("section"), type = $(this).parents("table").data("type"), trans = $(this).data("type");
-		if(confirm(sprintf(_("Are you sure you wish to delete this %s?"),translations[trans]))) {
-			$.post( window.FreePBX.ajaxurl, {command: "delete", module: "userman", extensions: [id], type: type}, function(data) {
-				if(data.status) {
-					$("#table-"+section).bootstrapTable('remove', {
-						field: "id",
-						values: [id.toString()]
-					});
-				} else {
-					alert(data.message);
-				}
-			});
-		}
+		fpbxConfirm(
+			sprintf(_("Are you sure you wish to delete this %s?"), translations[trans]),
+			_("Yes"), _("No"),
+			function() {
+				$.post( window.FreePBX.ajaxurl, {command: "delete", module: "userman", extensions: [id], type: type}, function(data) {
+					if(data.status) {
+						$("#table-"+section).bootstrapTable('remove', {
+							field: "id",
+							values: [id.toString()]
+						});
+					} else {
+						fpbxToast(data.message, '', 'error');
+					}
+				});
+			}
+		);
 	});
 });
 $("#table-directories").on("post-body.bs.table", function () {
@@ -196,16 +201,19 @@ $("#table-directories").on("post-body.bs.table", function () {
 		var $this = this;
 		var id = $(this).data("id");
 		if($(this).data("from") == 'directory') {
-		if(confirm(_("Are you sure you want to make this directory the system default?"))) {
-			$.post( window.FreePBX.ajaxurl, {command: "makeDefault", module: "userman", id: id}, function( data ) {
-				if(data.status) {
-					$(".default-check").removeClass("check");
-					$($this).addClass("check");
-				} else {
-					alert(data.message);
+			fpbxConfirm(
+				_("Are you sure you want to make this directory the system default?"),
+				_("Yes"), _("No"),
+				function() {
+					$.post( window.FreePBX.ajaxurl, {command: "makeDefault", module: "userman", id: id}, function( data ) {
+						if(data.status) {
+							$(".default-check").removeClass("check");
+							$($this).addClass("check");
+						}
+						fpbxToast(data.message, '', (data.status ? "success" : "error"));
+					});
 				}
-			});
-		}
+			);
 		}
 	});
 });
@@ -577,15 +585,15 @@ function rowStyle(row, index){
 	return style;
 }
 function rebuildwidgets(id) {
-	if(confirm(_("Are you sure rebuild all Users widgets associated with this Template ?"))) {
-		$.post(window.FreePBX.ajaxurl, {command: "rebuildtemplate", module: "userman", templateid: id}, function( data ) {
-			if(data.status) {
-				alert(data.message);
-			} else {
-				alert(data.message);
-			}
-		});
-	}
+	fpbxConfirm(
+		_("Are you sure rebuild all Users widgets associated with this Template?"),
+		_("Yes"), _("No"),
+		function() {
+			$.post(window.FreePBX.ajaxurl, {command: "rebuildtemplate", module: "userman", templateid: id}, function( data ) {
+				fpbxToast(data.message, '', (data.status ? "success" : "error"));
+			});	
+		}
+	);
 }
 
 function redirectToUCP(id, key) {
@@ -597,31 +605,31 @@ function redirectToUCP(id, key) {
 			var url = `/ucp/index.php?unlockkey=`+key+'&templateid='+id;
 			window.open(url, '_blank');
 		} else {
-			alert(data.message);
+			fpbxToast(data.message, '', 'error');
 		}
 	});
 }
 $("#generatetemplatecreator").click(function(e) {
 	$.post(window.FreePBX.ajaxurl, {command: "generatetemplatecreator", module: "userman"}, function( data ) {
+		fpbxToast(data.message, '', (data.status ? "success" : "error"));
 		if(data.status) {
-			alert(data.message);
 			location.reload();
-		} else {
-			alert(data.message);
 		}
 	});
 });
 $("#deletetemplatecreator").click(function(e) {
-	if(confirm(_("Are you sure to delete this Generic template ?"))) {
-		$.post(window.FreePBX.ajaxurl, {command: "deletetemplatecreator", module: "userman"}, function( data ) {
-			if(data.status) {
-				alert(data.message);
-				location.reload();
-			} else {
-				alert(data.message);
-			}
-		});
-	}
+	fpbxConfirm(
+		_("Are you sure to delete this Generic template?"),
+		_("Yes"), _("No"),
+		function() {
+			$.post(window.FreePBX.ajaxurl, {command: "deletetemplatecreator", module: "userman"}, function( data ) {
+				if(data.status) {
+					location.reload();
+				}
+				fpbxToast(data.message, '', (data.status ? "success" : "error"));
+			});
+		}
+	);
 });
 $("#merge").click(function(e) {
 	$('fieldset#users_allow > span, textarea').each(function(){
@@ -660,7 +668,7 @@ $("#editM").submit(function (e) {
 	var invalid = false;
 	if ($("#editM .pwd-error").text().length > 0) {
 		invalid = true;
-		alert("Password did not match the password polices");
+		fpbxToast(_("Password did not match the password polices"), '', 'warning');
 		$('#editM').submit(false);
 	}
 	if(!invalid){
