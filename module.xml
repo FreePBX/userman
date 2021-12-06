@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>15.0.63</version>
+	<version>15.0.64</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -11,6 +11,7 @@
 	</description>
   	<more-info>https://wiki.freepbx.org/display/FPG/User+Management+Module</more-info>
 	<changelog>
+		*15.0.64* FREEI-1194 Possible for job cron task to become locked indefinitely 
 		*15.0.63* FREEI-4229 Added frontend validation for users password field 
 		*15.0.62* FREEI-4107 Fixed warning messages misaligned inside the pop-up window 
 		*15.0.61* FREEI-4063 Added condition to display note only when there are error messages 
