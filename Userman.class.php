@@ -4457,4 +4457,14 @@ class Userman extends FreePBX_Helpers implements BMO {
 		}
 		return ['dashboard'=>$dashbords,'dashwidgets'=>$dashbordsettings];
 	}
+
+	public function regenerateAllContactFiles($type) {
+		switch ($type) {
+			case 'usermanusers':
+				if($this->FreePBX->Modules->checkStatus("sysadmin")) {
+					$this->FreePBX->Sysadmin->ApiHooks()->runModuleSystemHook('contactmanager', 'update-contacts', [-1]);
+				}
+			break;
+		}
+	}
 }

@@ -101,6 +101,7 @@
 			<method callingMethod="getTypes" class="Userman" namespace="FreePBX\modules">bulkhandlerGetTypes</method>
 			<method callingMethod="import" class="Userman" namespace="FreePBX\modules">bulkhandlerImport</method>
 			<method callingMethod="export" class="Userman" namespace="FreePBX\modules">bulkhandlerExport</method>
+			<method callingMethod="importFinished" class="Userman" namespace="FreePBX\modules">regenerateAllContactFiles</method>
 		</bulkhandler>
 	</hooks>
 	<database>
