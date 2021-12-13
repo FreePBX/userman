@@ -39,7 +39,7 @@
 										<select id="directory-users" class="form-control" style="display: inline-block;width: inherit;">
 											<option value=""><?php echo _('All Directories')?></option>
 											<?php foreach($directories as $directory) {?>
-												<option value="<?php echo $directory['id']?>"<?php echo _(sizeof($directories)==1 ? ' selected':'')?>><?php echo $directory['name']?></option>
+												<option value="<?php echo $directory['id']?>"<?php echo (sizeof($directories)==1 ? ' selected':'')?>><?php echo $directory['name']?></option>
 											<?php } ?>
 										</select>
 									</div>
