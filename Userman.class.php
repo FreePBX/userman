@@ -3053,7 +3053,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 	 * Get all Module Group Settings
 	 * @return array The settings as an ASSOC array
 	 */
-	private function getAllModuleGroupSettings($cached=true) {
+	public function getAllModuleGroupSettings($cached=true) {
 		if($cached && !empty($this->moduleGroupSettingsCache)) {
 			return $this->moduleGroupSettingsCache;
 		}
