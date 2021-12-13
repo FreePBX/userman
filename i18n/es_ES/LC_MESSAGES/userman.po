@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-04 06:18+0000\n"
-"PO-Revision-Date: 2021-08-05 16:01+0000\n"
+"PO-Revision-Date: 2021-12-14 22:00+0000\n"
 "Last-Translator: Javier Pastor <jpastor@cerebelum.net>\n"
 "Language-Team: Spanish <http://weblate.freepbx.org/projects/freepbx/userman/"
 "es/>\n"
@@ -141,7 +141,7 @@ msgstr "Avanzado"
 
 #: assets/js/userman.js:183
 msgid "Alert"
-msgstr ""
+msgstr "Alerta"
 
 #: views/welcome.php:44 views/welcome.php:78
 msgid "All Directories"
@@ -214,7 +214,7 @@ msgstr "Cerrar"
 
 #: views/msad2.php:241 views/openldap2.php:219
 msgid "Common Name attribute"
-msgstr ""
+msgstr "Atributo de Nombre Común"
 
 #: views/users.php:324
 msgid "Company"
@@ -279,6 +279,7 @@ msgstr "Borrando..."
 #: assets/js/userman.js:183
 msgid "Deletion is not allowed if a selected item is read-only !!"
 msgstr ""
+"¡No se permite la eliminación si un elemento seleccionado es de solo lectura!"
 
 #: views/users.php:348
 msgid "Department"
@@ -595,12 +596,19 @@ msgid ""
 "through Endpoint Manager, please rebuild their phone configuration and apply "
 "them if any Phone Apps settings have changed."
 msgstr ""
+"Si alguno de los usuarios de este grupo está utilizando un teléfono Sangoma/"
+"Digium configurado a través de Endpoint Manager, reconstruya la "
+"configuración de su teléfono y aplíquelo si ha cambiado la configuración de "
+"las aplicaciones del teléfono."
 
 #: views/msad2.php:206 views/openldap2.php:184
 msgid ""
 "If enabled and the 'User extension Link attribute' is set, a new extension "
 "will be created and linked to this user if one does not exist previously"
 msgstr ""
+"Si está habilitado y se establece el 'Atributo de Enlace de Extensión de "
+"Usuario', se creará una nueva extensión y se vinculará a este usuario si no "
+"existe una previamente"
 
 #: views/msad.php:151
 msgid ""
@@ -646,6 +654,10 @@ msgid ""
 "Manager, please rebuild the phone configuration and apply it if any Phone "
 "Apps settings have changed."
 msgstr ""
+"Si este usuario está utilizando un teléfono Sangoma/Digium configurado a "
+"través de Endpoint Manager, reconstruya la configuración del teléfono y "
+"aplíquela si ha cambiado alguna configuración de las aplicaciones del "
+"teléfono."
 
 #: Userman.class.php:124
 #, php-format
@@ -1126,7 +1138,7 @@ msgstr ""
 
 #: views/openldap.php:156
 msgid "The OpenLDAP Display Name. Usually is displayname"
-msgstr ""
+msgstr "El nombre para mostrar de OpenLDAP. Normalmente es displayname"
 
 #: views/openldap.php:134
 msgid "The OpenLDAP User Identity. Usually is uid"
@@ -1145,23 +1157,23 @@ msgstr "Anfitrión OpenLDAP"
 
 #: views/openldap2.php:45
 msgid "The OpenLDAP host(s), comma/space separated"
-msgstr ""
+msgstr "El (los) host (s) de OpenLDAP, separados por comas/espacios"
 
 #: views/openldap.php:112 views/openldap2.php:111
 msgid "The OpenLDAP password"
-msgstr "Contraseña OpenLDAP"
+msgstr "Contraseña de OpenLDAP"
 
 #: views/openldap.php:41 views/openldap2.php:67
 msgid "The OpenLDAP port"
-msgstr "Puerto OpenLDAP"
+msgstr "Puerto de OpenLDAP"
 
 #: views/openldap2.php:23
 msgid "The OpenLDAP secure connection type"
-msgstr ""
+msgstr "El tipo de conexión segura de OpenLDAP"
 
 #: views/openldap.php:90 views/openldap2.php:89
 msgid "The OpenLDAP username"
-msgstr "usuario OpenLDAP"
+msgstr "Usuario de OpenLDAP"
 
 #: assets/js/userman.js:466
 msgid "The PBX Language is not set"
@@ -1174,10 +1186,11 @@ msgstr "La zona horaria de la PBX no está configurada"
 #: views/msad2.php:411
 msgid "The RDN to use when loading the user username (eg. cn)."
 msgstr ""
+"El RDN que se utilizará al cargar el nombre de usuario del usuario (Ej. cn)."
 
 #: views/msad.php:107 views/msad2.php:133
 msgid "The active directory domain"
-msgstr "Dominio del Active Directory"
+msgstr "Dominio del Directorio Activo"
 
 #: views/msad.php:19
 msgid "The active directory host"
@@ -1185,7 +1198,7 @@ msgstr "Anfitrión del Active Directory"
 
 #: views/msad2.php:45
 msgid "The active directory host(s), comma/space separated"
-msgstr ""
+msgstr "El (los) host (s) del Directorio Activo, separados por comas/espacios"
 
 #: views/msad.php:85 views/msad2.php:111
 msgid "The active directory password"
@@ -1203,30 +1216,39 @@ msgstr "usuario del Active Directory"
 msgid ""
 "The attribute field to use for tracking user identity across object renames."
 msgstr ""
+"El campo de atributo que se utilizará para rastrear la identidad del usuario "
+"en los cambios de nombre de los objetos."
 
 #: views/msad2.php:388 views/openldap2.php:366
 msgid "The attribute field to use on the user object (eg. cn, sAMAccountName)"
 msgstr ""
+"El campo de atributo que se utilizará en el objeto de usuario (Ej. cn, "
+"sAMAccountName)"
 
 #: views/msad2.php:789 views/openldap2.php:743
 msgid "The attribute field to use when loading the group members."
-msgstr ""
+msgstr "El campo de atributo que se utilizará al cargar los miembros del grupo."
 
 #: views/msad2.php:275 views/openldap2.php:253
 msgid "The attribute field to use when loading the object description."
 msgstr ""
+"El campo de atributo que se utilizará al cargar la descripción del objeto."
 
 #: views/msad2.php:253 views/openldap2.php:231
 msgid "The attribute field to use when loading the object's common name."
 msgstr ""
+"El campo de atributo que se utilizará al cargar el nombre común de los "
+"objetos."
 
 #: views/msad2.php:654 views/openldap2.php:608
 msgid "The attribute field to use when loading the user cell phone."
 msgstr ""
+"El campo de atributo que se utilizará al cargar el teléfono movil del "
+"usuario."
 
 #: views/msad2.php:566 views/openldap2.php:520
 msgid "The attribute field to use when loading the user company."
-msgstr ""
+msgstr "El campo de atributo que se utilizará al cargar la empresa del usuario."
 
 #: views/msad2.php:588 views/openldap2.php:542
 msgid "The attribute field to use when loading the user department."
