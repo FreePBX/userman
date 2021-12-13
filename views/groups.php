@@ -48,7 +48,7 @@ echo $heading;
 							<input type="hidden" name="prevGroupname" value="<?php echo !empty($group['groupname']) ? $group['groupname'] : ''; ?>">
 							<input type="hidden" name="group" value="<?php echo !empty($group['id']) ? $group['id'] : ''; ?>">
 							<input type="hidden" name="submittype" value="gui">
-							<input type="hidden" name="users" value="" id="users">
+							<input type="hidden" name="users" value="<?php echo !empty($group['users']) ? implode(",",$group['users']) : '' ; ?>" id="users">
 							<div class="tab-content">
 								<!--Login Details -->
 								<div role="tabpanel" class="tab-pane active display" id="usermanlogin">
