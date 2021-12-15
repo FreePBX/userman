@@ -67,7 +67,7 @@
 										<a href="config.php?display=userman&amp;action=addgroup<?php echo (sizeof($directories)==1 ? '&directory='.$directoryOneId : ''); ?>" id="add-groups" class="btn btn-add hidden" data-type="groupss" data-section="groups">
 											<i class="fa fa-user-plus"></i> <span><?php echo _('Add')?></span>
 										</a>
-										<button id="remove-groups" class="btn btn-danger btn-remove" data-type="groups" data-section="groups"<?php echo (sizeof($directories)==1 ? 'disabled': sprintf(' disabled title="%s"', _('Select Directory to enable \'Delete\' Button')))?>>
+										<button id="remove-groups" class="btn btn-danger btn-remove" data-type="groups" data-section="groups"<?php echo (sizeof($directories)==1 ? '': sprintf(' disabled title="%s"', _('Select Directory to enable \'Delete\' Button')))?>>
 											<i class="fa fa-user-times"></i> <span><?php echo _('Delete')?></span>
 										</button>
 										<select id="directory-groups" class="form-control" style="display: inline-block;width: inherit;">
