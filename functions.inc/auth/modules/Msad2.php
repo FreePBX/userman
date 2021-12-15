@@ -233,13 +233,12 @@ class Msad2 extends Auth {
 				// Mandatory Configuration Options
 				'hosts'    		  => preg_split("/[ ,]/", $this->config['host']),
 				'base_dn'         => $this->config['dn'],
-				'username'        => $this->config['username'],
+				'username'        => $this->config['username'] . '@' . $this->config['domain'],
 				'password'        => $this->config['password'],
 
 				// Optional Configuration Options
 				'schema'				=> \App\Schemas\Msad2::class,
 				'account_suffix'        => '@'.$this->config['domain'],
-				'admin_account_suffix'  => '@'.$this->config['domain'],
 				'port'                  => $this->config['port'],
 				'follow_referrals'      => false,
 				'use_ssl'               => ($this->config['connection'] == 'ssl'),
