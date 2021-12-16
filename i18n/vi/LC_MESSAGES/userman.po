@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-13 04:58+0000\n"
+"POT-Creation-Date: 2021-12-16 05:08+0000\n"
 "PO-Revision-Date: 2017-07-03 12:33-0400\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -18,10 +18,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#: views/welcome.php:76
-msgid " selected"
-msgstr ""
 
 #: views/groups.php:36 views/users.php:33
 #, php-format
@@ -52,10 +48,6 @@ msgstr ""
 msgid "%s records failed validation"
 msgstr ""
 
-#: views/welcome.php:67
-msgid "&directory="
-msgstr ""
-
 #: Userman.class.php:315
 msgid "(0 - being Really Weak, 4 - being Strong)"
 msgstr ""
@@ -74,10 +66,6 @@ msgstr ""
 
 #: views/directories.php:112
 msgid "6 Hours"
-msgstr ""
-
-#: views/welcome.php:30
-msgid "?display=userman&action=adduser&directory="
 msgstr ""
 
 #: views/users.php:96
@@ -572,7 +560,7 @@ msgid ""
 msgstr ""
 
 #: functions.inc/auth/modules/Freepbx.php:139
-#: functions.inc/auth/modules/Msad2.php:399
+#: functions.inc/auth/modules/Msad2.php:398
 #: functions.inc/auth/modules/Openldap2.php:417
 #: functions.inc/auth/modules/Voicemail.php:183
 msgid "Group Successfully Added"
@@ -607,7 +595,7 @@ msgid "Group object filter"
 msgstr ""
 
 #: functions.inc/auth/modules/Msad.php:394
-#: functions.inc/auth/modules/Msad2.php:449
+#: functions.inc/auth/modules/Msad2.php:448
 #: functions.inc/auth/modules/Openldap.php:407
 #: functions.inc/auth/modules/Openldap2.php:467
 msgid "Group updated"
@@ -757,8 +745,8 @@ msgstr ""
 
 #: functions.inc/auth/modules/Msad.php:343
 #: functions.inc/auth/modules/Msad.php:356
-#: functions.inc/auth/modules/Msad2.php:375
-#: functions.inc/auth/modules/Msad2.php:401
+#: functions.inc/auth/modules/Msad2.php:374
+#: functions.inc/auth/modules/Msad2.php:400
 #: functions.inc/auth/modules/Openldap.php:356
 #: functions.inc/auth/modules/Openldap.php:369
 #: functions.inc/auth/modules/Openldap2.php:393
@@ -1098,6 +1086,14 @@ msgstr ""
 
 #: views/msad2.php:7 views/openldap2.php:7
 msgid "Secure Connection Type"
+msgstr ""
+
+#: views/welcome.php:30
+msgid "Select Directory to enable 'Add' Button"
+msgstr ""
+
+#: views/welcome.php:70
+msgid "Select Directory to enable 'Delete' Button"
 msgstr ""
 
 #: functions.inc/guihooks.php:224 functions.inc/guihooks.php:229
@@ -1952,7 +1948,7 @@ msgid "User object filter"
 msgstr ""
 
 #: functions.inc/auth/modules/Msad.php:381
-#: functions.inc/auth/modules/Msad2.php:427
+#: functions.inc/auth/modules/Msad2.php:426
 #: functions.inc/auth/modules/Openldap.php:394
 #: functions.inc/auth/modules/Openldap2.php:445
 #: functions.inc/auth/modules/Voicemail.php:208
@@ -2068,10 +2064,6 @@ msgstr ""
 
 #: assets/js/userman.js:11
 msgid "directory"
-msgstr ""
-
-#: views/welcome.php:70
-msgid "disabled"
 msgstr ""
 
 #: assets/js/userman.js:9
