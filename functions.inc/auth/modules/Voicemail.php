@@ -39,11 +39,30 @@ class Voicemail extends Auth {
 	 * Get the configuration display of the authentication driver
 	 * @param  object $userman The userman object
 	 * @param  object $freepbx The FreePBX BMO object
-	 * @return string          html display data
+	 * @return string          array with the name of the authentication device, and an array
+	 * 						   with all the configurations of this authentication device 
 	 */
 	public static function getConfig($userman, $freepbx, $config) {
 		$config['context'] = !empty($config['context']) ? $config['context'] : self::$defaults['context'];
-		return load_view(dirname(dirname(dirname(__DIR__)))."/views/voicemail.php", array("config" => $config));
+		
+		$typeauth = self::getShortName();
+		$form_data = array(
+			array(
+				'name'		=> $typeauth.'-context',
+				'title'		=> _("Context"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> false,
+				'opts'		=> array(
+					'value' => isset($config['context']) ? $config['context'] : '',
+				),
+				'help'		=> _("The voicemail context to get users from"),
+			),
+		);
+		return array(
+			'auth' => $typeauth,
+			'data' => $form_data,
+		);
 	}
 
 	/**
@@ -53,8 +72,10 @@ class Voicemail extends Auth {
 	 * @return mixed          Return true if valid. Otherwise return error string
 	 */
 	public static function saveConfig($userman, $freepbx) {
+		$typeauth = self::getShortName();
 		$config = array(
-			"context" => $_REQUEST['voicemail-context']
+			'authtype' => $typeauth,
+			"context" => $_REQUEST[$typeauth.'-context']
 		);
 		return $config;
 	}

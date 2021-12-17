@@ -486,6 +486,10 @@ class Userman extends FreePBX_Helpers implements BMO {
 					}
 					$config['sync'] = !empty($request['sync']) ? $request['sync'] : '';
 					if(!empty($request['id'])) {
+						if ( empty ( $config['password'] ) ) {
+							$auth_settings = $this->getConfig("auth-settings", $request['id']);
+							$config['password'] = $auth_settings['password'];
+						}
 						$id = $this->updateDirectory($request['id'], $request['name'], $request['enable'], $config);
 					} else {
 						$id = $this->addDirectory($request['authtype'], $request['name'], $request['enable'], $config);
@@ -938,7 +942,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 					if(!empty($a)) {
 						$auths[$auth] = $a;
 						$directory['config']['id'] = $request['directory'];
-						$auths[$auth]['html'] = $class::getConfig($this, $this->FreePBX, $directory['config']);
+						$auths[$auth]['config'] = $class::getConfig($this, $this->FreePBX, $directory['config']);
 					}
 				} else {
 					$directory = array(
@@ -950,18 +954,12 @@ class Userman extends FreePBX_Helpers implements BMO {
 						$a = $class::getInfo($this, $this->FreePBX);
 						if(!empty($a)) {
 							$auths[$auth] = $a;
-							$auths[$auth]['html'] = $class::getConfig($this, $this->FreePBX, array());
+							$auths[$auth]['config'] = $class::getConfig($this, $this->FreePBX, array());
 						}
 					}
 				}
 
-				$html .= load_view(
-					dirname(__FILE__).'/views/directories.php',
-					array(
-						'auths' => $auths,
-						'config' => $directory
-					)
-				);
+				$html .= load_view(dirname(__FILE__).'/views/directories.php', array('auths' => $auths, 'config' => $directory));
 			break;
 			case 'addgroup':
 			case 'showgroup':

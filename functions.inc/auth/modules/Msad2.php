@@ -48,11 +48,11 @@ class Msad2 extends Auth {
 	 * @var array
 	 */
 	private static $serverDefaults = array(
-		'host' => '',
+		'host' => 'dc.domain.local',
 		'port' => '389',
-		'dn' => '',
+		'dn' => 'dc=domain,dc=local',
 		'username' => '',
-		'domain' => '',
+		'domain' => 'domain.local',
 		'password' => '',
 		'connection' => '',
 		'localgroups' => 0,
@@ -73,9 +73,9 @@ class Msad2 extends Auth {
 		'userfirstnameattr' => 'givenName',
 		'userlastnameattr' => 'sn',
 		'userdisplaynameattr' => 'displayName',
-		'usertitleattr' => '',
-		'usercompanyattr' => '',
-		'userdepartmentattr' => '',
+		'usertitleattr' => 'title',
+		'usercompanyattr' => 'company',
+		'userdepartmentattr' => 'department',
 		'usercellphoneattr' => 'mobile',
 		'userworkphoneattr' => 'telephoneNumber',
 		'userhomephoneattr' => 'homephone',
@@ -157,7 +157,8 @@ class Msad2 extends Auth {
 	 * Get the configuration display of the authentication driver
 	 * @param  object $userman The userman object
 	 * @param  object $freepbx The FreePBX BMO object
-	 * @return string          html display data
+	 * @return string          array with the name of the authentication device, and an array
+	 * 						   with all the configurations of this authentication device 
 	 */
 	public static function getConfig($userman, $freepbx, $config) {
 		$status = array(
@@ -190,7 +191,457 @@ class Msad2 extends Auth {
 		}
 		$defaults = array_merge(self::$serverDefaults,self::$userDefaults,self::$groupDefaults);
 		$techs = $freepbx->Core->getAllDriversInfo();
-		return load_view(dirname(dirname(dirname(__DIR__)))."/views/msad2.php", array("techs" => $techs, "config" => $config, "status" => $status, "defaults" => $defaults));
+
+		$typeauth = self::getShortName();
+		$form_data = array(
+			array(
+				'name'		=> $typeauth.'-connection',
+				'title'		=> _("Secure Connection Type"),
+				'type'		=> 'list',
+				'index'		=> true,
+				'list'		=> array(
+					array('value' => '',    'text' => _('None')),
+					array('value' => 'tls', 'text' => 'Start TLS'),
+					array('value' => 'ssl', 'text' => 'SSL'),
+				),
+				'value'		=> isset($config['connection']) ? $config['connection'] : $defaults['connection'],
+				'keys'		=> array(
+					'value' => 'value',
+					'text' 	=> 'text',
+				),
+				'help'		=> _("The Active Directory secure connection type"),
+			),
+			array(
+				'name'		=> $typeauth.'-host',
+				'title'		=> _("Host(s)"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> true,
+				'default'	=> $defaults['host'],
+				'opts'		=> array(
+					'value' => isset($config['host']) ? $config['host'] : '',
+				),
+				'help'		=> _("The active directory host(s), comma/space separated"),
+			),
+			array(
+				'name'		=> $typeauth.'-post',
+				'title'		=> _("Port"),
+				'type'		=> 'number',
+				'index'		=> true,
+				'required'	=> true,
+				'default'	=> $defaults['port'],
+				'opts'		=> array(
+					'min' => "1",
+					'max' => "65535",
+					'value' => isset($config['port']) ? $config['port'] : $defaults['port'],
+				),
+				'help'		=> sprintf(_("The active directory port, default %s"), $defaults['port']),
+			),
+			array(
+				'name'		=> $typeauth.'-username',
+				'title'		=> _("Username"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> true,
+				'default'	=> $defaults['username'],
+				'opts'		=> array(
+					'value' => isset($config['username']) ? $config['username'] : $defaults['username'],
+				),
+				'help'		=> _("The active directory username"),
+			),
+			array(
+				'name'		=> $typeauth.'-password',
+				'title'		=> _("Password"),
+				'type' 		=> 'password',
+				'index'		=> true,
+				'required'	=> false,
+				'default'	=> $defaults['password'],
+				'opts'		=> array(
+					'value' => '',
+				),
+				'help'		=> _("The active directory password"),
+			),
+			array(
+				'name'		=> $typeauth.'-domain',
+				'title'		=> _("Domain"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> true,
+				'default'	=> $defaults['domain'],
+				'opts'		=> array(
+					'value' => isset($config['domain']) ? $config['domain'] : '',
+				),
+				'help'		=> _("The active directory domain"),
+			),
+			array(
+				'name'		=> $typeauth.'-dn',
+				'title'		=> _("Base DN"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> true,
+				'default'	=> $defaults['dn'],
+				'opts'		=> array(
+					'value' => isset($config['dn']) ? $config['dn'] : '',
+				),
+				'help'		=> _("The base DN. Usually in the format of CN=Users,DC=domain,DC=local"),
+			),
+			array(
+				'name'		=> $typeauth.'-status',
+				'title'		=> _("Status"),
+				'type' 		=> 'raw',
+				'index'		=> true,
+				'value'		=> sprintf('<div id="%s-status" class="bg-%s conection-status"><i class="fa fa-%s"></i>&nbsp; %s</div>', $typeauth, $status['type'],  ($status['type'] == "success" ? 'check' : 'exclamation')  , $status['message']),
+				'value_raw' => $status,
+				'help'		=> _("The connection status of the Active Directory Server"),
+			),
+
+
+
+
+			array('type' => 'fieldset_init', 'legend' => _("Operational Settings")),
+			array(
+				'name'		=> $typeauth.'-createextensions',
+				'title'		=> _("Create Missing Extensions"),
+				'type'		=> 'list',
+				'index'		=> true,
+				'list'		=> array(array_merge(array('rawName' => '', 'shortName' => _("Don't Create")), $techs)),
+				'value'		=> isset($config['createextensions']) ? $config['createextensions'] : $defaults['createextensions'],
+				'keys'		=> array(
+					'value' => 'rawName',
+					'text' 	=> 'shortName',
+				),
+				'help'		=> _("If enabled and the 'User extension Link attribute' is set, a new extension will be created and linked to this user if one does not exist previously"),
+			),
+			array(
+				'name' 		=> $typeauth.'-localgroups',
+				'title'		=>  _('Manage groups locally'),
+				'type' 		=> 'radioset_yn',
+				'value' 	=> isset($config['localgroups']) ? $config['localgroups'] : $defaults['localgroups'],
+				'values'	=> array(
+					'y'	=> '1',
+					'n'	=> '0',
+				),
+				'index'		=> true,
+				'help'		=> _("New groups created in this directory will be local and not saved to the Active Directory. Groups synchronised from the remote directory will be read-only."),
+			),
+			array(
+				'name'		=> $typeauth.'-commonnameattr',
+				'title'		=> _("Common Name attribute"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> true,
+				'default'	=> $defaults['commonnameattr'],
+				'opts'		=> array(
+					'value' => isset($config['commonnameattr']) ? $config['commonnameattr'] : $defaults['commonnameattr'],
+				),
+				'help'		=> _("The attribute field to use when loading the object's common name."),
+			),
+			array(
+				'name'		=> $typeauth.'-descriptionattr',
+				'title'		=> _("Description attribute"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> false,
+				'default'	=> $defaults['descriptionattr'],
+				'opts'		=> array(
+					'value' => isset($config['descriptionattr']) ? $config['descriptionattr'] : $defaults['descriptionattr'],
+				),
+				'help'		=> _("The attribute field to use when loading the object description."),
+			),
+			array(
+				'name'		=> $typeauth.'-externalidattr',
+				'title'		=> _("Unique identifier attribute"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> true,
+				'default'	=> $defaults['externalidattr'],
+				'opts'		=> array(
+					'value' => isset($config['externalidattr']) ? $config['externalidattr'] : $defaults['externalidattr'],
+				),
+				'help'		=> _("The attribute field to use for tracking user identity across object renames."),
+			),
+			array( 'type' => 'fieldset_end' ),
+
+
+
+
+			array('type' => 'fieldset_init', 'legend' => _("User configuration")),
+			array(
+				'name'		=> $typeauth.'-userdn',
+				'title'		=> _("User DN"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> false,
+				'default'	=> $defaults['userdn'],
+				'opts'		=> array(
+					'value' => isset($config['userdn']) ? $config['userdn'] : $defaults['userdn'],
+				),
+				'help'		=> _("This value is used in addition to the base DN when searching and loading users. An example is ou=Users. If no value is supplied, the subtree search will start from the base DN."),
+			),
+			array(
+				'name'		=> $typeauth.'-userobjectclass',
+				'title'		=> _("User object class"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> true,
+				'default'	=> $defaults['userobjectclass'],
+				'opts'		=> array(
+					'value' => isset($config['userobjectclass']) ? $config['userobjectclass'] : $defaults['userobjectclass'],
+				),
+				'help'		=> _("The Active Directoy user object class type to use when loading users."),
+			),
+			array(
+				'name'		=> $typeauth.'-userobjectfilter',
+				'title'		=> _("User object filter"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> true,
+				'default'	=> $defaults['userobjectfilter'],
+				'opts'		=> array(
+					'value' => isset($config['userobjectfilter']) ? $config['userobjectfilter'] : $defaults['userobjectfilter'],
+				),
+				'help'		=> _("The filter to use when searching user objects."),
+			),
+			array(
+				'name'		=> $typeauth.'-usernameattr',
+				'title'		=> _("User name attribute"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> true,
+				'default'	=> $defaults['usernameattr'],
+				'opts'		=> array(
+					'value' => isset($config['usernameattr']) ? $config['usernameattr'] : $defaults['usernameattr'],
+				),
+				'help'		=> _("The attribute field to use on the user object (eg. cn, sAMAccountName)"),
+			),
+			// array(
+			// 	'name'		=> $typeauth.'-usernamerdnattr',
+			// 	'title'		=> _("User name RDN attribute"),
+			// 	'type' 		=> 'text',
+			// 	'index'		=> true,
+			// 	'required'	=> true,
+			// 	'default'	=> $defaults['usernamerdnattr'],
+			// 	'opts'		=> array(
+			// 		'value' => isset($config['usernamerdnattr']) ? $config['usernamerdnattr'] : $defaults['usernamerdnattr'],
+			// 	),
+			// 	'help'		=> _("The RDN to use when loading the user username (eg. cn)."),
+			// ),
+			array(
+				'name'		=> $typeauth.'-userfirstnameattr',
+				'title'		=> _("User first name attribute"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> true,
+				'default'	=> $defaults['userfirstnameattr'],
+				'opts'		=> array(
+					'value' => isset($config['userfirstnameattr']) ? $config['userfirstnameattr'] : $defaults['userfirstnameattr'],
+				),
+				'help'		=> _("The attribute field to use when loading the user first name."),
+			),
+			array(
+				'name'		=> $typeauth.'-userlastnameattr',
+				'title'		=> _("User last name attribute"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> true,
+				'default'	=> $defaults['userlastnameattr'],
+				'opts'		=> array(
+					'value' => isset($config['userlastnameattr']) ? $config['userlastnameattr'] : $defaults['userlastnameattr'],
+				),
+				'help'		=> _("The attribute field to use when loading the user last name."),
+			),
+			array(
+				'name'		=> $typeauth.'-userdisplaynameattr',
+				'title'		=> _("User display name attribute"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> true,
+				'default'	=> $defaults['userdisplaynameattr'],
+				'opts'		=> array(
+					'value' => isset($config['userdisplaynameattr']) ? $config['userdisplaynameattr'] : $defaults['userdisplaynameattr'],
+				),
+				'help'		=> _("The attribute field to use when loading the user full name."),
+			),
+			array(
+				'name'		=> $typeauth.'-usergroupmemberattr',
+				'title'		=> _("User group attribute"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> true,
+				'default'	=> $defaults['usergroupmemberattr'],
+				'opts'		=> array(
+					'value' => isset($config['usergroupmemberattr']) ? $config['usergroupmemberattr'] : $defaults['usergroupmemberattr'],
+				),
+				'help'		=> _("The attribute field to use when loading the users groups."),
+			),
+			array(
+				'name'		=> $typeauth.'-usermailattr',
+				'title'		=> _("User email attribute"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> false,
+				'default'	=> $defaults['usermailattr'],
+				'opts'		=> array(
+					'value' => isset($config['usermailattr']) ? $config['usermailattr'] : $defaults['usermailattr'],
+				),
+				'help'		=> _("The attribute field to use when loading the user email."),
+			),
+			array(
+				'name'		=> $typeauth.'-usertitleattr',
+				'title'		=> _("User Title attribute"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> false,
+				'default'	=> $defaults['usertitleattr'],
+				'opts'		=> array(
+					'value' => isset($config['usertitleattr']) ? $config['usertitleattr'] : $defaults['usertitleattr'],
+				),
+				'help'		=> _("The attribute field to use when loading the user title."),
+			),
+			array(
+				'name'		=> $typeauth.'-usercompanyattr',
+				'title'		=> _("User Company attribute"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> false,
+				'default'	=> $defaults['usercompanyattr'],
+				'opts'		=> array(
+					'value' => isset($config['usercompanyattr']) ? $config['usercompanyattr'] : $defaults['usercompanyattr'],
+				),
+				'help'		=> _("The attribute field to use when loading the user company."),
+			),
+			array(
+				'name'		=> $typeauth.'-userdepartmentattr',
+				'title'		=> _("User Department attribute"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> false,
+				'default'	=> $defaults['userdepartmentattr'],
+				'opts'		=> array(
+					'value' => isset($config['userdepartmentattr']) ? $config['userdepartmentattr'] : $defaults['userdepartmentattr'],
+				),
+				'help'		=> _("The attribute field to use when loading the user department."),
+			),
+			array(
+				'name'		=> $typeauth.'-userhomephoneattr',
+				'title'		=> _("User Home Phone attribute"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> false,
+				'default'	=> $defaults['userhomephoneattr'],
+				'opts'		=> array(
+					'value' => isset($config['userhomephoneattr']) ? $config['userhomephoneattr'] : $defaults['userhomephoneattr'],
+				),
+				'help'		=> _("The attribute field to use when loading the user home phone."),
+			),
+			array(
+				'name'		=> $typeauth.'-userworkphoneattr',
+				'title'		=> _("User Work Phone attribute"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> false,
+				'default'	=> $defaults['userworkphoneattr'],
+				'opts'		=> array(
+					'value' => isset($config['userworkphoneattr']) ? $config['userworkphoneattr'] : $defaults['userworkphoneattr'],
+				),
+				'help'		=> _("The attribute field to use when loading the user work phone."),
+			),
+			array(
+				'name'		=> $typeauth.'-usercellphoneattr',
+				'title'		=> _("User Cell Phone attribute"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> false,
+				'default'	=> $defaults['usercellphoneattr'],
+				'opts'		=> array(
+					'value' => isset($config['usercellphoneattr']) ? $config['usercellphoneattr'] : $defaults['usercellphoneattr'],
+				),
+				'help'		=> _("The attribute field to use when loading the user cell phone."),
+			),
+			array(
+				'name'		=> $typeauth.'-userfaxphoneattr',
+				'title'		=> _("User Fax attribute"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> false,
+				'default'	=> $defaults['userfaxphoneattr'],
+				'opts'		=> array(
+					'value' => isset($config['userfaxphoneattr']) ? $config['userfaxphoneattr'] : $defaults['userfaxphoneattr'],
+				),
+				'help'		=> _("The attribute field to use when loading the user fax."),
+			),
+			array(
+				'name'		=> $typeauth.'-la',
+				'title'		=> _("User extension Link attribute"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> false,
+				'default'	=> $defaults['la'],
+				'opts'		=> array(
+					'value' => isset($config['la']) ? $config['la'] : $defaults['la'],
+				),
+				'help'		=> _("If this is set then User Manager will use the defined attribute of the user from the Active Directory server as the extension link. NOTE: If this field is set it will overwrite any manually linked extensions where this attribute extists!! (Try lowercase if it is not working.)"),
+			),
+			array( 'type' => 'fieldset_end' ),
+
+
+
+
+			array('type' => 'fieldset_init', 'legend' => _("Group configuration")),
+			array(
+				'name'		=> $typeauth.'-groupdnaddition',
+				'title'		=> _("Group DN"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> false,
+				'default'	=> $defaults['groupdnaddition'],
+				'opts'		=> array(
+					'value' => isset($config['groupdnaddition']) ? $config['groupdnaddition'] : $defaults['groupdnaddition'],
+				),
+				'help'		=> _("This value is used in addition to the base DN when searching and loading groups. An example is ou=Groups. If no value is supplied, the subtree search will start from the base DN."),
+			),
+			array(
+				'name'		=> $typeauth.'-groupobjectclass',
+				'title'		=> _("Group object class"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> true,
+				'default'	=> $defaults['groupobjectclass'],
+				'opts'		=> array(
+					'value' => isset($config['groupobjectclass']) ? $config['groupobjectclass'] : $defaults['groupobjectclass'],
+				),
+				'help'		=> _("The Active Directoy user object class type to use when loading groups."),
+			),
+			array(
+				'name'		=> $typeauth.'-groupobjectfilter',
+				'title'		=> _("Group object filter"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> true,
+				'default'	=> $defaults['groupobjectfilter'],
+				'opts'		=> array(
+					'value' => isset($config['groupobjectfilter']) ? $config['groupobjectfilter'] : $defaults['groupobjectfilter'],
+				),
+				'help'		=> _("The filter to use when searching group objects."),
+			),
+			array(
+				'name'		=> $typeauth.'-groupmemberattr',
+				'title'		=> _("Group members attribute"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> true,
+				'default'	=> $defaults['groupmemberattr'],
+				'opts'		=> array(
+					'value' => isset($config['groupmemberattr']) ? $config['groupmemberattr'] : $defaults['groupmemberattr'],
+				),
+				'help'		=> _("The attribute field to use when loading the group members."),
+			),
+			array( 'type' => 'fieldset_end' ),
+		);
+		return array(
+			'auth' => $typeauth,
+			'data' => $form_data,
+		);
 	}
 
 	/**
@@ -202,10 +653,11 @@ class Msad2 extends Auth {
 	public static function saveConfig($userman, $freepbx) {
 		$validKeys = array();
 		$validKeys = array_merge($validKeys,array_keys(self::$serverDefaults),array_keys(self::$userDefaults),array_keys(self::$groupDefaults));
-		$config = array();
+		$config = array('authtype' => self::getShortName());
 		foreach($validKeys as $key) {
-			if(isset($_POST['msad2-'.$key])) {
-				$config[$key] = $_POST['msad2-'.$key];
+			$post_key = $config['authtype'].'-'.$key;
+			if(isset($_POST[$post_key])) {
+				$config[$key] = $_POST[$post_key];
 			}
 		}
 		return $config;
