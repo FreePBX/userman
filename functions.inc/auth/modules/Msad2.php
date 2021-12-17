@@ -233,7 +233,7 @@ class Msad2 extends Auth {
 				// Mandatory Configuration Options
 				'hosts'    		  => preg_split("/[ ,]/", $this->config['host']),
 				'base_dn'         => $this->config['dn'],
-				'username'        => $this->config['username'],
+				'username'        => $this->config['username'].'@'.$this->config['domain'],
 				'password'        => $this->config['password'],
 
 				// Optional Configuration Options
