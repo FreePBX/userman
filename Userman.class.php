@@ -103,11 +103,14 @@ class Userman extends FreePBX_Helpers implements BMO {
 		foreach($crons as $cron) {
 			if(preg_match("/fwconsole userman sync$/",$cron) || preg_match("/fwconsole userman --syncall -q$/",$cron)) {
 				$freepbxCron->remove($cron);
+				out('removed cron entry '.$cron);
 			}
 		}
 		//$this->FreePBX->Job->addClass('userman', 'syncall', 'FreePBX\modules\Userman\Job', '*/15 * * * *');
 		$this->FreePBX->Job->remove('userman', 'syncall');
+		out('adding new Cron job');
 		$freepbxCron->addLine("*/15 * * * * [ -e ".$AMPSBIN."/fwconsole ] && sleep $((RANDOM\%30)) && ".$AMPSBIN."/fwconsole userman --syncall -q");
+		out('adding new Cron job Done');
 		$auth = $this->getConfig('auth');
 
 		$check = array(
