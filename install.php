@@ -31,7 +31,23 @@ $set['name'] = 'Email "From:" Address';
 $set['description'] = 'The From: field for emails when using the user management email feature.';
 $set['type'] = CONF_TYPE_TEXT;
 $freepbx->Config->define_conf_setting('AMPUSERMANEMAILFROM',$set,true);
+cronjobEntry($freepbx);
 
+function cronjobEntry($freepbx){
+	$AMPASTERISKWEBUSER = $freepbx->Config->get("AMPASTERISKWEBUSER");
+	$AMPSBIN = $freepbx->Config->get("AMPSBIN");
+		$freepbxCron = $freepbx->Cron($AMPASTERISKWEBUSER);
+		$crons = $freepbxCron->getAll();
+		foreach($crons as $cron) {
+			if(preg_match("/fwconsole userman sync$/",$cron) || preg_match("/fwconsole userman --syncall -q$/",$cron)) {
+				$freepbxCron->remove($cron);
+				out('Removed existing Cron entry '.$cron);
+			}
+		}
+		$freepbx->Job->remove('userman', 'syncall');
+		$freepbxCron->addLine("*/15 * * * * [ -e ".$AMPSBIN."/fwconsole ] && sleep $((RANDOM\%30)) && ".$AMPSBIN."/fwconsole userman --syncall -q");
+		outn(' Added new Cron entry');
+}
 function createDefaultUCPTemplate(){
 	//No harm if delete templatecreator on install  ,as we auto generated this from Userman page
 	$delete = "delete from kvstore_FreePBX_modules_Userman where `id` = 'templatecreator'";
