@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-21 09:33+0000\n"
+"POT-Creation-Date: 2022-02-21 11:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,10 +17,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-#: views/welcome.php:81
-msgid " selected"
-msgstr ""
 
 #: views/groups.php:36
 #: views/users.php:33
@@ -47,10 +43,6 @@ msgstr ""
 msgid "%s records failed validation"
 msgstr ""
 
-#: views/welcome.php:72
-msgid "&directory="
-msgstr ""
-
 #: Userman.class.php:310
 msgid "(0 - being Really Weak, 4 - being Strong)"
 msgstr ""
@@ -69,10 +61,6 @@ msgstr ""
 
 #: views/directories.php:102
 msgid "6 Hours"
-msgstr ""
-
-#: views/welcome.php:35
-msgid "?display=userman&action=adduser&directory="
 msgstr ""
 
 #: views/users.php:96
@@ -1194,6 +1182,14 @@ msgstr ""
 msgid "Secure Connection Type"
 msgstr ""
 
+#: views/welcome.php:35
+msgid "Select Directory to enable 'Add' Button"
+msgstr ""
+
+#: views/welcome.php:75
+msgid "Select Directory to enable 'Delete' Button"
+msgstr ""
+
 #: functions.inc/guihooks.php:224
 #: functions.inc/guihooks.php:229
 #: functions.inc/guihooks.php:276
@@ -2221,10 +2217,6 @@ msgstr ""
 
 #: assets/js/userman.js:11
 msgid "directory"
-msgstr ""
-
-#: views/welcome.php:75
-msgid "disabled"
 msgstr ""
 
 #: assets/js/userman.js:9
