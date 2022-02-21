@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-05 15:07+0000\n"
+"POT-Creation-Date: 2022-02-21 09:33+0000\n"
 "PO-Revision-Date: 2018-10-24 01:00+0000\n"
 "Last-Translator: Bastian Mertgen <b.mertgen@bastian-mertgen.de>\n"
 "Language-Team: German <http://*/projects/freepbx/userman/de/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 3.0.1\n"
 
-#: views/welcome.php:47 views/welcome.php:81
+#: views/welcome.php:81
 msgid " selected"
 msgstr ""
 
@@ -2207,6 +2207,10 @@ msgstr "Gruppen"
 #: Userman.class.php:3708
 msgid "password is required."
 msgstr "Passwort erforderlich."
+
+#: views/welcome.php:47
+msgid "selected"
+msgstr ""
 
 #: Userman.class.php:3602
 msgid "template_1_key"

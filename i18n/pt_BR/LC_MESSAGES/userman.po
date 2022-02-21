@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-05 15:07+0000\n"
+"POT-Creation-Date: 2022-02-21 09:33+0000\n"
 "PO-Revision-Date: 2016-12-21 00:22+0200\n"
 "Last-Translator: Alexander <alexander.schley@paranagua.pr.gov.br>\n"
 "Language-Team: Portuguese (Brazil) <http://weblate.freepbx.org/projects/"
@@ -21,7 +21,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 2.4\n"
 
-#: views/welcome.php:47 views/welcome.php:81
+#: views/welcome.php:81
 msgid " selected"
 msgstr ""
 
@@ -2103,6 +2103,10 @@ msgstr "grupos"
 #: Userman.class.php:3708
 msgid "password is required."
 msgstr "senha é necessária."
+
+#: views/welcome.php:47
+msgid "selected"
+msgstr ""
 
 #: Userman.class.php:3602
 msgid "template_1_key"
