@@ -2467,7 +2467,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 	 * @param string $password The updated password, if null then password isn't updated
 	 * @return array
 	 */
-	public function updateUser($uid, $prevUsername, $username, $default='none', $description=null, $extraData=array(), $password=null, $nodisplay = false) {
+	public function updateUser($uid, $prevUsername, $username, $default='none', $description=null, $extraData=array(), $password=null, $nodisplay = false, $runHook = true) {
 		if(!is_numeric($uid)) {
 			throw new Exception(_("UID was not numeric"));
 		}
@@ -2500,7 +2500,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 		if($dir['locked']) {
 			return array("status" => false, "message" => _("Directory is locked. Can not update user"));
 		}
-		$status = $this->directories[$u['auth']]->updateUser($uid, $prevUsername, $username, $default, $description, $extraData, $password, $nodisplay);
+		$status = $this->directories[$u['auth']]->updateUser($uid, $prevUsername, $username, $default, $description, $extraData, $password, $nodisplay, $runHook);
 		if(!$status['status']) {
 			return $status;
 		}

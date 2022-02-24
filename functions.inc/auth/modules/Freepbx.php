@@ -153,7 +153,7 @@ class Freepbx extends Auth {
 	* @param string $password The updated password, if null then password isn't updated
 	* @return array
 	*/
-	public function updateUser($uid, $prevUsername, $username, $default='none', $description=null, $extraData=array(), $password=null, $nodisplay = false) {
+	public function updateUser($uid, $prevUsername, $username, $default='none', $description=null, $extraData=array(), $password=null, $nodisplay = false, $runHook = true) {
 		$request = $_REQUEST;
 		$display = !empty($request['display']) ? $request['display'] : "";
 		$description = !empty($description) ? $description : null;
@@ -188,7 +188,9 @@ class Freepbx extends Auth {
 		if(!$this->updateUserData($user['id'],$extraData)) {
 			return array("status" => false, "type" => "danger", "message" => _("An Unknown error occured while trying to update user data"));
 		}
-		$this->updateUserHook($uid, $prevUsername, $username, $description, $password, $extraData, $nodisplay);
+		if ($runHook) {
+			$this->updateUserHook($uid, $prevUsername, $username, $description, $password, $extraData, $nodisplay);
+		}
 		return array("status" => true, "type" => "success", "message" => $message, "id" => $user['id']);
 	}
 
