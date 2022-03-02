@@ -691,6 +691,7 @@ abstract class Auth {
 				)
 			);
 		} catch (\Exception $e) {
+			dbug($e->getMessage());
 			return false;
 		}
 		return true;
