@@ -138,7 +138,8 @@ class Msad extends Auth {
 	 * Get the configuration display of the authentication driver
 	 * @param  object $userman The userman object
 	 * @param  object $freepbx The FreePBX BMO object
-	 * @return string          html display data
+	 * @return string          array with the name of the authentication device, and an array
+	 * 						   with all the configurations of this authentication device 
 	 */
 	public static function getConfig($userman, $freepbx, $config) {
 		$status = array(
@@ -169,7 +170,106 @@ class Msad extends Auth {
 				"message" => _("Not all of the connection parameters have been filled out")
 			);
 		}
-		return load_view(dirname(dirname(dirname(__DIR__)))."/views/msad.php", array("config" => $config, "status" => $status));
+
+		$typeauth = self::getShortName();
+		$form_data = array(
+			array(
+				'name'		=> $typeauth.'-host',
+				'title'		=> _("Host"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> true,
+				'default'	=> 'dc.domain.local',
+				'opts'		=> array(
+					'value' => isset($config['host']) ? $config['host'] : '',
+				),
+				'help'		=> _("The active directory host"),
+			),
+			array(
+				'name'		=> $typeauth.'-post',
+				'title'		=> _("Port"),
+				'type'		=> 'number',
+				'index'		=> true,
+				'required'	=> true,
+				'default'	=> 389,
+				'opts'		=> array(
+					'min' => "1",
+					'max' => "65535",
+					'value' => isset($config['port']) ? $config['port'] : '389',
+				),
+				'help'		=> sprintf("The active directory port, default 389"),
+			),
+			array(
+				'name'		=> $typeauth.'-username',
+				'title'		=> _("Username"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> true,
+				'opts'		=> array(
+					'value' => isset($config['username']) ? $config['username'] : '',
+				),
+				'help'		=> _("The active directory username"),
+			),
+			array(
+				'name'		=> $typeauth.'-password',
+				'title'		=> _("Password"),
+				'type' 		=> 'password',
+				'index'		=> true,
+				'required'	=> false,
+				'opts'		=> array(
+					'value' => '',
+				),
+				'help'		=> _("The active directory password"),
+			),
+			array(
+				'name'		=> $typeauth.'-domain',
+				'title'		=> _("Domain"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> true,
+				'default'	=> 'domain.local',
+				'opts'		=> array(
+					'value' => isset($config['domain']) ? $config['domain'] : '',
+				),
+				'help'		=> _("The active directory domain"),
+			),
+			array(
+				'name'		=> $typeauth.'-dn',
+				'title'		=> _("Base DN"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> true,
+				'default'	=> 'cn=Users,dc=domain,dc=local',
+				'opts'		=> array(
+					'value' => isset($config['dn']) ? $config['dn'] : '',
+				),
+				'help'		=> _("The base DN. Usually in the format of CN=Users,DC=domain,DC=local"),
+			),
+			array(
+				'name'		=> $typeauth.'-la',
+				'title'		=> _("Extension Link Attribute"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> false,
+				'opts'		=> array(
+					'value' => isset($config['la']) ? $config['la'] : '',
+				),
+				'help'		=> _("If this is set then User Manager will use the defined attribute of the user from the Active Directory server as the extension link. NOTE: If this field is set it will overwrite any manually linked extensions where this attribute extists!!"),
+			),
+			array(
+				'name'		=> $typeauth.'-status',
+				'title'		=> _("Status"),
+				'type' 		=> 'raw',
+				'index'		=> true,
+				'value'		=> sprintf('<div id="%s-status" class="bg-%s conection-status"><i class="fa fa-%s"></i>&nbsp; %s</div>', $typeauth, $status['type'],  ($status['type'] == "success" ? 'check' : 'exclamation')  , $status['message']),
+				'value_raw' => $status,
+				'help'		=> _("The connection status of the Active Directory Server"),
+			),
+		);
+		return array(
+			'auth' => $typeauth,
+			'data' => $form_data,
+		);
 	}
 
 	/**
@@ -179,14 +279,16 @@ class Msad extends Auth {
 	 * @return mixed          Return true if valid. Otherwise return error string
 	 */
 	public static function saveConfig($userman, $freepbx) {
+		$typeauth = self::getShortName();
 		$config = array(
-			"host" => $_REQUEST['msad-host'],
-			"port" => $_REQUEST['msad-port'],
-			"username" => $_REQUEST['msad-username'],
-			"password" => $_REQUEST['msad-password'],
-			"domain" => $_REQUEST['msad-domain'],
-			"dn" => $_REQUEST['msad-dn'],
-			"la" => $_REQUEST['msad-la'],
+			'authtype' => $typeauth,
+			"host" => $_REQUEST[$typeauth.'-host'],
+			"port" => $_REQUEST[$typeauth.'-port'],
+			"username" => $_REQUEST[$typeauth.'-username'],
+			"password" => $_REQUEST[$typeauth.'-password'],
+			"domain" => $_REQUEST[$typeauth.'-domain'],
+			"dn" => $_REQUEST[$typeauth.'-dn'],
+			"la" => $_REQUEST[$typeauth.'-la'],
 			"sync" => $_REQUEST['sync']
 		);
 		return $config;

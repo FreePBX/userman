@@ -75,7 +75,7 @@ $("#directory-users").change(function() {
 	if(val === '') {
 		$("#table-users").bootstrapTable('refresh',{url: window.FreePBX.ajaxurl + '?module=userman&command=getUsers'});
 		$("#table-users").bootstrapTable('showColumn','auth');
-		$("#remove-users").removeClass("hidden");
+		// $("#remove-users").removeClass("hidden");
 		$("#remove-users").removeClass("btn-remove");
 		$("#remove-users").attr('disabled', true);
 		$("#remove-users").attr("title", _("Select Directory to enable 'Delete' Button"));
@@ -97,9 +97,9 @@ $("#directory-users").change(function() {
 		}
 		if(directoryMapValues[val].permissions.removeUser) {
 			$("#remove-users").addClass("btn-remove");
-			$("#remove-users").removeClass("hidden");
+			// $("#remove-users").removeClass("hidden");
 		} else {
-			$("#remove-users").addClass("hidden");
+			// $("#remove-users").addClass("hidden");
 		}
 	}
 });
@@ -109,20 +109,31 @@ $("#directory-groups").change(function() {
 	if(val === '') {
 		$("#table-groups").bootstrapTable('refresh',{url: window.FreePBX.ajaxurl + '?module=userman&command=getGroups'});
 		$("#table-groups").bootstrapTable('showColumn','auth');
-		$("#add-groups").addClass("hidden");
+		// $("#remove-groups").removeClass("hidden");
+		$("#remove-groups").removeClass("btn-remove");
+		$("#remove-groups").attr('disabled', true);
+		$("#remove-groups").attr("title", _("Select Directory to enable 'Delete' Button"));
+		$("#add-groups").attr('disabled', true);
+		$("#add-groups").attr("title", _("Select Directory to enable 'Add' Button"));
+		$("#add-groups").attr("href", "#");
 	} else {
+		$("#remove-groups").removeAttr('title');
 		$("#add-groups").attr("href","?display=userman&action=addgroup&directory="+val);
 		$("#table-groups").bootstrapTable('refresh',{url: window.FreePBX.ajaxurl + '?module=userman&command=getGroups&directory='+$(this).val()});
 		$("#table-groups").bootstrapTable('hideColumn','auth');
 		if(directoryMapValues[val].permissions.addGroup) {
-			$("#add-groups").removeClass("hidden");
+			$("#add-groups").attr('disabled', false);
+			$("#add-groups").removeAttr('title');
 		} else {
-			$("#add-groups").addClass("hidden");
+			$("#add-groups").attr('disabled', true);
+			$("#add-groups").attr("title", _("Select Directory to enable 'Add' Button"));
+			$("#add-groups").attr("href", "#");
 		}
 		if(directoryMapValues[val].permissions.removeGroup) {
-			$("#remove-groups").removeClass("hidden");
+			$("#remove-groups").addClass("btn-remove");
+			// $("#remove-groups").removeClass("hidden");
 		} else {
-			$("#remove-groups").addClass("hidden");
+			// $("#remove-groups").addClass("hidden");
 		}
 	}
 });
@@ -146,6 +157,8 @@ $(document).on('click', "button.btn-remove", function() {
 							field: "id",
 							values: deleteExts[type]
 						});
+						$("#table-users").bootstrapTable('refresh');
+						$("#table-groups").bootstrapTable('refresh');
 					} else {
 						btn.find("span").text(_("Delete"));
 						btn.prop("disabled", true);
@@ -222,12 +235,13 @@ $("table").on("page-change.bs.table", function () {
 	deleteExts.users = [];
 	deleteExts.groups = [];
 });
-$("table").on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
+$("table").on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table load-success.bs.table load-error.bs.table', function () {
 	var toolbar = $(this).data("toolbar"),
-			button = $(toolbar).find(".btn-remove"),
-			buttone = $(toolbar).find(".btn-send"),
-			id = $(this).prop("id"),
-			type = $(this).data("type");
+		button = $(toolbar).find(".btn-remove"),
+		buttone = $(toolbar).find(".btn-send"),
+		id = $(this).prop("id"),
+		type = $(this).data("type");
+
 	$("#remove-"+type).prop("disabled", false);
 	button.prop('disabled', !$("#"+id).bootstrapTable('getSelections').length);
 	buttone.prop('disabled', !$("#"+id).bootstrapTable('getSelections').length);
@@ -244,9 +258,16 @@ $("#submit").click(function(e) {
 	e.stopPropagation();
 	e.preventDefault();
 	var invalid = false;
-	$('.fpbx-submit input').map(function() {
+	$('.fpbx-submit input').map(function(index, e) {
+		var conteiner = $(e).parents(".element-container");
+		$(conteiner).removeClass("has-error");
+		$(conteiner).find(".input-warn").remove();
+		if (! this.validity.valid) {
+			$(conteiner).addClass("has-error");
+			$(e).before('<i class="fa fa-exclamation-triangle input-warn" data-type="input" data-toggle="tooltip" data-placement="left" title="'+_('Required!')+'"></i>');
+		}
 		if(!this.validity.valid && !invalid) {
-			warnInvalid($(this),_("Please fill all missing fields"));
+			fpbxToast(_("Please fill all missing fields"), '', "error");
 			invalid = true;
 		}
 	});
@@ -362,7 +383,7 @@ $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
 			$("#action-bar").addClass("hidden");
 			$('input[name="submit"]').addClass('hidden');
 			$('input[name="reset"]').addClass('hidden');
-			onlyOneGroup();
+			// onlyOneGroup();
 		break;
 		case "#ucptemplates":
 			$("#action-bar").addClass("hidden");
@@ -397,7 +418,7 @@ $("#pwsub").on("click", function(){
 			id: uid,
 			newpass: pass
 		},
-		type: "GET",
+		type: "POST",
 		dataType: "json",
 		success: function(data){
 			if(data.status){
@@ -444,11 +465,11 @@ $('#defaultextension').multiselect({
 	enableCaseInsensitiveFiltering: true
 });
 
-function onlyOneGroup(){
-	if($("#directory-groups option").length == 2 && $("#directory-groups option:selected" ).text() != ""){
-		$("#add-groups").removeClass("hidden");
-	}	
-}
+// function onlyOneGroup(){
+// 	if($("#directory-groups option").length == 2 && $("#directory-groups option:selected" ).text() != ""){
+// 		$("#add-groups").removeClass("hidden");
+// 	}	
+// }
 
 function directoryMap(value, row, index) {
 	if (value in directoryMapValues) {

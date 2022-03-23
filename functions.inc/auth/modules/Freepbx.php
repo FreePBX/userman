@@ -33,18 +33,35 @@ class Freepbx extends Auth {
 	 * Get configuration for this driver
 	 * @param  Object $userman The userman Object
 	 * @param  Object $freepbx The freepbx Object
-	 * @return string          html to show to the page
+	 * @return string          array with the name of the authentication device, and an array
+	 * 						   with all the configurations of this authentication device 
 	 */
 	public static function getConfig($userman, $freepbx, $config) {
-		$sgroups = !empty($config['default-groups']) ? $config['default-groups'] : array();
 		$sql = "SELECT * FROM userman_groups WHERE auth = ? ORDER BY priority";
 		$sth = $freepbx->Database->prepare($sql);
 		$sth->execute(array($config['id']));
 		$groups = $sth->fetchAll(\PDO::FETCH_ASSOC);
-		foreach($groups as &$group) {
-			$group['users'] = json_decode($group['users'],true);
-		}
-		return load_view(dirname(dirname(dirname(__DIR__)))."/views/freepbx.php", array("groups" => $groups, "defaultgroups" => $sgroups));
+
+		$typeauth = self::getShortName();
+		$form_data = array(
+			array(
+				'name'		=> $typeauth.'-default-groups',
+				'title'		=> _('Default Groups'),
+				'type' 		=> 'list_multiple',
+				'index'		=> true,
+				'list'		=> $groups,
+				'value'		=> (! empty($config['default-groups']) ? $config['default-groups'] : array()),
+				'keys'		=> array(
+					'value' => 'id',
+					'text' 	=> 'groupname',
+				),
+				'help'		=> _("Select which groups new users are added to when they are created"),
+			),
+		);
+		return array(
+			'auth' => $typeauth,
+			'data' => $form_data,
+		);
 	}
 
 	/**
@@ -53,8 +70,10 @@ class Freepbx extends Auth {
 	 * @param  Object $freepbx The freepbx Object
 	 */
 	public static function saveConfig($userman, $freepbx) {
+		$typeauth = self::getShortName();
 		$config = array(
-			"default-groups" => $_POST['freepbx-default-groups']
+			'authtype' => $typeauth,
+			"default-groups" => $_REQUEST[$typeauth.'-default-groups']
 		);
 		return $config;
 	}
