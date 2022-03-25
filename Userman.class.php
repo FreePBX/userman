@@ -3224,7 +3224,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 			$tokens = $this->getGlobalsetting('passresettoken');
 			unset($tokens[$token]);
 			$this->setGlobalsetting('passresettoken',$tokens);
-			$this->updateUser($user['id'], $user['username'], $user['username'], $user['default_extension'], $user['description'], array(), $newpassword);
+			$this->updateUser($user['id'], $user['username'], $user['username'], $user['default_extension'], $user['description'], $user, $newpassword);
 			return true;
 		} else {
 			return false;
