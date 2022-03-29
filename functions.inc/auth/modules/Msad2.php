@@ -191,6 +191,7 @@ class Msad2 extends Auth {
 		}
 		$defaults = array_merge(self::$serverDefaults,self::$userDefaults,self::$groupDefaults);
 		$techs = $freepbx->Core->getAllDriversInfo();
+		array_unshift($techs, array('rawName' => '', 'shortName' => _("Don't Create")));
 
 		$typeauth = self::getShortName();
 		$form_data = array(
@@ -304,7 +305,7 @@ class Msad2 extends Auth {
 				'title'		=> _("Create Missing Extensions"),
 				'type'		=> 'list',
 				'index'		=> true,
-				'list'		=> array(array_merge(array('rawName' => '', 'shortName' => _("Don't Create")), $techs)),
+				'list'		=> $techs,
 				'value'		=> isset($config['createextensions']) ? $config['createextensions'] : $defaults['createextensions'],
 				'keys'		=> array(
 					'value' => 'rawName',
