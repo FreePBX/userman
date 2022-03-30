@@ -27,7 +27,7 @@
 							<div role="tabpanel" id="users" class="tab-pane display active">
 								<div class="table-responsive">
 									<div id="toolbar-users">
-									<a href="<?php echo (sizeof($directories)==1 ? '?display=userman&action=adduser&directory='.$directoryOneId : '#'); ?>" id="add-users" class="btn btn-add" data-type="users" data-section="users"<?php echo (sizeof($directories)==1 ? '': sprintf(' disabled title="%s"', _('Select Directory to enable \'Add\' Button'))) ?>>
+										<a href="<?php echo (sizeof($directories)==1 ? '?display=userman&action=adduser&directory='.$directoryOneId : '#'); ?>" id="add-users" class="btn btn-add" data-type="users" data-section="users"<?php echo (sizeof($directories)==1 ? '': sprintf(' disabled title="%s"', _('Select Directory to enable \'Add\' Button'))) ?>>
 											<i class="fa fa-user-plus"></i> <span><?php echo _('Add')?></span>
 										</a>
 										<button id="remove-users" class="btn btn-danger btn-remove" disabled data-type="users" data-section="users">
@@ -43,7 +43,7 @@
 											<?php } ?>
 										</select>
 									</div>
-									<table data-toolbar="#toolbar-users" data-url="ajax.php?module=userman&amp;command=getUsers" data-cache="false" data-toggle="table" data-maintain-selected="true" data-show-columns="true" data-pagination="true" data-search="true" class="table table-striped" id="table-users" data-type="users" data-escape="true">
+									<table data-toolbar="#toolbar-users" data-url="ajax.php?module=userman&amp;command=getUsers" data-cache="false" data-toggle="table" data-maintain-selected="true" data-show-columns="true" data-pagination="true" data-search="true" class="table table-striped" id="table-users" data-type="users" data-escape="true"  data-show-refresh="true">
 										<thead>
 											<tr>
 												<th data-checkbox="true"></th>
@@ -64,10 +64,10 @@
 								<div class="table-responsive">
 									<div class="alert alert-info"><?php echo _("Group Priorities can be changed by clicking and dragging groups around in the order you'd like. Groups with a lower number for priority take priority (EG 0 is higher than 1)")?></div>
 									<div id="toolbar-groups">
-										<a href="config.php?display=userman&amp;action=addgroup<?php echo (sizeof($directories)==1 ? '&directory='.$directoryOneId : ''); ?>" id="add-groups" class="btn btn-add hidden" data-type="groupss" data-section="groups">
+										<a href="config.php?display=userman&amp;action=addgroup<?php echo (sizeof($directories)==1 ? '&directory='.$directoryOneId : ''); ?>" id="add-groups" class="btn btn-add" data-type="groupss" data-section="groups"<?php echo (sizeof($directories)==1 ? '': sprintf(' disabled title="%s"', _('Select Directory to enable \'Add\' Button'))) ?>>
 											<i class="fa fa-user-plus"></i> <span><?php echo _('Add')?></span>
 										</a>
-										<button id="remove-groups" class="btn btn-danger btn-remove" data-type="groups" data-section="groups"<?php echo (sizeof($directories)==1 ? '': sprintf(' disabled title="%s"', _('Select Directory to enable \'Delete\' Button')))?>>
+										<button id="remove-groups" class="btn btn-danger btn-remove" disabled data-type="groups" data-section="groups">
 											<i class="fa fa-user-times"></i> <span><?php echo _('Delete')?></span>
 										</button>
 										<select id="directory-groups" class="form-control" style="display: inline-block;width: inherit;">
@@ -77,7 +77,7 @@
 											<?php } ?>
 										</select>
 									</div>
-									<table data-reorderable-rows="true" data-use-row-attr-func="true" data-sort-name="priority" data-toolbar="#toolbar-groups" data-url="ajax.php?module=userman&amp;command=getGroups" data-cache="false" data-toggle="table" data-pagination="false" data-search="true" class="table table-striped" id="table-groups" data-type="groups">
+									<table data-reorderable-rows="true" data-use-row-attr-func="true" data-sort-name="priority" data-toolbar="#toolbar-groups" data-url="ajax.php?module=userman&amp;command=getGroups" data-cache="false" data-toggle="table" data-show-columns="true" data-pagination="false" data-search="true" class="table table-striped" id="table-groups" data-type="groups"  data-show-refresh="true">
 										<thead>
 											<tr>
 												<th data-checkbox="true"></th>
@@ -102,7 +102,7 @@
 											<i class="fa fa-sitemap"></i> <span><?php echo _('Delete')?></span>
 										</button>
 									</div>
-									<table data-reorderable-rows="true" data-use-row-attr-func="true" data-sort-name="order" data-toolbar="#toolbar-directories" data-url="ajax.php?module=userman&amp;command=getDirectories" data-cache="false" data-toggle="table" data-maintain-selected="true" data-show-columns="true" data-pagination="true" data-search="true" class="table table-striped" id="table-directories" data-type="directories">
+									<table data-reorderable-rows="true" data-use-row-attr-func="true" data-sort-name="order" data-toolbar="#toolbar-directories" data-url="ajax.php?module=userman&amp;command=getDirectories" data-cache="false" data-toggle="table" data-maintain-selected="true" data-show-columns="true" data-pagination="true" data-search="true" class="table table-striped" id="table-directories" data-type="directories"  data-show-refresh="true">
 										<thead>
 											<tr>
 												<th data-checkbox="true"></th>
@@ -130,7 +130,7 @@
 										<button id="remove-ucptemplates" class="btn btn-danger btn-remove" data-type="ucptemplates" data-section="ucptemplates" disabled>
 											<i class="fa fa-user-times"></i> <span><?php echo _('Delete')?></span>
 										</button>
-<?php
+										<?php
 										if($allgenratebutton){ ?>
 											<button id="generatetemplatecreator" class="btn" >
 												<i class="fa fa-street-view"></i> <span><?php echo _('Create Generic Templates')?></span>
