@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-30 07:47+0000\n"
+"POT-Creation-Date: 2022-04-03 16:13+0000\n"
 "PO-Revision-Date: 2018-10-24 01:00+0000\n"
 "Last-Translator: Bastian Mertgen <b.mertgen@bastian-mertgen.de>\n"
 "Language-Team: German <http://*/projects/freepbx/userman/de/>\n"
@@ -1452,8 +1452,10 @@ msgstr "Der/die OpenLDAP Server, durch Komma oder Leerzeichen getrennt"
 
 #: functions.inc/auth/modules/Openldap.php:246
 #: functions.inc/auth/modules/Openldap2.php:288
-msgid "The OpenLDAP password"
-msgstr "Das OpenLDAP-Passwort"
+msgid ""
+"The OpenLDAP password. Only write the password if we want to modify it. If "
+"none is defined, the current password will be kept."
+msgstr ""
 
 #: functions.inc/auth/modules/Openldap2.php:264
 msgid "The OpenLDAP secure connection type"
@@ -1495,8 +1497,10 @@ msgstr "Der/die Active-Directory-Server, durch Komma oder Leerzeichen getrennt"
 
 #: functions.inc/auth/modules/Msad.php:222
 #: functions.inc/auth/modules/Msad2.php:263
-msgid "The active directory password"
-msgstr "Das Acitve-Directory-Passwort"
+msgid ""
+"The active directory password. Only write the password if we want to modify "
+"it. If none is defined, the current password will be kept."
+msgstr ""
 
 #: functions.inc/auth/modules/Msad2.php:239
 #, php-format
@@ -2375,6 +2379,12 @@ msgstr "Benutzer"
 #: Userman.class.php:4238
 msgid "widgets not reconfigured"
 msgstr ""
+
+#~ msgid "The OpenLDAP password"
+#~ msgstr "Das OpenLDAP-Passwort"
+
+#~ msgid "The active directory password"
+#~ msgstr "Das Acitve-Directory-Passwort"
 
 #~ msgid "The OpenLDAP Base-DN. Usually in the format of DC=example,DC=com"
 #~ msgstr ""

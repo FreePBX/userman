@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-30 07:47+0000\n"
+"POT-Creation-Date: 2022-04-03 16:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1468,7 +1468,9 @@ msgstr ""
 
 #: functions.inc/auth/modules/Openldap.php:246
 #: functions.inc/auth/modules/Openldap2.php:288
-msgid "The OpenLDAP password"
+msgid ""
+"The OpenLDAP password. Only write the password if we want to modify it. If "
+"none is defined, the current password will be kept."
 msgstr ""
 
 #: functions.inc/auth/modules/Openldap2.php:264
@@ -1511,7 +1513,9 @@ msgstr ""
 
 #: functions.inc/auth/modules/Msad.php:222
 #: functions.inc/auth/modules/Msad2.php:263
-msgid "The active directory password"
+msgid ""
+"The active directory password. Only write the password if we want to modify "
+"it. If none is defined, the current password will be kept."
 msgstr ""
 
 #: functions.inc/auth/modules/Msad2.php:239
