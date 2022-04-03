@@ -219,7 +219,7 @@ class Msad extends Auth {
 				'opts'		=> array(
 					'value' => '',
 				),
-				'help'		=> _("The active directory password"),
+				'help'		=> _("The active directory password. Only write the password if we want to modify it. If none is defined, the current password will be kept."),
 			),
 			array(
 				'name'		=> $typeauth.'-domain',
