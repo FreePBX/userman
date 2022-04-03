@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-04 06:18+0000\n"
-"PO-Revision-Date: 2021-12-14 22:00+0000\n"
+"PO-Revision-Date: 2022-04-04 20:00+0000\n"
 "Last-Translator: Javier Pastor <jpastor@cerebelum.net>\n"
 "Language-Team: Spanish <http://weblate.freepbx.org/projects/freepbx/userman/"
 "es/>\n"
@@ -853,7 +853,7 @@ msgstr "Directorio OpenLDAP (heredado)"
 #: views/msad2.php:182 views/openldap2.php:160
 #, fuzzy
 msgid "Operational Settings"
-msgstr "Configuración operativa"
+msgstr "Configuraciones Operativas"
 
 #: views/users.php:38
 msgid "Other Settings"
@@ -1257,26 +1257,32 @@ msgstr ""
 #: views/msad2.php:522 views/openldap2.php:476
 msgid "The attribute field to use when loading the user email."
 msgstr ""
+"El campo de atributo que se usará al cargar el correo electrónico del "
+"usuario."
 
 #: views/msad2.php:676 views/openldap2.php:630
 msgid "The attribute field to use when loading the user fax."
-msgstr ""
+msgstr "El campo de atributo que se utilizará al cargar el fax del usuario."
 
 #: views/msad2.php:434 views/openldap2.php:388
 msgid "The attribute field to use when loading the user first name."
-msgstr ""
+msgstr "El campo de atributo que se usará al cargar el nombre del usuario."
 
 #: views/msad2.php:478 views/openldap2.php:432
 msgid "The attribute field to use when loading the user full name."
 msgstr ""
+"El campo de atributo que se utilizará al cargar el nombre completo del "
+"usuario."
 
 #: views/msad2.php:610 views/openldap2.php:564
 msgid "The attribute field to use when loading the user home phone."
 msgstr ""
+"El campo de atributo que se utilizará al cargar el teléfono de la casa del "
+"usuario."
 
 #: views/msad2.php:456 views/openldap2.php:410
 msgid "The attribute field to use when loading the user last name."
-msgstr ""
+msgstr "El campo de atributo a utilizar al cargar el apellido del usuario."
 
 #: views/msad2.php:544 views/openldap2.php:498
 msgid "The attribute field to use when loading the user title."
@@ -1285,10 +1291,12 @@ msgstr ""
 #: views/msad2.php:632 views/openldap2.php:586
 msgid "The attribute field to use when loading the user work phone."
 msgstr ""
+"El campo de atributo que se utilizará al cargar el teléfono de trabajo del "
+"usuario."
 
 #: views/msad2.php:500 views/openldap2.php:454
 msgid "The attribute field to use when loading the users groups."
-msgstr ""
+msgstr "El campo de atributo a utilizar al cargar los grupos de usuarios."
 
 #: views/directories.php:37
 #, php-format
@@ -1319,7 +1327,7 @@ msgstr ""
 
 #: views/directories.php:59
 msgid "The directory name"
-msgstr ""
+msgstr "El nombre del directorio"
 
 #: views/users.php:448
 msgid ""
@@ -1331,11 +1339,11 @@ msgstr ""
 
 #: views/msad2.php:767 views/openldap2.php:721
 msgid "The filter to use when searching group objects."
-msgstr ""
+msgstr "El filtro que se utilizará al buscar objetos de grupo."
 
 #: views/msad2.php:366 views/openldap2.php:344
 msgid "The filter to use when searching user objects."
-msgstr ""
+msgstr "El filtro a usar al buscar objetos de usuario."
 
 #: views/users.php:576
 msgid ""
@@ -1434,7 +1442,7 @@ msgstr "El contexto del buzón de voz los usuarios"
 
 #: Userman.class.php:303
 msgid "There was an error saving the configuration"
-msgstr ""
+msgstr "Hubo un error al guardar la configuración"
 
 #: userman.i18n.php:8
 msgid ""
@@ -1442,6 +1450,9 @@ msgid ""
 "User Account that can be used by other applications for login or API "
 "purposes."
 msgstr ""
+"Este módulo gestiona todos los usuarios de PBX. Permite que un administrador "
+"cree una cuenta de usuario que otras aplicaciones pueden usar para fines de "
+"inicio de sesión o API."
 
 #: Userman.class.php:3078 Userman.class.php:3142
 msgid "This authentication driver does not allow importing"
@@ -1487,6 +1498,9 @@ msgid ""
 "groups. An example is ou=Groups. If no value is supplied, the subtree search "
 "will start from the base DN."
 msgstr ""
+"Este valor se usa además del Base DN al buscar y cargar grupos. Un ejemplo "
+"es ou=Grupos. Si no se proporciona ningún valor, la búsqueda del subárbol "
+"comenzará desde el Base DN."
 
 #: views/msad2.php:322 views/openldap2.php:300
 msgid ""
@@ -1494,18 +1508,21 @@ msgid ""
 "users. An example is ou=Users. If no value is supplied, the subtree search "
 "will start from the base DN."
 msgstr ""
+"Este valor se usa además del Base DN al buscar y cargar usuarios. Un ejemplo "
+"es ou=Usuarios. Si no se proporciona ningún valor, la búsqueda del subárbol "
+"comenzará desde el Base DN."
 
 #: views/groups.php:218 views/users.php:586
 msgid "Time Format"
-msgstr ""
+msgstr "Formato de Tiempo"
 
 #: views/groups.php:137 views/users.php:404
 msgid "Timezone"
-msgstr ""
+msgstr "Zona Horaria"
 
 #: views/groups.php:157 views/users.php:424
 msgid "Timezone for this user"
-msgstr ""
+msgstr "Zona Horaria para este usuario"
 
 #: views/users.php:300
 msgid "Title"
@@ -1517,7 +1534,7 @@ msgstr ""
 
 #: views/welcome.php:115
 msgid "Type"
-msgstr ""
+msgstr "Tipo"
 
 #: Userman.class.php:1903
 msgid "UID was not numeric"
@@ -1525,19 +1542,19 @@ msgstr "UID no fue numérico"
 
 #: Userman.class.php:1462
 msgid "Unable to create default group"
-msgstr ""
+msgstr "No se puede crear el grupo predeterminado"
 
 #: functions.inc/auth/Auth.php:557
 msgid "Unable to link group to an invalid directory"
-msgstr ""
+msgstr "No se puede vincular el grupo a un directorio no válido"
 
 #: functions.inc/auth/Auth.php:511
 msgid "Unable to link user to an invalid directory"
-msgstr ""
+msgstr "No se puede vincular al usuario a un directorio no válido"
 
 #: views/msad2.php:285 views/openldap2.php:263
 msgid "Unique identifier attribute"
-msgstr ""
+msgstr "Atributo de identificador único"
 
 #: functions.inc/auth/Auth.php:74
 msgid "Update Group is not defined"
@@ -1571,11 +1588,11 @@ msgstr "Actualizando"
 
 #: views/groups.php:112 views/users.php:379
 msgid "Use Browser Language"
-msgstr ""
+msgstr "Usar Idioma del Navegador"
 
 #: views/groups.php:144 views/users.php:411
 msgid "Use Browser Timezone"
-msgstr ""
+msgstr "Usar Zona Horaria del Navegador"
 
 #: functions.inc/guihooks.php:233 functions.inc/guihooks.php:277
 msgid "Use Custom Username"
@@ -1583,23 +1600,23 @@ msgstr "Use Nombre Personalizado del Usuario"
 
 #: views/groups.php:115 views/users.php:382
 msgid "Use PBX Language"
-msgstr ""
+msgstr "Usar Idioma del PBX"
 
 #: views/groups.php:147 views/users.php:414
 msgid "Use PBX Timezone"
-msgstr ""
+msgstr "Usar Zona Horaria del PBX"
 
 #: views/groups.php:110
 msgid "Use System Language"
-msgstr ""
+msgstr "Usar el Idioma del Sistema"
 
 #: views/groups.php:142
 msgid "Use System Timezone"
-msgstr ""
+msgstr "Usar la Zona Horario del Sistema"
 
 #: views/openldap.php:51 views/openldap.php:68
 msgid "Use TLS"
-msgstr ""
+msgstr "Usar TLS"
 
 #: functions.inc/auth/modules/Freepbx.php:105
 #: functions.inc/auth/modules/Freepbx.php:176
@@ -1614,11 +1631,11 @@ msgstr "Usuario '%s' No Existe"
 
 #: views/msad2.php:642 views/openldap2.php:596
 msgid "User Cell Phone attribute"
-msgstr ""
+msgstr "Atributo del teléfono movil del usuario"
 
 #: views/msad2.php:554 views/openldap2.php:508
 msgid "User Company attribute"
-msgstr ""
+msgstr "Atributo de la Empresa del usuario"
 
 #: views/msad2.php:310 views/openldap.php:166 views/openldap2.php:288
 msgid "User DN"
@@ -1638,11 +1655,11 @@ msgstr "Usuario No Existe"
 
 #: views/msad2.php:664 views/openldap2.php:618
 msgid "User Fax attribute"
-msgstr ""
+msgstr "Atributo de Fax de usuario"
 
 #: views/msad2.php:598 views/openldap2.php:552
 msgid "User Home Phone attribute"
-msgstr ""
+msgstr "Atributo de Teléfono de Casa del usuario"
 
 #: views/openldap.php:122
 msgid "User Identity"
