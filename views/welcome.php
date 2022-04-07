@@ -6,7 +6,7 @@
 					<h1><?php echo _("User Manager")?></h1>
 					<?php
 						// At some point we can probably kill this... Maybe make is a 1 time panel that may be dismissed
-						$box_info_description = "<p>" . sprintf(_('%s User Manager is taking the place of several modules which have attempted to create and manage users separate from Extensions. Modules such as iSymphony and RestAPI are examples of these type of modules. In %s 12, the new User Control Panel also uses User Manager.'), $brand, $brand) . "</p>";
+						$box_info_description = "<p>" . sprintf(_('%s User Manager is taking the place of several modules which have attempted to create and manage users separate from Extensions. Modules such as iSymphony and RestAPI are examples of these type of modules. For %s systems, the new User Control Panel also uses User Manager.'), $brand, $brand) . "</p>";
 						$box_info_description .= "</p>" . sprintf(_('In %s User Manager you can create users that have access to Extensions or Device/User Mode Users and the settings associated with those Devices. For example, a new user can be created that can log into User Control Panel and access the voicemail of 3 other accounts.'), $brand) . "</p>";
 						echo show_help( $box_info_description, sprintf(_('What is User Manager'),$type['type']), false, true, "info");
 						unset($box_info_description);
