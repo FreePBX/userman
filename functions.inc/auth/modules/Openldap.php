@@ -150,7 +150,8 @@ class Openldap extends Auth {
 	 * Get the configuration display of the authentication driver
 	 * @param  object $userman The userman object
 	 * @param  object $freepbx The FreePBX BMO object
-	 * @return string          html display data
+	 * @return string          array with the name of the authentication device, and an array
+	 * 						   with all the configurations of this authentication device 
 	 */
 	public static function getConfig($userman, $freepbx, $config) {
 		$status = array(
@@ -181,7 +182,142 @@ class Openldap extends Auth {
 				"message" => _("Not all of the connection parameters have been filled out")
 			);
 		}
-		return load_view(dirname(dirname(dirname(__DIR__)))."/views/openldap.php", array("config" => $config, "status" => $status));
+
+		$typeauth = self::getShortName();
+		$form_data = array(
+			array(
+				'name'		=> $typeauth.'-host',
+				'title'		=> _("Host"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> true,
+				'default'	=> 'ldap.domain.local',
+				'opts'		=> array(
+					'value' => isset($config['host']) ? $config['host'] : '',
+				),
+				'help'		=> _("The OpenLDAP host"),
+			),
+			array(
+				'name'		=> $typeauth.'-post',
+				'title'		=> _("Port"),
+				'type'		=> 'number',
+				'index'		=> true,
+				'required'	=> false,
+				'default'	=> 389,
+				'opts'		=> array(
+					'min' => "1",
+					'max' => "65535",
+					'value' => isset($config['port']) ? $config['port'] : '389',
+				),
+				'help'		=> sprintf("The OpenLDAP port, default 389"),
+			),
+			array(
+				'name' 		=> $typeauth.'-tls',
+				'title'		=>  _('Use TLS'),
+				'type' 		=> 'radioset_yn',
+				'value' 	=> (!isset($config['tls']) || $config['tls'] == true),
+				'values'	=> array(
+					'y'	=> 'yes',
+					'n'	=> 'no',
+				),
+				'index'		=> true,
+				'help'		=> _("Use TLS"),
+			),
+			array(
+				'name'		=> $typeauth.'-username',
+				'title'		=> _("Username"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> true,
+				'opts'		=> array(
+					'value' => isset($config['username']) ? $config['username'] : '',
+				),
+				'help'		=> _("The OpenLDAP username"),
+			),
+			array(
+				'name'		=> $typeauth.'-password',
+				'title'		=> _("Password"),
+				'type' 		=> 'password',
+				'index'		=> true,
+				'required'	=> false,
+				'opts'		=> array(
+					'value' => '',
+				),
+				'help'		=> _("The OpenLDAP password. Only write the password if we want to modify it. If none is defined, the current password will be kept."),
+			),
+			array(
+				'name'		=> $typeauth.'-userident',
+				'title'		=> _("User Identity"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> true,
+				'default'	=> 'uid',
+				'opts'		=> array(
+					'value' => isset($config['userident']) ? $config['userident'] : 'uid',
+				),
+				'help'		=> _("The OpenLDAP User Identity. Usually is uid"),
+			),
+			array(
+				'name'		=> $typeauth.'-displayname',
+				'title'		=> _("Display Name"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> true,
+				'default'	=> 'displayname',
+				'opts'		=> array(
+					'value' => isset($config['displayname']) ? $config['displayname'] : 'displayname',
+				),
+				'help'		=> _("The OpenLDAP Display Name. Usually is displayname"),
+			),
+			array(
+				'name'		=> $typeauth.'-userdn',
+				'title'		=> _("User DN"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> true,
+				'default'	=> 'ou=people,dc=domain,dc=local',
+				'opts'		=> array(
+					'value' => isset($config['userdn']) ? $config['userdn'] : '',
+				),
+				'help'		=> _("The OpenLDAP User-DN. Usually in the format of OU=people,DC=example,DC=com)"),
+			),
+			array(
+				'name'		=> $typeauth.'-basedn',
+				'title'		=> _("Base DN"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> true,
+				'default'	=> 'dc=domain,dc=local',
+				'opts'		=> array(
+					'value' => isset($config['basedn']) ? $config['basedn'] : '',
+				),
+				'help'		=> _("The OpenLDAP Base-DN. Usually in the format of DC=domain,DC=local"),
+			),
+			array(
+				'name'		=> $typeauth.'-la',
+				'title'		=> _("Extension Link Attribute"),
+				'type' 		=> 'text',
+				'index'		=> true,
+				'required'	=> false,
+				'opts'		=> array(
+					'value' => isset($config['la']) ? $config['la'] : '',
+				),
+				'help'		=> _("If this is set then User Manager will use the defined attribute of the user from the OpenLDAP server as the extension link. NOTE: If this field is set it will overwrite any manually linked extensions where this attribute extists!! (Try lowercase if it is not working.)"),
+			),
+			array(
+				'name'		=> $typeauth.'-status',
+				'title'		=> _("Status"),
+				'type' 		=> 'raw',
+				'index'		=> true,
+				'value'		=> sprintf('<div id="%s-status" class="bg-%s conection-status"><i class="fa fa-%s"></i>&nbsp; %s</div>', $typeauth, $status['type'],  ($status['type'] == "success" ? 'check' : 'exclamation')  , $status['message']),
+				'value_raw' => $status,
+				'help'		=> _("The connection status of the OpenLDAP Server"),
+			),
+		);
+		return array(
+			'auth' => $typeauth,
+			'data' => $form_data,
+		);
 	}
 
 	/**
@@ -191,17 +327,19 @@ class Openldap extends Auth {
 	 * @return mixed          Return true if valid. Otherwise return error string
 	 */
 	public static function saveConfig($userman, $freepbx) {
+		$typeauth = self::getShortName();
 		$config = array(
-			"host" => $_REQUEST['openldap-host'],
-			"port" => $_REQUEST['openldap-port'],
-			"tls" => $_REQUEST['openldap-tls'] === 'yes',
-			"username" => $_REQUEST['openldap-username'],
-			"password" => $_REQUEST['openldap-password'],
-			"userident" => $_REQUEST['openldap-userident'],
-			"displayname" => $_REQUEST['openldap-displayname'],
-			"userdn" => $_REQUEST['openldap-userdn'],
-			"basedn" => $_REQUEST['openldap-basedn'],
-			"la" => $_REQUEST['openldap-la'],
+			'authtype' => $typeauth,
+			"host" => $_REQUEST[$typeauth.'-host'],
+			"port" => $_REQUEST[$typeauth.'-port'],
+			"tls" => ($_REQUEST[$typeauth.'-tls'] === 'yes' || $_REQUEST[$typeauth.'-tls'] === 'Y'),
+			"username" => $_REQUEST[$typeauth.'-username'],
+			"password" => $_REQUEST[$typeauth.'-password'],
+			"userident" => $_REQUEST[$typeauth.'-userident'],
+			"displayname" => $_REQUEST[$typeauth.'-displayname'],
+			"userdn" => $_REQUEST[$typeauth.'-userdn'],
+			"basedn" => $_REQUEST[$typeauth.'-basedn'],
+			"la" => $_REQUEST[$typeauth.'-la'],
 			"sync" => $_REQUEST['sync']
 		);
 		return $config;

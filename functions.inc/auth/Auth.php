@@ -24,6 +24,11 @@ abstract class Auth {
 		$this->config = $config;
 	}
 
+	public static function getShortName() {
+		$f = new \ReflectionClass(get_called_class());
+		return strtolower($f->getShortName());
+	}
+
 	public function addUserHook($id, $username, $description, $password, $encrypt, $extraData) {
 		$display = isset($_REQUEST['display']) ? $_REQUEST['display'] : "";
 		$this->FreePBX->Hooks->processHooksByClassMethod("FreePBX\\modules\\Userman", "addUser", array($id, $display, array("id" => $id, "username" => $username, "description" => $description, "password" => $password, "encrypted" => $encrypt, "extraData" => $extraData)));
@@ -691,6 +696,7 @@ abstract class Auth {
 				)
 			);
 		} catch (\Exception $e) {
+			dbug($e->getMessage());
 			return false;
 		}
 		return true;
