@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: User Management\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 04:20+0000\n"
-"PO-Revision-Date: 2022-04-19 05:36+0000\n"
+"PO-Revision-Date: 2022-04-21 09:01+0000\n"
 "Last-Translator: Dmitriy Q <krotesk@ya.ru>\n"
 "Language-Team: Russian <http://weblate.freepbx.org/projects/freepbx/userman/"
 "ru/>\n"
@@ -1081,7 +1081,7 @@ msgstr ""
 
 #: views/welcome.php:28
 msgid "Settings"
-msgstr "Общие настройки"
+msgstr "Настройки"
 
 #: views/msad.php:161
 #: views/msad2.php:165
@@ -1092,7 +1092,7 @@ msgstr "Состояние"
 
 #: Userman.class.php:558
 msgid "Submit"
-msgstr "Сохранить"
+msgstr "Принять"
 
 #: Userman.class.php:552
 msgid "Submit & Send Email to User"
