@@ -114,6 +114,7 @@ $("#directory-groups").change(function() {
 		$("#remove-groups").attr('disabled', true);
 		$("#remove-groups").attr("title", _("Select Directory to enable 'Delete' Button"));
 		$("#add-groups").attr('disabled', true);
+		$("#add-groups").addClass('addgrpdisable');
 		$("#add-groups").attr("title", _("Select Directory to enable 'Add' Button"));
 		$("#add-groups").attr("href", "#");
 	} else {
@@ -123,9 +124,11 @@ $("#directory-groups").change(function() {
 		$("#table-groups").bootstrapTable('hideColumn','auth');
 		if(directoryMapValues[val].permissions.addGroup) {
 			$("#add-groups").attr('disabled', false);
+			$("#add-groups").removeClass('addgrpdisable');
 			$("#add-groups").removeAttr('title');
 		} else {
 			$("#add-groups").attr('disabled', true);
+			$("#add-groups").addClass('addgrpdisable');
 			$("#add-groups").attr("title", _("Select Directory to enable 'Add' Button"));
 			$("#add-groups").attr("href", "#");
 		}
@@ -359,6 +362,8 @@ $( document ).ready(function() {
 	}
 	$(".nav-tabs a[href="+hash+"]").tab('show');
 	//we should be at the user tab by default so we will show add user.
+	//on first load of groups tab disable add button as all directories is selected by default
+	$("#add-groups").addClass('addgrpdisable');
 });
 //this fires when you change tabs
 $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
