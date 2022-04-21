@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-03 16:13+0000\n"
+"POT-Creation-Date: 2022-04-21 09:26+0000\n"
 "PO-Revision-Date: 2016-12-21 00:22+0200\n"
 "Last-Translator: Alexander <alexander.schley@paranagua.pr.gov.br>\n"
 "Language-Team: Portuguese (Brazil) <http://weblate.freepbx.org/projects/"
@@ -36,13 +36,9 @@ msgstr "%s Diretório Interno"
 msgid ""
 "%s User Manager is taking the place of several modules which have attempted "
 "to create and manage users separate from Extensions. Modules such as "
-"iSymphony and RestAPI are examples of these type of modules. In %s 12, the "
-"new User Control Panel also uses User Manager."
+"iSymphony and RestAPI are examples of these type of modules. For %s systems, "
+"the new User Control Panel also uses User Manager."
 msgstr ""
-"%s O Gerenciador de Usuários está substituindo vários módulos que tentaram "
-"criar e gerenciar usuários separados dos Ramais. Módulos como iSymphony e "
-"RestAPI são exemplos desse tipo de módulos. Em %s 12, o novo Painel de "
-"Controle de Usuários também utiliza o Gerenciador de Usuários."
 
 #: Userman.class.php:4236
 #, php-format
@@ -163,7 +159,7 @@ msgstr "Ocorreu um erro desconhecido ao tentar atualizar dados do usuário"
 msgid "Apply Changes Bar"
 msgstr "Barra Aplicar Alterações"
 
-#: assets/js/userman.js:610
+#: assets/js/userman.js:615
 msgid "Are you sure rebuild all Users widgets associated with this Template?"
 msgstr ""
 
@@ -495,7 +491,7 @@ msgstr ""
 msgid "Extension Link Attribute"
 msgstr "Atributo do Link de Ramal"
 
-#: assets/js/userman.js:491
+#: assets/js/userman.js:496
 msgid "False"
 msgstr ""
 
@@ -948,7 +944,7 @@ msgstr ""
 #: views/general.php:252 views/general.php:293 views/general.php:334
 #: views/general.php:375 views/general.php:416 views/groups.php:273
 #: views/groups.php:298 views/quickCreate.php:16 views/users.php:649
-#: views/users.php:676 assets/js/userman.js:611
+#: views/users.php:676 assets/js/userman.js:616
 msgid "No"
 msgstr "Não"
 
@@ -1371,11 +1367,11 @@ msgstr ""
 msgid "The Active Directoy user object class type to use when loading users."
 msgstr ""
 
-#: assets/js/userman.js:555
+#: assets/js/userman.js:560
 msgid "The Browser Language could not be determined"
 msgstr ""
 
-#: assets/js/userman.js:575
+#: assets/js/userman.js:580
 msgid "The Browser Timezone could not be determined"
 msgstr ""
 
@@ -1444,11 +1440,11 @@ msgstr ""
 msgid "The OpenLDAP username"
 msgstr "Nome de Usuário OpenLDAP"
 
-#: assets/js/userman.js:565
+#: assets/js/userman.js:570
 msgid "The PBX Language is not set"
 msgstr ""
 
-#: assets/js/userman.js:585
+#: assets/js/userman.js:590
 msgid "The PBX Timezone is not set"
 msgstr ""
 
@@ -1837,7 +1833,7 @@ msgstr ""
 msgid "Title"
 msgstr "Título"
 
-#: assets/js/userman.js:491
+#: assets/js/userman.js:496
 msgid "True"
 msgstr ""
 
@@ -1880,7 +1876,7 @@ msgstr ""
 msgid "Update Group is not defined"
 msgstr ""
 
-#: views/passwordmodal.php:35 assets/js/userman.js:405 assets/js/userman.js:427
+#: views/passwordmodal.php:35 assets/js/userman.js:410 assets/js/userman.js:432
 msgid "Update Password"
 msgstr "Atualizar Senha"
 
@@ -1902,7 +1898,7 @@ msgstr "Usuário Atualizado"
 msgid "Updated Voicemail User %s"
 msgstr "Usuário de Correio de Voz %s atualizado"
 
-#: assets/js/userman.js:409
+#: assets/js/userman.js:414
 msgid "Updating"
 msgstr "Atualizando"
 
@@ -2196,7 +2192,7 @@ msgstr "Número de Telefone do Trabalho"
 #: views/general.php:250 views/general.php:291 views/general.php:332
 #: views/general.php:373 views/general.php:414 views/groups.php:271
 #: views/groups.php:296 views/quickCreate.php:14 views/users.php:647
-#: views/users.php:674 assets/js/userman.js:611
+#: views/users.php:674 assets/js/userman.js:616
 msgid "Yes"
 msgstr "Sim"
 
@@ -2279,6 +2275,17 @@ msgstr "usuários"
 #: Userman.class.php:4238
 msgid "widgets not reconfigured"
 msgstr ""
+
+#~ msgid ""
+#~ "%s User Manager is taking the place of several modules which have "
+#~ "attempted to create and manage users separate from Extensions. Modules "
+#~ "such as iSymphony and RestAPI are examples of these type of modules. In "
+#~ "%s 12, the new User Control Panel also uses User Manager."
+#~ msgstr ""
+#~ "%s O Gerenciador de Usuários está substituindo vários módulos que "
+#~ "tentaram criar e gerenciar usuários separados dos Ramais. Módulos como "
+#~ "iSymphony e RestAPI são exemplos desse tipo de módulos. Em %s 12, o novo "
+#~ "Painel de Controle de Usuários também utiliza o Gerenciador de Usuários."
 
 #~ msgid "The OpenLDAP password"
 #~ msgstr "Senha OpenLDAP"

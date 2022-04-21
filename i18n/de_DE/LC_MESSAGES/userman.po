@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-03 16:13+0000\n"
+"POT-Creation-Date: 2022-04-21 09:26+0000\n"
 "PO-Revision-Date: 2018-10-24 01:00+0000\n"
 "Last-Translator: Bastian Mertgen <b.mertgen@bastian-mertgen.de>\n"
 "Language-Team: German <http://*/projects/freepbx/userman/de/>\n"
@@ -35,13 +35,9 @@ msgstr "%s Internes Verzeichnis"
 msgid ""
 "%s User Manager is taking the place of several modules which have attempted "
 "to create and manage users separate from Extensions. Modules such as "
-"iSymphony and RestAPI are examples of these type of modules. In %s 12, the "
-"new User Control Panel also uses User Manager."
+"iSymphony and RestAPI are examples of these type of modules. For %s systems, "
+"the new User Control Panel also uses User Manager."
 msgstr ""
-"Die %s-Benutzerverwaltung ersetzt mehrere Module, die versucht haben, "
-"Benutzer unabhängig von Nebenstellen zu erzeugen und zu verwalten. Module "
-"wie iSymphony und RestAPI sind Beispiele hierfür. In %s 12 verwendet das "
-"neue „User Control Panel“ ebenfalls die Benutzerverwaltung."
 
 #: Userman.class.php:4236
 #, php-format
@@ -164,7 +160,7 @@ msgstr ""
 msgid "Apply Changes Bar"
 msgstr "Änderungen anwenden"
 
-#: assets/js/userman.js:610
+#: assets/js/userman.js:615
 msgid "Are you sure rebuild all Users widgets associated with this Template?"
 msgstr ""
 
@@ -500,7 +496,7 @@ msgstr ""
 msgid "Extension Link Attribute"
 msgstr "Verknüpfungsattribut der Nebenstelle"
 
-#: assets/js/userman.js:491
+#: assets/js/userman.js:496
 msgid "False"
 msgstr "Falsch"
 
@@ -964,7 +960,7 @@ msgstr ""
 #: views/general.php:252 views/general.php:293 views/general.php:334
 #: views/general.php:375 views/general.php:416 views/groups.php:273
 #: views/groups.php:298 views/quickCreate.php:16 views/users.php:649
-#: views/users.php:676 assets/js/userman.js:611
+#: views/users.php:676 assets/js/userman.js:616
 msgid "No"
 msgstr "Nein"
 
@@ -1389,11 +1385,11 @@ msgstr ""
 msgid "The Active Directoy user object class type to use when loading users."
 msgstr ""
 
-#: assets/js/userman.js:555
+#: assets/js/userman.js:560
 msgid "The Browser Language could not be determined"
 msgstr "Die Browser-Sprache konnte nicht bestimmt werden"
 
-#: assets/js/userman.js:575
+#: assets/js/userman.js:580
 msgid "The Browser Timezone could not be determined"
 msgstr "Die Browser-Zeitzone konnte nicht bestimmt werden"
 
@@ -1466,11 +1462,11 @@ msgstr "Die Art der sicheren Verbindung für OpenLDAP"
 msgid "The OpenLDAP username"
 msgstr "Der OpenLDAP-Benutzername"
 
-#: assets/js/userman.js:565
+#: assets/js/userman.js:570
 msgid "The PBX Language is not set"
 msgstr "Die TK-Anlagen Sprache ist nicht definiert"
 
-#: assets/js/userman.js:585
+#: assets/js/userman.js:590
 msgid "The PBX Timezone is not set"
 msgstr "Die TK-Anlagen Zeitzone ist nicht definiert"
 
@@ -1933,7 +1929,7 @@ msgstr "Die Zeitzone dieses Benutzers"
 msgid "Title"
 msgstr "Titel"
 
-#: assets/js/userman.js:491
+#: assets/js/userman.js:496
 msgid "True"
 msgstr "Wahr"
 
@@ -1976,7 +1972,7 @@ msgstr "Attribut für die eindeutige Kennung"
 msgid "Update Group is not defined"
 msgstr "Zu aktualisierende Gruppe ist nicht definiert"
 
-#: views/passwordmodal.php:35 assets/js/userman.js:405 assets/js/userman.js:427
+#: views/passwordmodal.php:35 assets/js/userman.js:410 assets/js/userman.js:432
 msgid "Update Password"
 msgstr "Passwort aktualisieren"
 
@@ -1998,7 +1994,7 @@ msgstr "Benutzer aktualisiert"
 msgid "Updated Voicemail User %s"
 msgstr "Voicemail-Benutzer %s aktualisiert"
 
-#: assets/js/userman.js:409
+#: assets/js/userman.js:414
 msgid "Updating"
 msgstr "Aktualisiere"
 
@@ -2294,7 +2290,7 @@ msgstr "Dienstliche Telefonnummer"
 #: views/general.php:250 views/general.php:291 views/general.php:332
 #: views/general.php:373 views/general.php:414 views/groups.php:271
 #: views/groups.php:296 views/quickCreate.php:14 views/users.php:647
-#: views/users.php:674 assets/js/userman.js:611
+#: views/users.php:674 assets/js/userman.js:616
 msgid "Yes"
 msgstr "Ja"
 
@@ -2379,6 +2375,17 @@ msgstr "Benutzer"
 #: Userman.class.php:4238
 msgid "widgets not reconfigured"
 msgstr ""
+
+#~ msgid ""
+#~ "%s User Manager is taking the place of several modules which have "
+#~ "attempted to create and manage users separate from Extensions. Modules "
+#~ "such as iSymphony and RestAPI are examples of these type of modules. In "
+#~ "%s 12, the new User Control Panel also uses User Manager."
+#~ msgstr ""
+#~ "Die %s-Benutzerverwaltung ersetzt mehrere Module, die versucht haben, "
+#~ "Benutzer unabhängig von Nebenstellen zu erzeugen und zu verwalten. Module "
+#~ "wie iSymphony und RestAPI sind Beispiele hierfür. In %s 12 verwendet das "
+#~ "neue „User Control Panel“ ebenfalls die Benutzerverwaltung."
 
 #~ msgid "The OpenLDAP password"
 #~ msgstr "Das OpenLDAP-Passwort"
