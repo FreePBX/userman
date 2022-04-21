@@ -73,3 +73,6 @@ fieldset>span{
     border-radius: 5px;
     margin-top: 5px;
 }
+.addgrpdisable {
+    pointer-events: none;
+}
