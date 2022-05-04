@@ -6,26 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: User Management\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 04:20+0000\n"
+"POT-Creation-Date: 2022-05-04 09:58+0000\n"
 "PO-Revision-Date: 2022-04-21 09:01+0000\n"
 "Last-Translator: Dmitriy Q <krotesk@ya.ru>\n"
 "Language-Team: Russian <http://weblate.freepbx.org/projects/freepbx/userman/"
 "ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
-"4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Weblate 3.0.1\n"
 
-#: views/welcome.php:46
-#: views/welcome.php:80
-msgid " selected"
-msgstr ""
-
-#: views/groups.php:36
-#: views/users.php:33
+#: views/groups.php:36 views/users.php:33
 #, php-format
 msgid "%s Administration GUI"
 msgstr "GUI администрирования %s"
@@ -40,21 +34,17 @@ msgstr "Внутренний каталог %s"
 msgid ""
 "%s User Manager is taking the place of several modules which have attempted "
 "to create and manage users separate from Extensions. Modules such as "
-"iSymphony and RestAPI are examples of these type of modules. In %s 12, the "
-"new User Control Panel also uses User Manager."
+"iSymphony and RestAPI are examples of these type of modules. For %s systems, "
+"the new User Control Panel also uses User Manager."
 msgstr ""
-"Менеджер пользователей %s используется вместо нескольких модулей, которые "
-"создавали пользователей и управляли ими отдельно от внутренних номеров. "
-"Примерами таких модулей являются iSymphony и RestAPI. В %s 12 новая Панель "
-"управления пользователями также использует Менеджер пользователей."
 
-#: Userman.class.php:2981
+#: Userman.class.php:3638
 #, php-format
 msgid "%s records failed validation"
 msgstr "%s записей не удалось проверить"
 
-#: views/welcome.php:71
-msgid "&directory="
+#: Userman.class.php:310
+msgid "(0 - being Really Weak, 4 - being Strong)"
 msgstr ""
 
 #: views/directories.php:103
@@ -73,44 +63,37 @@ msgstr "30 минут"
 msgid "6 Hours"
 msgstr "6 часов"
 
-#: views/welcome.php:34
-msgid "?display=userman&action=adduser&directory="
-msgstr ""
-
 #: views/users.php:96
 msgid "A brief description for this user."
 msgstr "Краткое описание для этого пользователя."
 
-#: views/welcome.php:61
-#: views/welcome.php:92
-#: views/welcome.php:117
+#: views/welcome.php:62 views/welcome.php:93 views/welcome.php:118
+#: views/welcome.php:156
 msgid "Action"
 msgstr "Действие"
 
-#: views/welcome.php:114
+#: views/welcome.php:115
 msgid "Active"
 msgstr "Активный"
 
-#: views/welcome.php:35
-#: views/welcome.php:72
-#: views/welcome.php:103
+#: views/welcome.php:36 views/welcome.php:73 views/welcome.php:104
+#: views/welcome.php:133
 msgid "Add"
 msgstr "Добавить"
 
-#: Userman.class.php:915
+#: Userman.class.php:1233
 msgid "Add Device"
 msgstr "Добавить устройство"
 
-#: views/rnav.php:40
+#: views/rnav.php:44
 msgid "Add Directory"
 msgstr "Добавить каталог"
 
-#: Userman.class.php:915
+#: Userman.class.php:1233
 msgid "Add Extension"
 msgstr "Добавить внутренний номер"
 
-#: views/groups.php:6
-#: views/rnav.php:24
+#: views/groups.php:6 views/rnav.php:28
 msgid "Add Group"
 msgstr "Добавить группу"
 
@@ -118,8 +101,11 @@ msgstr "Добавить группу"
 msgid "Add Group is not defined"
 msgstr "Добавить неопределенную группу"
 
-#: views/rnav.php:7
-#: views/users.php:5
+#: views/ucptemplates.php:5
+msgid "Add Template"
+msgstr ""
+
+#: views/rnav.php:11 views/users.php:5
 msgid "Add User"
 msgstr "Добавить пользователя"
 
@@ -136,31 +122,27 @@ msgstr "Добавлен пользователь голосовой почты 
 msgid "Admin"
 msgstr "Администратор"
 
-#: views/groups.php:337
-#: views/users.php:714
+#: views/groups.php:337 views/users.php:718
 msgid "Administration Access"
 msgstr "Административный доступ"
 
-#: views/groups.php:34
-#: views/users.php:31
+#: views/groups.php:34 views/users.php:31
 msgid "Advanced"
 msgstr "Расширенный"
 
-#: assets/js/userman.js:183
+#: assets/js/userman.js:227
 msgid "Alert"
 msgstr ""
 
-#: views/welcome.php:44
-#: views/welcome.php:78
+#: views/welcome.php:45 views/welcome.php:79
 msgid "All Directories"
 msgstr "Все директории"
 
-#: Userman.class.php:1460
+#: Userman.class.php:1835
 msgid "All Users"
 msgstr "Все пользователи"
 
-#: views/groups.php:265
-#: views/users.php:638
+#: views/groups.php:265 views/users.php:642
 #, php-format
 msgid "Allow %s Administration Login"
 msgstr "Разрешить вход администратора %s"
@@ -170,20 +152,28 @@ msgstr "Разрешить вход администратора %s"
 msgid "An Unknown error occured while trying to update user data"
 msgstr "Неизвестная ошибка при попытке обновить данные пользователей"
 
-#: Userman.class.php:916
+#: Userman.class.php:1234
 msgid "Apply Changes Bar"
 msgstr "Панель \"Применить изменения\""
 
-#: assets/js/userman.js:155
+#: assets/js/userman.js:571
+msgid "Are you sure rebuild all Users widgets associated with this Template ?"
+msgstr ""
+
+#: assets/js/userman.js:606
+msgid "Are you sure to delete this Generic template ?"
+msgstr ""
+
+#: assets/js/userman.js:198
 msgid "Are you sure you want to make this directory the system default?"
 msgstr "Вы уверены что хотите сделать этот каталог системным по умолчанию?"
 
-#: assets/js/userman.js:97
+#: assets/js/userman.js:139
 #, perl-format
 msgid "Are you sure you wish to delete these %s?"
 msgstr ""
 
-#: assets/js/userman.js:138
+#: assets/js/userman.js:180
 #, perl-format
 msgid "Are you sure you wish to delete this %s?"
 msgstr "Вы точно хотите удалить элемент %s?"
@@ -196,15 +186,16 @@ msgstr "Голосовая почта Asterisk"
 msgid "Authentication Settings"
 msgstr "Настройки аутентификации"
 
-#: Userman.class.php:218
-#: functions.inc/guihooks.php:301
-#: functions.inc/guihooks.php:374
+#: Userman.class.php:4074
+msgid "Autogenerated user For Template Creation"
+msgstr ""
+
+#: Userman.class.php:380 functions.inc/guihooks.php:302
+#: functions.inc/guihooks.php:379
 msgid "Autogenerated user on new device creation"
 msgstr "Автосгенерированный пользователь при создании нового устройства"
 
-#: views/msad.php:117
-#: views/msad2.php:143
-#: views/openldap.php:188
+#: views/msad.php:117 views/msad2.php:143 views/openldap.php:188
 #: views/openldap2.php:121
 msgid "Base DN"
 msgstr "Базовое DN"
@@ -213,20 +204,28 @@ msgstr "Базовое DN"
 msgid "Bind DN or Username"
 msgstr "Привязать DN или имя пользователя"
 
-#: views/users.php:460
+#: Userman.class.php:835
+msgid "Cancel"
+msgstr ""
+
+#: Userman.class.php:324
+#, php-format
+msgid "Cannot manage this rule: %s."
+msgstr ""
+
+#: views/users.php:464
 msgid "Cell Phone Number"
 msgstr "Номер сотового телефона"
 
-#: views/passwordmodal.php:29
+#: views/passwordmodal.php:34
 msgid "Close"
 msgstr "Закрыть"
 
-#: views/msad2.php:241
-#: views/openldap2.php:219
+#: views/msad2.php:241 views/openldap2.php:219
 msgid "Common Name attribute"
 msgstr "Атрибут общего имени"
 
-#: views/users.php:324
+#: views/users.php:328
 msgid "Company"
 msgstr "Компания"
 
@@ -245,31 +244,39 @@ msgstr "Контекст"
 msgid "Could not find the voicemail context"
 msgstr "Не удалось найти контекст голосовой почты"
 
-#: views/msad2.php:189
-#: views/openldap2.php:167
+#: views/welcome.php:141
+msgid "Create Generic Templates"
+msgstr ""
+
+#: views/msad2.php:189 views/openldap2.php:167
 msgid "Create Missing Extensions"
 msgstr "Создание отсутствующих расширений"
 
-#: functions.inc/guihooks.php:204
-#: functions.inc/guihooks.php:253
+#: functions.inc/guihooks.php:204 functions.inc/guihooks.php:254
 msgid "Create New User"
 msgstr "Создание нового пользователя"
+
+#: views/ucptemplates.php:70
+msgid "Create Template Via"
+msgstr ""
 
 #: views/quickCreate.php:8
 msgid "Create User Manager User"
 msgstr "Создание пользователя Менеджера пользователей"
 
-#: views/groups.php:240
-#: views/users.php:611
+#: views/ucptemplates.php:82
+msgid "Create Using Template Creator"
+msgstr ""
+
+#: views/groups.php:240 views/users.php:615
 msgid "Date Format"
 msgstr "Формат даты"
 
-#: views/groups.php:196
-#: views/users.php:561
+#: views/groups.php:196 views/users.php:565
 msgid "Date and Time Format"
 msgstr "Формат даты и времени"
 
-#: views/welcome.php:116
+#: views/welcome.php:117
 msgid "Default"
 msgstr "По умолчанию"
 
@@ -277,46 +284,44 @@ msgstr "По умолчанию"
 msgid "Default Groups"
 msgstr "Группа по-умолчанию"
 
-#: views/groups.php:367
-#: views/users.php:743
+#: views/groups.php:367 views/users.php:747
 msgid "Default Landing Page"
 msgstr "Целевая страница по умолчанию"
 
-#: Userman.class.php:564
-#: views/welcome.php:38
-#: views/welcome.php:75
-#: views/welcome.php:106
-#: assets/js/userman.js:102
-#: assets/js/userman.js:108
+#: Userman.class.php:823 views/welcome.php:39 views/welcome.php:76
+#: views/welcome.php:107 views/welcome.php:136 assets/js/userman.js:144
+#: assets/js/userman.js:150
 msgid "Delete"
 msgstr "Удалить"
 
-#: assets/js/userman.js:98
+#: views/welcome.php:145
+msgid "Delete Generic Templates"
+msgstr ""
+
+#: Console/Userman.class.php:25
+msgid "Delete generic templates user"
+msgstr ""
+
+#: assets/js/userman.js:140
 msgid "Deleting..."
 msgstr "Удаление..."
 
-#: assets/js/userman.js:183
+#: assets/js/userman.js:227
 msgid "Deletion is not allowed if a selected item is read-only !!"
 msgstr ""
 
-#: views/users.php:348
+#: views/users.php:352
 msgid "Department"
 msgstr "Отдел"
 
-#: Userman.class.php:2927
-#: Userman.class.php:2928
-#: Userman.class.php:2953
-#: Userman.class.php:2954
-#: views/rnav.php:14
-#: views/rnav.php:31
-#: views/users.php:84
-#: views/welcome.php:60
-#: views/welcome.php:90
+#: Userman.class.php:3556 Userman.class.php:3557 Userman.class.php:3582
+#: Userman.class.php:3583 Userman.class.php:3596 Userman.class.php:3597
+#: views/rnav.php:18 views/rnav.php:35 views/users.php:84 views/welcome.php:61
+#: views/welcome.php:91 views/welcome.php:154
 msgid "Description"
 msgstr "Описание"
 
-#: views/msad2.php:263
-#: views/openldap2.php:241
+#: views/msad2.php:263 views/openldap2.php:241
 msgid "Description attribute"
 msgstr "Атрибут описания"
 
@@ -324,13 +329,11 @@ msgstr "Атрибут описания"
 msgid "Directories"
 msgstr "Каталоги"
 
-#: views/welcome.php:54
-#: views/welcome.php:88
+#: views/welcome.php:55 views/welcome.php:89
 msgid "Directory"
 msgstr "Каталог"
 
-#: views/directories.php:47
-#: views/rnav.php:45
+#: views/directories.php:47 views/rnav.php:49
 msgid "Directory Name"
 msgstr "Название каталога"
 
@@ -342,58 +345,55 @@ msgstr "Настройки каталога"
 msgid "Directory Type"
 msgstr "Тип каталога"
 
-#: Userman.class.php:1803
-#: Userman.class.php:1833
+#: Userman.class.php:2372 Userman.class.php:2402
 msgid "Directory is locked. Can not add group"
 msgstr "Каталог заблокирован. Не удается добавить группу"
 
-#: Userman.class.php:1716
-#: Userman.class.php:1750
+#: Userman.class.php:2091 Userman.class.php:2138
 msgid "Directory is locked. Can not add user"
 msgstr "Каталог заблокирован. Не удается добавить пользователя"
 
-#: Userman.class.php:1961
+#: Userman.class.php:2546
 msgid "Directory is locked. Can not update group"
 msgstr "Каталог заблокирован. Не удается обновить группу"
 
-#: Userman.class.php:1918
+#: Userman.class.php:2501
 msgid "Directory is locked. Can not update user"
 msgstr "Каталог заблокирован. Не удается обновить пользователя"
 
-#: views/welcome.php:100
+#: views/welcome.php:101
 msgid ""
 "Directory order can be changed by clicking and dragging directories around "
 "in the order you'd like. User logins will match based on the first directory "
 "then if no match was found waterfall down the list in the order chosen below"
 msgstr ""
 
-#: Userman.class.php:2939
-#: Userman.class.php:2940
-#: views/openldap.php:144
-#: views/users.php:276
-#: views/welcome.php:56
+#: Userman.class.php:3568 Userman.class.php:3569 views/openldap.php:144
+#: views/users.php:280 views/welcome.php:57
 msgid "Display Name"
 msgstr "Отображаемое имя"
 
-#: views/users.php:288
+#: views/users.php:292
 msgid ""
 "Display Name. Used in User Control Panel and Contact Manager to display a "
 "customized user name"
 msgstr ""
 
-#: views/msad.php:95
-#: views/msad2.php:121
+#: views/msad.php:95 views/msad2.php:121
 msgid "Domain"
 msgstr "Домен"
 
-#: views/msad2.php:194
-#: views/openldap2.php:172
+#: views/msad2.php:194 views/openldap2.php:172
 msgid "Don't Create"
 msgstr "Не создавать"
 
 #: views/groups.php:3
 msgid "Edit Group"
 msgstr "Редактировать группу"
+
+#: views/ucptemplates.php:3
+msgid "Edit Template"
+msgstr ""
 
 #: views/users.php:3
 msgid "Edit User"
@@ -403,7 +403,7 @@ msgstr "Изменить пользователя"
 msgid "Email "
 msgstr "E-mail "
 
-#: views/users.php:436
+#: views/users.php:440
 msgid "Email Address"
 msgstr "Адрес Email"
 
@@ -411,14 +411,17 @@ msgstr "Адрес Email"
 msgid "Email Body"
 msgstr "Содержание письма"
 
-#: views/general.php:9
-#: views/general.php:16
+#: views/general.php:9 views/general.php:16
 msgid "Email Settings"
 msgstr "Настройки e-mail"
 
 #: views/general.php:104
 msgid "Email Subject"
 msgstr "Тема письма"
+
+#: Userman.class.php:3734
+msgid "Empty data array."
+msgstr ""
 
 #: views/directories.php:69
 msgid "Enable Directory"
@@ -428,40 +431,84 @@ msgstr "Включить каталог"
 msgid "Enable User Manager for this extension"
 msgstr ""
 
-#: Userman.class.php:1075
+#: views/general.php:187 views/general.php:228 views/general.php:269
+#: views/general.php:310 views/general.php:351 views/general.php:392
+#: views/general.php:433
+msgid "Enable or disable this rule Yes or No."
+msgstr ""
+
+#: views/general.php:433
+msgid ""
+"Enter a password complexity threshold from 0 to 4, 0 being 'Really weak', "
+"and 4 being 'Strong'."
+msgstr ""
+
+#: views/general.php:461
+msgid "Enter a password to test."
+msgstr ""
+
+#: views/general.php:269
+msgid "Enter the minimum number of lowercase characters."
+msgstr ""
+
+#: views/general.php:310
+msgid "Enter the minimum number of numeric characters."
+msgstr ""
+
+#: views/general.php:392
+msgid "Enter the minimum number of punctuation characters."
+msgstr ""
+
+#: views/general.php:351
+msgid "Enter the minimum number of special characters."
+msgstr ""
+
+#: views/general.php:228
+msgid "Enter the minimum number of uppercase characters."
+msgstr ""
+
+#: views/general.php:187
+msgid "Enter the minimum password length."
+msgstr ""
+
+#: Userman.class.php:1436
 msgid "Error: No id provided"
 msgstr ""
 
-#: Userman.class.php:1114
+#: Userman.class.php:1482
 msgid "Error: You should never see this"
 msgstr "Ошибка: Вы никогда не должны видеть это"
 
-#: views/msad.php:139
-#: views/openldap.php:210
+#: Backup.php:11
+msgid "Exporting Module XML userman"
+msgstr ""
+
+#: views/msad.php:139 views/openldap.php:210
 msgid "Extension Link Attribute"
 msgstr ""
 
-#: assets/js/userman.js:392
+#: assets/js/userman.js:453
 msgid "False"
 msgstr "Нет"
 
-#: views/users.php:532
+#: views/users.php:536
 msgid "Fax Phone Number"
 msgstr "Номер факса"
 
-#: Userman.class.php:2931
-#: Userman.class.php:2932
-#: views/users.php:228
-#: views/welcome.php:57
+#: Userman.class.php:3560 Userman.class.php:3561 views/users.php:232
+#: views/welcome.php:58
 msgid "First Name"
 msgstr "Имя"
+
+#: views/templatemembers.php:45
+msgid "Force Rebuild Templates For Users"
+msgstr ""
 
 #: Console/Userman.class.php:23
 msgid "Force syncronization"
 msgstr "Форсировать синхронизацию"
 
-#: Userman.class.php:1389
-#: Userman.class.php:1937
+#: Userman.class.php:1764 Userman.class.php:2522
 msgid "GID was not numeric"
 msgstr "GID не числовой"
 
@@ -473,13 +520,11 @@ msgstr "Дайте группе описание"
 msgid "Give the group a name"
 msgstr "Дайте группе название"
 
-#: views/groups.php:290
-#: views/users.php:665
+#: views/groups.php:290 views/users.php:669
 msgid "Grant Full Administration Rights"
 msgstr "Предоставить полные административные права"
 
-#: views/groups.php:305
-#: views/users.php:682
+#: views/groups.php:305 views/users.php:686
 msgid ""
 "Grant full administration rights regardless of extension range or module "
 "access."
@@ -491,8 +536,7 @@ msgstr ""
 msgid "Group '%s' Does Not Exist"
 msgstr "Группа '%s' не существует"
 
-#: views/msad2.php:711
-#: views/openldap2.php:665
+#: views/msad2.php:711 views/openldap2.php:665
 msgid "Group DN"
 msgstr "DN группы"
 
@@ -508,23 +552,20 @@ msgstr "Детали группы"
 msgid "Group Does Not Exist"
 msgstr "Группа не существует"
 
-#: Userman.class.php:2949
-#: Userman.class.php:2950
-#: views/groups.php:60
-#: views/rnav.php:30
-#: views/welcome.php:89
+#: Userman.class.php:3578 Userman.class.php:3579 views/groups.php:60
+#: views/rnav.php:34 views/welcome.php:90
 msgid "Group Name"
 msgstr "Название группы"
 
-#: views/welcome.php:69
+#: views/welcome.php:70
 msgid ""
 "Group Priorities can be changed by clicking and dragging groups around in "
 "the order you'd like. Groups with a lower number for priority take priority "
 "(EG 0 is higher than 1)"
 msgstr ""
 "Приоритеты групп можно изменить, щелкнув и перетащив группы в нужном "
-"порядке. Группы с меньшим числом приоритета имеют больший приоритет ("
-"например, 0 выше 1)"
+"порядке. Группы с меньшим числом приоритета имеют больший приоритет "
+"(например, 0 выше 1)"
 
 #: functions.inc/auth/modules/Freepbx.php:139
 #: functions.inc/auth/modules/Msad2.php:398
@@ -541,7 +582,7 @@ msgstr "Группа успешно удалена"
 msgid "Group Successfully Updated"
 msgstr "Группа успешно обновлена"
 
-#: Userman.class.php:3109
+#: Userman.class.php:3771
 msgid "Group already exists"
 msgstr "Группа уже существует"
 
@@ -549,18 +590,15 @@ msgstr "Группа уже существует"
 msgid "Group configuration"
 msgstr "Конфигурация группы"
 
-#: views/msad2.php:777
-#: views/openldap2.php:731
+#: views/msad2.php:777 views/openldap2.php:731
 msgid "Group members attribute"
 msgstr "Атрибуты участников группы"
 
-#: views/msad2.php:733
-#: views/openldap2.php:687
+#: views/msad2.php:733 views/openldap2.php:687
 msgid "Group object class"
 msgstr "Класс объектов группы"
 
-#: views/msad2.php:755
-#: views/openldap2.php:709
+#: views/msad2.php:755 views/openldap2.php:709
 msgid "Group object filter"
 msgstr "Фильтр объектов группы"
 
@@ -575,20 +613,16 @@ msgstr "Группа обновлена"
 msgid "Groupname Can Not Be Blank!"
 msgstr "Имя группы не может быть пустым!"
 
-#: Userman.class.php:1798
-#: Userman.class.php:1828
+#: Userman.class.php:2367 Userman.class.php:2397
 msgid "Groupname can not be blank"
 msgstr "Имя группы не может быть пустым"
 
-#: functions.inc/guihooks.php:235
-#: functions.inc/guihooks.php:279
-#: views/users.php:160
-#: views/welcome.php:26
+#: functions.inc/guihooks.php:236 functions.inc/guihooks.php:280
+#: views/users.php:164 views/welcome.php:26
 msgid "Groups"
 msgstr "Группы"
 
-#: functions.inc/guihooks.php:235
-#: functions.inc/guihooks.php:279
+#: functions.inc/guihooks.php:236 functions.inc/guihooks.php:280
 msgid ""
 "Groups that this user is a part of. You can add and remove this user from "
 "groups in this view as well"
@@ -596,12 +630,11 @@ msgstr ""
 "Группы, частью которых является данный пользователь. Вы также можете "
 "добавлять и удалять этого пользователя из групп в этом представлении"
 
-#: views/users.php:508
+#: views/users.php:512
 msgid "Home Phone Number"
 msgstr "Домашний номер телефона"
 
-#: views/msad.php:7
-#: views/openldap.php:7
+#: views/msad.php:7 views/openldap.php:7
 msgid "Host"
 msgstr "Узел"
 
@@ -609,42 +642,38 @@ msgstr "Узел"
 msgid "Host Name"
 msgstr "Имя узла"
 
-#: views/msad2.php:33
-#: views/openldap2.php:33
+#: views/msad2.php:33 views/openldap2.php:33
 msgid "Host(s)"
 msgstr "Узел(-лы)"
 
-#: Console/Userman.class.php:33
+#: Console/Userman.class.php:34
 msgid "ID"
 msgstr "ID"
 
-#: Userman.class.php:1361
+#: Userman.class.php:1729
 msgid "ID was not numeric"
 msgstr "ID не числовой"
 
-#: functions.inc/guihooks.php:234
-#: functions.inc/guihooks.php:278
+#: functions.inc/guihooks.php:235 functions.inc/guihooks.php:279
 msgid ""
 "If Create New User is selected this will be the autogenerated users new "
 "password"
 msgstr ""
 
-#: functions.inc/guihooks.php:233
-#: functions.inc/guihooks.php:277
+#: functions.inc/guihooks.php:234 functions.inc/guihooks.php:278
 msgid ""
 "If Create New User is selected this will be the username. If blank the "
 "username will be the same number as this device"
 msgstr ""
 
-#: Userman.class.php:354
+#: Userman.class.php:528
 msgid ""
 "If any users in this group are using a Sangoma/Digium phone configured "
 "through Endpoint Manager, please rebuild their phone configuration and apply "
 "them if any Phone Apps settings have changed."
 msgstr ""
 
-#: views/msad2.php:206
-#: views/openldap2.php:184
+#: views/msad2.php:206 views/openldap2.php:184
 msgid ""
 "If enabled and the 'User extension Link attribute' is set, a new extension "
 "will be created and linked to this user if one does not exist previously"
@@ -666,8 +695,7 @@ msgid ""
 "extists!! (Try lowercase if it is not working.)"
 msgstr ""
 
-#: views/openldap.php:222
-#: views/openldap2.php:652
+#: views/openldap.php:222 views/openldap2.php:652
 msgid ""
 "If this is set then User Manager will use the defined attribute of the user "
 "from the OpenLDAP server as the extension link. NOTE: If this field is set "
@@ -675,17 +703,33 @@ msgid ""
 "extists!! (Try lowercase if it is not working.)"
 msgstr ""
 
-#: Userman.class.php:435
+#: Userman.class.php:611
 msgid ""
 "If this user is using a Sangoma/Digium phone configured through Endpoint "
 "Manager, please rebuild the phone configuration and apply it if any Phone "
 "Apps settings have changed."
 msgstr ""
 
-#: Userman.class.php:124
+#: views/ucptemplates.php:78 views/ucptemplates.php:102
+msgid "Import from a User"
+msgstr ""
+
+#: views/ucptemplates.php:119 views/ucptemplates.php:138
+msgid "Import this user's  current dashbord setting from UCP"
+msgstr ""
+
+#: Userman.class.php:131
 #, php-format
 msgid "Imported %s directory"
 msgstr "Импортирован каталог %s"
+
+#: views/welcome.php:155
+msgid "Imported from "
+msgstr ""
+
+#: Restore.php:15
+msgid "Importing Module XML userman"
+msgstr ""
 
 #: views/welcome.php:16
 #, php-format
@@ -701,16 +745,18 @@ msgstr ""
 "который может войти в Панель управления пользователями и получить доступ к "
 "голосовой почте 3 других учетных записей."
 
-#: views/users.php:377
-#: views/users.php:409
-#: views/users.php:647
-#: views/users.php:674
+#: views/users.php:381 views/users.php:413 views/users.php:651
+#: views/users.php:678
 msgid "Inherit"
 msgstr "Наследовать"
 
-#: Userman.class.php:1070
+#: Userman.class.php:1431
 msgid "Invalid User"
 msgstr "Неверный пользователь"
+
+#: Userman.class.php:3601
+msgid "Key"
+msgstr ""
 
 #: functions.inc/auth/modules/Msad.php:343
 #: functions.inc/auth/modules/Msad.php:356
@@ -723,20 +769,16 @@ msgstr "Неверный пользователь"
 msgid "LDAP is in Read Only Mode. Addition denied"
 msgstr ""
 
-#: views/groups.php:105
-#: views/users.php:372
+#: views/groups.php:105 views/users.php:376
 msgid "Language"
 msgstr "Язык"
 
-#: views/groups.php:125
-#: views/users.php:392
+#: views/groups.php:125 views/users.php:396
 msgid "Language for this user"
 msgstr "Язык для этого пользователя"
 
-#: Userman.class.php:2935
-#: Userman.class.php:2936
-#: views/users.php:252
-#: views/welcome.php:58
+#: Userman.class.php:3564 Userman.class.php:3565 views/users.php:256
+#: views/welcome.php:59
 msgid "Last Name"
 msgstr "Фамилия"
 
@@ -744,12 +786,11 @@ msgstr "Фамилия"
 msgid "Link to User Manager User"
 msgstr ""
 
-#: functions.inc/guihooks.php:229
-#: functions.inc/guihooks.php:276
+#: functions.inc/guihooks.php:230 functions.inc/guihooks.php:277
 msgid "Link to a Default User"
 msgstr "Ссылка на пользователя по умолчанию"
 
-#: functions.inc/guihooks.php:224
+#: functions.inc/guihooks.php:225
 msgid "Link to a Different Default User:"
 msgstr ""
 
@@ -757,24 +798,28 @@ msgstr ""
 msgid "Linked"
 msgstr ""
 
-#: views/welcome.php:59
+#: views/welcome.php:60
 msgid "Linked Extension"
 msgstr ""
 
-#: functions.inc/guihooks.php:222
+#: functions.inc/guihooks.php:223
 #, php-format
 msgid "Linked to User %s"
 msgstr ""
 
-#: views/rnav.php:39
+#: views/rnav.php:43
 msgid "List Directories"
 msgstr "Список каталогов"
 
-#: views/rnav.php:22
+#: views/rnav.php:26
 msgid "List Groups"
 msgstr "Список групп"
 
-#: views/rnav.php:5
+#: views/rnav.php:9
+msgid "List Templates"
+msgstr ""
+
+#: views/rnav.php:8
 msgid "List Users"
 msgstr "Список пользователей"
 
@@ -786,14 +831,15 @@ msgstr "Список каталогов"
 msgid "Login Details"
 msgstr ""
 
-#: Userman.class.php:2913
-#: Userman.class.php:2914
-#: views/users.php:60
+#: Userman.class.php:3542 Userman.class.php:3543 views/users.php:60
 msgid "Login Name"
 msgstr ""
 
-#: views/msad2.php:216
-#: views/openldap2.php:194
+#: views/general.php:241
+msgid "Lowercase"
+msgstr ""
+
+#: views/msad2.php:216 views/openldap2.php:194
 msgid "Manage groups locally"
 msgstr ""
 
@@ -802,10 +848,17 @@ msgstr ""
 msgid "May this group log in to the %s Administration Pages?"
 msgstr ""
 
-#: views/directories.php:84
-#: views/users.php:655
+#: views/directories.php:84 views/users.php:659
 #, php-format
 msgid "May this user log in to the %s Administration Pages?"
+msgstr ""
+
+#: views/templatemembers.php:33
+msgid "Members"
+msgstr ""
+
+#: Userman.class.php:798
+msgid "Merge With Existing Widgets"
 msgstr ""
 
 #: functions.inc/auth/modules/Msad2.php:152
@@ -816,16 +869,15 @@ msgstr ""
 msgid "Microsoft Active Directory (Legacy)"
 msgstr ""
 
-#: Userman.class.php:2710
+#: Userman.class.php:3335
 msgid "Migrated user from voicemail"
 msgstr ""
 
-#: Userman.class.php:623
+#: Userman.class.php:887
 msgid "Module Core is disabled. Please enable it"
 msgstr ""
 
-#: Console/Userman.class.php:33
-#: views/welcome.php:113
+#: Console/Userman.class.php:34 views/welcome.php:114
 msgid "Name"
 msgstr "Имя"
 
@@ -837,32 +889,23 @@ msgstr "Название не может быть пустым!"
 msgid "Never"
 msgstr "Никогда"
 
-#: views/msad2.php:231
-#: views/openldap2.php:209
+#: views/msad2.php:231 views/openldap2.php:209
 msgid ""
 "New groups created in this directory will be local and not saved to the LDAP "
 "directory. Groups synchronised from the remote directory will be read-only."
 msgstr ""
 
-#: views/directories.php:76
-#: views/general.php:32
-#: views/general.php:61
-#: views/groups.php:272
-#: views/groups.php:297
-#: views/msad2.php:223
-#: views/openldap.php:59
-#: views/openldap2.php:201
-#: views/quickCreate.php:16
-#: views/users.php:645
-#: views/users.php:672
+#: views/directories.php:76 views/general.php:32 views/general.php:61
+#: views/general.php:170 views/general.php:211 views/general.php:252
+#: views/general.php:293 views/general.php:334 views/general.php:375
+#: views/general.php:416 views/groups.php:272 views/groups.php:297
+#: views/msad2.php:223 views/openldap.php:59 views/openldap2.php:201
+#: views/quickCreate.php:16 views/users.php:649 views/users.php:676
 msgid "No"
 msgstr "Нет"
 
-#: Userman.class.php:192
-#: functions.inc/guihooks.php:174
-#: functions.inc/guihooks.php:241
-#: views/msad2.php:12
-#: views/openldap2.php:12
+#: Userman.class.php:350 functions.inc/guihooks.php:174
+#: functions.inc/guihooks.php:242 views/msad2.php:12 views/openldap2.php:12
 msgid "None"
 msgstr "Отсутствует"
 
@@ -880,7 +923,11 @@ msgstr "Не подключено"
 msgid "Not all of the connection parameters have been filled out"
 msgstr ""
 
-#: Userman.class.php:2758
+#: views/general.php:282
+msgid "Numeric"
+msgstr ""
+
+#: Userman.class.php:3383
 msgid "Obfuscated. To reset use the reset link in this email"
 msgstr ""
 
@@ -892,8 +939,7 @@ msgstr ""
 msgid "OpenLDAP Directory (Legacy)"
 msgstr ""
 
-#: views/msad2.php:182
-#: views/openldap2.php:160
+#: views/msad2.php:182 views/openldap2.php:160
 msgid "Operational Settings"
 msgstr ""
 
@@ -901,88 +947,114 @@ msgstr ""
 msgid "Other Settings"
 msgstr "Прочие настройки"
 
-#: Userman.class.php:145
-#: Userman.class.php:1440
+#: Userman.class.php:152 Userman.class.php:1815
 msgid "PBX Internal Directory"
 msgstr "Внутренний каталог АТС"
 
-#: Userman.class.php:2918
-#: views/msad.php:73
-#: views/msad2.php:99
-#: views/openldap.php:100
-#: views/openldap2.php:99
-#: views/passwordmodal.php:16
+#: Userman.class.php:3547 views/msad.php:73 views/msad2.php:99
+#: views/openldap.php:100 views/openldap2.php:99 views/passwordmodal.php:16
 #: views/users.php:109
 msgid "Password"
 msgstr "Пароль"
 
-#: Userman.class.php:2919
+#: Userman.class.php:3548
 msgid "Password - plaintext"
 msgstr "Пароль - простой текст"
 
-#: functions.inc/guihooks.php:234
-#: functions.inc/guihooks.php:278
+#: functions.inc/guihooks.php:235 functions.inc/guihooks.php:279
 msgid "Password For New User"
 msgstr "Пароль для нового пользователя"
 
-#: Userman.class.php:1711
-#: Userman.class.php:1745
+#: views/general.php:159
+msgid "Password Length"
+msgstr ""
+
+#: views/general.php:151
+msgid "Password Policies"
+msgstr ""
+
+#: Userman.class.php:2086 Userman.class.php:2120
 msgid "Password can not be blank"
 msgstr "Пароль не может быть пустым"
 
-#: assets/js/userman.js:196
-#: assets/js/userman.js:218
+#: Userman.class.php:202
+#, php-format
+msgid "Password should contain minimum %d %s character(s), detected = %d"
+msgstr ""
+
+#: Userman.class.php:229
+#, php-format
+msgid "Password should have minimum %d characters, detected = %d"
+msgstr ""
+
+#: Userman.class.php:311
+#, php-format
+msgid "Password should have minimum %s value of %d, detected = %d"
+msgstr ""
+
+#: assets/js/userman.js:240 assets/js/userman.js:262
 msgid "Please fill all missing fields"
 msgstr ""
 
-#: functions.inc/guihooks.php:233
-#: functions.inc/guihooks.php:277
+#: assets/js/userman.js:57
+msgid "Please select a user to import the settings !"
+msgstr ""
+
+#: functions.inc/guihooks.php:234 functions.inc/guihooks.php:278
 msgid "Please select a valid username for New User Creation"
 msgstr ""
 
-#: Userman.class.php:3002
-#: Userman.class.php:3085
+#: Userman.class.php:3659 Userman.class.php:3747
 msgid "Please set a default directory in User Manager"
 msgstr "Пожалуйста установите каталог по умолчанию в Менеджере пользователей"
 
-#: views/msad.php:29
-#: views/msad2.php:55
-#: views/openldap.php:29
+#: views/msad.php:29 views/msad2.php:55 views/openldap.php:29
 #: views/openldap2.php:55
 msgid "Port"
 msgstr "Порт"
 
-#: Userman.class.php:1940
+#: Userman.class.php:2525
 msgid "Previous Groupname can not be blank"
 msgstr "Предыдущее имя группы не может быть пустым"
 
-#: Userman.class.php:1906
+#: Userman.class.php:2475
 msgid "Previous Username can not be blank"
 msgstr "Предыдущее имя пользователя не может быть пустым"
 
-#: Userman.class.php:2923
+#: Userman.class.php:3552
 msgid "Primary Extension"
 msgstr "Основной внутренний номер"
 
-#: views/users.php:133
+#: views/users.php:137
 msgid "Primary Group"
 msgstr "Основная группа"
 
-#: Userman.class.php:2924
-#: views/users.php:195
+#: Userman.class.php:3553 views/users.php:199
 msgid "Primary Linked Extension"
 msgstr "Основной связанный внутренний номер"
 
-#: views/welcome.php:91
+#: views/welcome.php:92
 msgid "Priority"
 msgstr "Приоритет"
+
+#: Restore.php:38
+msgid "Processing Legacy Userman tables"
+msgstr ""
+
+#: views/general.php:364
+msgid "Punctuation"
+msgstr ""
+
+#: Userman.class.php:805
+msgid "Rebuild Widgets"
+msgstr ""
 
 #: functions.inc/auth/modules/Voicemail.php:98
 #, php-format
 msgid "Removed Voicemail User %s"
 msgstr "Удален пользователь голосовой почты %s"
 
-#: Userman.class.php:570
+#: Userman.class.php:829
 msgid "Reset"
 msgstr "Сброс"
 
@@ -992,53 +1064,61 @@ msgid ""
 "within this range."
 msgstr ""
 
-#: views/users.php:704
+#: views/users.php:708
 msgid ""
 "Restrict this user's view to only Extensions, Ring Groups, and Queues within "
 "this range."
 msgstr ""
 
-#: Userman.class.php:502
+#: Userman.class.php:713
 msgid "Saved"
 msgstr "Сохранено"
 
-#: views/msad2.php:7
-#: views/openldap2.php:7
+#: views/msad2.php:7 views/openldap2.php:7
 msgid "Secure Connection Type"
 msgstr "Тип безопасного соединения"
 
-#: functions.inc/guihooks.php:223
-#: functions.inc/guihooks.php:228
-#: functions.inc/guihooks.php:275
+#: views/welcome.php:35
+msgid "Select Directory to enable 'Add' Button"
+msgstr ""
+
+#: views/welcome.php:75
+msgid "Select Directory to enable 'Delete' Button"
+msgstr ""
+
+#: functions.inc/guihooks.php:224 functions.inc/guihooks.php:229
+#: functions.inc/guihooks.php:276
 msgid "Select User Directory:"
 msgstr "Выберите каталог пользователя:"
+
+#: views/ucptemplates.php:107
+msgid "Select a User"
+msgstr ""
 
 #: views/groups.php:386
 msgid "Select a landing page that will be used by default."
 msgstr ""
 
-#: views/users.php:762
+#: views/users.php:766
 msgid ""
 "Select a landing page that will be used by default.This settings will be "
 "overridden by Group setting if Allow PBXact Administration Login set to "
 "Inherit."
 msgstr ""
 
-#: functions.inc/guihooks.php:223
-#: functions.inc/guihooks.php:228
-#: functions.inc/guihooks.php:275
+#: functions.inc/guihooks.php:224 functions.inc/guihooks.php:229
+#: functions.inc/guihooks.php:276
 msgid "Select a user directory"
 msgstr "Выберите каталог пользователя"
 
-#: functions.inc/guihooks.php:224
-#: functions.inc/guihooks.php:229
+#: functions.inc/guihooks.php:225 functions.inc/guihooks.php:230
 msgid ""
 "Select a user that this extension should be linked to in User Manager, else "
 "select Create New User to have User Manager autogenerate a new user that "
 "will be linked to this extension"
 msgstr ""
 
-#: functions.inc/guihooks.php:276
+#: functions.inc/guihooks.php:277
 msgid ""
 "Select a user that this extension should be linked to in User Manager, else "
 "select None to have no association to a user"
@@ -1048,7 +1128,7 @@ msgstr ""
 msgid "Select the Admin Sections this group should have access to."
 msgstr ""
 
-#: views/users.php:733
+#: views/users.php:737
 msgid ""
 "Select the Admin Sections this user should have access to,This settings will "
 "be overridden by Group setting if Allow PBXact Administration Login set to "
@@ -1059,7 +1139,7 @@ msgstr ""
 msgid "Select which groups new users are added to when they are created"
 msgstr ""
 
-#: views/welcome.php:41
+#: views/welcome.php:42
 msgid "Send Email"
 msgstr "Отправить письмо"
 
@@ -1075,7 +1155,7 @@ msgstr "Отправить письмо при создании нового в�
 msgid "Set Password"
 msgstr "Задать пароль"
 
-#: Userman.class.php:2756
+#: Userman.class.php:3381
 msgid "Set by your administrator"
 msgstr ""
 
@@ -1083,18 +1163,20 @@ msgstr ""
 msgid "Settings"
 msgstr "Настройки"
 
-#: views/msad.php:161
-#: views/msad2.php:165
-#: views/openldap.php:232
+#: views/general.php:323
+msgid "Special"
+msgstr ""
+
+#: views/msad.php:161 views/msad2.php:165 views/openldap.php:232
 #: views/openldap2.php:143
 msgid "Status"
 msgstr "Состояние"
 
-#: Userman.class.php:558
+#: Userman.class.php:817
 msgid "Submit"
 msgstr "Принять"
 
-#: Userman.class.php:552
+#: Userman.class.php:811
 msgid "Submit & Send Email to User"
 msgstr "Принять и отправить e-mail пользователю"
 
@@ -1109,6 +1191,41 @@ msgstr ""
 #: Console/Userman.class.php:21
 msgid "Syncronize all directories"
 msgstr "Синхронизировать все каталоги"
+
+#: views/ucptemplates.php:47
+msgid "Template Description"
+msgstr ""
+
+#: Userman.class.php:4035
+msgid "Template Does Not Exist"
+msgstr ""
+
+#: Userman.class.php:3592 Userman.class.php:3593 views/ucptemplates.php:25
+#: views/welcome.php:153
+msgid "Template Name"
+msgstr ""
+
+#: assets/js/userman.js:53
+msgid "Template Name can not be blank!"
+msgstr ""
+
+#: Userman.class.php:4043
+msgid "Template Successfully Deleted"
+msgstr ""
+
+#: Userman.class.php:3816
+msgid "Template already exists"
+msgstr ""
+
+#: views/welcome.php:128
+msgid ""
+"Template rows highlighted yellow have not been rebuilt since changes were "
+"made to the template."
+msgstr ""
+
+#: views/general.php:446
+msgid "Test"
+msgstr ""
 
 #: views/general.php:140
 #, php-format
@@ -1132,11 +1249,11 @@ msgstr ""
 msgid "The Active Directory secure connection type"
 msgstr ""
 
-#: assets/js/userman.js:456
+#: assets/js/userman.js:517
 msgid "The Browser Language could not be determined"
 msgstr ""
 
-#: assets/js/userman.js:476
+#: assets/js/userman.js:537
 msgid "The Browser Timezone could not be determined"
 msgstr ""
 
@@ -1145,18 +1262,15 @@ msgid ""
 "The From: field for emails when using the user management email feature."
 msgstr ""
 
-#: views/msad2.php:745
-#: views/openldap2.php:699
+#: views/msad2.php:745 views/openldap2.php:699
 msgid "The LDAP user object class type to use when loading groups."
 msgstr ""
 
-#: views/msad2.php:344
-#: views/openldap2.php:322
+#: views/msad2.php:344 views/openldap2.php:322
 msgid "The LDAP user object class type to use when loading users."
 msgstr ""
 
-#: views/openldap.php:200
-#: views/openldap2.php:133
+#: views/openldap.php:200 views/openldap2.php:133
 msgid "The OpenLDAP Base-DN. Usually in the format of DC=example,DC=com"
 msgstr ""
 
@@ -1181,13 +1295,11 @@ msgstr ""
 msgid "The OpenLDAP host(s), comma/space separated"
 msgstr ""
 
-#: views/openldap.php:112
-#: views/openldap2.php:111
+#: views/openldap.php:112 views/openldap2.php:111
 msgid "The OpenLDAP password"
 msgstr ""
 
-#: views/openldap.php:41
-#: views/openldap2.php:67
+#: views/openldap.php:41 views/openldap2.php:67
 msgid "The OpenLDAP port"
 msgstr ""
 
@@ -1195,16 +1307,15 @@ msgstr ""
 msgid "The OpenLDAP secure connection type"
 msgstr ""
 
-#: views/openldap.php:90
-#: views/openldap2.php:89
+#: views/openldap.php:90 views/openldap2.php:89
 msgid "The OpenLDAP username"
 msgstr ""
 
-#: assets/js/userman.js:466
+#: assets/js/userman.js:527
 msgid "The PBX Language is not set"
 msgstr ""
 
-#: assets/js/userman.js:486
+#: assets/js/userman.js:547
 msgid "The PBX Timezone is not set"
 msgstr ""
 
@@ -1212,8 +1323,15 @@ msgstr ""
 msgid "The RDN to use when loading the user username (eg. cn)."
 msgstr ""
 
-#: views/msad.php:107
-#: views/msad2.php:133
+#: views/ucptemplates.php:59
+msgid "The Template description"
+msgstr ""
+
+#: views/ucptemplates.php:37
+msgid "The Template name"
+msgstr ""
+
+#: views/msad.php:107 views/msad2.php:133
 msgid "The active directory domain"
 msgstr ""
 
@@ -1225,104 +1343,84 @@ msgstr ""
 msgid "The active directory host(s), comma/space separated"
 msgstr ""
 
-#: views/msad.php:85
-#: views/msad2.php:111
+#: views/msad.php:85 views/msad2.php:111
 msgid "The active directory password"
 msgstr ""
 
-#: views/msad.php:41
-#: views/msad2.php:67
+#: views/msad.php:41 views/msad2.php:67
 msgid "The active directory port"
 msgstr ""
 
-#: views/msad.php:63
-#: views/msad2.php:89
+#: views/msad.php:63 views/msad2.php:89
 msgid "The active directory username"
 msgstr ""
 
-#: views/msad2.php:297
-#: views/openldap2.php:275
+#: views/msad2.php:297 views/openldap2.php:275
 msgid ""
 "The attribute field to use for tracking user identity across object renames."
 msgstr ""
 
-#: views/msad2.php:388
-#: views/openldap2.php:366
+#: views/msad2.php:388 views/openldap2.php:366
 msgid "The attribute field to use on the user object (eg. cn, sAMAccountName)"
 msgstr ""
 
-#: views/msad2.php:789
-#: views/openldap2.php:743
+#: views/msad2.php:789 views/openldap2.php:743
 msgid "The attribute field to use when loading the group members."
 msgstr ""
 
-#: views/msad2.php:275
-#: views/openldap2.php:253
+#: views/msad2.php:275 views/openldap2.php:253
 msgid "The attribute field to use when loading the object description."
 msgstr ""
 
-#: views/msad2.php:253
-#: views/openldap2.php:231
+#: views/msad2.php:253 views/openldap2.php:231
 msgid "The attribute field to use when loading the object's common name."
 msgstr ""
 
-#: views/msad2.php:654
-#: views/openldap2.php:608
+#: views/msad2.php:654 views/openldap2.php:608
 msgid "The attribute field to use when loading the user cell phone."
 msgstr ""
 
-#: views/msad2.php:566
-#: views/openldap2.php:520
+#: views/msad2.php:566 views/openldap2.php:520
 msgid "The attribute field to use when loading the user company."
 msgstr ""
 
-#: views/msad2.php:588
-#: views/openldap2.php:542
+#: views/msad2.php:588 views/openldap2.php:542
 msgid "The attribute field to use when loading the user department."
 msgstr ""
 
-#: views/msad2.php:522
-#: views/openldap2.php:476
+#: views/msad2.php:522 views/openldap2.php:476
 msgid "The attribute field to use when loading the user email."
 msgstr ""
 
-#: views/msad2.php:676
-#: views/openldap2.php:630
+#: views/msad2.php:676 views/openldap2.php:630
 msgid "The attribute field to use when loading the user fax."
 msgstr ""
 
-#: views/msad2.php:434
-#: views/openldap2.php:388
+#: views/msad2.php:434 views/openldap2.php:388
 msgid "The attribute field to use when loading the user first name."
 msgstr ""
 
-#: views/msad2.php:478
-#: views/openldap2.php:432
+#: views/msad2.php:478 views/openldap2.php:432
 msgid "The attribute field to use when loading the user full name."
 msgstr ""
 
-#: views/msad2.php:610
-#: views/openldap2.php:564
+#: views/msad2.php:610 views/openldap2.php:564
 msgid "The attribute field to use when loading the user home phone."
 msgstr ""
 
-#: views/msad2.php:456
-#: views/openldap2.php:410
+#: views/msad2.php:456 views/openldap2.php:410
 msgid "The attribute field to use when loading the user last name."
 msgstr ""
 
-#: views/msad2.php:544
-#: views/openldap2.php:498
+#: views/msad2.php:544 views/openldap2.php:498
 msgid "The attribute field to use when loading the user title."
 msgstr ""
 
-#: views/msad2.php:632
-#: views/openldap2.php:586
+#: views/msad2.php:632 views/openldap2.php:586
 msgid "The attribute field to use when loading the user work phone."
 msgstr ""
 
-#: views/msad2.php:500
-#: views/openldap2.php:454
+#: views/msad2.php:500 views/openldap2.php:454
 msgid "The attribute field to use when loading the users groups."
 msgstr ""
 
@@ -1331,18 +1429,15 @@ msgstr ""
 msgid "The authentication engine to use"
 msgstr ""
 
-#: views/msad.php:129
-#: views/msad2.php:155
+#: views/msad.php:129 views/msad2.php:155
 msgid "The base DN. Usually in the format of CN=Users,DC=domain,DC=local"
 msgstr ""
 
-#: views/msad.php:173
-#: views/msad2.php:177
+#: views/msad.php:173 views/msad2.php:177
 msgid "The connection status of the Active Directory Server"
 msgstr ""
 
-#: views/openldap.php:244
-#: views/openldap2.php:155
+#: views/openldap.php:244 views/openldap2.php:155
 msgid "The connection status of the OpenLDAP Server"
 msgstr ""
 
@@ -1360,23 +1455,21 @@ msgstr ""
 msgid "The directory name"
 msgstr "Имя каталога"
 
-#: views/users.php:448
+#: views/users.php:452
 msgid ""
 "The email address to associate with this user. Multiple email address need "
 "to be separated with a comma."
 msgstr ""
 
-#: views/msad2.php:767
-#: views/openldap2.php:721
+#: views/msad2.php:767 views/openldap2.php:721
 msgid "The filter to use when searching group objects."
 msgstr ""
 
-#: views/msad2.php:366
-#: views/openldap2.php:344
+#: views/msad2.php:366 views/openldap2.php:344
 msgid "The filter to use when searching user objects."
 msgstr ""
 
-#: views/users.php:576
+#: views/users.php:580
 msgid ""
 "The format dates and times should display in. The default of \"llll\" is "
 "locale aware. If left blank this will use the group/system format. For more "
@@ -1390,7 +1483,7 @@ msgid ""
 "formats please see: http://momentjs.com/docs/#/displaying/format/"
 msgstr ""
 
-#: views/users.php:626
+#: views/users.php:630
 msgid ""
 "The format dates should display in. The default of \"l\" is locale aware. If "
 "left blank this will use the group/system format. For more formats please "
@@ -1404,7 +1497,7 @@ msgid ""
 "http://momentjs.com/docs/#/displaying/format/"
 msgstr ""
 
-#: views/users.php:601
+#: views/users.php:605
 msgid ""
 "The format times should display in. The default of \"LT\" is locale aware. "
 "If left blank this will use the group/system format. For more formats please "
@@ -1425,43 +1518,43 @@ msgid ""
 "used"
 msgstr ""
 
-#: views/users.php:472
+#: views/users.php:476
 msgid "The user's cell (mobile) phone number."
 msgstr "Сотовый (мобильный) номер телефона пользователя."
 
-#: views/users.php:336
+#: views/users.php:340
 msgid "The user's company."
 msgstr "Компания пользователя."
 
-#: views/users.php:360
+#: views/users.php:364
 msgid "The user's department."
 msgstr "Отдел пользователя."
 
-#: views/users.php:544
+#: views/users.php:548
 msgid "The user's fax phone number."
 msgstr "Номер факса пользователя."
 
-#: views/users.php:240
+#: views/users.php:244
 msgid "The user's first name."
 msgstr "Имя пользователя."
 
-#: views/users.php:520
+#: views/users.php:524
 msgid "The user's home phone number."
 msgstr "Домашний номер телефона пользователя."
 
-#: views/users.php:264
+#: views/users.php:268
 msgid "The user's last name."
 msgstr "Фамилия пользователя."
 
-#: views/users.php:121
+#: views/users.php:123
 msgid "The user's password."
 msgstr "Пароль пользователя."
 
-#: views/users.php:312
+#: views/users.php:316
 msgid "The user's title."
 msgstr "Название пользователя."
 
-#: views/users.php:496
+#: views/users.php:500
 msgid "The user's work phone number."
 msgstr ""
 
@@ -1469,8 +1562,21 @@ msgstr ""
 msgid "The voicemail context to get users from"
 msgstr ""
 
-#: Userman.class.php:303
+#: views/templatemembers.php:17
+msgid ""
+"There is NO members associated with this template. Please use Groups->UCP-"
+">General or User->UCP->General To associate this template to Users ."
+msgstr ""
+
+#: Userman.class.php:477
 msgid "There was an error saving the configuration"
+msgstr ""
+
+#: Userman.class.php:319
+#, php-format
+msgid ""
+"These requirements can be adjusted in the Authentication Settings tab, found "
+"in User Manager's Settings."
 msgstr ""
 
 #: userman.i18n.php:8
@@ -1480,18 +1586,17 @@ msgid ""
 "purposes."
 msgstr ""
 
-#: Userman.class.php:3078
-#: Userman.class.php:3142
+#: Userman.class.php:3740 Userman.class.php:3804
 msgid "This authentication driver does not allow importing"
 msgstr ""
 
-#: Userman.class.php:1460
+#: Userman.class.php:1835
 msgid ""
 "This group was created on install and is automatically assigned to new "
 "users. This can be disabled in User Manager Settings"
 msgstr ""
 
-#: views/users.php:211
+#: views/users.php:215
 msgid ""
 "This is the extension this user is linked to from the Extensions page. A "
 "single user can only be linked to one extension, and one extension can only "
@@ -1510,54 +1615,70 @@ msgid ""
 "ignored."
 msgstr ""
 
-#: views/msad2.php:723
-#: views/openldap2.php:677
+#: views/msad2.php:723 views/openldap2.php:677
 msgid ""
 "This value is used in addition to the base DN when searching and loading "
 "groups. An example is ou=Groups. If no value is supplied, the subtree search "
 "will start from the base DN."
 msgstr ""
 
-#: views/msad2.php:322
-#: views/openldap2.php:300
+#: views/msad2.php:322 views/openldap2.php:300
 msgid ""
 "This value is used in addition to the base DN when searching and loading "
 "users. An example is ou=Users. If no value is supplied, the subtree search "
 "will start from the base DN."
 msgstr ""
 
-#: views/groups.php:218
-#: views/users.php:586
+#: views/ucptemplates.php:130
+msgid ""
+"This will create a empty template now , you need to click on `eye` button "
+"once you submit this page, That will take you to UCP login where you can add "
+"template widgets "
+msgstr ""
+
+#: views/general.php:405
+msgid "Threshold Weak Password"
+msgstr ""
+
+#: views/groups.php:218 views/users.php:590
 msgid "Time Format"
 msgstr "Формат времени"
 
-#: views/groups.php:137
-#: views/users.php:404
+#: views/groups.php:137 views/users.php:408
 msgid "Timezone"
 msgstr "Часовой пояс"
 
-#: views/groups.php:157
-#: views/users.php:424
+#: views/groups.php:157 views/users.php:428
 msgid "Timezone for this user"
 msgstr "Часовой пояс для этого пользователя"
 
-#: views/users.php:300
+#: views/users.php:304
 msgid "Title"
 msgstr "Заголовок"
 
-#: assets/js/userman.js:392
+#: assets/js/userman.js:453
 msgid "True"
 msgstr "Да"
 
-#: views/welcome.php:115
+#: Userman.class.php:3610 views/welcome.php:116
 msgid "Type"
 msgstr "Тип"
 
-#: Userman.class.php:1903
+#: views/welcome.php:126
+msgid ""
+"UCP Template association with users is done through Groups->UCP->General Or "
+"users->UCP->General. For More details "
+msgstr ""
+
+#: Userman.class.php:3525 Userman.class.php:3526 views/welcome.php:29
+msgid "UCP Templates"
+msgstr ""
+
+#: Userman.class.php:2472
 msgid "UID was not numeric"
 msgstr "UID не числовой"
 
-#: Userman.class.php:1462
+#: Userman.class.php:1837
 msgid "Unable to create default group"
 msgstr ""
 
@@ -1569,8 +1690,7 @@ msgstr ""
 msgid "Unable to link user to an invalid directory"
 msgstr ""
 
-#: views/msad2.php:285
-#: views/openldap2.php:263
+#: views/msad2.php:285 views/openldap2.php:263
 msgid "Unique identifier attribute"
 msgstr ""
 
@@ -1578,8 +1698,7 @@ msgstr ""
 msgid "Update Group is not defined"
 msgstr ""
 
-#: views/passwordmodal.php:30
-#: assets/js/userman.js:319
+#: views/passwordmodal.php:35 assets/js/userman.js:375 assets/js/userman.js:397
 msgid "Update Password"
 msgstr ""
 
@@ -1601,32 +1720,31 @@ msgstr ""
 msgid "Updated Voicemail User %s"
 msgstr ""
 
-#: assets/js/userman.js:323
+#: assets/js/userman.js:379
 msgid "Updating"
 msgstr "Обновление"
 
-#: views/groups.php:112
-#: views/users.php:379
+#: views/general.php:200
+msgid "Uppercase"
+msgstr ""
+
+#: views/groups.php:112 views/users.php:383
 msgid "Use Browser Language"
 msgstr ""
 
-#: views/groups.php:144
-#: views/users.php:411
+#: views/groups.php:144 views/users.php:415
 msgid "Use Browser Timezone"
 msgstr ""
 
-#: functions.inc/guihooks.php:233
-#: functions.inc/guihooks.php:277
+#: functions.inc/guihooks.php:234 functions.inc/guihooks.php:278
 msgid "Use Custom Username"
 msgstr ""
 
-#: views/groups.php:115
-#: views/users.php:382
+#: views/groups.php:115 views/users.php:386
 msgid "Use PBX Language"
 msgstr "Использовать язык АТС"
 
-#: views/groups.php:147
-#: views/users.php:414
+#: views/groups.php:147 views/users.php:418
 msgid "Use PBX Timezone"
 msgstr "Использовать часовой пояс АТС"
 
@@ -1638,8 +1756,7 @@ msgstr "Использовать язык системы"
 msgid "Use System Timezone"
 msgstr "Использовать системный часовой пояс"
 
-#: views/openldap.php:51
-#: views/openldap.php:68
+#: views/openldap.php:51 views/openldap.php:68
 msgid "Use TLS"
 msgstr "Использовать TLS"
 
@@ -1654,24 +1771,19 @@ msgstr "Пользователь '%s' уже существует"
 msgid "User '%s' Does Not Exist"
 msgstr "Пользователь '%s' не существует"
 
-#: views/msad2.php:642
-#: views/openldap2.php:596
+#: views/msad2.php:642 views/openldap2.php:596
 msgid "User Cell Phone attribute"
 msgstr ""
 
-#: views/msad2.php:554
-#: views/openldap2.php:508
+#: views/msad2.php:554 views/openldap2.php:508
 msgid "User Company attribute"
 msgstr ""
 
-#: views/msad2.php:310
-#: views/openldap.php:166
-#: views/openldap2.php:288
+#: views/msad2.php:310 views/openldap.php:166 views/openldap2.php:288
 msgid "User DN"
 msgstr ""
 
-#: views/msad2.php:576
-#: views/openldap2.php:530
+#: views/msad2.php:576 views/openldap2.php:530
 msgid "User Department attribute"
 msgstr ""
 
@@ -1683,13 +1795,11 @@ msgstr "Сведения о пользователе"
 msgid "User Does Not Exist"
 msgstr "Пользователь не существует"
 
-#: views/msad2.php:664
-#: views/openldap2.php:618
+#: views/msad2.php:664 views/openldap2.php:618
 msgid "User Fax attribute"
 msgstr ""
 
-#: views/msad2.php:598
-#: views/openldap2.php:552
+#: views/msad2.php:598 views/openldap2.php:552
 msgid "User Home Phone attribute"
 msgstr "Атрибут домашнего телефона пользователя"
 
@@ -1697,8 +1807,7 @@ msgstr "Атрибут домашнего телефона пользовате�
 msgid "User Identity"
 msgstr "Идентификация пользователя"
 
-#: userman.i18n.php:4
-#: userman.i18n.php:10
+#: userman.i18n.php:4 userman.i18n.php:10
 msgid "User Management"
 msgstr "Управление пользователями"
 
@@ -1706,14 +1815,11 @@ msgstr "Управление пользователями"
 msgid "User Management Module"
 msgstr "Модуль управления пользователями"
 
-#: Console/Userman.class.php:19
-#: views/welcome.php:6
+#: Console/Userman.class.php:19 views/welcome.php:6
 msgid "User Manager"
 msgstr "Менеджер пользователей"
 
-#: Userman.class.php:2895
-#: Userman.class.php:2896
-#: views/quickCreate.php:36
+#: Userman.class.php:3520 Userman.class.php:3521 views/quickCreate.php:36
 msgid "User Manager Groups"
 msgstr "Группы менеджера пользователей"
 
@@ -1721,13 +1827,11 @@ msgstr "Группы менеджера пользователей"
 msgid "User Manager Settings"
 msgstr "Настройки менеджера пользователей"
 
-#: Userman.class.php:2889
-#: Userman.class.php:2890
+#: Userman.class.php:3514 Userman.class.php:3515
 msgid "User Manager Users"
 msgstr "Пользователи менеджера пользователей"
 
-#: functions.inc/auth/Auth.php:537
-#: functions.inc/auth/modules/Freepbx.php:124
+#: functions.inc/auth/Auth.php:537 functions.inc/auth/modules/Freepbx.php:124
 msgid "User Successfully Added"
 msgstr "Пользователь успешно добавлен"
 
@@ -1739,17 +1843,15 @@ msgstr "Пользователь успешно удален"
 msgid "User Successfully Updated"
 msgstr "Пользователь успешно обновлен"
 
-#: views/msad2.php:532
-#: views/openldap2.php:486
+#: views/msad2.php:532 views/openldap2.php:486
 msgid "User Title attribute"
 msgstr ""
 
-#: views/msad2.php:620
-#: views/openldap2.php:574
+#: views/msad2.php:620 views/openldap2.php:574
 msgid "User Work Phone attribute"
 msgstr ""
 
-#: Userman.class.php:3034
+#: Userman.class.php:3691
 msgid "User already exists"
 msgstr "Пользователь уже существует"
 
@@ -1757,33 +1859,27 @@ msgstr "Пользователь уже существует"
 msgid "User configuration"
 msgstr ""
 
-#: views/msad2.php:466
-#: views/openldap2.php:420
+#: views/msad2.php:466 views/openldap2.php:420
 msgid "User display name attribute"
 msgstr ""
 
-#: views/msad2.php:510
-#: views/openldap2.php:464
+#: views/msad2.php:510 views/openldap2.php:464
 msgid "User email attribute"
 msgstr ""
 
-#: views/msad2.php:686
-#: views/openldap2.php:640
+#: views/msad2.php:686 views/openldap2.php:640
 msgid "User extension Link attribute"
 msgstr ""
 
-#: views/msad2.php:422
-#: views/openldap2.php:376
+#: views/msad2.php:422 views/openldap2.php:376
 msgid "User first name attribute"
 msgstr ""
 
-#: views/msad2.php:488
-#: views/openldap2.php:442
+#: views/msad2.php:488 views/openldap2.php:442
 msgid "User group attribute"
 msgstr "Атрибут группы пользователей"
 
-#: views/msad2.php:444
-#: views/openldap2.php:398
+#: views/msad2.php:444 views/openldap2.php:398
 msgid "User last name attribute"
 msgstr ""
 
@@ -1791,18 +1887,15 @@ msgstr ""
 msgid "User name RDN attribute"
 msgstr ""
 
-#: views/msad2.php:376
-#: views/openldap2.php:354
+#: views/msad2.php:376 views/openldap2.php:354
 msgid "User name attribute"
 msgstr "Атрибуты имени пользователя"
 
-#: views/msad2.php:332
-#: views/openldap2.php:310
+#: views/msad2.php:332 views/openldap2.php:310
 msgid "User object class"
 msgstr "Класс объектов пользователя"
 
-#: views/msad2.php:354
-#: views/openldap2.php:332
+#: views/msad2.php:354 views/openldap2.php:332
 msgid "User object filter"
 msgstr "Фильтр объектов пользователя"
 
@@ -1814,13 +1907,9 @@ msgstr "Фильтр объектов пользователя"
 msgid "User updated"
 msgstr "Пользователь обновлен"
 
-#: functions.inc/guihooks.php:233
-#: functions.inc/guihooks.php:277
-#: views/msad.php:51
-#: views/msad2.php:77
-#: views/openldap.php:78
-#: views/rnav.php:13
-#: views/welcome.php:55
+#: functions.inc/guihooks.php:234 functions.inc/guihooks.php:278
+#: views/msad.php:51 views/msad2.php:77 views/openldap.php:78 views/rnav.php:17
+#: views/welcome.php:56
 msgid "Username"
 msgstr "Имя пользователя"
 
@@ -1828,8 +1917,7 @@ msgstr "Имя пользователя"
 msgid "Username Can Not Be Blank!"
 msgstr "Имя пользователя не может быть пустым!"
 
-#: Userman.class.php:1708
-#: Userman.class.php:1742
+#: Userman.class.php:2083 Userman.class.php:2117
 msgid "Username can not be blank"
 msgstr "Имя пользователя не может быть пустым"
 
@@ -1837,13 +1925,15 @@ msgstr "Имя пользователя не может быть пустым"
 msgid "Username/Password Can Not Be Blank!"
 msgstr "Имя пользователя/пароль не могут быть пустыми!"
 
-#: views/groups.php:168
-#: views/welcome.php:25
+#: views/groups.php:168 views/welcome.php:25
 msgid "Users"
 msgstr "Пользователи"
 
-#: views/groups.php:315
-#: views/users.php:692
+#: Userman.class.php:3606
+msgid "Value"
+msgstr ""
+
+#: views/groups.php:315 views/users.php:696
 msgid "Visible Extension Range"
 msgstr "Видимый диапазон расширений"
 
@@ -1851,7 +1941,7 @@ msgstr "Видимый диапазон расширений"
 msgid "Voicemail is in Read Only Mode. Addition denied"
 msgstr ""
 
-#: Userman.class.php:841
+#: Userman.class.php:1129
 msgid "Warning"
 msgstr "Предупреждение"
 
@@ -1873,9 +1963,7 @@ msgstr ""
 msgid "Which User Manager user this extension will link to"
 msgstr ""
 
-#: views/quickCreate.php:52
-#: views/users.php:149
-#: views/users.php:184
+#: views/quickCreate.php:52 views/users.php:153 views/users.php:188
 msgid "Which groups this user is in"
 msgstr "В какой группе находится этот пользователь"
 
@@ -1883,25 +1971,26 @@ msgstr "В какой группе находится этот пользова�
 msgid "Which users are in this group"
 msgstr "Какие пользователи в этой группе"
 
-#: views/users.php:484
+#: views/users.php:488
 msgid "Work Phone Number"
 msgstr "Рабочий номер телефона"
 
-#: views/directories.php:74
-#: views/general.php:30
-#: views/general.php:59
-#: views/groups.php:270
-#: views/groups.php:295
-#: views/msad2.php:221
-#: views/openldap.php:57
-#: views/openldap2.php:199
-#: views/quickCreate.php:14
-#: views/users.php:643
-#: views/users.php:670
+#: views/directories.php:74 views/general.php:30 views/general.php:59
+#: views/general.php:168 views/general.php:209 views/general.php:250
+#: views/general.php:291 views/general.php:332 views/general.php:373
+#: views/general.php:414 views/groups.php:270 views/groups.php:295
+#: views/msad2.php:221 views/openldap.php:57 views/openldap2.php:199
+#: views/quickCreate.php:14 views/users.php:647 views/users.php:674
 msgid "Yes"
 msgstr "Да"
 
-#: Userman.class.php:841
+#: views/ucptemplates.php:89
+msgid ""
+"You can create a template via copy existing settings from a user Or You can "
+"create the template via help of template creator"
+msgstr ""
+
+#: Userman.class.php:1129
 msgid ""
 "You have no directories enabled. This will affect users ability to use "
 "features that require a login"
@@ -1909,12 +1998,11 @@ msgstr ""
 "У вас нет включенных каталогов. Это повлияет на способность пользователей "
 "использовать функции, требующие входа в систему"
 
-#: Userman.class.php:2801
-#: views/general.php:108
+#: Userman.class.php:3426 views/general.php:108
 msgid "Your %brand% Account"
 msgstr "Ваш аккаунт %brand%"
 
-#: Userman.class.php:3010
+#: Userman.class.php:3668
 msgid "default_extension is required."
 msgstr ""
 
@@ -1926,10 +2014,6 @@ msgstr "каталоги"
 msgid "directory"
 msgstr "каталог"
 
-#: views/welcome.php:74
-msgid "disabled"
-msgstr ""
-
 #: assets/js/userman.js:9
 msgid "group"
 msgstr "группа"
@@ -1938,7 +2022,7 @@ msgstr "группа"
 msgid "group Successfully Added"
 msgstr "группа успешно добавлена"
 
-#: Userman.class.php:3090
+#: Userman.class.php:3752
 msgid "groupname is required."
 msgstr "имя группы обязательно."
 
@@ -1946,18 +2030,49 @@ msgstr "имя группы обязательно."
 msgid "groups"
 msgstr "группы"
 
-#: Userman.class.php:3052
+#: Userman.class.php:3708
 msgid "password is required."
 msgstr "требуется пароль."
+
+#: views/welcome.php:47
+msgid "selected"
+msgstr ""
+
+#: Userman.class.php:3602
+msgid "template_1_key"
+msgstr ""
+
+#: Userman.class.php:3611
+msgid "template_1_type"
+msgstr ""
+
+#: Userman.class.php:3607
+msgid "template_1_val"
+msgstr ""
+
+#: Userman.class.php:3811
+msgid "templatename is required."
+msgstr ""
 
 #: assets/js/userman.js:7
 msgid "user"
 msgstr "пользователь"
 
-#: Userman.class.php:3007
+#: Userman.class.php:3665
 msgid "username is required."
 msgstr "требуется имя пользователя."
 
 #: assets/js/userman.js:8
 msgid "users"
 msgstr "пользователи"
+
+#~ msgid ""
+#~ "%s User Manager is taking the place of several modules which have "
+#~ "attempted to create and manage users separate from Extensions. Modules "
+#~ "such as iSymphony and RestAPI are examples of these type of modules. In "
+#~ "%s 12, the new User Control Panel also uses User Manager."
+#~ msgstr ""
+#~ "Менеджер пользователей %s используется вместо нескольких модулей, которые "
+#~ "создавали пользователей и управляли ими отдельно от внутренних номеров. "
+#~ "Примерами таких модулей являются iSymphony и RestAPI. В %s 12 новая "
+#~ "Панель управления пользователями также использует Менеджер пользователей."
