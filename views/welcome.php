@@ -16,12 +16,12 @@
 						<div class="alert alert-<?php echo $message['type']?>"><?php echo $message['message']?></div>
 					<?php } ?>
 					<div role="tabpanel">
-						<ul class="nav nav-tabs" role="tablist">
-							<li role="presentation" class="active"><a href="#users" aria-controls="users" role="tab" data-toggle="tab"><?php echo _("Users"); ?></a></li>
-							<li role="presentation"><a href="#groups" aria-controls="groups" role="tab" data-toggle="tab"><?php echo _("Groups"); ?></a></li>
-							<li role="presentation"><a href="#directories" aria-controls="directories" role="tab" data-toggle="tab"><?php echo _("Directories"); ?></a></li>
-							<li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab"><?php echo _("Settings"); ?></a></li>
-							<li role="presentation"><a href="#ucptemplates" aria-controls="settings" role="tab" data-toggle="tab"><?php echo _("UCP Templates"); ?></a></li>
+						<ul class="nav nav-tabs pb-0" role="tablist">
+							<li role="presentation"><a href="#users" aria-controls="users" role="tab" class="nav-link active" data-toggle="tab"><?php echo _("Users"); ?></a></li>
+							<li role="presentation"><a href="#groups" aria-controls="groups" role="tab" class="nav-link" data-toggle="tab"><?php echo _("Groups"); ?></a></li>
+							<li role="presentation"><a href="#directories" aria-controls="directories" class="nav-link" role="tab" data-toggle="tab"><?php echo _("Directories"); ?></a></li>
+							<li role="presentation"><a href="#settings" aria-controls="settings" class="nav-link" role="tab" data-toggle="tab"><?php echo _("Settings"); ?></a></li>
+							<li role="presentation"><a href="#ucptemplates" aria-controls="settings" class="nav-link" role="tab" data-toggle="tab"><?php echo _("UCP Templates"); ?></a></li>
 						</ul>
 						<div class="tab-content">
 							<div role="tabpanel" id="users" class="tab-pane display active">

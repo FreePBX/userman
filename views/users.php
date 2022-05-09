@@ -22,20 +22,20 @@ echo $usage_html;
 				<div class="display no-border">
 					<div role="tabpanel">
 						<div class="nav-container">
-							<div class="scroller scroller-left"><i class="glyphicon glyphicon-chevron-left"></i></div>
-							<div class="scroller scroller-right"><i class="glyphicon glyphicon-chevron-right"></i></div>
+							<div class="scroller scroller-left"><i class="fa fa-chevron-left"></i></div>
+							<div class="scroller scroller-right"><i class="fa fa-chevron-right"></i></div>
 							<div class="wrapper">
-								<ul class="nav nav-tabs list" role="tablist">
-									<li role="presentation" class="active"><a href="#usermanlogin" aria-controls="usermanlogin" role="tab" data-toggle="tab"><?php echo _("Login Details")?></a></li>
-									<li role="presentation"><a href="#usermanuser" aria-controls="usermanuser" role="tab" data-toggle="tab"><?php echo _("User Details")?></a></li>
-									<li role="presentation"><a href="#advanced" aria-controls="usermanlogin" role="tab" data-toggle="tab"><?php echo _("Advanced")?></a></li>
+								<ul class="nav nav-tabs list pb-0 mt-0" role="tablist">
+									<li role="presentation"><a href="#usermanlogin" aria-controls="usermanlogin" role="tab" class="nav-link active" data-toggle="tab"><?php echo _("Login Details")?></a></li>
+									<li role="presentation"><a href="#usermanuser" aria-controls="usermanuser" role="tab" class="nav-link" data-toggle="tab"><?php echo _("User Details")?></a></li>
+									<li role="presentation"><a href="#advanced" aria-controls="usermanlogin" role="tab" class="nav-link" data-toggle="tab"><?php echo _("Advanced")?></a></li>
 									<?php if(\FreePBX::Config()->get('AUTHTYPE') == "usermanager") { ?>
-										<li role="presentation"><a href="#pbx" aria-controls="pbx" role="tab" data-toggle="tab"><?php echo sprintf(_("%s Administration GUI"),$brand)?></a></li>
+										<li role="presentation"><a href="#pbx" aria-controls="pbx" role="tab" class="nav-link" data-toggle="tab"><?php echo sprintf(_("%s Administration GUI"),$brand)?></a></li>
 									<?php } ?>
 									<?php foreach($sections as $section) { ?>
-										<li role="presentation"><a href="#usermanhook<?php echo $section['rawname']?>" aria-controls="usermanhook<?php echo $section['rawname']?>" role="tab" data-toggle="tab"><?php echo $section['title']?></a></li>
+										<li role="presentation"><a href="#usermanhook<?php echo $section['rawname']?>" aria-controls="usermanhook<?php echo $section['rawname']?>" role="tab" class="nav-link" data-toggle="tab"><?php echo $section['title']?></a></li>
 									<?php } ?>
-									<li role="presentation" class="<?php echo empty($hookHtml)?'hidden':''?>"><a href="#usermanother" aria-controls="usermanother" role="tab" data-toggle="tab"><?php echo _("Other Settings")?></a></li>
+									<li role="presentation" class="<?php echo empty($hookHtml)?'d-none':''?>"><a href="#usermanother" aria-controls="usermanother" role="tab" class="nav-link" data-toggle="tab"><?php echo _("Other Settings")?></a></li>
 								</ul>
 							</div>
 						</div>
@@ -54,8 +54,8 @@ echo $usage_html;
 						<div class="element-container">
 							<div class="row">
 								<div class="col-md-12">
-									<div class="row">
-										<div class="form-group">
+									<div class="">
+										<div class="form-group row">
 											<div class="col-md-3">
 												<label class="control-label" for="username"><?php echo _("Login Name")?></label>
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="username"></i>
@@ -78,8 +78,8 @@ echo $usage_html;
 						<div class="element-container">
 							<div class="row">
 								<div class="col-md-12">
-									<div class="row">
-										<div class="form-group">
+									<div class="">
+										<div class="form-group row">
 											<div class="col-md-3">
 												<label class="control-label" for="description"><?php echo _("Description")?></label>
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="description"></i>
@@ -103,8 +103,8 @@ echo $usage_html;
 							<div class="element-container">
 								<div class="row">
 									<div class="col-md-12">
-										<div class="row">
-											<div class="form-group">
+										<div class="">
+											<div class="form-group row">
 												<div class="col-md-3">
 													<label class="control-label" for="password"><?php echo _("Password")?></label>
 													<i class="fa fa-question-circle fpbx-help-icon" id="pwd-templates-show" data-for="password"></i>
@@ -131,8 +131,8 @@ echo $usage_html;
 						<div class="element-container">
 							<div class="row">
 								<div class="col-md-12">
-									<div class="row">
-										<div class="form-group">
+									<div class="">
+										<div class="form-group row">
 											<div class="col-md-3">
 												<label class="control-label" for="group_primary"><?php echo _('Primary Group')?></label>
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="group_users"></i>
@@ -158,8 +158,8 @@ echo $usage_html;
 						<div class="element-container">
 							<div class="row">
 								<div class="col-md-12">
-									<div class="row">
-										<div class="form-group">
+									<div class="">
+										<div class="form-group row">
 											<div class="col-md-3">
 												<label class="control-label" for="group_users"><?php echo _('Groups')?></label>
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="group_users"></i>
@@ -193,8 +193,8 @@ echo $usage_html;
 						<div class="element-container">
 							<div class="row">
 								<div class="col-md-12">
-									<div class="row">
-										<div class="form-group">
+									<div class="">
+										<div class="form-group row">
 											<div class="col-md-3">
 												<label class="control-label" for="defaultextension"><?php echo _("Primary Linked Extension")?></label>
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="defaultextension"></i>
@@ -226,8 +226,8 @@ echo $usage_html;
 						<div class="element-container">
 							<div class="row">
 								<div class="col-md-12">
-									<div class="row">
-										<div class="form-group">
+									<div class="">
+										<div class="form-group row">
 											<div class="col-md-3">
 												<label class="control-label" for="fname"><?php echo _("First Name")?></label>
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="fname"></i>
@@ -250,8 +250,8 @@ echo $usage_html;
 						<div class="element-container">
 							<div class="row">
 								<div class="col-md-12">
-									<div class="row">
-										<div class="form-group">
+									<div class="">
+										<div class="form-group row">
 											<div class="col-md-3">
 												<label class="control-label" for="lname"><?php echo _("Last Name")?></label>
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="lname"></i>
@@ -274,8 +274,8 @@ echo $usage_html;
 						<div class="element-container">
 							<div class="row">
 								<div class="col-md-12">
-									<div class="row">
-										<div class="form-group">
+									<div class="">
+										<div class="form-group row">
 											<div class="col-md-3">
 												<label class="control-label" for="displayname"><?php echo _("Display Name")?></label>
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="displayname"></i>
@@ -298,8 +298,8 @@ echo $usage_html;
 						<div class="element-container">
 							<div class="row">
 								<div class="col-md-12">
-									<div class="row">
-										<div class="form-group">
+									<div class="">
+										<div class="form-group row">
 											<div class="col-md-3">
 												<label class="control-label" for="title"><?php echo _("Title")?></label>
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="title"></i>
@@ -322,8 +322,8 @@ echo $usage_html;
 						<div class="element-container">
 							<div class="row">
 								<div class="col-md-12">
-									<div class="row">
-										<div class="form-group">
+									<div class="">
+										<div class="form-group row">
 											<div class="col-md-3">
 												<label class="control-label" for="company"><?php echo _("Company")?></label>
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="company"></i>
@@ -346,8 +346,8 @@ echo $usage_html;
 						<div class="element-container">
 							<div class="row">
 								<div class="col-md-12">
-									<div class="row">
-										<div class="form-group">
+									<div class="">
+										<div class="form-group row">
 											<div class="col-md-3">
 												<label class="control-label" for="department"><?php echo _("Department")?></label>
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="department"></i>
@@ -370,21 +370,25 @@ echo $usage_html;
 						<div class="element-container">
 							<div class="row">
 								<div class="col-md-12">
-									<div class="row">
-										<div class="form-group">
+									<div class="">
+										<div class="form-group row">
 											<div class="col-md-3">
 												<label class="control-label" for="language"><?php echo _("Language") ?></label>
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="language"></i>
 											</div>
 											<div class="col-md-9">
 												<div class="input-group">
-													<?php echo FreePBX::View()->languageDrawSelect('language',$user['language'],_("Inherit")); ?>
-													<span class="input-group-btn">
-														<a href="#" class="btn btn-default" id="browserlang"><?php echo _("Use Browser Language")?></a>
-													</span>
-													<span class="input-group-btn">
-														<a href="#" class="btn btn-default" id="systemlang"><?php echo _("Use PBX Language")?></a>
-													</span>
+													<div>
+														<?php echo FreePBX::View()->languageDrawSelect('language',$user['language'],_("Inherit")); ?>
+													</div>
+													<div>
+														<!--<span class="input-group-btn">-->
+															<a href="#" class="btn btn-default" id="browserlang"><?php echo _("Use Browser Language")?></a>
+														<!--</span>-->
+														<!--<span class="input-group-btn">-->
+															<a href="#" class="btn btn-default" id="systemlang"><?php echo _("Use PBX Language")?></a>
+														<!--</span>-->
+													</div>
 												</div>
 											</div>
 										</div>
@@ -402,21 +406,25 @@ echo $usage_html;
 						<div class="element-container">
 							<div class="row">
 								<div class="col-md-12">
-									<div class="row">
-										<div class="form-group">
+									<div class="">
+										<div class="form-group row">
 											<div class="col-md-3">
 												<label class="control-label" for="timezone"><?php echo _("Timezone") ?></label>
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="timezone"></i>
 											</div>
 											<div class="col-md-9">
 												<div class="input-group">
-													<?php echo FreePBX::View()->timezoneDrawSelect('timezone',$user['timezone'],_("Inherit")); ?>
-													<span class="input-group-btn">
-														<a href="#" class="btn btn-default" id="browsertz"><?php echo _("Use Browser Timezone")?></a>
-													</span>
-													<span class="input-group-btn">
-														<a href="#" class="btn btn-default" id="systemtz"><?php echo _("Use PBX Timezone")?></a>
-													</span>
+													<div>
+														<?php echo FreePBX::View()->timezoneDrawSelect('timezone',$user['timezone'],_("Inherit")); ?>
+													</div>
+													<div>
+														<!--<span class="input-group-btn">-->
+															<a href="#" class="btn btn-default" id="browsertz"><?php echo _("Use Browser Timezone")?></a>
+														<!--</span>-->
+														<!--<span class="input-group-btn">-->
+															<a href="#" class="btn btn-default" id="systemtz"><?php echo _("Use PBX Timezone")?></a>
+														<!--</span>-->
+													</div>
 												</div>
 											</div>
 										</div>
@@ -434,8 +442,8 @@ echo $usage_html;
 						<div class="element-container">
 							<div class="row">
 								<div class="col-md-12">
-									<div class="row">
-										<div class="form-group">
+									<div class="">
+										<div class="form-group row">
 											<div class="col-md-3">
 												<label class="control-label" for="email"><?php echo _("Email Address")?></label>
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="email"></i>
@@ -458,8 +466,8 @@ echo $usage_html;
 						<div class="element-container">
 							<div class="row">
 								<div class="col-md-12">
-									<div class="row">
-										<div class="form-group">
+									<div class="">
+										<div class="form-group row">
 											<div class="col-md-3">
 												<label class="control-label" for="cell"><?php echo _("Cell Phone Number")?></label>
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="cell"></i>
@@ -482,8 +490,8 @@ echo $usage_html;
 						<div class="element-container">
 							<div class="row">
 								<div class="col-md-12">
-									<div class="row">
-										<div class="form-group">
+									<div class="">
+										<div class="form-group row">
 											<div class="col-md-3">
 												<label class="control-label" for="work"><?php echo _("Work Phone Number")?></label>
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="work"></i>
@@ -506,8 +514,8 @@ echo $usage_html;
 						<div class="element-container">
 							<div class="row">
 								<div class="col-md-12">
-									<div class="row">
-										<div class="form-group">
+									<div class="">
+										<div class="form-group row">
 											<div class="col-md-3">
 												<label class="control-label" for="home"><?php echo _("Home Phone Number")?></label>
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="home"></i>
@@ -530,8 +538,8 @@ echo $usage_html;
 						<div class="element-container">
 							<div class="row">
 								<div class="col-md-12">
-									<div class="row">
-										<div class="form-group">
+									<div class="">
+										<div class="form-group row">
 											<div class="col-md-3">
 												<label class="control-label" for="fax"><?php echo _("Fax Phone Number")?></label>
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="fax"></i>
@@ -559,8 +567,8 @@ echo $usage_html;
 							<div class="element-container">
 								<div class="row">
 									<div class="col-md-12">
-										<div class="row">
-											<div class="form-group">
+										<div class="">
+											<div class="form-group row">
 												<div class="col-md-3">
 													<label class="control-label" for="datetimeformat"><?php echo _("Date and Time Format")?></label>
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="datetimeformat"></i>
@@ -584,8 +592,8 @@ echo $usage_html;
 							<div class="element-container">
 								<div class="row">
 									<div class="col-md-12">
-										<div class="row">
-											<div class="form-group">
+										<div class="">
+											<div class="form-group row">
 												<div class="col-md-3">
 													<label class="control-label" for="timeformat"><?php echo _("Time Format")?></label>
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="timeformat"></i>
@@ -609,8 +617,8 @@ echo $usage_html;
 							<div class="element-container">
 								<div class="row">
 									<div class="col-md-12">
-										<div class="row">
-											<div class="form-group">
+										<div class="">
+											<div class="form-group row">
 												<div class="col-md-3">
 													<label class="control-label" for="dateformat"><?php echo _("Date Format")?></label>
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="dateformat"></i>
@@ -636,8 +644,8 @@ echo $usage_html;
 							<div class="element-container">
 								<div class="row">
 									<div class="col-md-12">
-										<div class="row">
-											<div class="form-group">
+										<div class="">
+											<div class="form-group row">
 												<div class="col-md-3">
 													<label class="control-label" for="pbx_login"><?php echo sprintf(_('Allow %s Administration Login'),$brand)?></label>
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="pbx_login"></i>
@@ -663,8 +671,8 @@ echo $usage_html;
 							<div class="element-container">
 								<div class="row">
 									<div class="col-md-12">
-										<div class="row">
-											<div class="form-group">
+										<div class="">
+											<div class="form-group row">
 												<div class="col-md-3">
 													<label class="control-label" for="pbx_admin"><?php echo _('Grant Full Administration Rights')?></label>
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="pbx_admin"></i>
@@ -690,8 +698,8 @@ echo $usage_html;
 							<div class="element-container">
 								<div class="row">
 									<div class="col-md-12">
-										<div class="row">
-											<div class="form-group">
+										<div class="">
+											<div class="form-group row">
 												<div class="col-md-3">
 													<label class="control-label" for="pbx_range"><?php echo _('Visible Extension Range')?></label>
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="pbx_range"></i>
@@ -712,8 +720,8 @@ echo $usage_html;
 							<div class="element-container">
 								<div class="row">
 									<div class="col-md-12">
-										<div class="row">
-											<div class="form-group">
+										<div class="">
+											<div class="form-group row">
 												<div class="col-md-3">
 													<label class="control-label" for="pbx_modules"><?php echo _('Administration Access')?></label>
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="pbx_modules"></i>
@@ -741,8 +749,8 @@ echo $usage_html;
 							<div class="element-container">
 								<div class="row">
 									<div class="col-md-12">
-										<div class="row">
-											<div class="form-group">
+										<div class="">
+											<div class="form-group row">
 												<div class="col-md-3">
 													<label class="control-label" for="pbx_landing"><?php echo _('Default Landing Page')?></label>
 													<i class="fa fa-question-circle fpbx-help-icon" data-for="pbx_landing"></i>

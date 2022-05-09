@@ -29,6 +29,8 @@
 }
 legend {
     text-align: center !important;
+    border-bottom: 1px solid #e5e5e5 !important;
+    margin-bottom: 1.5rem !important;
 }
 .dragitem {
     white-space: normal !important;

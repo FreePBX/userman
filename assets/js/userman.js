@@ -75,7 +75,7 @@ $("#directory-users").change(function() {
 	if(val === '') {
 		$("#table-users").bootstrapTable('refresh',{url: window.FreePBX.ajaxurl + '?module=userman&command=getUsers'});
 		$("#table-users").bootstrapTable('showColumn','auth');
-		// $("#remove-users").removeClass("hidden");
+		// $("#remove-users").removeClass("d-none");
 		$("#remove-users").removeClass("btn-remove");
 		$("#remove-users").attr('disabled', true);
 		$("#remove-users").attr("title", _("Select Directory to enable 'Delete' Button"));
@@ -97,9 +97,9 @@ $("#directory-users").change(function() {
 		}
 		if(directoryMapValues[val].permissions.removeUser) {
 			$("#remove-users").addClass("btn-remove");
-			// $("#remove-users").removeClass("hidden");
+			// $("#remove-users").removeClass("d-none");
 		} else {
-			// $("#remove-users").addClass("hidden");
+			// $("#remove-users").addClass("d-none");
 		}
 	}
 });
@@ -109,7 +109,7 @@ $("#directory-groups").change(function() {
 	if(val === '') {
 		$("#table-groups").bootstrapTable('refresh',{url: window.FreePBX.ajaxurl + '?module=userman&command=getGroups'});
 		$("#table-groups").bootstrapTable('showColumn','auth');
-		// $("#remove-groups").removeClass("hidden");
+		// $("#remove-groups").removeClass("d-none");
 		$("#remove-groups").removeClass("btn-remove");
 		$("#remove-groups").attr('disabled', true);
 		$("#remove-groups").attr("title", _("Select Directory to enable 'Delete' Button"));
@@ -134,9 +134,9 @@ $("#directory-groups").change(function() {
 		}
 		if(directoryMapValues[val].permissions.removeGroup) {
 			$("#remove-groups").addClass("btn-remove");
-			// $("#remove-groups").removeClass("hidden");
+			// $("#remove-groups").removeClass("d-none");
 		} else {
-			// $("#remove-groups").addClass("hidden");
+			// $("#remove-groups").addClass("d-none");
 		}
 	}
 });
@@ -336,26 +336,26 @@ var params={};window.location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi,function(
 $( document ).ready(function() {
 	var hash = (window.location.hash !== "") ? window.location.hash : "users";
 	if(hash == '#settings'){
-		$('input[name="submit"]').removeClass('hidden');
-		$('input[name="submitsend"]').removeClass('hidden');
-		$('input[name="reset"]').removeClass('hidden');
-		$("#action-bar").removeClass("hidden");
+		$('input[name="submit"]').removeClass('d-none');
+		$('input[name="submitsend"]').removeClass('d-none');
+		$('input[name="reset"]').removeClass('d-none');
+		$("#action-bar").removeClass("d-none");
 	} else if(params.action == 'adduser' || params.action == 'showuser'){
-		$('input[name="submitsend"]').removeClass('hidden');
-		$('input[name="submit"]').removeClass('hidden');
-		$('input[name="reset"]').removeClass('hidden');
-		$('input[name="delete"]').removeClass('hidden');
+		$('input[name="submitsend"]').removeClass('d-none');
+		$('input[name="submit"]').removeClass('d-none');
+		$('input[name="reset"]').removeClass('d-none');
+		$('input[name="delete"]').removeClass('d-none');
 	}else if(params.action == 'addgroup' || params.action == 'showgroup' || params.action == 'adddirectory' || params.action == 'showdirectory' || params.action == 'adducptemplate' ||  params.action == 'showucptemplate') {
-		$('input[name="submit"]').removeClass('hidden');
-		$('input[name="reset"]').removeClass('hidden');
-		$('input[name="delete"]').removeClass('hidden');
+		$('input[name="submit"]').removeClass('d-none');
+		$('input[name="reset"]').removeClass('d-none');
+		$('input[name="delete"]').removeClass('d-none');
 	} else if(params.action == "showmembers"){
-		$('input[name="cancel"]').removeClass('hidden');
-		$('input[name="merge"]').removeClass('hidden');
-		$('input[name="rebuild"]').removeClass('hidden');
+		$('input[name="cancel"]').removeClass('d-none');
+		$('input[name="merge"]').removeClass('d-none');
+		$('input[name="rebuild"]').removeClass('d-none');
 	}
 	else {
-		$("#action-bar").addClass("hidden");
+		$("#action-bar").addClass("d-none");
 	}
 	if(params.action == 'adducptemplate'){
 		$("#tempcreatediv").hide()
@@ -370,30 +370,30 @@ $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
 	//Button Related
 	switch(e.target.hash){
 		case "#directories":
-			$("#action-bar").addClass("hidden");
-			$('input[name="submit"]').addClass('hidden');
-			$('input[name="reset"]').addClass('hidden');
+			$("#action-bar").addClass("d-none");
+			$('input[name="submit"]').addClass('d-none');
+			$('input[name="reset"]').addClass('d-none');
 		break;
 		case "#settings":
-			$("#action-bar").removeClass("hidden");
-			$('input[name="submit"]').removeClass('hidden');
-			$('input[name="reset"]').removeClass('hidden');
+			$("#action-bar").removeClass("d-none");
+			$('input[name="submit"]').removeClass('d-none');
+			$('input[name="reset"]').removeClass('d-none');
 		break;
 		case "#users":
-			$("#action-bar").addClass("hidden");
-			$('input[name="submit"]').addClass('hidden');
-			$('input[name="reset"]').addClass('hidden');
+			$("#action-bar").addClass("d-none");
+			$('input[name="submit"]').addClass('d-none');
+			$('input[name="reset"]').addClass('d-none');
 		break;
 		case "#groups":
-			$("#action-bar").addClass("hidden");
-			$('input[name="submit"]').addClass('hidden');
-			$('input[name="reset"]').addClass('hidden');
+			$("#action-bar").addClass("d-none");
+			$('input[name="submit"]').addClass('d-none');
+			$('input[name="reset"]').addClass('d-none');
 			// onlyOneGroup();
 		break;
 		case "#ucptemplates":
-			$("#action-bar").addClass("hidden");
-			$('input[name="submit"]').addClass('hidden');
-			$('input[name="reset"]').addClass('hidden');
+			$("#action-bar").addClass("d-none");
+			$('input[name="submit"]').addClass('d-none');
+			$('input[name="reset"]').addClass('d-none');
 		break;
 		default:
 			return;
@@ -472,7 +472,7 @@ $('#defaultextension').multiselect({
 
 // function onlyOneGroup(){
 // 	if($("#directory-groups option").length == 2 && $("#directory-groups option:selected" ).text() != ""){
-// 		$("#add-groups").removeClass("hidden");
+// 		$("#add-groups").removeClass("d-none");
 // 	}	
 // }
 

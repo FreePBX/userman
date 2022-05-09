@@ -800,44 +800,44 @@ class Userman extends FreePBX_Helpers implements BMO {
 						'name' => 'merge',
 						'id' => 'merge',
 						'value' => _("Merge With Existing Widgets"),
-						'class' => array('hidden')
+						'class' => array('d-none')
 							),
 					'rebuild'=> array(
 						'name' => 'rebuild',
 						'id' => 'rebuild',
 						'type'=>'button',
 						'value' => _("Rebuild Widgets"),
-						'class' => array('hidden')
+						'class' => array('d-none')
 							),
 					'submitsend' => array(
 						'name' => 'submitsend',
 						'id' => 'submitsend',
 						'value' => _("Submit & Send Email to User"),
-						'class' => array('hidden')
+						'class' => array('d-none')
 					),
 					'submit' => array(
 						'name' => 'submit',
 						'id' => 'submit',
 						'value' => _("Submit"),
-						'class' => array('hidden')
+						'class' => array('d-none')
 					),
 					'delete' => array(
 						'name' => 'delete',
 						'id' => 'delete',
 						'value' => _("Delete"),
-						'class' => array('hidden')
+						'class' => array('d-none')
 					),
 					'reset' => array(
 						'name' => 'reset',
 						'id' => 'reset',
 						'value' => _("Reset"),
-						'class' => array('hidden')
+						'class' => array('d-none')
 					),
 					'cancel' => array(
 						'name' => 'cancel',
 						'id' => 'cancel',
 						'value' => _("Cancel"),
-						'class' => array('hidden')
+						'class' => array('d-none')
 					),
 				);
 

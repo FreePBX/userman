@@ -23,8 +23,8 @@ function showMiddle() {
 	<input type="hidden" name="type" value="rebuilducp">
 	<input type="hidden" name="submittype" value="gui">
 	<input type="hidden" name="templateid" value=<?php echo $templateid;?>>
-	<ul class="nav nav-tabs" id="Users" role="tablist">
-		<li data-name="users" class="change-tab active"><a href="#users" role="tab" data-toggle="tab"><?php echo $name ?></a></li>
+	<ul class="nav nav-tabs pb-0" id="Users" role="tablist">
+		<li data-name="users" class="change-tab"><a href="#users" role="tab" class="nav-link active" data-toggle="tab"><?php echo $name ?></a></li>
 	</ul>
 	<div class="tab-content display">
 		<div id='users' class='tab-pane active'>

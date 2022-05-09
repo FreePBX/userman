@@ -26,17 +26,17 @@ echo $heading;
 				<div class="display no-border">
 						<div role="tabpanel">
 							<div class="nav-container">
-								<div class="scroller scroller-left"><i class="glyphicon glyphicon-chevron-left"></i></div>
-								<div class="scroller scroller-right"><i class="glyphicon glyphicon-chevron-right"></i></div>
+								<div class="scroller scroller-left"><i class="fa fa-chevron-left"></i></div>
+								<div class="scroller scroller-right"><i class="fa fa-chevron-right"></i></div>
 								<div class="wrapper">
-									<ul class="nav nav-tabs list" role="tablist">
-										<li role="presentation" class="active"><a href="#usermanlogin" aria-controls="usermanlogin" role="tab" data-toggle="tab"><?php echo _("Group Details")?></a></li>
-										<li role="presentation"><a href="#advanced" aria-controls="usermanlogin" role="tab" data-toggle="tab"><?php echo _("Advanced")?></a></li>
+									<ul class="nav nav-tabs list pb-0 mt-0" role="tablist">
+										<li role="presentation"><a href="#usermanlogin" aria-controls="usermanlogin" role="tab" class="nav-link active" data-toggle="tab"><?php echo _("Group Details")?></a></li>
+										<li role="presentation"><a href="#advanced" aria-controls="usermanlogin" role="tab" class="nav-link" data-toggle="tab"><?php echo _("Advanced")?></a></li>
 										<?php if(\FreePBX::Config()->get('AUTHTYPE') == "usermanager") { ?>
-											<li role="presentation"><a href="#pbx" aria-controls="pbx" role="tab" data-toggle="tab"><?php echo sprintf(_("%s Administration GUI"),$brand)?></a></li>
+											<li role="presentation"><a href="#pbx" aria-controls="pbx" role="tab" class="nav-link" data-toggle="tab"><?php echo sprintf(_("%s Administration GUI"),$brand)?></a></li>
 										<?php } ?>
 										<?php foreach($sections as $section) { ?>
-											<li role="presentation"><a href="#usermanhook<?php echo $section['rawname']?>" aria-controls="usermanhook<?php echo $section['rawname']?>" role="tab" data-toggle="tab"><?php echo $section['title']?></a></li>
+											<li role="presentation"><a href="#usermanhook<?php echo $section['rawname']?>" aria-controls="usermanhook<?php echo $section['rawname']?>" role="tab" class="nav-link" data-toggle="tab"><?php echo $section['title']?></a></li>
 										<?php } ?>
 									</ul>
 								</div>
@@ -55,8 +55,8 @@ echo $heading;
 									<div class="element-container">
 										<div class="row">
 											<div class="col-md-12">
-												<div class="row">
-													<div class="form-group">
+												<div class="">
+													<div class="form-group row">
 														<div class="col-md-3">
 															<label class="control-label" for="group_name"><?php echo _('Group Name')?></label>
 															<i class="fa fa-question-circle fpbx-help-icon" data-for="group_name"></i>
@@ -77,8 +77,8 @@ echo $heading;
 									<div class="element-container">
 										<div class="row">
 											<div class="col-md-12">
-												<div class="row">
-													<div class="form-group">
+												<div class="">
+													<div class="form-group row">
 														<div class="col-md-3">
 															<label class="control-label" for="group_description"><?php echo _('Group Description')?></label>
 															<i class="fa fa-question-circle fpbx-help-icon" data-for="group_description"></i>
@@ -100,21 +100,25 @@ echo $heading;
 									<div class="element-container">
 										<div class="row">
 											<div class="col-md-12">
-												<div class="row">
-													<div class="form-group">
+												<div class="">
+													<div class="form-group row">
 														<div class="col-md-3">
 															<label class="control-label" for="language"><?php echo _("Language") ?></label>
 															<i class="fa fa-question-circle fpbx-help-icon" data-for="language"></i>
 														</div>
 														<div class="col-md-9">
 															<div class="input-group">
-																<?php echo FreePBX::View()->languageDrawSelect('language',$group['language'],_("Use System Language")); ?>
-																<span class="input-group-btn">
-																	<a href="#" class="btn btn-default" id="browserlang"><?php echo _("Use Browser Language")?></a>
-																</span>
-																<span class="input-group-btn">
-																	<a href="#" class="btn btn-default" id="systemlang"><?php echo _("Use PBX Language")?></a>
-																</span>
+																<div>
+																	<?php echo FreePBX::View()->languageDrawSelect('language',$group['language'],_("Use System Language")); ?>
+																</div>
+																<div>
+																	<!--<span class="input-group-btn">-->
+																		<a href="#" class="btn btn-default" id="browserlang"><?php echo _("Use Browser Language")?></a>
+																	<!--</span>-->
+																	<!--<span class="input-group-btn">-->
+																		<a href="#" class="btn btn-default" id="systemlang"><?php echo _("Use PBX Language")?></a>
+																	<!--</span>-->
+																</div>
 															</div>
 														</div>
 													</div>
@@ -132,21 +136,25 @@ echo $heading;
 									<div class="element-container">
 										<div class="row">
 											<div class="col-md-12">
-												<div class="row">
-													<div class="form-group">
+												<div class="">
+													<div class="form-group row">
 														<div class="col-md-3">
 															<label class="control-label" for="timezone"><?php echo _("Timezone") ?></label>
 															<i class="fa fa-question-circle fpbx-help-icon" data-for="timezone"></i>
 														</div>
 														<div class="col-md-9">
 															<div class="input-group">
-																<?php echo FreePBX::View()->timezoneDrawSelect('timezone',$group['timezone'],_("Use System Timezone")); ?>
-																<span class="input-group-btn">
-																	<a href="#" class="btn btn-default" id="browsertz"><?php echo _("Use Browser Timezone")?></a>
-																</span>
-																<span class="input-group-btn">
-																	<a href="#" class="btn btn-default" id="systemtz"><?php echo _("Use PBX Timezone")?></a>
-																</span>
+																<div>
+																	<?php echo FreePBX::View()->timezoneDrawSelect('timezone',$group['timezone'],_("Use System Timezone")); ?>
+																</div>
+																<div>
+																	<!--<span class="input-group-btn">-->
+																		<a href="#" class="btn btn-default" id="browsertz"><?php echo _("Use Browser Timezone")?></a>
+																	<!--</span>-->
+																	<!--<span class="input-group-btn">-->
+																		<a href="#" class="btn btn-default" id="systemtz"><?php echo _("Use PBX Timezone")?></a>
+																	<!--</span>-->
+																</div>
 															</div>
 														</div>
 													</div>
@@ -163,8 +171,8 @@ echo $heading;
 									<div class="element-container">
 										<div class="row">
 											<div class="col-md-12">
-												<div class="row">
-													<div class="form-group">
+												<div class="">
+													<div class="form-group row">
 														<div class="col-md-3">
 															<label class="control-label" for="group_users"><?php echo _('Users')?></label>
 															<i class="fa fa-question-circle fpbx-help-icon" data-for="group_users"></i>
@@ -191,8 +199,8 @@ echo $heading;
 									<div class="element-container">
 										<div class="row">
 											<div class="col-md-12">
-												<div class="row">
-													<div class="form-group">
+												<div class="">
+													<div class="form-group row">
 														<div class="col-md-3">
 															<label class="control-label" for="datetimeformat"><?php echo _("Date and Time Format")?></label>
 															<i class="fa fa-question-circle fpbx-help-icon" data-for="datetimeformat"></i>
@@ -213,8 +221,8 @@ echo $heading;
 									<div class="element-container">
 										<div class="row">
 											<div class="col-md-12">
-												<div class="row">
-													<div class="form-group">
+												<div class="">
+													<div class="form-group row">
 														<div class="col-md-3">
 															<label class="control-label" for="timeformat"><?php echo _("Time Format")?></label>
 															<i class="fa fa-question-circle fpbx-help-icon" data-for="timeformat"></i>
@@ -235,8 +243,8 @@ echo $heading;
 									<div class="element-container">
 										<div class="row">
 											<div class="col-md-12">
-												<div class="row">
-													<div class="form-group">
+												<div class="">
+													<div class="form-group row">
 														<div class="col-md-3">
 															<label class="control-label" for="dateformat"><?php echo _("Date Format")?></label>
 															<i class="fa fa-question-circle fpbx-help-icon" data-for="dateformat"></i>
@@ -260,8 +268,8 @@ echo $heading;
 										<div class="element-container">
 											<div class="row">
 												<div class="col-md-12">
-													<div class="row">
-														<div class="form-group">
+													<div class="">
+														<div class="form-group row">
 															<div class="col-md-3">
 																<label class="control-label" for="pbx_login"><?php echo sprintf(_('Allow %s Administration Login'),$brand)?></label>
 																<i class="fa fa-question-circle fpbx-help-icon" data-for="pbx_login"></i>
@@ -285,8 +293,8 @@ echo $heading;
 										<div class="element-container">
 											<div class="row">
 												<div class="col-md-12">
-													<div class="row">
-														<div class="form-group">
+													<div class="">
+														<div class="form-group row">
 															<div class="col-md-3">
 																<label class="control-label" for="pbx_admin"><?php echo _('Grant Full Administration Rights')?></label>
 																<i class="fa fa-question-circle fpbx-help-icon" data-for="pbx_admin"></i>
@@ -310,8 +318,8 @@ echo $heading;
 										<div class="element-container">
 											<div class="row">
 												<div class="col-md-12">
-													<div class="row">
-														<div class="form-group">
+													<div class="">
+														<div class="form-group row">
 															<div class="col-md-3">
 																<label class="control-label" for="pbx_range"><?php echo _('Visible Extension Range')?></label>
 																<i class="fa fa-question-circle fpbx-help-icon" data-for="pbx_range"></i>
@@ -332,8 +340,8 @@ echo $heading;
 										<div class="element-container">
 											<div class="row">
 												<div class="col-md-12">
-													<div class="row">
-														<div class="form-group">
+													<div class="">
+														<div class="form-group row">
 															<div class="col-md-3">
 																<label class="control-label" for="pbx_modules"><?php echo _('Administration Access')?></label>
 																<i class="fa fa-question-circle fpbx-help-icon" data-for="pbx_modules"></i>
@@ -362,8 +370,8 @@ echo $heading;
 										<div class="element-container">
 											<div class="row">
 												<div class="col-md-12">
-													<div class="row">
-														<div class="form-group">
+													<div class="">
+														<div class="form-group row">
 															<div class="col-md-3">
 																<label class="control-label" for="pbx_landing"><?php echo _('Default Landing Page')?></label>
 																<i class="fa fa-question-circle fpbx-help-icon" data-for="pbx_landing"></i>
