@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-21 09:26+0000\n"
+"POT-Creation-Date: 2022-05-10 12:20+0000\n"
 "PO-Revision-Date: 2016-12-11 08:33+0200\n"
 "Last-Translator: Ernesto <ecasas@sangoma.com>\n"
 "Language-Team: Spanish <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -129,7 +129,7 @@ msgstr "Agregado Voicemail usuario: %s"
 msgid "Admin"
 msgstr "Administrador"
 
-#: views/groups.php:338 views/users.php:718
+#: views/groups.php:346 views/users.php:726
 msgid "Administration Access"
 msgstr "Acceso Administración"
 
@@ -145,7 +145,7 @@ msgstr ""
 msgid "All Users"
 msgstr "Todos los Usuarios"
 
-#: views/groups.php:266 views/users.php:642
+#: views/groups.php:274 views/users.php:650
 #, php-format
 msgid "Allow %s Administration Login"
 msgstr "Permitir %s Login Administrador"
@@ -201,7 +201,7 @@ msgstr ""
 msgid "Cannot manage this rule: %s."
 msgstr ""
 
-#: views/users.php:464
+#: views/users.php:472
 msgid "Cell Phone Number"
 msgstr "Número de Móvil"
 
@@ -258,11 +258,11 @@ msgstr "Crear usuario gestor de usuarios"
 msgid "Create Using Template Creator"
 msgstr ""
 
-#: views/groups.php:241 views/users.php:615
+#: views/groups.php:249 views/users.php:623
 msgid "Date Format"
 msgstr ""
 
-#: views/groups.php:197 views/users.php:565
+#: views/groups.php:205 views/users.php:573
 msgid "Date and Time Format"
 msgstr ""
 
@@ -274,7 +274,7 @@ msgstr ""
 msgid "Default Groups"
 msgstr "Grupos predeterminados"
 
-#: views/groups.php:368 views/users.php:747
+#: views/groups.php:376 views/users.php:755
 msgid "Default Landing Page"
 msgstr ""
 
@@ -402,7 +402,7 @@ msgstr "Editar Usuario"
 msgid "Email "
 msgstr "Correo Electrónico "
 
-#: views/users.php:440
+#: views/users.php:448
 msgid "Email Address"
 msgstr "Dirección de Correo"
 
@@ -496,7 +496,7 @@ msgstr "Atributo de enlace de extensión"
 msgid "False"
 msgstr ""
 
-#: views/users.php:536
+#: views/users.php:544
 msgid "Fax Phone Number"
 msgstr "Numero de teléfono de Fax"
 
@@ -525,11 +525,11 @@ msgstr "Dele a grupo una descripción"
 msgid "Give the group a name"
 msgstr "Dele al grupo un nombre"
 
-#: views/groups.php:291 views/users.php:669
+#: views/groups.php:299 views/users.php:677
 msgid "Grant Full Administration Rights"
 msgstr "Concede los derechos completos del administrador"
 
-#: views/groups.php:306 views/users.php:686
+#: views/groups.php:314 views/users.php:694
 msgid ""
 "Grant full administration rights regardless of extension range or module "
 "access."
@@ -646,7 +646,7 @@ msgstr ""
 "Grupos de los que este usuario es parte. También puede agregar y eliminar "
 "este usuario de los grupos en esta vista"
 
-#: views/users.php:512
+#: views/users.php:520
 msgid "Home Phone Number"
 msgstr "Teléfono de Habitación"
 
@@ -775,8 +775,8 @@ msgstr ""
 "esos dispositivos. Por ejemplo, un nuevo usuario se puede entrar al Panel de "
 "control de usuario y acceder al correo de voz de otras 3 cuentas."
 
-#: views/users.php:381 views/users.php:413 views/users.php:651
-#: views/users.php:678
+#: views/users.php:382 views/users.php:418 views/users.php:659
+#: views/users.php:686
 msgid "Inherit"
 msgstr "Heredar"
 
@@ -803,7 +803,7 @@ msgstr "LDAP está en modo de sólo lectura. Adición negada"
 msgid "Language"
 msgstr ""
 
-#: views/groups.php:126 views/users.php:396
+#: views/groups.php:130 views/users.php:400
 msgid "Language for this user"
 msgstr ""
 
@@ -874,13 +874,13 @@ msgstr ""
 msgid "Manage groups locally"
 msgstr ""
 
-#: views/groups.php:281
+#: views/groups.php:289
 #, php-format
 msgid "May this group log in to the %s Administration Pages?"
 msgstr ""
 "¿Puede este grupo iniciar sesión en las Páginas de administración de %s?"
 
-#: views/directories.php:317 views/users.php:659
+#: views/directories.php:317 views/users.php:667
 #, php-format
 msgid "May this user log in to the %s Administration Pages?"
 msgstr ""
@@ -942,9 +942,9 @@ msgstr ""
 #: views/directories.php:43 views/directories.php:309 views/general.php:32
 #: views/general.php:61 views/general.php:170 views/general.php:211
 #: views/general.php:252 views/general.php:293 views/general.php:334
-#: views/general.php:375 views/general.php:416 views/groups.php:273
-#: views/groups.php:298 views/quickCreate.php:16 views/users.php:649
-#: views/users.php:676 assets/js/userman.js:616
+#: views/general.php:375 views/general.php:416 views/groups.php:281
+#: views/groups.php:306 views/quickCreate.php:16 views/users.php:657
+#: views/users.php:684 assets/js/userman.js:616
 msgid "No"
 msgstr "No"
 
@@ -1130,7 +1130,7 @@ msgstr "Usuario de correo de voz eliminado %s"
 msgid "Reset"
 msgstr "Reinicio"
 
-#: views/groups.php:328
+#: views/groups.php:336
 msgid ""
 "Restrict this groups's view to only Extensions, Ring Groups, and Queues "
 "within this range."
@@ -1138,7 +1138,7 @@ msgstr ""
 "Restringir la vista de este grupo a sólo Extensiones, Grupos de timbrado y "
 "Colas dentro de este rango."
 
-#: views/users.php:708
+#: views/users.php:716
 msgid ""
 "Restrict this user's view to only Extensions, Ring Groups, and Queues within "
 "this range."
@@ -1169,11 +1169,11 @@ msgstr ""
 msgid "Select a User"
 msgstr ""
 
-#: views/groups.php:387
+#: views/groups.php:395
 msgid "Select a landing page that will be used by default."
 msgstr ""
 
-#: views/users.php:766
+#: views/users.php:774
 msgid ""
 "Select a landing page that will be used by default.This settings will be "
 "overridden by Group setting if Allow PBXact Administration Login set to "
@@ -1205,13 +1205,13 @@ msgstr ""
 "Administrador de Usuarios, si no, seleccione Ninguno para no tener "
 "asociación a un usuario"
 
-#: views/groups.php:358
+#: views/groups.php:366
 msgid "Select the Admin Sections this group should have access to."
 msgstr ""
 "Seleccione las secciones de administración a las que este grupo debe tener "
 "acceso."
 
-#: views/users.php:737
+#: views/users.php:745
 msgid ""
 "Select the Admin Sections this user should have access to,This settings will "
 "be overridden by Group setting if Allow PBXact Administration Login set to "
@@ -1619,7 +1619,7 @@ msgstr ""
 msgid "The directory name"
 msgstr ""
 
-#: views/users.php:452
+#: views/users.php:460
 msgid ""
 "The email address to associate with this user. Multiple email address need "
 "to be separated with a comma."
@@ -1637,42 +1637,42 @@ msgstr ""
 msgid "The filter to use when searching user objects."
 msgstr ""
 
-#: views/users.php:580
+#: views/users.php:588
 msgid ""
 "The format dates and times should display in. The default of \"llll\" is "
 "locale aware. If left blank this will use the group/system format. For more "
 "formats please see: http://momentjs.com/docs/#/displaying/format/"
 msgstr ""
 
-#: views/groups.php:209
+#: views/groups.php:217
 msgid ""
 "The format dates and times should display in. The default of \"llll\" is "
 "locale aware. If left blank this will use the system format. For more "
 "formats please see: http://momentjs.com/docs/#/displaying/format/"
 msgstr ""
 
-#: views/users.php:630
+#: views/users.php:638
 msgid ""
 "The format dates should display in. The default of \"l\" is locale aware. If "
 "left blank this will use the group/system format. For more formats please "
 "see: http://momentjs.com/docs/#/displaying/format/"
 msgstr ""
 
-#: views/groups.php:253
+#: views/groups.php:261
 msgid ""
 "The format dates should display in. The default of \"l\" is locale aware. If "
 "left blank this will use the system format. For more formats please see: "
 "http://momentjs.com/docs/#/displaying/format/"
 msgstr ""
 
-#: views/users.php:605
+#: views/users.php:613
 msgid ""
 "The format times should display in. The default of \"LT\" is locale aware. "
 "If left blank this will use the group/system format. For more formats please "
 "see: http://momentjs.com/docs/#/displaying/format/"
 msgstr ""
 
-#: views/groups.php:231
+#: views/groups.php:239
 msgid ""
 "The format times should display in. The default of \"LT\" is locale aware. "
 "If left blank this will use the system format. For more formats please see: "
@@ -1688,7 +1688,7 @@ msgstr ""
 "El nombre de anfitrión utilizado para el correo electrónico. Si se deja en "
 "blanco se utilizará el valor por defecto de '%s'"
 
-#: views/users.php:476
+#: views/users.php:484
 msgid "The user's cell (mobile) phone number."
 msgstr "Número del Móvil (Celular) del usuario."
 
@@ -1700,7 +1700,7 @@ msgstr "Empresa del Usuario."
 msgid "The user's department."
 msgstr "Departamento del usuario."
 
-#: views/users.php:548
+#: views/users.php:556
 msgid "The user's fax phone number."
 msgstr "Numero de fax del usuario."
 
@@ -1708,7 +1708,7 @@ msgstr "Numero de fax del usuario."
 msgid "The user's first name."
 msgstr "Primer Nombre del usuario."
 
-#: views/users.php:524
+#: views/users.php:532
 msgid "The user's home phone number."
 msgstr "Número de teléfono de habitación del usuario."
 
@@ -1724,7 +1724,7 @@ msgstr "Contraseña del usuario."
 msgid "The user's title."
 msgstr "Titulo del usuario."
 
-#: views/users.php:500
+#: views/users.php:508
 msgid "The user's work phone number."
 msgstr "Número de teléfono del Trabajo del usuario."
 
@@ -1821,15 +1821,15 @@ msgstr ""
 msgid "Threshold Weak Password"
 msgstr ""
 
-#: views/groups.php:219 views/users.php:590
+#: views/groups.php:227 views/users.php:598
 msgid "Time Format"
 msgstr ""
 
-#: views/groups.php:138 views/users.php:408
+#: views/groups.php:142 views/users.php:412
 msgid "Timezone"
 msgstr ""
 
-#: views/groups.php:158 views/users.php:428
+#: views/groups.php:166 views/users.php:436
 msgid "Timezone for this user"
 msgstr ""
 
@@ -1910,11 +1910,11 @@ msgstr "Actualizando"
 msgid "Uppercase"
 msgstr ""
 
-#: views/groups.php:113 views/users.php:383
+#: views/groups.php:116 views/users.php:386
 msgid "Use Browser Language"
 msgstr ""
 
-#: views/groups.php:145 views/users.php:415
+#: views/groups.php:152 views/users.php:422
 msgid "Use Browser Timezone"
 msgstr ""
 
@@ -1922,19 +1922,19 @@ msgstr ""
 msgid "Use Custom Username"
 msgstr "Use Nombre Personalizado del Usuario"
 
-#: views/groups.php:116 views/users.php:386
+#: views/groups.php:119 views/users.php:389
 msgid "Use PBX Language"
 msgstr ""
 
-#: views/groups.php:148 views/users.php:418
+#: views/groups.php:155 views/users.php:425
 msgid "Use PBX Timezone"
 msgstr ""
 
-#: views/groups.php:111
+#: views/groups.php:112
 msgid "Use System Language"
 msgstr ""
 
-#: views/groups.php:143
+#: views/groups.php:148
 msgid "Use System Timezone"
 msgstr ""
 
@@ -2132,7 +2132,7 @@ msgstr "Username no puede ser blanco"
 msgid "Username/Password Can Not Be Blank!"
 msgstr "Nombre Usuario/Contraseña no pueden estar en Blanco!"
 
-#: views/groups.php:169 views/welcome.php:20
+#: views/groups.php:177 views/welcome.php:20
 msgid "Users"
 msgstr "Usuarios"
 
@@ -2144,7 +2144,7 @@ msgstr ""
 msgid "Version of the connection protocol with the LDAP server"
 msgstr ""
 
-#: views/groups.php:316 views/users.php:696
+#: views/groups.php:324 views/users.php:704
 msgid "Visible Extension Range"
 msgstr "Rango de Extensiones Visible"
 
@@ -2183,20 +2183,20 @@ msgstr ""
 msgid "Which groups this user is in"
 msgstr "En qué grupos está este usuario"
 
-#: views/groups.php:185
+#: views/groups.php:193
 msgid "Which users are in this group"
 msgstr "Qué usuarios están en este grupo"
 
-#: views/users.php:488
+#: views/users.php:496
 msgid "Work Phone Number"
 msgstr "Numero de teléfono del Trabajo"
 
 #: views/directories.php:41 views/directories.php:307 views/general.php:30
 #: views/general.php:59 views/general.php:168 views/general.php:209
 #: views/general.php:250 views/general.php:291 views/general.php:332
-#: views/general.php:373 views/general.php:414 views/groups.php:271
-#: views/groups.php:296 views/quickCreate.php:14 views/users.php:647
-#: views/users.php:674 assets/js/userman.js:616
+#: views/general.php:373 views/general.php:414 views/groups.php:279
+#: views/groups.php:304 views/quickCreate.php:14 views/users.php:655
+#: views/users.php:682 assets/js/userman.js:616
 msgid "Yes"
 msgstr "Si"
 
