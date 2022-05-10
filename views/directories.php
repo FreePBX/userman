@@ -6,8 +6,8 @@ function genConfFormHTML($form_data = array()) {
 	<div class="element-container $$__ELEMENT_CONTAINER_CLASS__$$">
 		<div class="row">
 			<div class="col-md-12">
-				<div class="row">
-					<div class="form-group">
+				<div class="">
+					<div class="form-group row">
 						<div class="col-md-3">
 							<label class="control-label" for="$$__NAME__$$">$$__TITLE__$$</label>
 							<i class="fa fa-question-circle fpbx-help-icon" data-for="$$__NAME__$$"></i>
@@ -243,8 +243,8 @@ echo $heading;
 						<div class="element-container">
 							<div class="row">
 								<div class="col-md-12">
-									<div class="row">
-										<div class="form-group">
+									<div class="">
+										<div class="form-group row">
 											<div class="col-md-3">
 												<label class="control-label" for="authtype"><?php echo _("Directory Type")?></label>
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="authtype"></i>
@@ -274,8 +274,8 @@ echo $heading;
 						<div class="element-container">
 							<div class="row">
 								<div class="col-md-12">
-									<div class="row">
-										<div class="form-group">
+									<div class="">
+										<div class="form-group row">
 											<div class="col-md-3">
 												<label class="control-label" for="name"><?php echo _("Directory Name")?></label>
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="name"></i>
@@ -296,8 +296,8 @@ echo $heading;
 						<div class="element-container">
 							<div class="row">
 								<div class="col-md-12">
-									<div class="row">
-										<div class="form-group">
+									<div class="">
+										<div class="form-group row">
 											<div class="col-md-3">
 												<label class="control-label" for="enable"><?php echo _("Enable Directory")?></label>
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="enable"></i>
@@ -321,8 +321,8 @@ echo $heading;
 						<div class="element-container" id="sync-container">
 							<div class="row">
 								<div class="col-md-12">
-									<div class="row">
-										<div class="form-group">
+									<div class="">
+										<div class="form-group row">
 											<div class="col-md-3">
 												<label class="control-label" for="sync"><?php echo _("Synchronize")?></label>
 												<i class="fa fa-question-circle fpbx-help-icon" data-for="sync"></i>
@@ -351,7 +351,7 @@ echo $heading;
 							<?php 
 							foreach($auths as $rawname => $auth)
 							{
-								echo sprintf('<div id="%s-auth-settings" class="auth-settings hidden">%s</div>', $rawname, genConfFormHTML($auth['config']['data']));
+								echo sprintf('<div id="%s-auth-settings" class="auth-settings d-none">%s</div>', $rawname, genConfFormHTML($auth['config']['data']));
 							}
 							?>
 						<fieldset>
@@ -363,22 +363,22 @@ echo $heading;
 </div>
 <script>
 	var val = $("#authtype").val();
-	$("#" + val + "-auth-settings").removeClass("hidden");
+	$("#" + val + "-auth-settings").removeClass("d-none");
 	if(val == "Freepbx") {
-		$("#sync-container").addClass("hidden");
+		$("#sync-container").addClass("d-none");
 	} else {
-		$("#sync-container").removeClass("hidden");
+		$("#sync-container").removeClass("d-none");
 	}
 
 	$("#authtype").change(function() {
 		var val = $(this).val();
 		if(val == "Freepbx") {
-			$("#sync-container").addClass("hidden");
+			$("#sync-container").addClass("d-none");
 		} else {
-			$("#sync-container").removeClass("hidden");
+			$("#sync-container").removeClass("d-none");
 		}
-		$(".auth-settings").addClass("hidden");
-		$("#" + val + "-auth-settings").removeClass("hidden");
+		$(".auth-settings").addClass("d-none");
+		$("#" + val + "-auth-settings").removeClass("d-none");
 		$(".fpbx-submit input[type=text]:hidden").prop("disabled",true);
 		$(".fpbx-submit input:visible").prop("disabled",false);
 	});

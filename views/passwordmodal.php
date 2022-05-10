@@ -10,8 +10,8 @@
 				<div class="element-container">
 					<div class="row">
 						<div class="col-md-12">
-							<div class="row">
-								<div class="form-group">
+							<div class="">
+								<div class="form-group row">
 									<div class="col-md-12">
 										<label class="control-label" for="password"><?php echo _("Password")?></label>
 									</div>
