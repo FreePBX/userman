@@ -25,7 +25,7 @@ echo $usage_html;
 							<div class="scroller scroller-left"><i class="fa fa-chevron-left"></i></div>
 							<div class="scroller scroller-right"><i class="fa fa-chevron-right"></i></div>
 							<div class="wrapper">
-								<ul class="nav nav-tabs list pb-0 mt-0" role="tablist">
+								<ul class="nav nav-tabs list pb-0 mt-2p" role="tablist">
 									<li role="presentation"><a href="#usermanlogin" aria-controls="usermanlogin" role="tab" class="nav-link active" data-toggle="tab"><?php echo _("Login Details")?></a></li>
 									<li role="presentation"><a href="#usermanuser" aria-controls="usermanuser" role="tab" class="nav-link" data-toggle="tab"><?php echo _("User Details")?></a></li>
 									<li role="presentation"><a href="#advanced" aria-controls="usermanlogin" role="tab" class="nav-link" data-toggle="tab"><?php echo _("Advanced")?></a></li>

@@ -81,7 +81,7 @@ function showMiddle() {
 	$('.toggle').click(function(e) {
 		e.preventDefault();
 		var cmd=$(this).data('cmd');
-		var tabname = $(".nav-tabs .active").data('name');
+		var tabname = $(".nav-tabs .active").parent().data('name');
 		var thistab = $('#'+tabname).children();
 		var left = thistab.children('.left');
 		var right = thistab.children('.right');

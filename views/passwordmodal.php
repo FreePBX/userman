@@ -3,8 +3,8 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
+				<h4 class="modal-title mr-auto"><i class="fa fa-key"></i>&nbsp;&nbsp;<?php echo _("Set Password")?></h4>
 				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-				<h4 class="modal-title"><i class="fa fa-key"></i>&nbsp;&nbsp;<?php echo _("Set Password")?></h4>
 			</div>
 			<div class="modal-body">
 				<div class="element-container">

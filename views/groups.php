@@ -29,7 +29,7 @@ echo $heading;
 								<div class="scroller scroller-left"><i class="fa fa-chevron-left"></i></div>
 								<div class="scroller scroller-right"><i class="fa fa-chevron-right"></i></div>
 								<div class="wrapper">
-									<ul class="nav nav-tabs list pb-0 mt-0" role="tablist">
+									<ul class="nav nav-tabs list pb-0 mt-2p" role="tablist">
 										<li role="presentation"><a href="#usermanlogin" aria-controls="usermanlogin" role="tab" class="nav-link active" data-toggle="tab"><?php echo _("Group Details")?></a></li>
 										<li role="presentation"><a href="#advanced" aria-controls="usermanlogin" role="tab" class="nav-link" data-toggle="tab"><?php echo _("Advanced")?></a></li>
 										<?php if(\FreePBX::Config()->get('AUTHTYPE') == "usermanager") { ?>
@@ -111,7 +111,7 @@ echo $heading;
 																<div>
 																	<?php echo FreePBX::View()->languageDrawSelect('language',$group['language'],_("Use System Language")); ?>
 																</div>
-																<div>
+																<div class="ml-2">
 																	<!--<span class="input-group-btn">-->
 																		<a href="#" class="btn btn-default" id="browserlang"><?php echo _("Use Browser Language")?></a>
 																	<!--</span>-->
@@ -147,7 +147,7 @@ echo $heading;
 																<div>
 																	<?php echo FreePBX::View()->timezoneDrawSelect('timezone',$group['timezone'],_("Use System Timezone")); ?>
 																</div>
-																<div>
+																<div class="ml-2">
 																	<!--<span class="input-group-btn">-->
 																		<a href="#" class="btn btn-default" id="browsertz"><?php echo _("Use Browser Timezone")?></a>
 																	<!--</span>-->
