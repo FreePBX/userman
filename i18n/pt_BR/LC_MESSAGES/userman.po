@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-10 12:20+0000\n"
+"POT-Creation-Date: 2022-05-17 08:47+0000\n"
 "PO-Revision-Date: 2016-12-21 00:22+0200\n"
 "Last-Translator: Alexander <alexander.schley@paranagua.pr.gov.br>\n"
 "Language-Team: Portuguese (Brazil) <http://weblate.freepbx.org/projects/"
@@ -1231,7 +1231,7 @@ msgstr "Enviar E-mail como HTML"
 msgid "Send Email on External New User Creation"
 msgstr "Enviar E-mail para Criação de Novo Usuário Externo"
 
-#: views/passwordmodal.php:7
+#: views/passwordmodal.php:6
 msgid "Set Password"
 msgstr "Configurar Senha"
 
