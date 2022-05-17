@@ -5,7 +5,7 @@
 		<div class="scroller scroller-left"><i class="fa fa-chevron-left"></i></div>
 		<div class="scroller scroller-right"><i class="fa fa-chevron-right"></i></div>
 		<div class="wrapper">
-			<ul class="nav nav-tabs list pb-0 mt-0" role="tablist">
+			<ul class="nav nav-tabs list pb-0 mt-2p" role="tablist">
 				<li data-name="tab1" class="change-tab"><a href="#tab1" aria-controls="tab1" role="tab" class="nav-link active" data-toggle="tab"><?php echo _("Email Settings")?></a></li>
 				<li data-name="tab2" class="change-tab"><a href="#tab2" aria-controls="tab2" role="tab" class="nav-link" data-toggle="tab"><?php echo _("Authentication Settings")?></a></li>
 			</ul>
