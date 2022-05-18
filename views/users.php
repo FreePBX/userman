@@ -381,7 +381,7 @@ echo $usage_html;
 													<div>
 														<?php echo FreePBX::View()->languageDrawSelect('language',$user['language'],_("Inherit")); ?>
 													</div>
-													<div>
+													<div class="ml-auto">
 														<!--<span class="input-group-btn">-->
 															<a href="#" class="btn btn-default" id="browserlang"><?php echo _("Use Browser Language")?></a>
 														<!--</span>-->
@@ -417,7 +417,7 @@ echo $usage_html;
 													<div>
 														<?php echo FreePBX::View()->timezoneDrawSelect('timezone',$user['timezone'],_("Inherit")); ?>
 													</div>
-													<div>
+													<div class="ml-auto">
 														<!--<span class="input-group-btn">-->
 															<a href="#" class="btn btn-default" id="browsertz"><?php echo _("Use Browser Timezone")?></a>
 														<!--</span>-->
