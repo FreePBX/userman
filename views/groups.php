@@ -111,7 +111,7 @@ echo $heading;
 																<div>
 																	<?php echo FreePBX::View()->languageDrawSelect('language',$group['language'],_("Use System Language")); ?>
 																</div>
-																<div class="ml-2">
+																<div  class="ml-auto">
 																	<!--<span class="input-group-btn">-->
 																		<a href="#" class="btn btn-default" id="browserlang"><?php echo _("Use Browser Language")?></a>
 																	<!--</span>-->
@@ -147,7 +147,7 @@ echo $heading;
 																<div>
 																	<?php echo FreePBX::View()->timezoneDrawSelect('timezone',$group['timezone'],_("Use System Timezone")); ?>
 																</div>
-																<div class="ml-2">
+																<div class="ml-auto">
 																	<!--<span class="input-group-btn">-->
 																		<a href="#" class="btn btn-default" id="browsertz"><?php echo _("Use Browser Timezone")?></a>
 																	<!--</span>-->
