@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>16.0.33</version>
+	<version>17.0.1</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -11,71 +11,7 @@
 	</description>
   	<more-info>https://wiki.freepbx.org/display/FPG/User+Management+Module</more-info>
 	<changelog>
-		*16.0.33* Packaging of ver 16.0.33
-		*16.0.32* Packaging of ver 16.0.32
-		*16.0.31* Packaging of ver 16.0.31
-		*16.0.30* FREEI-4793 
-		*16.0.29* FREEI-4777 
-		*16.0.28* FREEI-4741 
-		*16.0.27* FREEPBX-23420 
-		*16.0.26*    FREEPBX-23160 , FREEPBX-23411 
-		*16.0.25.32* FREEI-4663 and FREEI-4602
-		*16.0.25.31* Packaging of ver 16.0.25.31
-		*16.0.25.30* Packaging of ver 16.0.25.30
-		*16.0.25.29* FREEPBX-23120 Corrected username config option format according to Adldap2 documentation 
-		*16.0.25.28* FREEPBX-23120 and FREEPBX-22854 
-		*16.0.25.27* FREEPBX-23133 
-		*16.0.25.26* FREEPBX-22854 
-		*16.0.25.25* FREEPBX-23061 
-		*16.0.25.24* FREEPBX-23115 and FREEPBX-23112 
-		*16.0.25.23* FREEI-4041 
-		*16.0.25.22* FREEI-1194 
-		*16.0.25.21* FREEPBX-22980, FREEPBX-23114 , FREEPBX-23113 and FREEPBX-23116 
-		*16.0.25.20* FREEPBX-22980: Error Sync to OpenLDAP, member users of each group 
-		*16.0.25.19* FREEPBX-22980: Error Sync to OpenLDAP 
-		*16.0.25.18* FREEI-4229 Added frontend validation for users password field 
-		*16.0.25.17* FREEPBX-22980 Upgraded Adldap2/Adldap2 composer package 
-		*16.0.25.16* FREEI-4107 Fixed warning messages misaligned inside the pop-up window 
-		*16.0.25.15* FREEI-4025 Converted users post data from array to string before submitting form 
-		*16.0.25.14* FREEI-4063 Added condition to display note only when there are error messages 
-		*16.0.25.13* FREEI-4063 Added note about settings to password strength description 
-		*16.0.25.12* FREEI-4062 Password complexity rules are enabled by default on upgrade 
-		*16.0.25.11* Packaging of ver 16.0.25.11
-		*16.0.25.10* Packaging of ver 16.0.25.10
-		*16.0.25.9* Packaging of ver 16.0.25.9
-		*16.0.25.8* FREEI-4064 userman auth settings - adjust the help text for a some policies 
-		*16.0.25.7* FREEI-3161 Fixe conflicts for password policies, and tab button issues 
-		*16.0.25.6* FREEPBX-22855 Fixing mutiple issues with button and whoups errors 
-		*16.0.25.5* FREEPBX-22812 and FREEPBX-22828 
-		*16.0.25.4* FREEPBX-22828 Don't auto-create extension and user UCP template features 
-		*16.0.25.3* FREEPBX-22634 FREEPBX-22812 Unable to delete user from user manager without selecting a directory, Add button in Groups Tab allows to add a group if this one is disabled 
-		*16.0.25.2* SCD-15 modified the checkCredentials method to include default_extension/password validation besides username/password validation 
-		*16.0.25.1* Fixing FREEPBX-22635
-		*16.0.25* FREEPBX-22792 FreePBX 15 Updates and Contact Manager 
-		*16.0.24* FREEI-3765 Add a proper email for template creator 
-		*16.0.23* FREEPBX-22602: Don't transform search query to lowercase 
-		*16.0.22* FREEPBX-22700 FREEPBX-22702 UCP template install and Ldap directory issue 
-		*16.0.21* FREEI-3688 added condition to restore new ucp tables data ('userman_template_settings' and 'userman_ucp_templates') 
-		*16.0.20* Packaging of ver 16.0.20
-		*16.0.19* SMOBILE-294 select by module from userman-settings 
-		*16.0.18* FREEI-3369 Adding UCP template feature 
-		*16.0.17* Packaging of ver 16.0.17
-		*16.0.16* Packaging of ver 16.0.16
-		*16.0.15* FREEI-3547: don't add AMPUSER/none/accountcode to asterisk database 
-		*16.0.14* FREEI-3528: remove restapps_rtapi_conferences rows for deleted user 
-		*16.0.13* FREEI-2691 Added condition to use password given in GQL query (addExtension/UpdateExtension) to access user control panel or else to generate a new random password 
-		*16.0.12* FREEI-3350: set /AMPUSER/ext/accountcode to each extension's userId 
-		*16.0.11* Packaging of ver 16.0.11
-		*16.0.10* Add previous user e-mail address to extraData 
-		*16.0.9* FREEPBX-21901: fixed data recovery 
-		*16.0.8* FREEPBX-21902- Remove directory in table kvstore - v13 
-		*16.0.7* FREEPBX-21782: Backup and restore all data modulo 
-		*16.0.6* Packaging of ver 16.0.6
-		*16.0.5* FREEPBX-20823: LDAP users, contact data is deleted 
-		*16.0.4* FREEI-1623 Userman Delete button GUI improvement 
-		*16.0.3* FREEI-1458 user manager: add instructions to select a directory to add users 
-		*16.0.2* FREEI-1201 Ordering userman groups generates PHP error 
-		*16.0.1alpha* 16.0.1 alpha release
+		*17.0.1alpha* 17.0.1 alpha release
 	</changelog>
 	<info/>
 	<category>Admin</category>
