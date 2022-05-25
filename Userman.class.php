@@ -2587,6 +2587,184 @@ class Userman extends FreePBX_Helpers implements BMO {
 		return $this->directories[$user['dirid']]->checkCredentials($username, $password);
 	}
 
+		/**
+	 * Check mfa enabled or not against username with a password
+	 *
+	 * @param  {string} $username The username
+	 * @param  {string} $password The sha
+	 * @return void
+	 */
+	public function getusermandetails($username, $password) {
+		$user = [];
+		$sql = "SELECT u.mfa,u.email,d.id as dirid from userman_users u, userman_directories d WHERE username = ? AND u.auth = d.id AND d.active = 1 ORDER BY d.order LIMIT 1";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array($username));
+		$results = $sth->fetch(PDO::FETCH_ASSOC);
+		if (empty($result)) {
+			$sql = "SELECT u.mfa,u.email,d.id as dirid from userman_users u, userman_directories d WHERE default_extension = ? AND u.auth = d.id AND d.active = 1 ORDER BY d.order LIMIT 1";
+			$sth = $this->db->prepare($sql);
+			$sth->execute(array($username));
+			$results = $sth->fetch(PDO::FETCH_ASSOC);
+		}
+		if (!empty($results) && $this->directories[$results['dirid']]->checkCredentials($username, $password)) {
+			$user["username"] = $username;
+			$user["usermail"] = isset($results['email'])? $results['email'] :'';
+			$user["mfa"] = isset($results['mfa'])? $results['mfa']:'';
+			if (!session_start()) {
+				session_start();
+				$_SESSION['uid'] = session_id();
+			} else {
+				$_SESSION['uid'] = (isset($_SESSION['uid']) && trim($_SESSION['uid']) !='')? $_SESSION['uid'] : session_id();
+			}
+			if (isset($_SESSION['uid'])) {
+				$sql = "SELECT otp, otpexpirytime, attemptcount FROM userman_mfadetails WHERE session_id =:session_id and usermail =:usermail";
+				$sth = $this->database->prepare($sql);
+				$sth->execute(array(':session_id'=>$_SESSION['uid'],':usermail'=>$user["usermail"]));
+				$mfa = $sth->fetchAll(\PDO::FETCH_ASSOC);
+			}
+			$user["otp"] = isset($mfa[0]['otp'])? $mfa[0]['otp'] :'';
+			$user["otpexpirytime"] = isset($mfa[0]['otpexpirytime'])? $mfa[0]['otpexpirytime'] :'';
+			$user["attemptcount"] = isset($mfa[0]['attemptcount'])? $mfa[0]['attemptcount'] :'';
+			return $user;
+		}
+		dbug($user);
+		return $user;
+	}
+
+
+	public function updateOTPdetails($type,$usermail, $otp, $attemptcount=0,$expirytime='') {
+		$session_id = isset($_SESSION['uid']) ? $_SESSION['uid'] :'';
+		$vars = array();
+		$sql ='';
+		if ($type=='insertmfadetails') {
+			$vars[':otp']= $otp;
+			$vars[':attemptcount']= $attemptcount;
+			$vars[':otpexpirytime']= $expirytime;
+			$vars[':session_id']= $session_id;
+			$vars[':usermail']= $usermail;
+			$sql = "insert into userman_mfadetails (otp,attemptcount,otpexpirytime,session_id,usermail) values (:otp,:attemptcount,:otpexpirytime,:session_id,:usermail)";
+		}else if ($type=='updatemfadetails') {
+			$vars[':otp']= $otp;
+			$vars[':attemptcount']= $attemptcount;
+			$vars[':otpexpirytime']= $expirytime;
+			$vars[':session_id']= $session_id;
+			$sql = "update userman_mfadetails set otp=:otp, attemptcount=:attemptcount,otpexpirytime=:otpexpirytime where session_id=:session_id";
+		} else if($type=='updateattemptcount') {
+			$vars[':attemptcount']= $attemptcount;
+			$vars[':session_id']= $session_id;
+			$sql = "update userman_mfadetails set attemptcount=:attemptcount where session_id=:session_id";
+		} else if($type=='cleartable') {
+			$vars[':session_id']= $session_id;
+			$sql = "delete from userman_mfadetails where session_id=:session_id";
+			if(isset($_SESSION['uid'])) {
+				unset($_SESSION['uid']);
+			}
+		}
+		try {
+			if ($sql !='') {
+				$stmt = $this->database->prepare($sql);
+				$stmt->execute($vars);
+			}
+		} catch(PDOException $e) {
+			if ($e->getCode() == '23000') {
+				return false;
+			} else {
+				echo $e->getMessage();
+        		throw $e;
+			}
+		}
+	}
+
+	public function updateMFAstatus($username, $status='disabled') {
+		$vars = array();
+		$vars[':mfa']= $status;
+		$vars[':username']= $username;
+		$sql = "update userman_mfadetails set mfa=:mfa where username=:username";
+		try {
+			if ($sql !='') {
+				$stmt = $this->database->prepare($sql);
+				$stmt->execute($vars);
+				return true;
+			}
+		} catch(PDOException $e) {
+			if ($e->getCode() == '23000') {
+				return false;
+			} else {
+				echo $e->getMessage();
+        		return false;
+			}
+		}
+	}
+
+	public function verifyOtp($otp,$username) {
+		$response = array();
+		$response['status']=false;
+		$response['message']=_('Please enter valid Otp');
+		$sql = "SELECT username, email FROM userman_users WHERE username=:username";
+		$sth = $this->database->prepare($sql);
+		$sth->execute(array(':username'=>$username));
+		$response['username'] = $username;
+		$results = $sth->fetchAll(\PDO::FETCH_ASSOC);
+		if (count($results) > 0) {
+			$usermail = $results[0]['mail'];
+			if (isset($_SESSION['uid'])) {
+				$sql = "SELECT otp, otpexpirytime, attemptcount FROM userman_mfadetails WHERE session_id =:session_id and usermail =:usermail";
+				$sth = $this->database->prepare($sql);
+				$sth->execute(array(':session_id'=>$_SESSION['uid'],':usermail'=>$usermail));
+				$mfa = $sth->fetchAll(\PDO::FETCH_ASSOC);
+			}
+			$otpexpirytime = isset($mfa[0]['otpexpirytime'])? $mfa[0]['otpexpirytime']:'';
+			$attemptcount = isset($mfa[0]['attemptcount'])? $mfa[0]['attemptcount'] :'';
+			$otp_from_db = isset($mfa[0]['otp'])? $mfa[0]['otp']:'';
+			$response['otp_from_db'] = $otp_from_db;
+			$response['otp']=$otp;
+			$currentDate = strtotime(date("Y-m-d H:i:s"));
+			$otpexpirytime = ($otpexpirytime !='')? strtotime(date($otpexpirytime)) : $currentDate;
+			$attemptcount++;
+			if ($attemptcount >3) {
+				$response['message']=_('You’ve reached the maximum login attempts. Exit your browser and try again');
+				$to = $usermail;
+				$subject=_("Freepbx-OTP-reached the maximum login attempts");
+				$body='Hi '.$username.',<br /><br />';
+				$body .=_('You’ve reached the maximum login attempts. Exit your browser and try again').'<br />';
+				$body .='<br /><br /><br />';
+				$body .=_('Thanks');
+				$mailstatus = $this->otpSendMail($to,$subject,$body);
+				$this->updateOTPdetails('cleartable',$usermail, '', 0,'');
+			} else if ($otpexpirytime !='' && $otpexpirytime < $currentDate) {
+				$this->updateOTPdetails('cleartable',$usermail, '', 0,'');
+				$response['message']=_('Verification code is expired. Exit your browser and try again');
+			} else if($otp_from_db != $otp) {
+				$response['message']=_('Verification code is not match');
+				$this->updateOTPdetails('updateattemptcount',$usermail, $otp, $attemptcount);
+			} else if($otp_from_db == $otp) {
+				$this->updateOTPdetails('cleartable',$usermail, '', 0,'');
+				$response['status']=true;
+				$response['message']=_('Verification code is valid');
+			}
+		}
+		return $response; 
+	}
+
+	public function otpSendMail($to,$subject,$body,$forceType = null) {
+		$email = new \CI_Email();
+		$ipaddress = $email->get_ip();
+		$from = 'freepbx@freepbx.org';
+		$mailtype='html';
+		$mailtype = $mailtype === 'html' ? 'html' : 'text';
+		$email->set_mailtype($mailtype);
+		$email->from($from);
+		$email->to($to);
+		$email->subject($subject);
+		$email->message($body);
+		$mailresponse = $email->send();
+		//$this->log(sprintf(_("Mail send completed - %s"),$subject.' IP Address :'.$ipaddress)); 
+		if ($mailresponse) {
+			return true;
+		}
+		return false;
+	}
+
 	/**
 	 * Get the assigned devices (Extensions or ﻿(device/user mode) Users) for this User
 	 *
