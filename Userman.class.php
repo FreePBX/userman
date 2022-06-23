@@ -3214,6 +3214,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 	public function resetPasswordWithToken($token,$newpassword) {
 		$user = $this->validatePasswordResetToken($token);
 		if(!empty($user)) {
+			$this->FreePBX->Hooks->processHooks($user);
 			$tokens = $this->getGlobalsetting('passresettoken');
 			unset($tokens[$token]);
 			$this->setGlobalsetting('passresettoken',$tokens);
