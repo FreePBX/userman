@@ -627,6 +627,12 @@ class Userman extends FreePBX_Helpers implements BMO {
 								'type' => $ret['type']
 							);
 						}
+						if (!is_null($password) && $this->FreePBX->Modules->checkStatus('pbxsecurity')) {
+							$passwordExpiryData['id'] = $ret['id'];
+							$passwordExpiryData['username'] = $username;
+							$passwordExpiryData['email'] = isset($extraData['email']) ? $extraData['email'] : "";
+							$this->FreePBX->Pbxsecurity->passwordReminder->resetPasswordExpiry($passwordExpiryData, 'ucp');
+						}
 					}
 					if(!empty($ret['status'])) {
 						if($request['pbx_login'] != "inherit") {
