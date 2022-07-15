@@ -2170,6 +2170,9 @@ class Userman extends FreePBX_Helpers implements BMO {
 		if($moduleuc == 'Home'){
 			return $widget;
 		}
+		if (!$this->FreePBX->Modules->checkStatus($widget['rawname'])){
+				return false;
+		}
 		//call the module api to get the widgetlist
 		if(method_exists($this->FreePBX->$moduleuc,'getWidgetListByModule')){
 			$widget = $this->FreePBX->$moduleuc->getWidgetListByModule($defaultextension,$userid,$widget);
