@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>16.0.35.2</version>
+	<version>16.0.35.3</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -11,6 +11,7 @@
 	</description>
   	<more-info>https://wiki.freepbx.org/display/FPG/User+Management+Module</more-info>
 	<changelog>
+		*16.0.35.3* FREEPBX-23601 
 		*16.0.35.2* Packaging of ver 16.0.35.2
 		*16.0.35.1* bump 
 		*16.0.35* Packaging of ver 16.0.35
