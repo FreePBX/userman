@@ -631,7 +631,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 							$passwordExpiryData['id'] = $ret['id'];
 							$passwordExpiryData['username'] = $username;
 							$passwordExpiryData['email'] = isset($extraData['email']) ? $extraData['email'] : "";
-							$this->FreePBX->Pbxsecurity->passwordReminder->resetPasswordExpiry($passwordExpiryData, 'ucp');
+							$this->FreePBX->Pbxsecurity->passwordManagement->resetPasswordExpiry($passwordExpiryData, 'ucp');
 						}
 					}
 					if(!empty($ret['status'])) {
