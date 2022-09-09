@@ -2508,12 +2508,22 @@ class Userman extends FreePBX_Helpers implements BMO {
 		if($dir['locked']) {
 			return array("status" => false, "message" => _("Directory is locked. Can not update user"));
 		}
-		if (\FreePBX::Modules()->checkStatus('pbxmfa')) {
-			$res = $this->FreePBX->Pbxmfa->checkFieldValidationForUserman($uid, $_POST, $extraData);
+
+      	$modules = \FreePBX::Modules();
+		if ($modules->checkStatus('pbxmfa')) {
+			$res = $this->FreePBX->Pbxmfa->checkFieldValidationForUserman($uid, $_POST);
 			if (!$res['status']) {
 				return $res;
 			}
 		}
+
+		if ($modules->checkStatus('missedcall')) {
+			$res = $this->FreePBX->Missedcall->checkFieldValidationForUserman($uid, $_POST);
+			if (!$res['status']) {
+				return $res;
+			}
+		}
+      
 		$status = $this->directories[$u['auth']]->updateUser($uid, $prevUsername, $username, $default, $description, $extraData, $password, $nodisplay);
 		if(!$status['status']) {
 			return $status;
