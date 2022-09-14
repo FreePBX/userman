@@ -560,7 +560,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 					$password = !empty($request['password']) ? $request['password'] : '';
 					$description = !empty($request['description']) ? $request['description'] : '';
 					$prevUsername = !empty($request['prevUsername']) ? $request['prevUsername'] : '';
-					$prevEmail = !empty($request['prevEmail']) ? $request['prevEmail'] : '';
+					$prevEmail = !empty($request['prevEmail']) ? trim($request['prevEmail']) : '';
 					$assigned = !empty($request['assigned']) ? $request['assigned'] : array();
 					$extraData = array(
 						'fname' => isset($request['fname']) ? $request['fname'] : null,
@@ -573,7 +573,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 						'timeformat' => isset($request['timeformat']) ? $request['timeformat'] : null,
 						'dateformat' => isset($request['dateformat']) ? $request['dateformat'] : null,
 						'datetimeformat' => isset($request['datetimeformat']) ? $request['datetimeformat'] : null,
-						'email' => isset($request['email']) ? $request['email'] : null,
+						'email' => isset($request['email']) ? trim($request['email']) : null,
 						'cell' => isset($request['cell']) ? $request['cell'] : null,
 						'work' => isset($request['work']) ? $request['work'] : null,
 						'home' => isset($request['home']) ? $request['home'] : null,
@@ -3695,7 +3695,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 								'title' => isset($data['title']) ? $data['title'] : null,
 								'company' => isset($data['company']) ? $data['company'] : null,
 								'department' => isset($data['department']) ? $data['department'] : null,
-								'email' => isset($data['email']) ? $data['email'] : null,
+								'email' => isset($data['email']) ? trim($data['email']) : null,
 								'cell' => isset($data['cell']) ? $data['cell'] : null,
 								'work' => isset($data['work']) ? $data['work'] : null,
 								'home' => isset($data['home']) ? $data['home'] : null,
