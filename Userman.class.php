@@ -2164,6 +2164,9 @@ class Userman extends FreePBX_Helpers implements BMO {
 		if($moduleuc == 'Home'){
 			return $widget;
 		}
+		if (!$this->FreePBX->Modules->checkStatus($widget['rawname'])){
+				return false;
+		}
 		//call the module api to get the widgetlist
 		if(method_exists($this->FreePBX->$moduleuc,'getWidgetListByModule')){
 			$widget = $this->FreePBX->$moduleuc->getWidgetListByModule($defaultextension,$userid,$widget);
@@ -2505,6 +2508,22 @@ class Userman extends FreePBX_Helpers implements BMO {
 		if($dir['locked']) {
 			return array("status" => false, "message" => _("Directory is locked. Can not update user"));
 		}
+
+      	$modules = \FreePBX::Modules();
+		if ($modules->checkStatus('pbxmfa')) {
+			$res = $this->FreePBX->Pbxmfa->checkFieldValidationForUserman($uid, $_POST);
+			if (!$res['status']) {
+				return $res;
+			}
+		}
+
+		if ($modules->checkStatus('missedcall') && empty($extraData["email"])) {
+			$res = $this->FreePBX->Missedcall->checkFieldValidationForUserman($uid, $_POST);
+			if (!$res['status']) {
+				return $res;
+			}
+		}
+      
 		$status = $this->directories[$u['auth']]->updateUser($uid, $prevUsername, $username, $default, $description, $extraData, $password, $nodisplay);
 		if(!$status['status']) {
 			return $status;
@@ -3219,6 +3238,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 	public function resetPasswordWithToken($token,$newpassword) {
 		$user = $this->validatePasswordResetToken($token);
 		if(!empty($user)) {
+			$this->FreePBX->Hooks->processHooks($user);
 			$tokens = $this->getGlobalsetting('passresettoken');
 			unset($tokens[$token]);
 			$this->setGlobalsetting('passresettoken',$tokens);
