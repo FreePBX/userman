@@ -49,11 +49,13 @@ class Userman extends Command {
 		}
 		if($input->getOption('syncall')) {
 			$this->setLock();
+			$output->writeln(sprintf(_("%s Starting sync process"), date('Y-m-d H:i:s')));
 			$directories = $userman->getAllDirectories();
 			foreach($directories as $directory) {
 				$this->syncDirectory($directory,$output,$force);
 			}
 			$this->removeLock();
+			$output->writeln(sprintf(_("%s Sync process ended"), date('Y-m-d H:i:s')));
 		}
 		if($input->getOption('deletegenerictemplate')) {
 			try {
