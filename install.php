@@ -33,21 +33,31 @@ $set['type'] = CONF_TYPE_TEXT;
 $freepbx->Config->define_conf_setting('AMPUSERMANEMAILFROM',$set,true);
 cronjobEntry($freepbx);
 
-function cronjobEntry($freepbx){
+function cronjobEntry($freepbx) {
 	$AMPASTERISKWEBUSER = $freepbx->Config->get("AMPASTERISKWEBUSER");
 	$AMPSBIN = $freepbx->Config->get("AMPSBIN");
-		$freepbxCron = $freepbx->Cron($AMPASTERISKWEBUSER);
-		$crons = $freepbxCron->getAll();
-		foreach($crons as $cron) {
-			if(preg_match("/fwconsole userman sync$/",$cron) || preg_match("/fwconsole userman --syncall -q$/",$cron)) {
-				$freepbxCron->remove($cron);
-				out('Removed existing Cron entry '.$cron);
-			}
+	$freepbxCron = $freepbx->Cron($AMPASTERISKWEBUSER);
+	$crons = $freepbxCron->getAll();
+	foreach($crons as $cron) {
+		if(preg_match("/fwconsole userman sync$/",$cron) || preg_match("/fwconsole userman --syncall/",$cron)) {
+			$freepbxCron->remove($cron);
+			out('Removed existing Cron entry '.$cron);
 		}
-		$freepbx->Job->remove('userman', 'syncall');
+	}
+	$freepbx->Job->remove('userman', 'syncall');
+	$sql = "SELECT * FROM kvstore_FreePBX_modules_Userman WHERE `key` ='enableSyncLogs'";
+	$sth = \FreePBX::Database()->prepare($sql);
+	$sth->execute();
+	$row = $sth->fetch(PDO::FETCH_ASSOC);
+	if ($row['val']) {
+		$logdir = $freepbx->Config->get("ASTLOGDIR");
+		$freepbxCron->addLine("*/15 * * * * [ -e ".$AMPSBIN."/fwconsole ] && sleep $((RANDOM\%30)) && ".$AMPSBIN."/fwconsole userman --syncall >> " . $logdir . "/userman_sync.log 2>&1");
+	} else {
 		$freepbxCron->addLine("*/15 * * * * [ -e ".$AMPSBIN."/fwconsole ] && sleep $((RANDOM\%30)) && ".$AMPSBIN."/fwconsole userman --syncall -q");
-		outn(' Added new Cron entry');
+	}
+	outn('Added new Cron entry');
 }
+
 function createDefaultUCPTemplate(){
 	//No harm if delete templatecreator on install  ,as we auto generated this from Userman page
 	$delete = "delete from kvstore_FreePBX_modules_Userman where `id` = 'templatecreator'";
