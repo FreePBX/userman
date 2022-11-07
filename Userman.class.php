@@ -157,6 +157,17 @@ class Userman extends FreePBX_Helpers implements BMO {
 		if($dir['driver'] == 'Freepbx') {
 			$this->addDefaultGroupToDirectory($dir['id']);
 		}
+		$logdir = $this->FreePBX->Config->get("ASTLOGDIR");
+		if (!file_exists($logdir . "/userman_sync.log")) {
+			touch($logdir . "/userman_sync.log");
+			chown($logdir . "/userman_sync.log", "asterisk");
+			chgrp($logdir . "/userman_sync.log", "asterisk");
+			chmod($logdir . "/userman_sync.log", 0664);
+			out("log file created " . $logdir . "/userman_sync.log");
+		}
+		if ($this->FreePBX->Modules->checkStatus("sysadmin")) {
+			touch("/var/spool/asterisk/incron/userman.logrotate");
+		}
 	}
 
 	/**
@@ -712,7 +723,13 @@ class Userman extends FreePBX_Helpers implements BMO {
 											'pwd_threshold_enable'	=> $request['pwd_threshold_enable'],
 											'pwd_threshold_value' 	=> $request['pwd_threshold_value'],
 										);
-					$this->setConfig("pwdSettings", json_encode($pwdSettings));	
+					$this->setConfig("pwdSettings", json_encode($pwdSettings));
+					$enableSyncLogs = ($request['enable-sync-logs'] == "yes") ? 1 : 0;
+					$updateCron = ($enableSyncLogs != $this->getConfig('enableSyncLogs')) ? true : false;
+					$this->setConfig("enableSyncLogs", $enableSyncLogs);
+					if ($updateCron) {
+						$this->cronjobEntry($this->FreePBX);
+					}
 					$this->message = array(
 						'message' => _('Saved'),
 						'type' => 'success'
@@ -1182,7 +1199,8 @@ class Userman extends FreePBX_Helpers implements BMO {
 						"mailtype" => $mailtype,
 						"dirwarn" => $dirwarn,
 						"allgenratebutton" => $allgenratebutton,
-						"pwdSettings" => $this->getConfig('pwdSettings')
+						"pwdSettings" => $this->getConfig('pwdSettings'),
+						"enableSyncLogs" => $this->getConfig('enableSyncLogs')
 					)
 				);
 			break;
@@ -4476,5 +4494,24 @@ class Userman extends FreePBX_Helpers implements BMO {
 			}
 		}
 		return ['dashboard'=>$dashbords,'dashwidgets'=>$dashbordsettings];
+	}
+
+	public function cronjobEntry() {
+		$AMPASTERISKWEBUSER = $this->FreePBX->Config->get("AMPASTERISKWEBUSER");
+		$AMPSBIN = $this->FreePBX->Config->get("AMPSBIN");
+		$freepbxCron = $this->FreePBX->Cron($AMPASTERISKWEBUSER);
+		$crons = $freepbxCron->getAll();
+		foreach($crons as $cron) {
+			if(preg_match("/fwconsole userman sync$/",$cron) || preg_match("/fwconsole userman --syncall/",$cron)) {
+				$freepbxCron->remove($cron);
+			}
+		}
+		$this->FreePBX->Job->remove('userman', 'syncall');
+		if ($this->getConfig('enableSyncLogs')) {
+			$logdir = $this->FreePBX->Config->get("ASTLOGDIR");
+			$freepbxCron->addLine("*/15 * * * * [ -e ".$AMPSBIN."/fwconsole ] && sleep $((RANDOM\%30)) && ".$AMPSBIN."/fwconsole userman --syncall >> " . $logdir . "/userman_sync.log 2>&1");
+		} else {
+			$freepbxCron->addLine("*/15 * * * * [ -e ".$AMPSBIN."/fwconsole ] && sleep $((RANDOM\%30)) && ".$AMPSBIN."/fwconsole userman --syncall -q");
+		}
 	}
 }

@@ -1,0 +1,15 @@
+#!/bin/bash
+cat <<- EOF > /etc/logrotate.d/userman
+
+/var/log/asterisk/userman_sync.log {
+	size 50M
+	missingok
+	rotate 5
+	dateext
+	notifempty
+	sharedscripts
+	create 0664 asterisk asterisk
+	su asterisk asterisk
+}
+
+EOF
