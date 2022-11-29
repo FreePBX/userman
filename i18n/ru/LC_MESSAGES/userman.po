@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: User Management\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 04:20+0000\n"
-"PO-Revision-Date: 2022-04-21 09:01+0000\n"
+"PO-Revision-Date: 2022-11-30 07:00+0000\n"
 "Last-Translator: Dmitriy Q <krotesk@ya.ru>\n"
 "Language-Team: Russian <http://weblate.freepbx.org/projects/freepbx/userman/"
 "ru/>\n"
@@ -1134,16 +1134,18 @@ msgstr ""
 
 #: assets/js/userman.js:456
 msgid "The Browser Language could not be determined"
-msgstr ""
+msgstr "Не удалось определить язык браузера"
 
 #: assets/js/userman.js:476
 msgid "The Browser Timezone could not be determined"
-msgstr ""
+msgstr "Не удалось определить часовой пояс браузера"
 
 #: userman.i18n.php:16
 msgid ""
 "The From: field for emails when using the user management email feature."
 msgstr ""
+"Поле From: для электронных писем при использовании функции электронной почты "
+"в управлении пользователями."
 
 #: views/msad2.php:745
 #: views/openldap2.php:699
