@@ -4494,7 +4494,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 		$this->FreePBX->Job->remove('userman', 'syncall');
 		if ($this->getConfig('enableSyncLogs')) {
 			$logdir = $this->FreePBX->Config->get("ASTLOGDIR");
-			$freepbxCron->addLine("*/15 * * * * [ -e ".$AMPSBIN."/fwconsole ] && sleep $((RANDOM\%30)) && ".$AMPSBIN."/fwconsole userman --syncall >> " . $logdir . "/userman_sync.log 2>&1");
+			$freepbxCron->addLine("*/15 * * * * [ -e ".$AMPSBIN."/fwconsole ] && sleep $((RANDOM\%30)) && ".$AMPSBIN."/fwconsole userman --syncall --verbose >> " . $logdir . "/userman_sync.log 2>&1");
 		} else {
 			$freepbxCron->addLine("*/15 * * * * [ -e ".$AMPSBIN."/fwconsole ] && sleep $((RANDOM\%30)) && ".$AMPSBIN."/fwconsole userman --syncall -q");
 		}
