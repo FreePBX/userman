@@ -6,45 +6,13 @@
 		<div class="scroller scroller-right"><i class="glyphicon glyphicon-chevron-right"></i></div>
 		<div class="wrapper">
 			<ul class="nav nav-tabs list" role="tablist">
-				<li data-name="tab1" class="change-tab active"><a href="#tab1" aria-controls="tab1" role="tab" data-toggle="tab"><?php echo _("General Settings")?></a></li>
-				<li data-name="tab2" class="change-tab"><a href="#tab2" aria-controls="tab2" role="tab" data-toggle="tab"><?php echo _("Email Settings")?></a></li>
-				<li data-name="tab3" class="change-tab"><a href="#tab3" aria-controls="tab3" role="tab" data-toggle="tab"><?php echo _("Authentication Settings")?></a></li>
+				<li data-name="tab1" class="change-tab active"><a href="#tab1" aria-controls="tab1" role="tab" data-toggle="tab"><?php echo _("Email Settings")?></a></li>
+				<li data-name="tab2" class="change-tab"><a href="#tab2" aria-controls="tab2" role="tab" data-toggle="tab"><?php echo _("Authentication Settings")?></a></li>
 			</ul>
 		</div>
 	</div>
 	<div class="tab-content">
 		<div id="tab1" class="tab-pane display active">
-			<!--Enable Sync Logs-->
-			<div class="element-container">
-				<div class="row">
-					<div class="col-md-12">
-						<div class="row">
-							<div class="form-group">
-								<div class="col-md-3">
-									<label class="control-label" for="enable-sync-logs"><?php echo _("Enable Sync Logs")?></label>
-									<i class="fa fa-question-circle fpbx-help-icon" data-for="enable-sync-logs"></i>
-								</div>
-								<div class="col-md-9">
-									<span class="radioset">
-										<input type="radio" id="enable-sync-logs-yes" name="enable-sync-logs" value="yes" <?php echo ($enableSyncLogs) ? "checked" : ""?>>
-										<label for="enable-sync-logs-yes"><?php echo _("Yes")?></label>
-										<input type="radio" id="enable-sync-logs-no" name="enable-sync-logs" value="no" <?php echo !($enableSyncLogs) ? "checked" : ""?>>
-										<label for="enable-sync-logs-no"><?php echo _("No")?></label>
-									</span>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-12">
-						<span id="enable-sync-logs-help" class="help-block fpbx-help-block"><?php echo _("Enable or disable Userman directory sync logs. If enabled, the logs will be available in the userman_sync.log file inside the default directory for Asterisks log files.")?></span>
-					</div>
-				</div>
-			</div>
-			<!--END Enable Sync Logs-->
-		</div>
-		<div id="tab2" class="tab-pane display">
 			<h3><?php echo _("Email Settings")?></h3>
 			<!--Email Subject-->
 			<div class="element-container">
@@ -179,7 +147,7 @@
 				<?php
 			extract($pwdSettings);
 		?>
-		<div id="tab3" class="tab-pane display">
+		<div id="tab2" class="tab-pane display">
 			<h3><?php echo _("Password Policies")?></h3>
 			<!--Length-->
 			<div class="element-container">
