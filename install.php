@@ -39,7 +39,7 @@ function cronjobEntry($freepbx){
 		$freepbxCron = $freepbx->Cron($AMPASTERISKWEBUSER);
 		$crons = $freepbxCron->getAll();
 		foreach($crons as $cron) {
-			if(preg_match("/fwconsole userman sync$/",$cron) || preg_match("/fwconsole userman --syncall -q$/",$cron)) {
+			if(preg_match("/fwconsole userman sync$/",$cron) || preg_match("/fwconsole userman --syncall /",$cron)) {
 				$freepbxCron->remove($cron);
 				out('Removed existing Cron entry '.$cron);
 			}
