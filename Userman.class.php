@@ -529,7 +529,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 								$res = $this->FreePBX->Endpoint->getTemplateSettingsByIds(array('use_native_apps'));
 								if (in_array(array('use_native_apps' => 1), $res)) {
 									$ret['message'] = $ret['message'] . "<br><br>" .
-										_("If any users in this group are using a Sangoma/Digium phone configured through Endpoint Manager, please rebuild their phone configuration and apply them if any Phone Apps settings have changed.");
+										_("We recommend that any users in this group using Sangoma's S, D & P series phones configured through Endpoint Manager, please rebuild their phone configuration, and apply any changes made to the Phone Apps Settings.");
 								}
 							}
 
@@ -612,7 +612,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 								$res = $this->FreePBX->Endpoint->getTemplateSettingsByIds(array('use_native_apps'));
 								if (in_array(array('use_native_apps' => 1), $res)) {
 									$ret['message'] = $ret['message'] . "<br><br>" .
-										_("If this user is using a Sangoma/Digium phone configured through Endpoint Manager, please rebuild the phone configuration and apply it if any Phone Apps settings have changed.");
+										_("In case these Phone Apps settings have changed, please rebuild the phone configuration if the user uses Sangoma's S, D & P series phones configured through Endpoint Manager.");
 								}
 							}
 
