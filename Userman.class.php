@@ -15,6 +15,7 @@ use PDO;
 use Exception;
 use Ramsey\Uuid\Uuid;
 use ZxcvbnPhp\Zxcvbn as Zxcvbn;
+
 class Userman extends FreePBX_Helpers implements BMO {
 	private $registeredFunctions = array();
 	private $message = '';
@@ -623,6 +624,12 @@ class Userman extends FreePBX_Helpers implements BMO {
 								'type' => $ret['type']
 							);
 						}
+						if (!is_null($password) && $this->FreePBX->Modules->checkStatus('sysadmin')) {
+							$passwordExpiryData['id'] = $ret['id'];
+							$passwordExpiryData['username'] = $username;
+							$passwordExpiryData['email'] = isset($extraData['email']) ? $extraData['email'] : "";
+							$this->pwdExpReminder()->resetPasswordExpiry($passwordExpiryData, 'ucp');
+						}
 					}
 					if(!empty($ret['status'])) {
 						if($request['pbx_login'] != "inherit") {
@@ -708,7 +715,8 @@ class Userman extends FreePBX_Helpers implements BMO {
 											'pwd_threshold_enable'	=> $request['pwd_threshold_enable'],
 											'pwd_threshold_value' 	=> $request['pwd_threshold_value'],
 										);
-					$this->setConfig("pwdSettings", json_encode($pwdSettings));	
+					$this->setConfig("pwdSettings", json_encode($pwdSettings));
+					$this->pwdExpReminder()->setPaswordConfig($request);
 					$this->message = array(
 						'message' => _('Saved'),
 						'type' => 'success'
@@ -1160,6 +1168,14 @@ class Userman extends FreePBX_Helpers implements BMO {
 				if(empty($pwdsettings)){
 					$this->setDefaultPwdSettings();
 				}
+				$passwordReminder = array(
+					'forcePasswordReset' => $this->pwdExpReminder()->getSettings('forcePasswordReset'),
+					'passwordExpiryReminder' => $this->pwdExpReminder()->getSettings('passwordExpiryReminder'),
+					'passwordExpirationDays' => $this->pwdExpReminder()->getSettings('passwordExpirationDays'),
+					'passwordExpiryReminderDays' => $this->pwdExpReminder()->getSettings('passwordExpiryReminderDays'),
+					'errors' => $errors
+				);
+
 				$html .= load_view(
 					dirname(__FILE__).'/views/welcome.php',
 					array(
@@ -1184,7 +1200,8 @@ class Userman extends FreePBX_Helpers implements BMO {
 						"mailtype" => $mailtype,
 						"dirwarn" => $dirwarn,
 						"allgenratebutton" => $allgenratebutton,
-						"pwdSettings" => $this->getConfig('pwdSettings')
+						"pwdSettings" => $this->getConfig('pwdSettings'),
+						"passwordReminder" => $passwordReminder
 					)
 				);
 			break;
@@ -1303,6 +1320,10 @@ class Userman extends FreePBX_Helpers implements BMO {
 				$setting['allowremote'] = true;
 				return true;
 			break;
+			case 'checkPasswordReminder':
+			case 'resetAdminPasswordWithToken':
+				$setting['authenticate'] = false;
+				return true;
 			default:
 				return false;
 			break;
@@ -1478,6 +1499,10 @@ class Userman extends FreePBX_Helpers implements BMO {
 					break;
 				}
 			break;
+			case 'checkPasswordReminder':
+				return $this->pwdExpReminder()->checkPasswordReminder($_REQUEST);
+			case 'resetAdminPasswordWithToken':
+				return $this->pwdExpReminder()->resetAdminPasswordWithToken($_REQUEST);
 			default:
 				echo json_encode(_("Error: You should never see this"));
 			break;
@@ -4461,5 +4486,52 @@ class Userman extends FreePBX_Helpers implements BMO {
 			}
 		}
 		return ['dashboard'=>$dashbords,'dashwidgets'=>$dashbordsettings];
+	}
+
+	public function pwdExpReminder()
+	{
+		static $pwdExpReminder = false;
+		if (!is_object($pwdExpReminder)) {
+			include_once __DIR__ . "/PasswordExpReminder.php";
+			$pwdExpReminder = new Userman\PasswordExpReminder();
+		}
+		return $pwdExpReminder;
+	}
+
+	public function resetPasswordExpiry($user)
+	{
+		$this->pwdExpReminder()->resetPasswordExpiry($user);
+	}
+
+	public function pwdShowPage()
+	{
+		return $this->pwdExpReminder()->usermanShowPage();
+	}
+
+	public function pwdAddGroup($id, $display, $data)
+	{
+		$this->pwdExpReminder()->usermanAddUser($id, $display, $data);
+	}
+
+	public function pwdUpdateGroup($id, $display, $data)
+	{
+		$this->pwdExpReminder()->usermanUpdateGroup($id, $display, $data);
+	}
+
+	public function pwdAddUser($id, $display, $data)
+	{
+		$this->pwdExpReminder()->usermanAddUser($id, $display, $data);
+	}
+
+	public function pwdUpdateUser($id, $display, $data)
+	{
+		$this->pwdExpReminder()->usermanUpdateUser($id, $display, $data);
+	}
+
+	public function pwdDeleteUser($id, $display, $data)
+	{
+		if (isset($data['username'])) {
+			$this->pwdExpReminder()->deleteReminderSettingsForUser($data['username'], $id);
+		}
 	}
 }
