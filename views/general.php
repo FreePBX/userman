@@ -8,6 +8,7 @@
 			<ul class="nav nav-tabs list" role="tablist">
 				<li data-name="tab1" class="change-tab active"><a href="#tab1" aria-controls="tab1" role="tab" data-toggle="tab"><?php echo _("Email Settings")?></a></li>
 				<li data-name="tab2" class="change-tab"><a href="#tab2" aria-controls="tab2" role="tab" data-toggle="tab"><?php echo _("Authentication Settings")?></a></li>
+				<li data-name="tab3" class="change-tab"><a href="#tab3" aria-controls="tab3" role="tab" data-toggle="tab"><?php echo _("Password Management")?></a></li>
 			</ul>
 		</div>
 	</div>
@@ -470,6 +471,98 @@
 			<div class="pwd-error">
 			</div>
 		</div>
+		<!-- Start : Password Management -->
+		
+		<div id="tab3" class="tab-pane display">
+			<h3><?php echo _("Password Management")?></h3>
+			<?php extract($passwordReminder); ?>
+			<div class="alert alert-warning">
+				<p class="mb-0"><b>Note:</b> <?php echo _("Enabling / Disabling below settings will be applied for all users. You can manage these settings for each users from"); ?> <a href="/admin/config.php?display=userman" target="_blank">userman</a> </p>
+			</div>
+
+			<!-- Start: Force reset the password on first time login  -->
+			<div class="element-container">
+				<div class="row">
+					<div class="form-group">
+						<div class="col-md-7">
+							<label class="control-label" for="forcePasswordReset"><?php echo _("Force reset the password on first time login") ?></label>
+							<i class="fa fa-question-circle fpbx-help-icon" data-for="forcePasswordReset"></i>&nbsp;
+							<span id="forcePasswordReset-help" class="help-block fpbx-help-block m-0 p-0">
+								<?php echo _("If the option is set to yes, the user will be forced to reset the password on first time login.") ?>
+							</span>
+						</div>
+						<div class="col-md-5 radioset text-right">
+							<input type="radio" id="forcePasswordReset1" name="forcePasswordReset"  value="1" <?php echo $forcePasswordReset ? 'checked=""' : "" ?>>
+							<label for="forcePasswordReset1">Yes</label>
+							<input type="radio" id="forcePasswordReset0" name="forcePasswordReset"  value="0" <?php echo $forcePasswordReset ? '' : "checked=''" ?>>
+							<label for="forcePasswordReset0">No</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- End: Force reset the password on first time login  -->
+			
+			<!-- Start: Password Expiry Reminder  -->
+			<div class="element-container">
+				<div class="row">
+					<div class="form-group">
+						<div class="col-md-7">
+							<label class="control-label" for="passwordExpiryReminder"><?php echo _("Password Expiry Reminder") ?></label>
+							<i class="fa fa-question-circle fpbx-help-icon" data-for="passwordExpiryReminder"></i>&nbsp;
+							<span id="passwordExpiryReminder-help" class="help-block fpbx-help-block m-0 p-0">
+								<?php echo _("If this option is enabled user has to change their passwords every 60, 90 or XX number of days. In other words, the password has been in use for too long and user must choose a new password at this time") ?>
+							</span>
+						</div>
+						<div class="col-md-5 radioset text-right">
+							<input type="radio" id="passwordExpiryReminder1" onClick="handlePasswordExpiryReminder()" name="passwordExpiryReminder"  value="1" <?php echo $passwordExpiryReminder ? 'checked=""' : "" ?>>
+							<label for="passwordExpiryReminder1">Yes</label>
+							<input type="radio" id="passwordExpiryReminder0" onClick="handlePasswordExpiryReminder()" name="passwordExpiryReminder"  value="0" <?php echo $passwordExpiryReminder ? '' : "checked=''" ?>>
+							<label for="passwordExpiryReminder0">No</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- End: Password Expiry Reminder  -->
+		
+			<!-- Start: Password expiration Days-->
+			<div class="element-container" style="<?php echo $passwordExpiryReminder ? "" : "display:none;" ?>" id="expirationDaysWrapper">
+				<div class="row">
+					<div class="form-group">
+						<div class="col-md-7">
+							<label class="control-label" for="passwordExpirationDays"><?php echo _("Password Expiration Days") ?></label>
+							<i class="fa fa-question-circle fpbx-help-icon" data-for="passwordExpirationDays"></i>&nbsp;
+							<span id="passwordExpirationDays-help" class="help-block fpbx-help-block m-0 p-0">
+								<?php echo _("Password expiration days is when an user requires to change their passwords. Example 60, 90 or XX number of days. User will be notified every time when they login, 5 days prior to the password expiry") ?>
+							</span>
+						</div>
+						<div class="col-md-5">
+							<input type="number" class="form-control" id="passwordExpirationDays" min="1" name="passwordExpirationDays" value=<?php echo $passwordExpirationDays ? $passwordExpirationDays : "90" ?>>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- End: Password expiration Days-->
+		
+			<!-- Start: Password expiry reminder days -->
+			<div class="element-container" style="<?php echo $passwordExpiryReminder ? "" : "display:none;" ?>" id="expiryReminderDaysWrapper">
+				<div class="row">
+					<div class="form-group">
+						<div class="col-md-7">
+							<label class="control-label" for="passwordExpiryReminderDays"><?php echo _("Password Expiry Reminder Days") ?></label>
+							<i class="fa fa-question-circle fpbx-help-icon" data-for="passwordExpiryReminderDays"></i>&nbsp;
+							<span id="passwordExpiryReminderDays-help" class="help-block fpbx-help-block m-0 p-0">
+								<?php echo _("X days from when user will get password expiry reminder") ?>
+							</span>
+						</div>
+						<div class="col-md-5">
+							<input type="number" class="form-control" id="passwordExpiryReminderDays" min="1" name="passwordExpiryReminderDays" value=<?php echo $passwordExpiryReminderDays ? $passwordExpiryReminderDays : "5" ?>>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- End: Password expiry reminder days -->
+		</div>
+		<!-- End : Password Management -->
 	</div>
 </form>
 <style>
@@ -480,3 +573,15 @@
 	right: 38px;
 }
 </style>
+<script>
+	function handlePasswordExpiryReminder() {
+		let passwordExpiryReminder = $('input[name=passwordExpiryReminder]:checked').val();
+		if (parseInt(passwordExpiryReminder)) {
+			$('#expirationDaysWrapper').show();
+			$('#expiryReminderDaysWrapper').show();
+		} else {
+			$('#expirationDaysWrapper').hide();
+			$('#expiryReminderDaysWrapper').hide();
+		}
+	}
+</script>
