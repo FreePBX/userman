@@ -624,6 +624,9 @@ class Userman extends FreePBX_Helpers implements BMO {
 							);
 						}
 					}
+					if (!is_null($password) && $this->FreePBX->Modules->checkStatus('pbxmfa')) {
+						$this->FreePBX->Pbxmfa->resetTrustedDevices($username, 'ucp');
+					}
 					if(!empty($ret['status'])) {
 						if($request['pbx_login'] != "inherit") {
 							$pbx_login = ($request['pbx_login'] == "true") ? true : false;
