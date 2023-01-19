@@ -1450,6 +1450,9 @@ class Userman extends FreePBX_Helpers implements BMO {
 				$newpass = $request['newpass'];
 				$extra = array();
 				$user = $this->getUserByID($uid);
+				if (!is_null($newpass) && $this->FreePBX->Modules->checkStatus('pbxmfa')) {
+					$this->FreePBX->Pbxmfa->resetTrustedDevices($user['username'], 'ucp');
+				}
 				return $this->updateUser($uid, $user['username'], $user['username'], $user['default_extension'], $user['description'], $extra, $newpass);
 			break;
 			case 'delete':
