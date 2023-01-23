@@ -250,7 +250,15 @@
 				<column name="tid"/>
 			</key>
 		</table>
-
+		<table name="userman_password_reminder">
+			<field name="id" type="integer" primarykey="true" autoincrement="true"/>
+			<field name="uid" type="string" length="40" default=""/>
+			<field name="username" type="string" length="40" default=""/>
+			<field name="usermail" type="string" length="40" default=""/>
+			<field name="usertype" type="string" length="20" default=""/>
+			<field name="passwordChangedAt" type="datetime"/>
+			<field name="passwordExpiryDate" type="datetime"/>
+		</table>
 	</database>
 	<supported>
 		<version>16.0</version>
