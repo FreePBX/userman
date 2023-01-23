@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>16.0.35.11</version>
+	<version>16.0.36</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -11,6 +11,7 @@
 	</description>
   	<more-info>https://wiki.freepbx.org/display/FPG/User+Management+Module</more-info>
 	<changelog>
+		*16.0.36*   FREEI-4700 Integrated password management
 		*16.0.35.11* Packaging of ver 16.0.35.11
 		*16.0.35.10* FREEI-5522 
 		*16.0.35.9* FREEI-5198 
@@ -108,6 +109,15 @@
 			<method callingMethod="import" class="Userman" namespace="FreePBX\modules">bulkhandlerImport</method>
 			<method callingMethod="export" class="Userman" namespace="FreePBX\modules">bulkhandlerExport</method>
 		</bulkhandler>
+		<userman class="Userman" namespace="FreePBX\modules">
+			<method callingMethod="addGroup" class="Userman" namespace="FreePBX\modules">pwdAddGroup</method>
+			<method callingMethod="updateGroup" class="Userman" namespace="FreePBX\modules">pwdUpdateGroup</method>
+			<method callingMethod="addUser" class="Userman" namespace="FreePBX\modules">pwdAddUser</method>
+			<method callingMethod="updateUser" class="Userman" namespace="FreePBX\modules">pwdUpdateUser</method>
+			<method callingMethod="myShowPage" class="Userman" namespace="FreePBX\modules">pwdShowPage</method>
+			<method callingMethod="delUser" class="Userman" namespace="FreePBX\modules">pwdDeleteUser</method>
+			<method callingMethod="resetPasswordWithToken" class="Userman" namespace="FreePBX\modules">resetPasswordExpiry</method>
+		</userman>
 	</hooks>
 	<database>
 		<table name="userman_users">
