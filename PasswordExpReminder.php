@@ -778,7 +778,7 @@ class PasswordExpReminder {
             $isValidCredentials = false;
             $ampUser = new \ampuser($username, "usermanager");
             if ($ampUser->checkPassword($password)) {
-                if($this->Userman->getCombinedGlobalSettingByID($ampUser->id, 'pbx_admin')) {
+                if ($this->Userman->getCombinedGlobalSettingByID($ampUser->id, 'pbx_login')) {
                     $isValidCredentials = true;
                 }
             }else{
