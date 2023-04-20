@@ -217,7 +217,7 @@ class Openldap2 extends Auth {
 				'help'		=> _("The OpenLDAP host(s), comma/space separated"),
 			),
 			array(
-				'name'		=> $typeauth.'-post',
+				'name'		=> $typeauth.'-port',
 				'title'		=> _("Port"),
 				'type'		=> 'number',
 				'index'		=> true,
