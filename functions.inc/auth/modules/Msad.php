@@ -186,7 +186,7 @@ class Msad extends Auth {
 				'help'		=> _("The active directory host"),
 			),
 			array(
-				'name'		=> $typeauth.'-post',
+				'name'		=> $typeauth.'-port',
 				'title'		=> _("Port"),
 				'type'		=> 'number',
 				'index'		=> true,
