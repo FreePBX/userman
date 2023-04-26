@@ -15,6 +15,7 @@ use PDO;
 use Exception;
 use Ramsey\Uuid\Uuid;
 use ZxcvbnPhp\Zxcvbn as Zxcvbn;
+
 class Userman extends FreePBX_Helpers implements BMO {
 	private $registeredFunctions = array();
 	private $message = '';
@@ -156,17 +157,6 @@ class Userman extends FreePBX_Helpers implements BMO {
 		$dir = $this->getDefaultDirectory();
 		if($dir['driver'] == 'Freepbx') {
 			$this->addDefaultGroupToDirectory($dir['id']);
-		}
-		$logdir = $this->FreePBX->Config->get("ASTLOGDIR");
-		if (!file_exists($logdir . "/userman_sync.log")) {
-			touch($logdir . "/userman_sync.log");
-			chown($logdir . "/userman_sync.log", "asterisk");
-			chgrp($logdir . "/userman_sync.log", "asterisk");
-			chmod($logdir . "/userman_sync.log", 0664);
-			out("log file created " . $logdir . "/userman_sync.log");
-		}
-		if ($this->FreePBX->Modules->checkStatus("sysadmin")) {
-			touch("/var/spool/asterisk/incron/userman.logrotate");
 		}
 	}
 
@@ -540,7 +530,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 								$res = $this->FreePBX->Endpoint->getTemplateSettingsByIds(array('use_native_apps'));
 								if (in_array(array('use_native_apps' => 1), $res)) {
 									$ret['message'] = $ret['message'] . "<br><br>" .
-										_("If any users in this group are using a Sangoma/Digium phone configured through Endpoint Manager, please rebuild their phone configuration and apply them if any Phone Apps settings have changed.");
+										_("We recommend that any users in this group using Sangoma's S, D & P series phones configured through Endpoint Manager, please rebuild their phone configuration, and apply any changes made to the Phone Apps Settings.");
 								}
 							}
 
@@ -623,7 +613,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 								$res = $this->FreePBX->Endpoint->getTemplateSettingsByIds(array('use_native_apps'));
 								if (in_array(array('use_native_apps' => 1), $res)) {
 									$ret['message'] = $ret['message'] . "<br><br>" .
-										_("If this user is using a Sangoma/Digium phone configured through Endpoint Manager, please rebuild the phone configuration and apply it if any Phone Apps settings have changed.");
+										_("In case these Phone Apps settings have changed, please rebuild the phone configuration if the user uses Sangoma's S, D & P series phones configured through Endpoint Manager.");
 								}
 							}
 
@@ -637,6 +627,12 @@ class Userman extends FreePBX_Helpers implements BMO {
 								'message' => $ret['message'],
 								'type' => $ret['type']
 							);
+						}
+						if (!is_null($password) && $this->FreePBX->Modules->checkStatus('sysadmin')) {
+							$passwordExpiryData['id'] = $ret['id'];
+							$passwordExpiryData['username'] = $username;
+							$passwordExpiryData['email'] = isset($extraData['email']) ? $extraData['email'] : "";
+							$this->pwdExpReminder()->resetPasswordExpiry($passwordExpiryData, 'ucp');
 						}
 					}
 					if(!empty($ret['status'])) {
@@ -724,12 +720,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 											'pwd_threshold_value' 	=> $request['pwd_threshold_value'],
 										);
 					$this->setConfig("pwdSettings", json_encode($pwdSettings));
-					$enableSyncLogs = ($request['enable-sync-logs'] == "yes") ? 1 : 0;
-					$updateCron = ($enableSyncLogs != $this->getConfig('enableSyncLogs')) ? true : false;
-					$this->setConfig("enableSyncLogs", $enableSyncLogs);
-					if ($updateCron) {
-						$this->cronjobEntry($this->FreePBX);
-					}
+					$this->pwdExpReminder()->setPaswordConfig($request);
 					$this->message = array(
 						'message' => _('Saved'),
 						'type' => 'success'
@@ -1175,6 +1166,14 @@ class Userman extends FreePBX_Helpers implements BMO {
 				if(empty($pwdsettings)){
 					$this->setDefaultPwdSettings();
 				}
+				$passwordReminder = array(
+					'forcePasswordReset' => $this->pwdExpReminder()->getSettings('forcePasswordReset'),
+					'passwordExpiryReminder' => $this->pwdExpReminder()->getSettings('passwordExpiryReminder'),
+					'passwordExpirationDays' => $this->pwdExpReminder()->getSettings('passwordExpirationDays'),
+					'passwordExpiryReminderDays' => $this->pwdExpReminder()->getSettings('passwordExpiryReminderDays'),
+					'errors' => $errors
+				);
+
 				$html .= load_view(
 					dirname(__FILE__).'/views/welcome.php',
 					array(
@@ -1200,7 +1199,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 						"dirwarn" => $dirwarn,
 						"allgenratebutton" => $allgenratebutton,
 						"pwdSettings" => $this->getConfig('pwdSettings'),
-						"enableSyncLogs" => $this->getConfig('enableSyncLogs')
+						"passwordReminder" => $passwordReminder
 					)
 				);
 			break;
@@ -1319,6 +1318,10 @@ class Userman extends FreePBX_Helpers implements BMO {
 				$setting['allowremote'] = true;
 				return true;
 			break;
+			case 'checkPasswordReminder':
+			case 'resetAdminPasswordWithToken':
+				$setting['authenticate'] = false;
+				return true;
 			default:
 				return false;
 			break;
@@ -1499,6 +1502,10 @@ class Userman extends FreePBX_Helpers implements BMO {
 					break;
 				}
 			break;
+			case 'checkPasswordReminder':
+				return $this->pwdExpReminder()->checkPasswordReminder($_REQUEST);
+			case 'resetAdminPasswordWithToken':
+				return $this->pwdExpReminder()->resetAdminPasswordWithToken($_REQUEST);
 			default:
 				echo json_encode(_("Error: You should never see this"));
 			break;
@@ -2529,6 +2536,9 @@ class Userman extends FreePBX_Helpers implements BMO {
 
       	$modules = \FreePBX::Modules();
 		if ($modules->checkStatus('pbxmfa')) {
+			if (!is_null($password)) {
+				$this->FreePBX->Pbxmfa->resetTrustedDevices($username, 'ucp');
+			}
 			$res = $this->FreePBX->Pbxmfa->checkFieldValidationForUserman($uid, $_POST);
 			if (!$res['status']) {
 				return $res;
@@ -4496,22 +4506,50 @@ class Userman extends FreePBX_Helpers implements BMO {
 		return ['dashboard'=>$dashbords,'dashwidgets'=>$dashbordsettings];
 	}
 
-	public function cronjobEntry() {
-		$AMPASTERISKWEBUSER = $this->FreePBX->Config->get("AMPASTERISKWEBUSER");
-		$AMPSBIN = $this->FreePBX->Config->get("AMPSBIN");
-		$freepbxCron = $this->FreePBX->Cron($AMPASTERISKWEBUSER);
-		$crons = $freepbxCron->getAll();
-		foreach($crons as $cron) {
-			if(preg_match("/fwconsole userman sync$/",$cron) || preg_match("/fwconsole userman --syncall/",$cron)) {
-				$freepbxCron->remove($cron);
-			}
+	public function pwdExpReminder()
+	{
+		static $pwdExpReminder = false;
+		if (!is_object($pwdExpReminder)) {
+			include_once __DIR__ . "/PasswordExpReminder.php";
+			$pwdExpReminder = new Userman\PasswordExpReminder();
 		}
-		$this->FreePBX->Job->remove('userman', 'syncall');
-		if ($this->getConfig('enableSyncLogs')) {
-			$logdir = $this->FreePBX->Config->get("ASTLOGDIR");
-			$freepbxCron->addLine("*/15 * * * * [ -e ".$AMPSBIN."/fwconsole ] && sleep $((RANDOM\%30)) && ".$AMPSBIN."/fwconsole userman --syncall >> " . $logdir . "/userman_sync.log 2>&1");
-		} else {
-			$freepbxCron->addLine("*/15 * * * * [ -e ".$AMPSBIN."/fwconsole ] && sleep $((RANDOM\%30)) && ".$AMPSBIN."/fwconsole userman --syncall -q");
+		return $pwdExpReminder;
+	}
+
+	public function resetPasswordExpiry($user)
+	{
+		$this->pwdExpReminder()->resetPasswordExpiry($user);
+	}
+
+	public function pwdShowPage()
+	{
+		return $this->pwdExpReminder()->usermanShowPage();
+	}
+
+	public function pwdAddGroup($id, $display, $data)
+	{
+		$this->pwdExpReminder()->usermanAddUser($id, $display, $data);
+	}
+
+	public function pwdUpdateGroup($id, $display, $data)
+	{
+		$this->pwdExpReminder()->usermanUpdateGroup($id, $display, $data);
+	}
+
+	public function pwdAddUser($id, $display, $data)
+	{
+		$this->pwdExpReminder()->usermanAddUser($id, $display, $data);
+	}
+
+	public function pwdUpdateUser($id, $display, $data)
+	{
+		$this->pwdExpReminder()->usermanUpdateUser($id, $display, $data);
+	}
+
+	public function pwdDeleteUser($id, $display, $data)
+	{
+		if (isset($data['username'])) {
+			$this->pwdExpReminder()->deleteReminderSettingsForUser($data['username'], $id);
 		}
 	}
 }

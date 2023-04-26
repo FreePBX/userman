@@ -217,7 +217,7 @@ class Openldap2 extends Auth {
 				'help'		=> _("The OpenLDAP host(s), comma/space separated"),
 			),
 			array(
-				'name'		=> $typeauth.'-post',
+				'name'		=> $typeauth.'-port',
 				'title'		=> _("Port"),
 				'type'		=> 'number',
 				'index'		=> true,
@@ -1211,11 +1211,12 @@ class Openldap2 extends Auth {
 	 * @param  boolean $nl      New line or not
 	 */
 	private function out($message,$nl=true) {
+		$date = date("Y-m-d_H:i:s");
 		if(is_object($this->output) && $this->output->isVerbose()) {
 			if($nl) {
-				$this->output->writeln($message);
+				$this->output->writeln($date.' -'.$message);
 			} else {
-				$this->output->write($message);
+				$this->output->write($date.' -'.$message);
 			}
 		} elseif(!is_object($this->output)) {
 			dbug($message);
