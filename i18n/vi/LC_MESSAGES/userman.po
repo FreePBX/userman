@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-23 05:32+0000\n"
+"POT-Creation-Date: 2023-05-03 09:23+0000\n"
 "PO-Revision-Date: 2017-07-03 12:33-0400\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -667,6 +667,13 @@ msgid ""
 "will be created and linked to this user if one does not exist previously"
 msgstr ""
 
+#: Userman.class.php:611
+msgid ""
+"If the user settings have changed, please rebuild the phone configuration if "
+"the user uses Sangoma's S, D & P series phones configured through Endpoint "
+"Manager."
+msgstr ""
+
 #: views/msad.php:151
 msgid ""
 "If this is set then User Manager will use the defined attribute of the user "
@@ -719,13 +726,6 @@ msgid ""
 "Device/User Mode Users and the settings associated with those Devices. For "
 "example, a new user can be created that can log into User Control Panel and "
 "access the voicemail of 3 other accounts."
-msgstr ""
-
-#: Userman.class.php:611
-msgid ""
-"In case these Phone Apps settings have changed, please rebuild the phone "
-"configuration if the user uses Sangoma's S, D & P series phones configured "
-"through Endpoint Manager."
 msgstr ""
 
 #: views/users.php:381 views/users.php:413 views/users.php:651

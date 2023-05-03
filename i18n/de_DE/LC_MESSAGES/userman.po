@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-23 05:32+0000\n"
+"POT-Creation-Date: 2023-05-03 09:23+0000\n"
 "PO-Revision-Date: 2018-10-24 01:00+0000\n"
 "Last-Translator: Bastian Mertgen <b.mertgen@bastian-mertgen.de>\n"
 "Language-Team: German <http://*/projects/freepbx/userman/de/>\n"
@@ -690,6 +690,13 @@ msgstr ""
 "Zuordnung' gesetzt ist, wird eine neue Nebenstelle erzeugt und mit diesem "
 "Benutzer verknüpft, falls noch keine exisitiert"
 
+#: Userman.class.php:611
+msgid ""
+"If the user settings have changed, please rebuild the phone configuration if "
+"the user uses Sangoma's S, D & P series phones configured through Endpoint "
+"Manager."
+msgstr ""
+
 #: views/msad.php:151
 msgid ""
 "If this is set then User Manager will use the defined attribute of the user "
@@ -764,13 +771,6 @@ msgstr ""
 "Einstellungen haben. So können Sie z.B. einen neuen Benutzer anlegen, der "
 "sich am 'User Control Panel' anmelden und auf die Sprachnachrichten von drei "
 "anderen Konten zugreifen kann."
-
-#: Userman.class.php:611
-msgid ""
-"In case these Phone Apps settings have changed, please rebuild the phone "
-"configuration if the user uses Sangoma's S, D & P series phones configured "
-"through Endpoint Manager."
-msgstr ""
 
 #: views/users.php:381 views/users.php:413 views/users.php:651
 #: views/users.php:678

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-23 05:32+0000\n"
+"POT-Creation-Date: 2023-05-03 09:23+0000\n"
 "PO-Revision-Date: 2016-12-11 08:33+0200\n"
 "Last-Translator: Ernesto <ecasas@sangoma.com>\n"
 "Language-Team: Spanish <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -681,6 +681,13 @@ msgid ""
 "will be created and linked to this user if one does not exist previously"
 msgstr ""
 
+#: Userman.class.php:611
+msgid ""
+"If the user settings have changed, please rebuild the phone configuration if "
+"the user uses Sangoma's S, D & P series phones configured through Endpoint "
+"Manager."
+msgstr ""
+
 #: views/msad.php:151
 msgid ""
 "If this is set then User Manager will use the defined attribute of the user "
@@ -747,13 +754,6 @@ msgstr ""
 "a Extensiones o modos de dispositivo/usuario y los ajustes asociados con "
 "esos dispositivos. Por ejemplo, un nuevo usuario se puede entrar al Panel de "
 "control de usuario y acceder al correo de voz de otras 3 cuentas."
-
-#: Userman.class.php:611
-msgid ""
-"In case these Phone Apps settings have changed, please rebuild the phone "
-"configuration if the user uses Sangoma's S, D & P series phones configured "
-"through Endpoint Manager."
-msgstr ""
 
 #: views/users.php:381 views/users.php:413 views/users.php:651
 #: views/users.php:678
