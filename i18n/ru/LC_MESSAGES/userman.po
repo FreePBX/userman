@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: User Management\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-03 09:24+0000\n"
+"POT-Creation-Date: 2023-05-10 06:52+0000\n"
 "PO-Revision-Date: 2022-04-21 09:01+0000\n"
 "Last-Translator: Dmitriy Q <krotesk@ya.ru>\n"
 "Language-Team: Russian <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -641,10 +641,10 @@ msgstr "Класс объектов группы"
 msgid "Group object filter"
 msgstr "Фильтр объектов группы"
 
-#: functions.inc/auth/modules/Msad.php:496
-#: functions.inc/auth/modules/Msad2.php:901
-#: functions.inc/auth/modules/Openldap.php:545
-#: functions.inc/auth/modules/Openldap2.php:919
+#: functions.inc/auth/modules/Msad.php:497
+#: functions.inc/auth/modules/Msad2.php:902
+#: functions.inc/auth/modules/Openldap.php:546
+#: functions.inc/auth/modules/Openldap2.php:920
 msgid "Group updated"
 msgstr "Группа обновлена"
 

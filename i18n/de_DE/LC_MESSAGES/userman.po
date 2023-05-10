@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-03 09:24+0000\n"
+"POT-Creation-Date: 2023-05-10 06:52+0000\n"
 "PO-Revision-Date: 2018-10-24 01:00+0000\n"
 "Last-Translator: Bastian Mertgen <b.mertgen@bastian-mertgen.de>\n"
 "Language-Team: German <http://*/projects/freepbx/userman/de/>\n"
@@ -652,10 +652,10 @@ msgstr "Gruppenobjektklasse"
 msgid "Group object filter"
 msgstr "Gruppenobjekt-Filter"
 
-#: functions.inc/auth/modules/Msad.php:496
-#: functions.inc/auth/modules/Msad2.php:901
-#: functions.inc/auth/modules/Openldap.php:545
-#: functions.inc/auth/modules/Openldap2.php:919
+#: functions.inc/auth/modules/Msad.php:497
+#: functions.inc/auth/modules/Msad2.php:902
+#: functions.inc/auth/modules/Openldap.php:546
+#: functions.inc/auth/modules/Openldap2.php:920
 msgid "Group updated"
 msgstr "Gruppe aktualisiert"
 

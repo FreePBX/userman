@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-03 09:24+0000\n"
+"POT-Creation-Date: 2023-05-10 06:52+0000\n"
 "PO-Revision-Date: 2016-12-11 08:33+0200\n"
 "Last-Translator: Ernesto <ecasas@sangoma.com>\n"
 "Language-Team: Spanish <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -648,10 +648,10 @@ msgstr ""
 msgid "Group object filter"
 msgstr ""
 
-#: functions.inc/auth/modules/Msad.php:496
-#: functions.inc/auth/modules/Msad2.php:901
-#: functions.inc/auth/modules/Openldap.php:545
-#: functions.inc/auth/modules/Openldap2.php:919
+#: functions.inc/auth/modules/Msad.php:497
+#: functions.inc/auth/modules/Msad2.php:902
+#: functions.inc/auth/modules/Openldap.php:546
+#: functions.inc/auth/modules/Openldap2.php:920
 msgid "Group updated"
 msgstr "Grupo actualizado"
 
