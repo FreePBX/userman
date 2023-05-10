@@ -886,7 +886,7 @@ class Msad2 extends Auth {
 	 * @param string $description   The group description
 	 * @param array  $users         Array of users in this Group
 	 */
-	public function updateGroup($gid, $prevGroupname, $groupname, $description=null, $users=array(), $nodisplay=false) {
+	public function updateGroup($gid, $prevGroupname, $groupname, $description = null, $users = array(), $nodisplay = false, $extraData = array()){
 		$group = $this->getGroupByUsername($prevGroupname);
 		if($this->config['localgroups'] && $group['local']) {
 			$sql = "UPDATE ".$this->groupTable." SET `groupname` = :groupname, `description` = :description, `users` = :users WHERE `id` = :gid";
@@ -897,7 +897,8 @@ class Msad2 extends Auth {
 				return array("status" => false, "type" => "danger", "message" => $e->getMessage());
 			}
 		}
-		$this->updateGroupHook($gid, $prevGroupname, $groupname, $description, $group['users'],$nodisplay);
+		$this->updateGroupData($gid, $extraData);
+		$this->updateGroupHook($gid, $prevGroupname, $groupname, $description, $group['users'], $nodisplay);
 		return array("status" => true, "type" => "success", "message" => _("Group updated"), "id" => $gid);
 	}
 
