@@ -45,6 +45,7 @@ echo $usage_html;
 						<input type="hidden" name="directory" value="<?php echo htmlentities($directory) ?>">
 						<input type="hidden" name="prevUsername" value="<?php echo !empty($user['username']) ? htmlentities($user['username']) : ''; ?>">
 						<input type="hidden" name="prevEmail" value="<?php echo !empty($user['email']) ? htmlentities($user['email']) : ''; ?>">
+						<input type="hidden" name="prevLinkdExt" value="<?php echo !empty($user['default_extension']) ? htmlentities($user['default_extension']) : ''; ?>">
 						<input type="hidden" name="user" value="<?php echo !empty($user['id']) ? htmlentities($user['id']) : ''; ?>">
 						<input type="hidden" name="submittype" value="gui">
 						<div class="tab-content">
