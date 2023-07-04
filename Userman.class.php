@@ -613,7 +613,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 								$res = $this->FreePBX->Endpoint->getTemplateSettingsByIds(array('use_native_apps'));
 								if (in_array(array('use_native_apps' => 1), $res)) {
 									$ret['message'] = $ret['message'] . "<br><br>" .
-										_("In case these Phone Apps settings have changed, please rebuild the phone configuration if the user uses Sangoma's S, D & P series phones configured through Endpoint Manager.");
+										_("If the user settings have changed, please rebuild the phone configuration if the user uses Sangoma's S, D & P series phones configured through Endpoint Manager.");
 								}
 							}
 
@@ -3468,7 +3468,11 @@ class Userman extends FreePBX_Helpers implements BMO {
 		}
 		$email_options = array('useragent' => $this->brand, 'protocol' => 'mail');
 		$email = new \CI_Email();
-		$from = !empty($amp_conf['AMPUSERMANEMAILFROM']) ? $amp_conf['AMPUSERMANEMAILFROM'] : 'freepbx@freepbx.org';
+		if(function_exists('fetchFromEmail')) {
+			$from = fetchFromEmail(true);
+		} else {
+			$from = !empty($amp_conf['AMPUSERMANEMAILFROM']) ? $amp_conf['AMPUSERMANEMAILFROM'] : 'freepbx@freepbx.org';
+		}
 
 		$mailtype = $this->getGlobalsetting('mailtype');
 		$mailtype = $mailtype === 'html' ? 'html' : 'text';
@@ -3507,15 +3511,19 @@ class Userman extends FreePBX_Helpers implements BMO {
 			include $this->FreePBX->Config()->get('AMPWEBROOT').'/admin/modules/sysadmin/functions.inc.php';
 		}
 
-		$femail = $this->FreePBX->Config()->get('AMPUSERMANEMAILFROM');
-		if(function_exists('sysadmin_get_storage_email')) {
-			$emails = sysadmin_get_storage_email();
-			if(!empty($emails['fromemail']) && filter_var($emails['fromemail'],FILTER_VALIDATE_EMAIL)) {
-				$femail = $emails['fromemail'];
+		if (function_exists('fetchFromEmail')) {
+			$from = fetchFromEmail();
+		} else {
+			$femail = $this->FreePBX->Config()->get('AMPUSERMANEMAILFROM');
+			if(function_exists('sysadmin_get_storage_email')) {
+				$emails = sysadmin_get_storage_email();
+				if(!empty($emails['fromemail']) && filter_var($emails['fromemail'],FILTER_VALIDATE_EMAIL)) {
+					$femail = $emails['fromemail'];
+				}
 			}
-		}
 
-		$from = !empty($femail) ? $femail : get_current_user() . '@' . gethostname();
+			$from = !empty($femail) ? $femail : get_current_user() . '@' . gethostname();
+		}
 
 		$mailtype = (isset($forceType)) ? $forceType : $this->getGlobalsetting('mailtype');
 		$mailtype = $mailtype === 'html' ? 'html' : 'text';
