@@ -20,7 +20,7 @@ trait LoggerTrait
      *
      * @return void
      */
-    public function emergency($message, array $context = array())
+    public function emergency($message, array $context = array()) : void
     {
         $this->log(LogLevel::EMERGENCY, $message, $context);
     }

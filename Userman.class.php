@@ -901,6 +901,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 		$module_hook = \moduleHook::create();
 		$mods = $this->FreePBX->Hooks->processHooks();
 		$sections = array();
+		$errors = array();
 		foreach($mods as $mod => $contents) {
 			if(empty($contents)) {
 				continue;
@@ -4265,7 +4266,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 	}
 
 	/* rebuild given users template settings*/
-	public function rebuildtemplate($users = array(),$tempid){
+	public function rebuildtemplate($users = array(), $tempid = ""){
 		$count = 0;
 		foreach($users as $user){
 			$assigntemplate = $this->getCombinedModuleSettingByID($user,'ucp|template','assigntemplate');
@@ -4422,7 +4423,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 		return $userSettings;
 	}
 	/* merge the main Dashbord settings*/
-	private function mergeMainDashboards($userSettings=[],$templateSettings=[],$templateid,$uid){
+	private function mergeMainDashboards($userSettings=[],$templateSettings=[],$templateid="",$uid=""){
 		$dashbords =[];
 		$dashbordsettings = [];
 		foreach($templateSettings as $dash){
