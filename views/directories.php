@@ -1,6 +1,6 @@
 <?php
 
-function genConfFormHTML($form_data = array()) {
+function genConfFormHTML($form_data = []) {
 	$return_data = "";
 	$element_container = '
 	<div class="element-container $$__ELEMENT_CONTAINER_CLASS__$$">
@@ -27,23 +27,14 @@ function genConfFormHTML($form_data = array()) {
 	</div>
 	';
 
-	$type_input = array(
-		'text' 	 		=> '<input type="text" id="$$__NAME__$$" class="form-control" name="$$__NAME__$$" $$__OPTIONS__$$>',
-		'list' 	 		=> '<select id="$$__NAME__$$" class="form-control" name="$$__NAME__$$" $$__OPTIONS__$$>$$__LINES__$$</select>',
-		'list_multiple'	=> '<select id="$$__NAME__$$" class="form-control chosenmultiselect" name="$$__NAME__$$[]" multiple="multiple" $$__OPTIONS__$$>$$__LINES__$$</select>',
-		'list_line'		=> '<option value="$$__VALUE__$$" $$__SELECTED__$$>$$__TEXT__$$</option>',
-		'number'		=> '<input type="number" id="$$__NAME__$$" class="form-control" name="$$__NAME__$$" $$__OPTIONS__$$>',
-		'password'		=> '<input type="password" id="$$__NAME__$$" class="form-control" name="$$__NAME__$$" $$__OPTIONS__$$>',
-		'textarea' 		=> '<textarea id="$$__NAME__$$" class="form-control" name="$$__NAME__$$" $$__OPTIONS__$$>$$__VALUE__$$</textarea>',	
-		'yn' 			=> '
+	$type_input = ['text' 	 		=> '<input type="text" id="$$__NAME__$$" class="form-control" name="$$__NAME__$$" $$__OPTIONS__$$>', 'list' 	 		=> '<select id="$$__NAME__$$" class="form-control" name="$$__NAME__$$" $$__OPTIONS__$$>$$__LINES__$$</select>', 'list_multiple'	=> '<select id="$$__NAME__$$" class="form-control chosenmultiselect" name="$$__NAME__$$[]" multiple="multiple" $$__OPTIONS__$$>$$__LINES__$$</select>', 'list_line'		=> '<option value="$$__VALUE__$$" $$__SELECTED__$$>$$__TEXT__$$</option>', 'number'		=> '<input type="number" id="$$__NAME__$$" class="form-control" name="$$__NAME__$$" $$__OPTIONS__$$>', 'password'		=> '<input type="password" id="$$__NAME__$$" class="form-control" name="$$__NAME__$$" $$__OPTIONS__$$>', 'textarea' 		=> '<textarea id="$$__NAME__$$" class="form-control" name="$$__NAME__$$" $$__OPTIONS__$$>$$__VALUE__$$</textarea>', 'yn' 			=> '
 			<span class="radioset">
 				<input type="radio" id="$$__NAME__$$_on" name="$$__NAME__$$" value="$$__VALUE_Y__$$" $$__CHECKED_Y__$$>
 				<label for="$$__NAME__$$_on">'._('Yes').'</label>
 				<input type="radio" id="$$__NAME__$$_off" name="$$__NAME__$$" value="$$__VALUE_N__$$" $$__CHECKED_N__$$>
 				<label for="$$__NAME__$$_off">'._('No').'</label>
 			</span>
-		',
-	);
+		'];
 
 	foreach ($form_data as $index => $element)
 	{
@@ -128,8 +119,8 @@ function genConfFormHTML($form_data = array()) {
 				$new_input = $element_container;
 				$tmp_radioset = $type_input['yn'];
 
-				$tmp_values_y = isset($element['values']['y']) ? $element['values']['y'] : 'Y';
-				$tmp_values_n = isset($element['values']['n']) ? $element['values']['n'] : 'N';
+				$tmp_values_y = $element['values']['y'] ?? 'Y';
+				$tmp_values_n = $element['values']['n'] ?? 'N';
 
 				$tmp_radioset = str_replace('$$__CHECKED_Y__$$', $element['value'] == $tmp_values_y ? 'checked' : '', $tmp_radioset);
 				$tmp_radioset = str_replace('$$__CHECKED_N__$$', $element['value'] == $tmp_values_n ? 'checked' : '', $tmp_radioset);
@@ -152,22 +143,22 @@ function genConfFormHTML($form_data = array()) {
 
 		// NAME
 		if (isset($element['name'])) {
-			$new_input = str_replace('$$__NAME__$$', $element['name'], $new_input);
+			$new_input = str_replace('$$__NAME__$$', $element['name'] ?? '', $new_input ?? '');
 		}
 
 		// TTITLE
 		if (isset($element['title'])) {
-			$new_input = str_replace('$$__TITLE__$$', $element['title'], $new_input);
+			$new_input = str_replace('$$__TITLE__$$', $element['title'] ?? '', $new_input) ?? '';
 		}
 		
 		// DEFAULT
 		if (! empty($element['default'])) {
-			$new_input = str_replace('$$__DEFAULT__$$', $element['default'], $new_input);
+			$new_input = str_replace('$$__DEFAULT__$$', $element['default'] ?? '', $new_input ?? '');
 		}
 
 		// VALUE
 		if (isset($element['value'])) {
-			$new_input = str_replace('$$__VALUE__$$', $element['value'], $new_input);
+			$new_input = str_replace('$$__VALUE__$$', (is_array($element['value'])? '': ($element['value'] ?? '')), $new_input);
 		}
 
 		// HELP
@@ -190,7 +181,7 @@ function genConfFormHTML($form_data = array()) {
 								foreach ($list_line as $l_key => $l_val)
 								{
 									if (in_array($l_key, $line['keys'])) {
-										$help_text_line = str_replace( sprintf('$$__%s__$$', strtoupper($l_key)), $l_val, $help_text_line);
+										$help_text_line = str_replace( sprintf('$$__%s__$$', strtoupper((string) $l_key)), $l_val, (string) $help_text_line);
 									}
 								}
 								$help_text .= $help_text_line;
@@ -211,7 +202,7 @@ function genConfFormHTML($form_data = array()) {
 		}
 		
 		// Clean Up
-		foreach (array('TYPE_INPUT', 'OPTIONS', 'VALUE', 'HELP', 'LINES', 'ELEMENT_CONTAINER_CLASS', 'DEFAULT') as $item)
+		foreach (['TYPE_INPUT', 'OPTIONS', 'VALUE', 'HELP', 'LINES', 'ELEMENT_CONTAINER_CLASS', 'DEFAULT'] as $item)
 		{
 			$new_input = str_replace( sprintf('$$__%s__$$', $item), "", $new_input);
 		}
@@ -230,6 +221,7 @@ if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'showdirectory'){
 $formaction = 'config.php?display=userman#directories';
 
 echo $heading;
+if(!isset($brand)) $brand = '';
 ?>
 <div class="container-fluid">
 	<div class="row">

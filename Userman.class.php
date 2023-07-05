@@ -8,6 +8,14 @@
  * 
  */
  namespace FreePBX\modules;
+use FreePBX\modules\Userman\Auth\GlobalAuth;
+use FreePBX\modules\Userman\Auth\Base;
+use FreePBX\modules\Userman\Auth\Auth;
+use moduleHook;
+use modgettext;
+use FreePBX;
+use CI_Email;
+use FreePBX\modules\Userman\PasswordExpReminder;
 include __DIR__."/vendor/autoload.php";
 use BMO;
 use FreePBX_Helpers;
@@ -17,26 +25,26 @@ use Ramsey\Uuid\Uuid;
 use ZxcvbnPhp\Zxcvbn as Zxcvbn;
 
 class Userman extends FreePBX_Helpers implements BMO {
-	private $registeredFunctions = array();
+	private array $registeredFunctions = [];
 	private $message = '';
-	private $userTable = 'userman_users';
-	private $userSettingsTable = 'userman_users_settings';
-	private $groupTable = 'userman_groups';
-	private $groupSettingsTable = 'userman_groups_settings';
-	private $directoryTable = 'userman_directories';
+	private string $userTable = 'userman_users';
+	private string $userSettingsTable = 'userman_users_settings';
+	private string $groupTable = 'userman_groups';
+	private string $groupSettingsTable = 'userman_groups_settings';
+	private string $directoryTable = 'userman_directories';
 	private $brand = 'FreePBX';
-	private $tokenExpiration = "1 day";
-	private $directories = array();
-	private $globalDirectory = null;
+	private string $tokenExpiration = "1 day";
+	private array $directories = [];
+	private ?GlobalAuth $globalDirectory = null;
 
-	private $moduleGroupSettingsCache = array();
-	private $moduleUserSettingsCache = array();
+	private array $moduleGroupSettingsCache = [];
+	private array $moduleUserSettingsCache = [];
 
-	private $allUsersCache = array();
-	private $allGroupsByUserCache = array();
+	private array $allUsersCache = [];
+	private array $allGroupsByUserCache = [];
 
-	private $displayNameTemplateCreator = 'Template Creator';
-	private $userNameTemplateCreator = 'FreePBXUCPTemplateCreator';
+	private string $displayNameTemplateCreator = 'Template Creator';
+	private string $userNameTemplateCreator = 'FreePBXUCPTemplateCreator';
 
 	public function getUserNameTemplateCreator() {
 		return $this->userNameTemplateCreator;
@@ -47,16 +55,16 @@ class Userman extends FreePBX_Helpers implements BMO {
 		$this->db = $freepbx->Database;
 		$this->brand = $this->FreePBX->Config->get("DASHBOARD_FREEPBX_BRAND");
 
-		if(!interface_exists('FreePBX\modules\Userman\Auth\Base')) {
+		if(!interface_exists(Base::class)) {
 			include(__DIR__."/functions.inc/auth/Base.php");
 		}
-		if(!class_exists('FreePBX\modules\Userman\Auth\Auth')) {
+		if(!class_exists(Auth::class)) {
 			include(__DIR__."/functions.inc/auth/Auth.php");
 		}
 
 		try {
 			$this->loadActiveDirectories();
-		} catch(Exception $e) {}
+		} catch(Exception) {}
 	}
 
 	
@@ -70,12 +78,12 @@ class Userman extends FreePBX_Helpers implements BMO {
 		if(!ctype_digit($query)) {
 			$sql = "SELECT * FROM ".$this->userTable." WHERE (username LIKE :query or description LIKE :query or fname LIKE :query or lname LIKE :query or displayname LIKE :query or title LIKE :query or company LIKE :query or department LIKE :query or email LIKE :query)";
 			$sth = $this->db->prepare($sql);
-			$sth->execute(array("query" => "%".$query."%"));
+			$sth->execute(["query" => "%".$query."%"]);
 			$rows = $sth->fetchAll(PDO::FETCH_ASSOC);
 			foreach($rows as $entry) {
 				$entry['displayname'] = !empty($entry['displayname']) ? $entry['displayname'] : trim($entry['fname'] . " " . $entry['lname']);
 				$entry['displayname'] = !empty($entry['displayname']) ? $entry['displayname'] : $entry['username'];
-				$results[] = array("text" => $entry['displayname'], "type" => "get", "dest" => "?display=userman&action=showuser&user=".$entry['id']);
+				$results[] = ["text" => $entry['displayname'], "type" => "get", "dest" => "?display=userman&action=showuser&user=".$entry['id']];
 			}
 		}
 	}
@@ -83,7 +91,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 	public function getRightNav($request) {
 		if(isset($request['action'])) {
 			$permissions = $this->getAuthAllPermissions($request['directory']);
-			return load_view(__DIR__."/views/rnav.php",array("action" => $request['action'], "directory" => $request['directory'], "permissions" => $permissions));
+			return load_view(__DIR__."/views/rnav.php",["action" => $request['action'], "directory" => $request['directory'], "permissions" => $permissions]);
 		} else {
 			return '';
 		}
@@ -106,38 +114,33 @@ class Userman extends FreePBX_Helpers implements BMO {
 	public function install() {
 		$auth = $this->getConfig('auth');
 
-		$check = array(
-			"authFREEPBXSettings" => "freepbx",
-			"authMSADSettings" => 'msad',
-			"authOpenLDAPSettings" => 'openldap',
-			"authVoicemailSettings" => 'voicemail'
-		);
+		$check = ["authFREEPBXSettings" => "freepbx", "authMSADSettings" => 'msad', "authOpenLDAPSettings" => 'openldap', "authVoicemailSettings" => 'voicemail'];
 
-		$inuse = array();
+		$inuse = [];
 		$sql = "SELECT DISTINCT auth FROM userman_users WHERE auth REGEXP '^[A-Za-z]+$'";
 		$sth = $this->FreePBX->Database->prepare($sql);
 		$sth->execute();
 		$res = $sth->fetchAll(PDO::FETCH_ASSOC);
 		foreach($res as $dat) {
-			$inuse[] = strtolower($dat['auth']);
+			$inuse[] = strtolower((string) $dat['auth']);
 		}
 
 		foreach($check as $key => $driver) {
 			$settings = $this->getConfig($key);
-			if((strtolower($auth) == $driver) || in_array($driver,$inuse) || !empty($settings)) {
+			if((strtolower((string) $auth) == $driver) || in_array($driver,$inuse) || !empty($settings)) {
 				$active = false;
-				if((empty($auth) && ($driver == 'freepbx')) || (!empty($auth) && strtolower($auth) == $driver)) {
+				if((empty($auth) && ($driver == 'freepbx')) || (!empty($auth) && strtolower((string) $auth) == $driver)) {
 					$active = true;
 				}
 				$id = $this->addDirectory(ucfirst($driver), sprintf(_('Imported %s directory'),$driver), $active, $settings);
 				if(!empty($id)) {
 					$sql = "UPDATE userman_users SET auth = ? WHERE LOWER(auth) = '".$driver."'";
 					$sth = $this->FreePBX->Database->prepare($sql);
-					$sth->execute(array($id));
+					$sth->execute([$id]);
 					$sql = "UPDATE userman_groups SET auth = ? WHERE LOWER(auth) = '".$driver."'";
 					$sth = $this->FreePBX->Database->prepare($sql);
-					$sth->execute(array($id));
-					if(strtolower($auth) == $driver) {
+					$sth->execute([$id]);
+					if(strtolower((string) $auth) == $driver) {
 						$this->setDefaultDirectory($id);
 					}
 				}
@@ -150,7 +153,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 
 		$directories = $this->getAllDirectories();
 		if(empty($directories)) {
-			$id = $this->addDirectory('Freepbx', _("PBX Internal Directory"), true, array());
+			$id = $this->addDirectory('Freepbx', _("PBX Internal Directory"), true, []);
 			$this->setDefaultDirectory($id);
 		}
 
@@ -195,28 +198,20 @@ class Userman extends FreePBX_Helpers implements BMO {
 	function password_policies($password = "", $threshold = false){
 		$zxcvbn 		= new Zxcvbn();
 		if($threshold == false){
-			$weak 			= $zxcvbn->passwordStrength($password, array());
+			$weak 			= $zxcvbn->passwordStrength($password, []);
 			$threshold		= $weak["score"];	
 		}
 
-		$error 			= $t = array();
+		$error 			= $t = [];
 		$error_message 	= _("Password should contain minimum %d %s character(s), detected = %d");
 		$pwdSettings 	= $this->getConfig('pwdSettings');
 		if(empty($pwdSettings)){
 			$this->setDefaultPwdSettings();
 			$pwdSettings	= $this->getConfig("pwdSettings");
 		}
-		$pwdSettings		= json_decode($pwdSettings, true);
+		$pwdSettings		= json_decode((string) $pwdSettings, true, 512, JSON_THROW_ON_ERROR);
 		extract($pwdSettings);
-		$rules 			= array("Length"        => array("enabled" => $pwd_length_enable, 		"min" => $pwd_length_value),
-								"Uppercase"     => array("enabled" => $pwd_uppercase_enable,	"min" => $pwd_uppercase_value),
-								"Lowercase"     => array("enabled" => $pwd_lowercase_enable,	"min" => $pwd_lowercase_value),
-								"Numeric"       => array("enabled" => $pwd_numeric_enable, 		"min" => $pwd_numeric_value),
-								"Special"       => array("enabled" => $pwd_special_enable, 		"min" => $pwd_special_value),
-								"Punctuation"   => array("enabled" => $pwd_punctuation_enable, 	"min" => $pwd_punctuation_value),
-								"Threshold"		=> array("enabled" => $pwd_threshold_enable, 	"min" => $pwd_threshold_value),
-								"Note"          => array("enabled" => true)
-								);
+		$rules 			= ["Length"        => ["enabled" => $pwd_length_enable, "min" => $pwd_length_value], "Uppercase"     => ["enabled" => $pwd_uppercase_enable, "min" => $pwd_uppercase_value], "Lowercase"     => ["enabled" => $pwd_lowercase_enable, "min" => $pwd_lowercase_value], "Numeric"       => ["enabled" => $pwd_numeric_enable, "min" => $pwd_numeric_value], "Special"       => ["enabled" => $pwd_special_enable, "min" => $pwd_special_value], "Punctuation"   => ["enabled" => $pwd_punctuation_enable, "min" => $pwd_punctuation_value], "Threshold"		=> ["enabled" => $pwd_threshold_enable, "min" => $pwd_threshold_value], "Note"          => ["enabled" => true]];
 						
 		foreach($rules as $rule => $values){
 			/**
@@ -331,7 +326,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 			$status = true;
 		}
 
-		return array("status" => $status, "error" => $error, "templates" => $t);
+		return ["status" => $status, "error" => $error, "templates" => $t];
 	}
 
 	/**
@@ -339,12 +334,13 @@ class Userman extends FreePBX_Helpers implements BMO {
 	 * @return array The array of the display
 	 */
 	public function getQuickCreateDisplay() {
-		$directory = $this->getDefaultDirectory();
+		$userarray = [];
+  $directory = $this->getDefaultDirectory();
 		$groups = $this->getAllGroups($directory['id']);
 		$permissions = $this->getAuthAllPermissions($directory['id']);
 		$dgroups = $this->getDefaultGroups($directory['id']);
-		$dgroups = !empty($dgroups) ? $dgroups : array();
-		$usersC = array();  // Initialize the array.
+		$dgroups = !empty($dgroups) ? $dgroups : [];
+		$usersC = [];  // Initialize the array.
 		foreach($this->FreePBX->Core->getAllUsers() as $user) {
 			$usersC[] = $user['extension'];
 		}
@@ -355,13 +351,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 			}
 			$userarray[$user['id']] = $user['username'];
 		}
-		return array(
-			1 => array(
-				array(
-					'html' => load_view(__DIR__.'/views/quickCreate.php',array("users" => $userarray, "dgroups" => $dgroups, "groups" => $groups, "permissions" => $permissions))
-				)
-			)
-		);
+		return [1 => [['html' => load_view(__DIR__.'/views/quickCreate.php',["users" => $userarray, "dgroups" => $dgroups, "groups" => $groups, "permissions" => $permissions])]]];
 	}
 
 	/**
@@ -378,9 +368,9 @@ class Userman extends FreePBX_Helpers implements BMO {
 				$pass = md5(uniqid());
 			}
 			$directory = $this->getDefaultDirectory();
-			$ret = $this->addUserByDirectory($directory['id'], $extension, $pass, $extension, _('Autogenerated user on new device creation'), array('email' => $data['email'], 'displayname' => $data['name']));
+			$ret = $this->addUserByDirectory($directory['id'], $extension, $pass, $extension, _('Autogenerated user on new device creation'), ['email' => $data['email'], 'displayname' => $data['name']]);
 			if($ret['status']) {
-				$this->setGlobalSettingByID($ret['id'],'assigned',array($extension));
+				$this->setGlobalSettingByID($ret['id'],'assigned',[$extension]);
 				$autoEmail = $this->getGlobalsetting('autoEmail');
 				$autoEmail = is_null($autoEmail) ? true : $autoEmail;
 				if($autoEmail) {
@@ -407,7 +397,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 			$ret = $this->getUserByID($data['um-link']);
 			if(!empty($ret)) {
 				$this->updateUser($ret['id'], $ret['username'], $ret['username'], $extension, $ret['description']);
-				$this->setGlobalSettingByID($ret['id'],'assigned',array($extension));
+				$this->setGlobalSettingByID($ret['id'],'assigned',[$extension]);
 				$autoEmail = $this->getGlobalsetting('autoEmail');
 				$autoEmail = is_null($autoEmail) ? true : $autoEmail;
 				if($autoEmail) {
@@ -424,10 +414,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 	 * @param string $type    [description]
 	 */
 	public function setMessage($message,$type='info') {
-		$this->message = array(
-			'message' => $message,
-			'type' => $type
-		);
+		$this->message = ['message' => $message, 'type' => $type];
 		return true;
 	}
 
@@ -439,32 +426,23 @@ class Userman extends FreePBX_Helpers implements BMO {
 		$request = freepbxGetSanitizedRequest();
 		if(isset($request['action']) && $request['action'] == 'deluser') {
 			$ret = $this->deleteUserByID($request['user']);
-			$this->message = array(
-				'message' => $ret['message'],
-				'type' => $ret['type']
-			);
+			$this->message = ['message' => $ret['message'], 'type' => $ret['type']];
 			return true;
 		}
 		if(isset($request['action']) && $request['action'] == 'delgroup') {
 			$ret = $this->deleteGroupByGID($request['user']);
-			$this->message = array(
-				'message' => $ret['message'],
-				'type' => $ret['type']
-			);
+			$this->message = ['message' => $ret['message'], 'type' => $ret['type']];
 			return true;
 		}
 		if(isset($request['action']) && $request['action'] == 'delucptemplate') {
 			$ret = $this->deleteUcpTemplateByID($request['template']);
-			$this->message = array(
-				'message' => $ret['message'],
-				'type' => $ret['type']
-			);
+			$this->message = ['message' => $ret['message'], 'type' => $ret['type']];
 			return true;
 		}
 		if(isset($request['submittype'])) {
 			switch($request['type']) {
 				case 'directory':
-					$auths = array();
+					$auths = [];
 					$config = false;
 					foreach($this->getDirectoryDrivers() as $auth) {
 						if($auth == $request['authtype']) {
@@ -474,10 +452,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 						}
 					}
 					if($config === false) {
-						$this->message = array(
-							'message' => _("There was an error saving the configuration"),
-							'type' => 'danger'
-						);
+						$this->message = ['message' => _("There was an error saving the configuration"), 'type' => 'danger'];
 						return false;
 					}
 					$config['sync'] = !empty($request['sync']) ? $request['sync'] : '';
@@ -499,26 +474,14 @@ class Userman extends FreePBX_Helpers implements BMO {
 					$description = !empty($request['description']) ? $request['description'] : '';
 					$prevGroupname = !empty($request['prevGroupname']) ? $request['prevGroupname'] : '';
 					$directory = $request['directory'];
-					$users = !empty($request['users']) ? (gettype($request['users']) == 'string' ? explode(',',$request['users']) : $request['users']) : array();
-					$extraData = array(
-						'language' => isset($request['language']) ? $request['language'] : null,
-						'timezone' => isset($request['timezone']) ? $request['timezone'] : null,
-						'timeformat' => isset($request['timeformat']) ? $request['timeformat'] : null,
-						'dateformat' => isset($request['dateformat']) ? $request['dateformat'] : null,
-						'datetimeformat' => isset($request['datetimeformat']) ? $request['datetimeformat'] : null,
-					);
+					$users = !empty($request['users']) ? (gettype($request['users']) == 'string' ? explode(',',$request['users']) : $request['users']) : [];
+					$extraData = ['language' => $request['language'] ?? null, 'timezone' => $request['timezone'] ?? null, 'timeformat' => $request['timeformat'] ?? null, 'dateformat' => $request['dateformat'] ?? null, 'datetimeformat' => $request['datetimeformat'] ?? null];
 					if($request['group'] == "") {
 						$ret = $this->addGroupByDirectory($directory, $groupname, $description, $users);
 						if($ret['status']) {
-							$this->message = array(
-								'message' => $ret['message'],
-								'type' => $ret['type']
-							);
+							$this->message = ['message' => $ret['message'], 'type' => $ret['type']];
 						} else {
-							$this->message = array(
-								'message' => $ret['message'],
-								'type' => $ret['type']
-							);
+							$this->message = ['message' => $ret['message'], 'type' => $ret['type']];
 							return false;
 						}
 					} else {
@@ -527,22 +490,16 @@ class Userman extends FreePBX_Helpers implements BMO {
 							if ($this->FreePBX->Modules->checkStatus('endpoint')
 								&& method_exists($this->FreePBX->Endpoint(), 'getTemplateSettingsByIds'))
 							{
-								$res = $this->FreePBX->Endpoint->getTemplateSettingsByIds(array('use_native_apps'));
-								if (in_array(array('use_native_apps' => 1), $res)) {
+								$res = $this->FreePBX->Endpoint->getTemplateSettingsByIds(['use_native_apps']);
+								if (in_array(['use_native_apps' => 1], $res)) {
 									$ret['message'] = $ret['message'] . "<br><br>" .
 										_("We recommend that any users in this group using Sangoma's S, D & P series phones configured through Endpoint Manager, please rebuild their phone configuration, and apply any changes made to the Phone Apps Settings.");
 								}
 							}
 
-							$this->message = array(
-								'message' => $ret['message'],
-								'type' => $ret['type']
-							);
+							$this->message = ['message' => $ret['message'], 'type' => $ret['type']];
 						} else {
-							$this->message = array(
-								'message' => $ret['message'],
-								'type' => $ret['type']
-							);
+							$this->message = ['message' => $ret['message'], 'type' => $ret['type']];
 							return false;
 						}
 					}
@@ -556,7 +513,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 					$this->setGlobalSettingByGID($ret['id'],'pbx_low',$request['pbx_low']);
 					$this->setGlobalSettingByGID($ret['id'],'pbx_high',$request['pbx_high']);
 					$this->setGlobalSettingByGID($ret['id'],'pbx_landing', $request['pbx_landing']);
-					$this->setGlobalSettingByGID($ret['id'],'pbx_modules',(!empty($request['pbx_modules']) ? $request['pbx_modules'] : array()));
+					$this->setGlobalSettingByGID($ret['id'],'pbx_modules',(!empty($request['pbx_modules']) ? $request['pbx_modules'] : []));
 				break;
 				case 'user':
 
@@ -566,41 +523,17 @@ class Userman extends FreePBX_Helpers implements BMO {
 					$description = !empty($request['description']) ? $request['description'] : '';
 					$prevUsername = !empty($request['prevUsername']) ? $request['prevUsername'] : '';
 					$prevEmail = !empty($request['prevEmail']) ? $request['prevEmail'] : '';
-					$assigned = !empty($request['assigned']) ? $request['assigned'] : array();
-					$extraData = array(
-						'fname' => isset($request['fname']) ? $request['fname'] : null,
-						'lname' => isset($request['lname']) ? $request['lname'] : null,
-						'title' => isset($request['title']) ? $request['title'] : null,
-						'company' => isset($request['company']) ? $request['company'] : null,
-						'department' => isset($request['department']) ? $request['department'] : null,
-						'language' => isset($request['language']) ? $request['language'] : null,
-						'timezone' => isset($request['timezone']) ? $request['timezone'] : null,
-						'timeformat' => isset($request['timeformat']) ? $request['timeformat'] : null,
-						'dateformat' => isset($request['dateformat']) ? $request['dateformat'] : null,
-						'datetimeformat' => isset($request['datetimeformat']) ? $request['datetimeformat'] : null,
-						'email' => isset($request['email']) ? $request['email'] : null,
-						'cell' => isset($request['cell']) ? $request['cell'] : null,
-						'work' => isset($request['work']) ? $request['work'] : null,
-						'home' => isset($request['home']) ? $request['home'] : null,
-						'fax' => isset($request['fax']) ? $request['fax'] : null,
-						'displayname' => isset($request['displayname']) ? $request['displayname'] : null,
-						'prevEmail' => $prevEmail
-					);
+					$assigned = !empty($request['assigned']) ? $request['assigned'] : [];
+					$extraData = ['fname' => $request['fname'] ?? null, 'lname' => $request['lname'] ?? null, 'title' => $request['title'] ?? null, 'company' => $request['company'] ?? null, 'department' => $request['department'] ?? null, 'language' => $request['language'] ?? null, 'timezone' => $request['timezone'] ?? null, 'timeformat' => $request['timeformat'] ?? null, 'dateformat' => $request['dateformat'] ?? null, 'datetimeformat' => $request['datetimeformat'] ?? null, 'email' => $request['email'] ?? null, 'cell' => $request['cell'] ?? null, 'work' => $request['work'] ?? null, 'home' => $request['home'] ?? null, 'fax' => $request['fax'] ?? null, 'displayname' => $request['displayname'] ?? null, 'prevEmail' => $prevEmail];
 					$default = !empty($request['defaultextension']) ? $request['defaultextension'] : 'none';
 					if($request['user'] == "") {
 						$add = true;
 						$ret = $this->addUserByDirectory($directory, $username, $password, $default, $description, $extraData);
 						if($ret['status']) {
 							$this->setGlobalSettingByID($ret['id'],'assigned',$assigned);
-							$this->message = array(
-								'message' => $ret['message'],
-								'type' => $ret['type']
-							);
+							$this->message = ['message' => $ret['message'], 'type' => $ret['type']];
 						} else {
-							$this->message = array(
-								'message' => $ret['message'],
-								'type' => $ret['type']
-							);
+							$this->message = ['message' => $ret['message'], 'type' => $ret['type']];
 						}
 					} else { 
 						$add = false;
@@ -610,28 +543,22 @@ class Userman extends FreePBX_Helpers implements BMO {
 							if ($this->FreePBX->Modules->checkStatus('endpoint')
 								&& method_exists($this->FreePBX->Endpoint(), 'getTemplateSettingsByIds'))
 							{
-								$res = $this->FreePBX->Endpoint->getTemplateSettingsByIds(array('use_native_apps'));
-								if (in_array(array('use_native_apps' => 1), $res)) {
+								$res = $this->FreePBX->Endpoint->getTemplateSettingsByIds(['use_native_apps']);
+								if (in_array(['use_native_apps' => 1], $res)) {
 									$ret['message'] = $ret['message'] . "<br><br>" .
 										_("If the user settings have changed, please rebuild the phone configuration if the user uses Sangoma's S, D & P series phones configured through Endpoint Manager.");
 								}
 							}
 
 							$this->setGlobalSettingByID($ret['id'],'assigned',$assigned);
-							$this->message = array(
-								'message' => $ret['message'],
-								'type' => $ret['type']
-							);
+							$this->message = ['message' => $ret['message'], 'type' => $ret['type']];
 						} else {
-							$this->message = array(
-								'message' => $ret['message'],
-								'type' => $ret['type']
-							);
+							$this->message = ['message' => $ret['message'], 'type' => $ret['type']];
 						}
 						if (!is_null($password) && $this->FreePBX->Modules->checkStatus('sysadmin')) {
 							$passwordExpiryData['id'] = $ret['id'];
 							$passwordExpiryData['username'] = $username;
-							$passwordExpiryData['email'] = isset($extraData['email']) ? $extraData['email'] : "";
+							$passwordExpiryData['email'] = $extraData['email'] ?? "";
 							$this->pwdExpReminder()->resetPasswordExpiry($passwordExpiryData, 'ucp');
 						}
 					}
@@ -661,7 +588,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 									$group['users'][] = $ret['id'];
 									$this->updateGroup($group['id'],$group['groupname'], $group['groupname'], $group['description'], $group['users'], true);
 								} elseif(!in_array($group['id'],$request['groups']) && in_array($ret['id'],$group['users'])) {
-									$group['users'] = array_diff($group['users'], array($ret['id']));
+									$group['users'] = array_diff($group['users'], [$ret['id']]);
 									$this->updateGroup($group['id'],$group['groupname'], $group['groupname'], $group['description'], $group['users'], true);
 								}
 							}
@@ -669,7 +596,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 							$groups = $this->getGroupsByID($ret['id']);
 							foreach($groups as $gid) {
 								$group = $this->getGroupByGID($gid);
-								$group['users'] = array_diff($group['users'], array($ret['id']));
+								$group['users'] = array_diff($group['users'], [$ret['id']]);
 								$this->updateGroup($group['id'],$group['groupname'], $group['groupname'], $group['description'], $group['users'], true);
 							}
 						}
@@ -680,12 +607,12 @@ class Userman extends FreePBX_Helpers implements BMO {
 						$prevtempid = $this->getConfig('template_id', $ret['id']);
 						//only on Add case we need to generate the widgets
 						if($add){
-							if($request['assign_template'] === 'true') {
-								$tempid = $request['templateid'];
+							if($request['assign_template'] ?? '' === 'true') {
+								$tempid = $request['templateid'] ?? '';
 								if(!empty($tempid) && $prevtempid != $tempid) {
 									$this->updateUserUcpByTemplate($ret['id'],$tempid);
 								}
-							} elseif($request['assign_template'] === 'inherit') {
+							} elseif($request['assign_template'] ?? '' === 'inherit') {
 								$tempid = $this->getCombinedModuleSettingByID($ret['id'],'ucp|template','templateid');
 								if(!empty($tempid) && $prevtempid != $tempid) {
 									$this->updateUserUcpByTemplate($ret['id'],$tempid);
@@ -704,27 +631,10 @@ class Userman extends FreePBX_Helpers implements BMO {
 					$this->setGlobalsetting('hostname', $request['hostname']);
 					$this->setGlobalsetting('autoEmail',($request['auto-email'] == "yes") ? 1 : 0);
 					$this->setGlobalsetting('mailtype',$request['mailtype']);
-					$pwdSettings = array(	'pwd_length_enable' 	=> $request['pwd_length_enable'],
-											'pwd_length_value' 		=> $request['pwd_length_value'],
-											'pwd_uppercase_enable'	=> $request['pwd_uppercase_enable'],
-											'pwd_uppercase_value'	=> $request['pwd_uppercase_value'],
-											'pwd_lowercase_enable' 	=> $request['pwd_lowercase_enable'],
-											'pwd_lowercase_value'	=> $request['pwd_lowercase_value'],
-											'pwd_numeric_enable' 	=> $request['pwd_numeric_enable'],
-											'pwd_numeric_value' 	=> $request['pwd_numeric_value'],
-											'pwd_special_enable'	=> $request['pwd_special_enable'],
-											'pwd_special_value' 	=> $request['pwd_special_value'],
-											'pwd_punctuation_enable'=> $request['pwd_punctuation_enable'],
-											'pwd_punctuation_value' => $request['pwd_punctuation_value'],
-											'pwd_threshold_enable'	=> $request['pwd_threshold_enable'],
-											'pwd_threshold_value' 	=> $request['pwd_threshold_value'],
-										);
-					$this->setConfig("pwdSettings", json_encode($pwdSettings));
+					$pwdSettings = ['pwd_length_enable' 	=> $request['pwd_length_enable'], 'pwd_length_value' 		=> $request['pwd_length_value'], 'pwd_uppercase_enable'	=> $request['pwd_uppercase_enable'], 'pwd_uppercase_value'	=> $request['pwd_uppercase_value'], 'pwd_lowercase_enable' 	=> $request['pwd_lowercase_enable'], 'pwd_lowercase_value'	=> $request['pwd_lowercase_value'], 'pwd_numeric_enable' 	=> $request['pwd_numeric_enable'], 'pwd_numeric_value' 	=> $request['pwd_numeric_value'], 'pwd_special_enable'	=> $request['pwd_special_enable'], 'pwd_special_value' 	=> $request['pwd_special_value'], 'pwd_punctuation_enable'=> $request['pwd_punctuation_enable'], 'pwd_punctuation_value' => $request['pwd_punctuation_value'], 'pwd_threshold_enable'	=> $request['pwd_threshold_enable'], 'pwd_threshold_value' 	=> $request['pwd_threshold_value']];
+					$this->setConfig("pwdSettings", json_encode($pwdSettings, JSON_THROW_ON_ERROR));
 					$this->pwdExpReminder()->setPaswordConfig($request);
-					$this->message = array(
-						'message' => _('Saved'),
-						'type' => 'success'
-					);
+					$this->message = ['message' => _('Saved'), 'type' => 'success'];
 					if(isset($request['sendemailtoall'])) {
 						$this->sendWelcomeEmailToAll();
 					}
@@ -732,13 +642,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 				case 'ucptemplate':
 					$uid = $request['userid'];
 					$userdata = $this->getUserByID($uid);
-					$templateData = array(
-						'templatename' => isset($request['templatename']) ? $request['templatename'] : null,
-						'description' => isset($request['description']) ? $request['description'] : null,
-						'importedfromuid' => isset($request['userid']) ? $request['userid'] : null,
-						'importedfromuname' => isset($userdata['username']) ? $userdata['username'] : null,
-						'defaultexten' => isset($userdata['default_extension']) ? $userdata['default_extension'] : null,
-					);
+					$templateData = ['templatename' => $request['templatename'] ?? null, 'description' => $request['description'] ?? null, 'importedfromuid' => $request['userid'] ?? null, 'importedfromuname' => $userdata['username'] ?? null, 'defaultexten' => $userdata['default_extension'] ?? null];
 					if(!empty($request['id'])) {
 						$templateData['id'] = $request['id'];
 						$this->updateUcpTemplate($templateData);
@@ -790,7 +694,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 			$id = $directory['id'];
 		}
 		$settings = $this->directories[$id]->getPermissions();
-		return isset($settings[$permission]) ? $settings[$permission] : null;
+		return $settings[$permission] ?? null;
 	}
 
 	/**
@@ -798,56 +702,12 @@ class Userman extends FreePBX_Helpers implements BMO {
 	 * @param string $request The action bar
 	 */
 	public function getActionBar($request){
-		$buttons = array();
+		$buttons = [];
 		$request['action'] = !empty($request['action']) ? $request['action'] : '';
 		$request['display'] = !empty($request['display']) ? $request['display'] : '';
 		switch($request['display']) {
 			case 'userman':
-				$buttons = array(
-					'merge'=> array(
-						'name' => 'merge',
-						'id' => 'merge',
-						'value' => _("Merge With Existing Widgets"),
-						'class' => array('d-none')
-							),
-					'rebuild'=> array(
-						'name' => 'rebuild',
-						'id' => 'rebuild',
-						'type'=>'button',
-						'value' => _("Rebuild Widgets"),
-						'class' => array('d-none')
-							),
-					'submitsend' => array(
-						'name' => 'submitsend',
-						'id' => 'submitsend',
-						'value' => _("Submit & Send Email to User"),
-						'class' => array('d-none')
-					),
-					'submit' => array(
-						'name' => 'submit',
-						'id' => 'submit',
-						'value' => _("Submit"),
-						'class' => array('d-none')
-					),
-					'delete' => array(
-						'name' => 'delete',
-						'id' => 'delete',
-						'value' => _("Delete"),
-						'class' => array('d-none')
-					),
-					'reset' => array(
-						'name' => 'reset',
-						'id' => 'reset',
-						'value' => _("Reset"),
-						'class' => array('d-none')
-					),
-					'cancel' => array(
-						'name' => 'cancel',
-						'id' => 'cancel',
-						'value' => _("Cancel"),
-						'class' => array('d-none')
-					),
-				);
+				$buttons = ['merge'=> ['name' => 'merge', 'id' => 'merge', 'value' => _("Merge With Existing Widgets"), 'class' => ['d-none']], 'rebuild'=> ['name' => 'rebuild', 'id' => 'rebuild', 'type'=>'button', 'value' => _("Rebuild Widgets"), 'class' => ['d-none']], 'submitsend' => ['name' => 'submitsend', 'id' => 'submitsend', 'value' => _("Submit & Send Email to User"), 'class' => ['d-none']], 'submit' => ['name' => 'submit', 'id' => 'submit', 'value' => _("Submit"), 'class' => ['d-none']], 'delete' => ['name' => 'delete', 'id' => 'delete', 'value' => _("Delete"), 'class' => ['d-none']], 'reset' => ['name' => 'reset', 'id' => 'reset', 'value' => _("Reset"), 'class' => ['d-none']], 'cancel' => ['name' => 'cancel', 'id' => 'cancel', 'value' => _("Cancel"), 'class' => ['d-none']]];
 
 				if($request['action'] != 'showuser' && $request['action'] != 'showgroup'){
 					unset($buttons['delete']);
@@ -859,7 +719,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 						$directory = $this->getDirectoryByID($user['auth']);
 						$permissions = $this->getAuthAllPermissions($user['auth']);
 						if($directory['locked']) {
-							$buttons = array();
+							$buttons = [];
 						}
 						if(!$permissions['removeUser']) {
 							unset($buttons['delete']);
@@ -878,7 +738,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 						}
 
 						if($directory['locked']) {
-							$buttons = array();
+							$buttons = [];
 						}
 					} else {
 						$permissions = $this->getAuthAllPermissions($request['directory']);
@@ -898,10 +758,11 @@ class Userman extends FreePBX_Helpers implements BMO {
 		if(!function_exists('core_users_list')) {
 			return _("Module Core is disabled. Please enable it");
 		}
-		$module_hook = \moduleHook::create();
+		$module_hook = moduleHook::create();
 		$mods = $this->FreePBX->Hooks->processHooks();
-		$sections = array();
-		$errors = array();
+		$sections = [];
+		$errors = [];
+		$users = [];
 		foreach($mods as $mod => $contents) {
 			if(empty($contents)) {
 				continue;
@@ -910,22 +771,14 @@ class Userman extends FreePBX_Helpers implements BMO {
 			if(is_array($contents)) {
 				foreach($contents as $content) {
 					if(!isset($sections[$content['rawname']])) {
-						$sections[$content['rawname']] = array(
-							"title" => $content['title'],
-							"rawname" => $content['rawname'],
-							"content" => $content['content']
-						);
+						$sections[$content['rawname']] = ["title" => $content['title'], "rawname" => $content['rawname'], "content" => $content['content']];
 					} else {
 						$sections[$content['rawname']]['content'] .= $content['content'];
 					}
 				}
 			} else {
 				if(!isset($sections[$mod])) {
-					$sections[$mod] = array(
-						"title" => ucfirst(strtolower($mod)),
-						"rawname" => $mod,
-						"content" => $contents
-					);
+					$sections[$mod] = ["title" => ucfirst(strtolower((string) $mod)), "rawname" => $mod, "content" => $contents];
 				} else {
 					$sections[$mod]['content'] .= $contents;
 				}
@@ -949,29 +802,25 @@ class Userman extends FreePBX_Helpers implements BMO {
 						$auths[$auth]['config'] = $class::getConfig($this, $this->FreePBX, $directory['config']);
 					}
 				} else {
-					$directory = array(
-						'active' => true
-					);
-					$auths = array();
+					$directory = ['active' => true];
+					$auths = [];
 					foreach($this->getDirectoryDrivers() as $auth) {
 						$class = 'FreePBX\modules\Userman\Auth\\'.$auth;
 						$a = $class::getInfo($this, $this->FreePBX);
 						if(!empty($a)) {
 							$auths[$auth] = $a;
-							$auths[$auth]['config'] = $class::getConfig($this, $this->FreePBX, array());
+							$auths[$auth]['config'] = $class::getConfig($this, $this->FreePBX, []);
 						}
 					}
 				}
 
-				$html .= load_view(dirname(__FILE__).'/views/directories.php', array('auths' => $auths, 'config' => $directory));
+				$html .= load_view(__DIR__.'/views/directories.php', ['auths' => $auths, 'config' => $directory]);
 			break;
 			case 'addgroup':
 			case 'showgroup':
 
 				$module_list = $this->getModuleList();
-				uasort($module_list, function($a,$b){
-					return strnatcmp($a['name'],$b['name']);
-				});
+				uasort($module_list, fn($a, $b) => strnatcmp((string) $a['name'],(string) $b['name']));
 				$landing_page_list = $module_list;
 				unset($landing_page_list[99],$landing_page_list[999]);
 
@@ -979,7 +828,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 					$group = $this->getGroupByGID($request['group']);
 					$directory = $group['auth'];
 				} else {
-					$group = array();
+					$group = [];
 					$directory = $_GET['directory'];
 				}
 				$dir = $this->getDirectoryByID($directory);
@@ -990,29 +839,12 @@ class Userman extends FreePBX_Helpers implements BMO {
 					$permissions['removeGroup'] = true;
 				}
 				$users = $this->getAllUsers($directory);
-				$mods = $this->getGlobalSettingByGID($request['group'],'pbx_modules');
-				$pbx_landing = $this->getGlobalSettingByGID($request['group'],'pbx_landing');
+				$mods = $this->getGlobalSettingByGID($request['group'] ?? '','pbx_modules');
+				$pbx_landing = $this->getGlobalSettingByGID($request['group'] ?? '','pbx_landing');
 				$pbx_landing = !empty($pbx_landing) ? $pbx_landing : 'index';
 				$html .= load_view(
-					dirname(__FILE__).'/views/groups.php',
-					array(
-						"group" => $group,
-						"pbx_modules" => empty($group) ? array() : (!empty($mods) ? $mods : array()),
-						"pbx_low" => empty($group) ? '' : $this->getGlobalSettingByGID($request['group'],'pbx_low'),
-						"pbx_high" => empty($group) ? '' : $this->getGlobalSettingByGID($request['group'],'pbx_high'),
-						"pbx_login" => empty($group) ? false : $this->getGlobalSettingByGID($request['group'],'pbx_login'),
-						"pbx_admin" => empty($group) ? false : $this->getGlobalSettingByGID($request['group'],'pbx_admin'),
-						"pbx_landing" => $pbx_landing,
-						"brand" => $this->brand,
-						"users" => $users,
-						"modules" => $module_list,
-						"sections" => $sections,
-						"message" => $this->message,
-						"permissions" => $permissions,
-						"locked" => $dir['locked'],
-						"directory" => $directory,
-						"landing_page_list" => $landing_page_list
-					)
+					__DIR__.'/views/groups.php',
+					["group" => $group, "pbx_modules" => empty($group) ? [] : (!empty($mods) ? $mods : []), "pbx_low" => empty($group) ? '' : $this->getGlobalSettingByGID($request['group'],'pbx_low'), "pbx_high" => empty($group) ? '' : $this->getGlobalSettingByGID($request['group'],'pbx_high'), "pbx_login" => empty($group) ? false : $this->getGlobalSettingByGID($request['group'],'pbx_login'), "pbx_admin" => empty($group) ? false : $this->getGlobalSettingByGID($request['group'],'pbx_admin'), "pbx_landing" => $pbx_landing, "brand" => $this->brand, "users" => $users, "modules" => $module_list, "sections" => $sections, "message" => $this->message, "permissions" => $permissions, "locked" => $dir['locked'], "directory" => $directory, "landing_page_list" => $landing_page_list]
 				);
 			break;
 			case 'showuser':
@@ -1020,13 +852,13 @@ class Userman extends FreePBX_Helpers implements BMO {
 				if($action == 'showuser' && !empty($request['user'])) {
 					$user = $this->getUserByID($request['user']);
 					$assigned = $this->getGlobalSettingByID($request['user'],'assigned');
-					$assigned = !(empty($assigned)) ? $assigned : array();
+					$assigned = !(empty($assigned)) ? $assigned : [];
 					$default = $user['default_extension'];
 					$directory = $user['auth'];
 					$usage_html = $this->FreePBX->View->destinationUsage("ext-fax,$request[user],1");
 				} else {
-					$user = array();
-					$assigned = array();
+					$user = [];
+					$assigned = [];
 					$default = null;
 					$directory = $_GET['directory'];
 					$usage_html = '';
@@ -1034,63 +866,35 @@ class Userman extends FreePBX_Helpers implements BMO {
 				$dir = $this->getDirectoryByID($directory);
 				$groups = $this->getAllGroups($directory);
 				$extrauserdetails = $this->getExtraUserDetailsDisplay($user);
-				$fpbxusers = array();
-				$dfpbxusers = array();
-				$cul = array();
+				$fpbxusers = [];
+				$dfpbxusers = [];
+				$cul = [];
 				foreach($this->FreePBX->Core->listUsers() as $list) {
-					$cul[$list[0]] = array(
-						"name" => $list[1],
-						"vmcontext" => $list[2]
-					);
+					$cul[$list[0]] = ["name" => $list[1], "vmcontext" => $list[2]];
 				}
 				foreach($cul as $e => $u) {
-					$fpbxusers[] = array("ext" => $e, "name" => $u['name'], "selected" => in_array($e,$assigned));
+					$fpbxusers[] = ["ext" => $e, "name" => $u['name'], "selected" => in_array($e,$assigned)];
 				}
 
 				$module_list = $this->getModuleList();
-				uasort($module_list, function($a,$b){
-					return strnatcmp($a['name'],$b['name']);
-				});
+				uasort($module_list, fn($a, $b) => strnatcmp((string) $a['name'],(string) $b['name']));
 				$landing_page_list = $module_list;
 				unset($landing_page_list[99],$landing_page_list[999]);
 
 				$iuext = $this->getAllInUseExtensions();
-				$dfpbxusers[] = array("ext" => 'none', "name" => 'none', "selected" => false);
+				$dfpbxusers[] = ["ext" => 'none', "name" => 'none', "selected" => false];
 				foreach($cul as $e => $u) {
 					if($e != $default && in_array($e,$iuext)) {
 						continue;
 					}
-					$dfpbxusers[] = array("ext" => $e, "name" => $u['name'], "selected" => ($e == $default));
+					$dfpbxusers[] = ["ext" => $e, "name" => $u['name'], "selected" => ($e == $default)];
 				}
-				$pbx_landing = $this->getGlobalSettingByID($request['user'],'pbx_landing',true);
+				$pbx_landing = $this->getGlobalSettingByID($request['user'] ?? null,'pbx_landing',true);
 				$pbx_landing = !empty($pbx_landing) ? $pbx_landing : 'index';
 
 				$html .= load_view(
-					dirname(__FILE__).'/views/users.php',
-					array(
-						"users" => $users,
-						"groups" => $groups,
-						"dgroups" => $this->getDefaultGroups($directory),
-						"sections" => $sections,
-						"pbx_modules" => empty($request['user']) ? array() : $this->getGlobalSettingByID($request['user'],'pbx_modules'),
-						"pbx_low" => empty($request['user']) ? '' : $this->getGlobalSettingByID($request['user'],'pbx_low'),
-						"pbx_high" => empty($request['user']) ? '' : $this->getGlobalSettingByID($request['user'],'pbx_high'),
-						"pbx_landing" => $pbx_landing,
-						"pbx_login" => empty($request['user']) ? false : $this->getGlobalSettingByID($request['user'],'pbx_login',true),
-						"pbx_admin" => empty($request['user']) ? false : $this->getGlobalSettingByID($request['user'],'pbx_admin',true),
-						"modules" => $module_list,
-						"brand" => $this->brand,
-						"dfpbxusers" => $dfpbxusers,
-						"fpbxusers" => $fpbxusers,
-						"user" => $user,
-						"message" => $this->message,
-						"permissions" => $this->getAuthAllPermissions($directory),
-						"extrauserdetails" => $extrauserdetails,
-						"locked" => $dir['locked'],
-						"directory" => $directory,
-						"usage_html" => $usage_html,
-						"landing_page_list" => $landing_page_list
-					)
+					__DIR__.'/views/users.php',
+					["users" => $users, "groups" => $groups, "dgroups" => $this->getDefaultGroups($directory), "sections" => $sections, "pbx_modules" => empty($request['user']) ? [] : $this->getGlobalSettingByID($request['user'],'pbx_modules'), "pbx_low" => empty($request['user']) ? '' : $this->getGlobalSettingByID($request['user'],'pbx_low'), "pbx_high" => empty($request['user']) ? '' : $this->getGlobalSettingByID($request['user'],'pbx_high'), "pbx_landing" => $pbx_landing, "pbx_login" => empty($request['user']) ? false : $this->getGlobalSettingByID($request['user'],'pbx_login',true), "pbx_admin" => empty($request['user']) ? false : $this->getGlobalSettingByID($request['user'],'pbx_admin',true), "modules" => $module_list, "brand" => $this->brand, "dfpbxusers" => $dfpbxusers, "fpbxusers" => $fpbxusers, "user" => $user, "message" => $this->message, "permissions" => $this->getAuthAllPermissions($directory), "extrauserdetails" => $extrauserdetails, "locked" => $dir['locked'], "directory" => $directory, "usage_html" => $usage_html, "landing_page_list" => $landing_page_list]
 				);
 			break;
 			case 'adducptemplate':
@@ -1101,11 +905,8 @@ class Userman extends FreePBX_Helpers implements BMO {
 					$template = [];
 				}
 				$html .= load_view(
-					dirname(__FILE__).'/views/ucptemplates.php',
-					array(
-						'template' => $template,
-						'users'=>$this->getAllUsers()
-					)
+					__DIR__.'/views/ucptemplates.php',
+					['template' => $template, 'users'=>$this->getAllUsers()]
 				);
 			break;
 			case 'showmembers':
@@ -1114,13 +915,13 @@ class Userman extends FreePBX_Helpers implements BMO {
 				//lets change the hasupdated to 0
 				$sql = "UPDATE userman_ucp_templates SET `hasupdated`=0 Where id=:id";
 				$sth = $this->db->prepare($sql);
-				$sth->execute(array(':id' => $request['template']));
-				$html .= load_view(dirname(__FILE__).'/views/templatemembers.php', array('members'=>$members,'templateid'=>$request['template'],'name'=>$template['templatename']));
+				$sth->execute([':id' => $request['template']]);
+				$html .= load_view(__DIR__.'/views/templatemembers.php', ['members'=>$members, 'templateid'=>$request['template'], 'name'=>$template['templatename']]);
 				break;
 			default:
 				$users = $this->getAllUsers();
 				$groups = $this->getAllGroups();
-				$auths = array();
+				$auths = [];
 				foreach($this->getDirectoryDrivers() as $auth) {
 					$class = 'FreePBX\modules\Userman\Auth\\'.$auth;
 					$a = $class::getInfo($this, $this->FreePBX);
@@ -1135,7 +936,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 				if($activedirectorycount === 0){
 					$dirwarn = '<div class="alert alert-warning" role="alert"><strong>'._("Warning")."</strong>: "._("You have no directories enabled. This will affect users ability to use features that require a login").'</div>';
 				}
-				$directoryMap = array();
+				$directoryMap = [];
 				foreach($directories as $directory) {
 					$directoryMap[$directory['id']]['name'] = $directory['name'];
 					$directoryMap[$directory['id']]['driver'] = $directory['driver'];
@@ -1158,7 +959,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 				$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https" : "http";
 				$host = $protocol.'://'.$_SERVER["SERVER_NAME"];
 				$directoryOneId = "";
-                if(count($directories) == 1){
+                if((is_countable($directories) ? count($directories) : 0) == 1){
                     foreach($directories as $dirone){
                         $directoryOneId = $dirone["id"];
                     }
@@ -1167,41 +968,11 @@ class Userman extends FreePBX_Helpers implements BMO {
 				if(empty($pwdsettings)){
 					$this->setDefaultPwdSettings();
 				}
-				$passwordReminder = array(
-					'forcePasswordReset' => $this->pwdExpReminder()->getSettings('forcePasswordReset'),
-					'passwordExpiryReminder' => $this->pwdExpReminder()->getSettings('passwordExpiryReminder'),
-					'passwordExpirationDays' => $this->pwdExpReminder()->getSettings('passwordExpirationDays'),
-					'passwordExpiryReminderDays' => $this->pwdExpReminder()->getSettings('passwordExpiryReminderDays'),
-					'errors' => $errors
-				);
+				$passwordReminder = ['forcePasswordReset' => $this->pwdExpReminder()->getSettings('forcePasswordReset'), 'passwordExpiryReminder' => $this->pwdExpReminder()->getSettings('passwordExpiryReminder'), 'passwordExpirationDays' => $this->pwdExpReminder()->getSettings('passwordExpirationDays'), 'passwordExpiryReminderDays' => $this->pwdExpReminder()->getSettings('passwordExpiryReminderDays'), 'errors' => $errors];
 
 				$html .= load_view(
-					dirname(__FILE__).'/views/welcome.php',
-					array(
-						"directoryMap" => $directoryMap,
-						"directories" => $directories,
-						"directoryOneId" => $directoryOneId,
-						"auths" => $auths,
-						"hostname" => $hostname,
-						"host" => $host,
-						"autoEmail" => $autoEmail,
-						"remoteips" => $remoteips,
-						"sync" => $this->getConfig("sync"),
-						"authtype" => $this->getConfig("auth"),
-						"auths" => $auths,
-						"brand" => $this->brand,
-						"groups" => $groups,
-						"users" => $users,
-						"sections" => $sections,
-						"message" => $this->message,
-						"emailbody" => $emailbody,
-						"emailsubject" => $emailsubject,
-						"mailtype" => $mailtype,
-						"dirwarn" => $dirwarn,
-						"allgenratebutton" => $allgenratebutton,
-						"pwdSettings" => $this->getConfig('pwdSettings'),
-						"passwordReminder" => $passwordReminder
-					)
+					__DIR__.'/views/welcome.php',
+					["directoryMap" => $directoryMap, "directories" => $directories, "directoryOneId" => $directoryOneId, "auths" => $auths, "hostname" => $hostname, "host" => $host, "autoEmail" => $autoEmail, "remoteips" => $remoteips, "sync" => $this->getConfig("sync"), "authtype" => $this->getConfig("auth"), "auths" => $auths, "brand" => $this->brand, "groups" => $groups, "users" => $users, "sections" => $sections, "message" => $this->message, "emailbody" => $emailbody, "emailsubject" => $emailsubject, "mailtype" => $mailtype, "dirwarn" => $dirwarn, "allgenratebutton" => $allgenratebutton, "pwdSettings" => $this->getConfig('pwdSettings'), "passwordReminder" => $passwordReminder]
 				);
 			break;
 		}
@@ -1210,27 +981,13 @@ class Userman extends FreePBX_Helpers implements BMO {
 	}
 
 	public function setDefaultPwdSettings(){
-		$pwdSettings = array(	'pwd_length_enable' 	=> "no",
-								'pwd_length_value' 		=> 8,
-								'pwd_uppercase_enable'	=> "no",
-								'pwd_uppercase_value'	=> 1,
-								'pwd_lowercase_enable' 	=> "no",
-								'pwd_lowercase_value'	=> 1,
-								'pwd_numeric_enable' 	=> "no",
-								'pwd_numeric_value' 	=> 1,
-								'pwd_special_enable'	=> "no",
-								'pwd_special_value' 	=> 1,
-								'pwd_punctuation_enable'=> "no",
-								'pwd_punctuation_value' => 1,
-								'pwd_threshold_enable'	=> "no",
-								'pwd_threshold_value' 	=> 4,
-							);
+		$pwdSettings = ['pwd_length_enable' 	=> "no", 'pwd_length_value' 		=> 8, 'pwd_uppercase_enable'	=> "no", 'pwd_uppercase_value'	=> 1, 'pwd_lowercase_enable' 	=> "no", 'pwd_lowercase_value'	=> 1, 'pwd_numeric_enable' 	=> "no", 'pwd_numeric_value' 	=> 1, 'pwd_special_enable'	=> "no", 'pwd_special_value' 	=> 1, 'pwd_punctuation_enable'=> "no", 'pwd_punctuation_value' => 1, 'pwd_threshold_enable'	=> "no", 'pwd_threshold_value' 	=> 4];
 		$this->setConfig("pwdSettings", json_encode($pwdSettings));		
 	}
 
 	public function getExtraUserDetailsDisplay($user) {
 		$mods = $this->FreePBX->Hooks->processHooks($user);
-		$final = array();
+		$final = [];
 		foreach($mods as $mod) {
 			foreach($mod as $item) {
 				$final[] = $item;
@@ -1243,12 +1000,13 @@ class Userman extends FreePBX_Helpers implements BMO {
 	 * Get List of Menu items from said Modules
 	 */
 	private function getModuleList() {
-		$active_modules = $this->FreePBX->Modules->getActiveModules();
-		$module_list = array();
+		$amp_conf = [];
+  $active_modules = $this->FreePBX->Modules->getActiveModules();
+		$module_list = [];
 		if(is_array($active_modules)){
 			$dis = ($this->FreePBX->Config->get('AMPEXTENSIONS') == 'deviceanduser')?_("Add Device"):_("Add Extension");
-			$active_modules['au']['items'][] = array('name' => _("Apply Changes Bar"), 'display' => '99');
-			$active_modules['au']['items'][] = array('name' => $dis, 'display' => '999');
+			$active_modules['au']['items'][] = ['name' => _("Apply Changes Bar"), 'display' => '99'];
+			$active_modules['au']['items'][] = ['name' => $dis, 'display' => '999'];
 
 			foreach($active_modules as $key => $module) {
 				//create an array of module sections to display
@@ -1257,12 +1015,12 @@ class Userman extends FreePBX_Helpers implements BMO {
 						$listKey = (!empty($item['display']) ? $item['display'] : $itemKey);
 						if(isset($item['rawname'])) {
 							$item['rawname'] = $module['rawname'];
-							\modgettext::push_textdomain($module['rawname']);
+							modgettext::push_textdomain($module['rawname']);
 						}
 						$item['name'] = _($item['name']);
 						$module_list[ $listKey ] = $item;
 						if(isset($item['rawname'])) {
-							\modgettext::pop_textdomain();
+							modgettext::pop_textdomain();
 						}
 					}
 				}
@@ -1346,27 +1104,22 @@ class Userman extends FreePBX_Helpers implements BMO {
 					$_SESSION['AMP_user']->dateformat = !empty($request['dateformat']) ? $request['dateformat'] : $this->getLocaleSpecificSettingByUID($request['id'],"dateformat");
 					$_SESSION['AMP_user']->datetimeformat = !empty($request['datetimeformat']) ? $request['datetimeformat'] : $this->getLocaleSpecificSettingByUID($request['id'],"datetimeformat");
 				}
-				return array("status" => true);
+				return ["status" => true];
 			break;
 			case "getGuihookInfo":
 				$directory = $this->getDirectoryByID($request['directory']);
 				$users = $this->getAllUsers($directory['id']);
 				$groups = $this->getAllGroups($directory['id']);
 				$permissions = $this->getAuthAllPermissions($directory['id']);
-				return array(
-					"status" => true,
-					"users" => $users,
-					"groups" => $groups,
-					"permissions" => $permissions
-				);
+				return ["status" => true, "users" => $users, "groups" => $groups, "permissions" => $permissions];
 			break;
 			case "makeDefault":
-				$newid = isset($request['id']) ? $request['id'] : null;
+				$newid = $request['id'] ?? null;
 				if (is_numeric($newid)) {
 					$this->setDefaultDirectory($request['id']);
-					$return = array("status" => true, 'message'=> _('Directory update successful'));
+					$return = ["status" => true, 'message'=> _('Directory update successful')];
 				} else {
-					$return = array("status" => false, 'message'=> _('The Directory ID is not valid!'));
+					$return = ["status" => false, 'message'=> _('The Directory ID is not valid!')];
 				}
 				return $return;
 			break;
@@ -1375,19 +1128,19 @@ class Userman extends FreePBX_Helpers implements BMO {
 					$uID = $this->getUidFromUnlockkey($request['key']);
 					if(!empty($uID)) {
 						$ret = $this->updateUserUcpByTemplate($uID, $request['id']);
-						return array("status" => true);
+						return ["status" => true];
 					}
-					return array("status" => false, 'message' => _('Please Generate Generic Template to View /Edit Template'));
+					return ["status" => false, 'message' => _('Please Generate Generic Template to View /Edit Template')];
 				}else if(!empty($request['id']) && $request['key'] == 'false') {
 					$uID = $this->getTemplateCreator();
 					$key = $this->getUnlockKeyTemplateCreator();
 					if($uID != false) {
 						$ret = $this->updateUserUcpByTemplate($uID, $request['id']);
-						return array("status" => true,'key'=>$key);
+						return ["status" => true, 'key'=>$key];
 					}
-					return array("status" => false, 'message' => ('Please Create Generic Template to View /Edit Template'));
+					return ["status" => false, 'message' => ('Please Create Generic Template to View /Edit Template')];
 				}else {
-					return array("status" => false, 'message' => _('Please Create Generic Template to View /Edit Template'));
+					return ["status" => false, 'message' => _('Please Create Generic Template to View /Edit Template')];
 				}
 			break;
 			case "rebuildtemplate":
@@ -1403,28 +1156,28 @@ class Userman extends FreePBX_Helpers implements BMO {
 			case "auth":
 				$out = $this->checkCredentials($request["username"],$request["password"]);
 				if($out) {
-					return array("status" => true);
+					return ["status" => true];
 				} else {
-					return array("status" => false);
+					return ["status" => false];
 				}
 			break;
 			case "updateDirectorySort":
-				$sort = json_decode(htmlspecialchars_decode($request['sort']),true);
+				$sort = json_decode(htmlspecialchars_decode((string) $request['sort']),true, 512, JSON_THROW_ON_ERROR);
 				$sql = "UPDATE ".$this->directoryTable." SET `order` = ? WHERE `id` = ?";
 				$sth = $this->db->prepare($sql);
 
 				foreach($sort as $order => $gid) {
-					$sth->execute(array($order,$gid));
+					$sth->execute([$order, $gid]);
 				}
-				return array("status" => true);
+				return ["status" => true];
 			case "updateGroupSort":
-				$sort = json_decode(htmlspecialchars_decode($request['sort']),true);
+				$sort = json_decode(htmlspecialchars_decode((string) $request['sort']),true, 512, JSON_THROW_ON_ERROR);
 				$sql = "UPDATE ".$this->groupTable." SET `priority` = ? WHERE `id` = ?";
 				$sth = $this->db->prepare($sql);
 				foreach($sort as $order => $gid) {
-					$sth->execute(array($order,$gid));
+					$sth->execute([$order, $gid]);
 				}
-				return array("status" => true);
+				return ["status" => true];
 			case "getUsers":
 				$directory = !empty($_GET['directory']) ? $_GET['directory'] : '';
 				return $this->getAllUsers($directory);
@@ -1440,7 +1193,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 			case "email":
 				//FREEPBX-15304 Send email to multiple selected users only sends to the first
 				$sendmail = false;
-				$maillist = array();
+				$maillist = [];
 				foreach($_REQUEST['extensions'] as $ext){
 					$user = $this->getUserbyID($ext);
 					if(!empty($user)) {
@@ -1451,14 +1204,14 @@ class Userman extends FreePBX_Helpers implements BMO {
 				}
 				if($sendmail){
 					$list = implode(",",$maillist);
-					return array('status' => true, "message" => sprintf(_("Email Sent to users: %s"), $list));
+					return ['status' => true, "message" => sprintf(_("Email Sent to users: %s"), $list)];
 				}
-				return array('status' => false, "message" => _("Invalid User"));
+				return ['status' => false, "message" => _("Invalid User")];
 
 			break;
 			case "getuserfields":
 				if(empty($request['id'])){
-					print json_encode(_("Error: No id provided"));
+					print json_encode(_("Error: No id provided"), JSON_THROW_ON_ERROR);
 				}else{
 					$user = $this->getUserByID($request['id']);
 					return $user;
@@ -1467,39 +1220,39 @@ class Userman extends FreePBX_Helpers implements BMO {
 			case "updatePassword":
 				$uid = $request['id'];
 				$newpass = $request['newpass'];
-				$extra = array();
+				$extra = [];
 				$user = $this->getUserByID($uid);
 				return $this->updateUser($uid, $user['username'], $user['username'], $user['default_extension'], $user['description'], $extra, $newpass);
 			break;
 			case 'delete':
 				switch ($_REQUEST['type']) {
 					case 'groups':
-						$ret = array();
+						$ret = [];
 						foreach($_REQUEST['extensions'] as $ext){
 							$ret[$ext] = $this->deleteGroupByGID($ext);
 						}
-						return array('status' => true, 'message' => $ret);
+						return ['status' => true, 'message' => $ret];
 					break;
 					case 'users':
-						$ret = array();
+						$ret = [];
 						foreach($_REQUEST['extensions'] as $ext){
 							$ret[$ext] = $this->deleteUserByID($ext);
 						}
-						return array('status' => true, 'message' => $ret);
+						return ['status' => true, 'message' => $ret];
 					break;
 					case 'directories':
-						$ret = array();
+						$ret = [];
 						foreach($_REQUEST['extensions'] as $ext){
 							$ret[$ext] = $this->deleteDirectoryByID($ext);
 						}
-						return array('status' => true, 'message' => $ret);
+						return ['status' => true, 'message' => $ret];
 					break;
 					case 'ucptemplates':
-						$ret = array();
+						$ret = [];
 						foreach($_REQUEST['extensions'] as $ext){
 							$ret[$ext] = $this->deleteUcpTemplateByID($ext);
 						}
-						return array('status' => true, 'message' => $ret);
+						return ['status' => true, 'message' => $ret];
 					break;
 				}
 			break;
@@ -1508,7 +1261,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 			case 'resetAdminPasswordWithToken':
 				return $this->pwdExpReminder()->resetAdminPasswordWithToken($_REQUEST);
 			default:
-				echo json_encode(_("Error: You should never see this"));
+				echo json_encode(_("Error: You should never see this"), JSON_THROW_ON_ERROR);
 			break;
 		}
 	}
@@ -1539,7 +1292,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 				$this->directories[$directory['id']] = new $class($this, $this->FreePBX, $o['config']);
 			}
 		}
-		$class = 'FreePBX\modules\Userman\Auth\GlobalAuth';
+		$class = GlobalAuth::class;
 		if(!class_exists($class)) {
 			include(__DIR__."/functions.inc/auth/Global.php");
 		}
@@ -1559,7 +1312,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 			}
 		}
 		if($withactivecount){
-			return array('active' => $count, 'directories' => $directories);
+			return ['active' => $count, 'directories' => $directories];
 		}
 		return $directories;
 	}
@@ -1612,7 +1365,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 		} else {
 			$groups = $this->globalDirectory->getDefaultGroups();
 		}
-		return is_array($groups) ? $groups : array();
+		return is_array($groups) ? $groups : [];
 	}
 
 	/**
@@ -1767,8 +1520,8 @@ class Userman extends FreePBX_Helpers implements BMO {
 			$sql = "DELETE FROM restapps_rtapi_conferences WHERE userman_id = ?";
 			$sth = $this->db->prepare($sql);
 			try {
-				$sth->execute(array($id));
-			} catch(Exception $e) {}
+				$sth->execute([$id]);
+			} catch(Exception) {}
 		}
 		//delete the templatecreator 
 		$key = $this->getConfig('unlockkey','templatecreator');
@@ -1806,13 +1559,13 @@ class Userman extends FreePBX_Helpers implements BMO {
 	public function lockDirectory($id) {
 		$sql = "UPDATE ".$this->directoryTable." SET `locked` = 1 WHERE `id` = ?";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array($id));
+		$sth->execute([$id]);
 	}
 
 	public function unlockDirectory($id) {
 		$sql = "UPDATE ".$this->directoryTable." SET `locked` = 0 WHERE `id` = ?";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array($id));
+		$sth->execute([$id]);
 	}
 
 	/**
@@ -1826,7 +1579,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 		$sth->execute();
 		$sql = "UPDATE ".$this->directoryTable." SET `default` = 1 WHERE `id` = ?";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array($id));
+		$sth->execute([$id]);
 	}
 
 	public function getDefaultDirectory() {
@@ -1840,9 +1593,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 			$sth->execute();
 			$dir = $sth->fetch(PDO::FETCH_ASSOC);
 			if(empty($dir)) {
-				$dir = array(
-					"id" => $this->addDirectory('Freepbx', _("PBX Internal Directory"), true, array())
-				);
+				$dir = ["id" => $this->addDirectory('Freepbx', _("PBX Internal Directory"), true, [])];
 				$this->addDefaultGroupToDirectory($dir['id']);
 			} else {
 				$this->setDefaultDirectory($dir['id']);
@@ -1857,7 +1608,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 		$groups = $obj->getAllGroups();
 		if(empty($groups)) {
 			$users = $obj->getAllUsers();
-			$allUsers = array();
+			$allUsers = [];
 			foreach($users as $u) {
 				$allUsers[] = $u['id'];
 			}
@@ -1866,14 +1617,12 @@ class Userman extends FreePBX_Helpers implements BMO {
 				out(_("Unable to create default group"));
 				return false;
 			}
-			$config = array(
-				"default-groups" => array($g['id'])
-			);
+			$config = ["default-groups" => [$g['id']]];
 			$gid = $g['id'];
 			$this->updateDirectory($dirid, $dir['name'], 1, $config);
 			//Default New Group Settings
 			$this->setModuleSettingByGID($gid,'contactmanager','show', true);
-			$this->setModuleSettingByGID($gid,'contactmanager','groups',array($gid));
+			$this->setModuleSettingByGID($gid,'contactmanager','groups',[$gid]);
 			$this->setModuleSettingByGID($gid,'fax','enabled',true);
 			$this->setModuleSettingByGID($gid,'fax','attachformat',"pdf");
 			$this->setModuleSettingByGID($gid,'faxpro','localstore',"true");
@@ -1884,18 +1633,18 @@ class Userman extends FreePBX_Helpers implements BMO {
 			$this->setModuleSettingByGID($gid,'xmpp','enable', true);
 			$this->setModuleSettingByGID($gid,'ucp|Global','allowLogin',true);
 			$this->setModuleSettingByGID($gid,'ucp|Global','originate', true);
-			$this->setModuleSettingByGID($gid,'ucp|Settings','assigned', array("self"));
+			$this->setModuleSettingByGID($gid,'ucp|Settings','assigned', ["self"]);
 			$this->setModuleSettingByGID($gid,'ucp|Cdr','enable', true);
-			$this->setModuleSettingByGID($gid,'ucp|Cdr','assigned', array("self"));
+			$this->setModuleSettingByGID($gid,'ucp|Cdr','assigned', ["self"]);
 			$this->setModuleSettingByGID($gid,'ucp|Cdr','download', true);
 			$this->setModuleSettingByGID($gid,'ucp|Cdr','playback', true);
 			$this->setModuleSettingByGID($gid,'ucp|Cel','enable', true);
-			$this->setModuleSettingByGID($gid,'ucp|Cel','assigned', array("self"));
+			$this->setModuleSettingByGID($gid,'ucp|Cel','assigned', ["self"]);
 			$this->setModuleSettingByGID($gid,'ucp|Cel','download', true);
 			$this->setModuleSettingByGID($gid,'ucp|Cel','playback', true);
 			$this->setModuleSettingByGID($gid,'ucp|Presencestate','enabled',true);
 			$this->setModuleSettingByGID($gid,'ucp|Voicemail','enable', true);
-			$this->setModuleSettingByGID($gid,'ucp|Voicemail','assigned', array("self"));
+			$this->setModuleSettingByGID($gid,'ucp|Voicemail','assigned', ["self"]);
 			$this->setModuleSettingByGID($gid,'ucp|Voicemail','download', true);
 			$this->setModuleSettingByGID($gid,'ucp|Voicemail','playback', true);
 			$this->setModuleSettingByGID($gid,'ucp|Voicemail','settings', true);
@@ -1903,43 +1652,22 @@ class Userman extends FreePBX_Helpers implements BMO {
 			$this->setModuleSettingByGID($gid,'ucp|Voicemail','vmxlocater', true);
 			$this->setModuleSettingByGID($gid,'ucp|Conferencespro','enable', true);
 			$this->setModuleSettingByGID($gid,'ucp|Endpoint','enable', true);
-			$this->setModuleSettingByGID($gid,'ucp|Endpoint','assigned', array("self"));
-			$this->setModuleSettingByGID($gid,'ucp|Conferencespro','assigned', array("linked"));
+			$this->setModuleSettingByGID($gid,'ucp|Endpoint','assigned', ["self"]);
+			$this->setModuleSettingByGID($gid,'ucp|Conferencespro','assigned', ["linked"]);
 			$this->setModuleSettingByGID($gid,'conferencespro','link', true);
 			$this->setModuleSettingByGID($gid,'conferencespro','ivr', true);
 			$this->setModuleSettingByGID($gid,'ucp|Sysadmin','vpn_enable', true);
-			$tfsettings = array(
-				"login",
-				"menuover",
-				"conference_enable",
-				"queue_enable",
-				"timecondition_enable",
-				"callflow_enable",
-				"contact_enable",
-				"voicemail_enable",
-				"presence_enable",
-				"parking_enable",
-				"fmfm_enable",
-				"dnd_enable",
-				"cf_enable",
-				"qa_enable",
-				"lilo_enable"
-			);
+			$tfsettings = ["login", "menuover", "conference_enable", "queue_enable", "timecondition_enable", "callflow_enable", "contact_enable", "voicemail_enable", "presence_enable", "parking_enable", "fmfm_enable", "dnd_enable", "cf_enable", "qa_enable", "lilo_enable"];
 			foreach($tfsettings as $setting) {
 				$this->setModuleSettingByGID($gid,'restapps',$setting, true);
 			}
-			$this->setModuleSettingByGID($gid,'restapps','conferences',array('linked'));
-			$asettings = array(
-				"queues",
-				"timeconditions",
-				"callflows",
-				"contacts"
-			);
+			$this->setModuleSettingByGID($gid,'restapps','conferences',['linked']);
+			$asettings = ["queues", "timeconditions", "callflows", "contacts"];
 			foreach($asettings as $setting) {
-				$this->setModuleSettingByGID($gid,'restapps',$setting,array('*'));
+				$this->setModuleSettingByGID($gid,'restapps',$setting,['*']);
 			}
-			$this->setModuleSettingByGID($gid,"contactmanager","showingroups",array("*"));
-			$this->setModuleSettingByGID($gid,'contactmanager','groups',array("*"));
+			$this->setModuleSettingByGID($gid,"contactmanager","showingroups",["*"]);
+			$this->setModuleSettingByGID($gid,'contactmanager','groups',["*"]);
 			$this->setModuleSettingByGID($gid,'sysadmin','vpn_link', true);
 			$this->setModuleSettingByGID($gid,'zulu','enable', true);
 			$this->setModuleSettingByGID($gid,'zulu','enable_fax', true);
@@ -1963,9 +1691,9 @@ class Userman extends FreePBX_Helpers implements BMO {
 	 * @return array Array of valid directory engines
 	 */
 	private function getDirectoryDrivers() {
-		$auths = array();
+		$auths = [];
 		foreach(glob(__DIR__."/functions.inc/auth/modules/*.php") as $auth) {
-			$name = basename($auth, ".php");
+			$name = basename((string) $auth, ".php");
 			if(!class_exists('FreePBX\modules\Userman\Auth\\'.$name)) {
 				include(__DIR__."/functions.inc/auth/modules/".$name.".php");
 			}
@@ -1987,7 +1715,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 	public function deleteDirectoryByID($id) {
 		$sql = "SELECT * FROM userman_users WHERE `auth` = ?";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array($id));
+		$sth->execute([$id]);
 		$users = $sth->fetchAll(PDO::FETCH_ASSOC);
 		foreach($users as $user){
 			$this->deleteUserByID($user['id']);
@@ -1995,7 +1723,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 
 		$sql = "SELECT * FROM userman_groups WHERE `auth` = ?";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array($id));
+		$sth->execute([$id]);
 		$groups = $sth->fetchAll(PDO::FETCH_ASSOC);
 		foreach($groups as $group){
 			$this->deleteGroupByGID($group['id']);
@@ -2003,7 +1731,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 
 		$sql = "DELETE FROM ".$this->directoryTable." WHERE `id` = ?";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array($id));
+		$sth->execute([$id]);
 
 		$this->setConfig("auth-settings",false,$id);
 		$this->loadActiveDirectories();
@@ -2019,9 +1747,9 @@ class Userman extends FreePBX_Helpers implements BMO {
 	public function getDirectoryByID($id) {
 		$sql = "SELECT * FROM ".$this->directoryTable." WHERE `id` = ?";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array($id));
+		$sth->execute([$id]);
 		$settings = $this->getConfig("auth-settings",$id);
-		$settings = is_array($settings) ? $settings : array();
+		$settings = is_array($settings) ? $settings : [];
 		$out = $sth->fetch(PDO::FETCH_ASSOC);
 		if(empty($out)) {
 			return false;
@@ -2038,10 +1766,10 @@ class Userman extends FreePBX_Helpers implements BMO {
 	 * @param  array          $settings Array of diretory settings
 	 * @return integer                    The directory ID
 	 */
-	public function addDirectory($driver, $name, $enable, $settings=array()) {
+	public function addDirectory($driver, $name, $enable, $settings=[]) {
 		$sql = "INSERT INTO ".$this->directoryTable." (`name`,`driver`,`active`) VALUES (?,?,?)";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array($name,ucfirst(strtolower($driver)),($enable ? 1 : 0)));
+		$sth->execute([$name, ucfirst(strtolower($driver)), ($enable ? 1 : 0)]);
 		$id = $this->db->lastInsertId();
 		$this->setConfig("auth-settings",$settings,$id);
 		$this->loadActiveDirectories();
@@ -2056,10 +1784,10 @@ class Userman extends FreePBX_Helpers implements BMO {
 	 * @param  array          $settings Array of diretory settings
 	 * @return integer                    The directory ID
 	 */
-	public function updateDirectory($id, $name, $enable, $settings=array()) {
+	public function updateDirectory($id, $name, $enable, $settings=[]) {
 		$sql = "UPDATE ".$this->directoryTable." SET `name` = ?, `active` = ? WHERE `id` = ?";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array($name,($enable ? 1 : 0),$id));
+		$sth->execute([$name, ($enable ? 1 : 0), $id]);
 		$this->setConfig("auth-settings",$settings,$id);
 		$this->loadActiveDirectories();
 		return $id;
@@ -2107,8 +1835,9 @@ class Userman extends FreePBX_Helpers implements BMO {
 	 * @param bool $encrypt Whether to encrypt the password or not. If this is false the system will still assume its hashed as sha1, so this is only useful if importing accounts with previous sha1 passwords
 	 * @return array
 	 */
-	public function addUserByDirectory($directory, $username, $password, $default='none', $description=null, $extraData=array(), $encrypt = true) {
-		if(empty($username)) {
+	public function addUserByDirectory($directory, $username, $password, $default='none', $description=null, $extraData=[], $encrypt = true) {
+		$status = [];
+  if(empty($username)) {
 			throw new Exception(_("Username can not be blank"));
 		}
 		if(empty($password)) {
@@ -2117,7 +1846,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 		set_time_limit(0);
 		$dir = $this->getDirectoryByID($directory);
 		if($dir['locked']) {
-			return array("status" => false, "message" => _("Directory is locked. Can not add user"));
+			return ["status" => false, "message" => _("Directory is locked. Can not add user")];
 		}
 		$display = !empty($_REQUEST['display']) ? $_REQUEST['display'] : "";
 		if(isset($this->directories[$directory])){
@@ -2143,7 +1872,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 	 * @param bool $encrypt Whether to encrypt the password or not. If this is false the system will still assume its hashed as sha1, so this is only useful if importing accounts with previous sha1 passwords
 	 * @return array
 	 */
-	public function addUser($username, $password, $default='none', $description=null, $extraData=array(), $encrypt = true) {
+	public function addUser($username, $password, $default='none', $description=null, $extraData=[], $encrypt = true) {
 		if(empty($username)) {
 			throw new Exception(_("Username can not be blank"));
 		}
@@ -2160,13 +1889,13 @@ class Userman extends FreePBX_Helpers implements BMO {
 				$error_content .= "<li> ".$item." - ".$error."</li>";
 			}
 			$error_content .= '</div>';
-			return array("status" => false, "message" => $error_content);
+			return ["status" => false, "message" => $error_content];
 		}			
 
 		set_time_limit(0);
 		$dir = $this->getDefaultDirectory();
 		if($dir['locked']) {
-			return array("status" => false, "message" => _("Directory is locked. Can not add user"));
+			return ["status" => false, "message" => _("Directory is locked. Can not add user")];
 		}
 		$display = !empty($_REQUEST['display']) ? $_REQUEST['display'] : "";
 		$status = $this->directories[$dir['id']]->addUser($username, $password, $default, $description, $extraData, $encrypt);
@@ -2183,7 +1912,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 	*/
 	private function getUserModulesSettingBasedOnTemplate($widget,$userid){
 		$widget['id'] = (string)Uuid::uuid4();
-		$moduleuc = ucfirst($widget['rawname']);
+		$moduleuc = ucfirst((string) $widget['rawname']);
 		$u = $this->getUserByID($userid);
 		$defaultextension = $u['default_extension'];
 		//when Rssfeeds comes the module name will be home. We can just retrun the same widget
@@ -2212,38 +1941,38 @@ class Userman extends FreePBX_Helpers implements BMO {
 		//add the side bar dasboards and its widgets
 		$sql = "SELECT a.val, a.type,a.key FROM userman_template_settings a WHERE a.tid = :tid AND `key`='dashboard-simple-layout' ";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':tid' => $templateid));
+		$sth->execute([':tid' => $templateid]);
 		$results = $sth->fetch(PDO::FETCH_ASSOC);
 		$this->removeUCPSideDashboardSettingByID($userid);
 		if($results) {
-			$dashbords = json_decode($results['val'],true);
+			$dashbords = json_decode((string) $results['val'],true, 512, JSON_THROW_ON_ERROR);
 			$newsidedash = [];
 			foreach($dashbords as $dash){
 				$id = (string)Uuid::uuid4();
 				$name = $dash['name'];
 				$allowedwidget = [];
-				$updatedwidget = $this->getUserModulesSettingBasedOnTemplate($dash,$userid,$templateid);
+				$updatedwidget = $this->getUserModulesSettingBasedOnTemplate($dash,$userid);
 				if(!$updatedwidget){
 					//this is not a valid widget for this user
 					continue;
 				}
 				$newsidedash[] = $updatedwidget;
 			}
-			$sidedashboards = json_encode($newsidedash);
+			$sidedashboards = json_encode($newsidedash, JSON_THROW_ON_ERROR);
 			//insert sidebar dasboard widgets
 			$sql = "INSERT INTO userman_users_settings(`uid`,`module`,`key`,`val`,`type`) VALUES(:uid,'ucp|Global',:key,:val,:type)";
 			$sth = $this->db->prepare($sql);
-			$sth->execute(array(':uid' => $userid, ':key' => $results['key'],':val' => $sidedashboards,':type'=>$results['type']));
+			$sth->execute([':uid' => $userid, ':key' => $results['key'], ':val' => $sidedashboards, ':type'=>$results['type']]);
 		}
 		// Adding the main dashboards
 		$sql = "SELECT a.val, a.type,a.key FROM userman_template_settings a WHERE a.tid = :tid AND `key`='dashboards' ";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':tid' => $templateid));
+		$sth->execute([':tid' => $templateid]);
 		$results = $sth->fetch(PDO::FETCH_ASSOC);
 		$this->removeUCPDashboardSettingByID($userid);
 		if($results) {
 			//we have all new dashboards ids here
-			$dashbords = json_decode($results['val'],true);
+			$dashbords = json_decode((string) $results['val'],true, 512, JSON_THROW_ON_ERROR);
 			$newdashbords = [];
 			foreach($dashbords as $dash){
 				$id = (string)Uuid::uuid4();
@@ -2252,32 +1981,32 @@ class Userman extends FreePBX_Helpers implements BMO {
 				$layoutkey = 'dashboard-layout-'.$dash['id'];
 				$sql = "select * from userman_template_settings where tid=:tid AND `key`=:key ";
 				$sth = $this->db->prepare($sql);
-				$sth->execute(array(':tid' => $templateid,':key'=>$layoutkey));
+				$sth->execute([':tid' => $templateid, ':key'=>$layoutkey]);
 				$wids = $sth->fetch(PDO::FETCH_ASSOC);
 				unset($thiswidget);
 				$thiswidget = [];
-				$widgets = json_decode($wids['val'],true);
+				$widgets = json_decode((string) $wids['val'],true, 512, JSON_THROW_ON_ERROR);
 				$widgets = is_array($widgets)?$widgets:[];
 				unset($allowedwidget);
 				$allowedwidget = [];
 				foreach($widgets as $widget){
-					$updatedwidget = $this->getUserModulesSettingBasedOnTemplate($widget,$userid,$templateid);
+					$updatedwidget = $this->getUserModulesSettingBasedOnTemplate($widget,$userid);
 					if(!$updatedwidget){
 						//this is not a valid widget for this user
 						continue;
 					}
 					$thiswidget[] = $updatedwidget;
 				}
-				$updatedwidgets = json_encode($thiswidget);
+				$updatedwidgets = json_encode($thiswidget, JSON_THROW_ON_ERROR);
 				$sql = "INSERT INTO userman_users_settings(`uid`,`module`,`key`,`val`,`type`) VALUES(:uid,'ucp|Global',:key,:val,:type)";
 				$sth = $this->db->prepare($sql);
-				$sth->execute(array(':uid' => $userid, ':key' => $widskey,':val' => $updatedwidgets,':type'=>$wids['type']));
+				$sth->execute([':uid' => $userid, ':key' => $widskey, ':val' => $updatedwidgets, ':type'=>$wids['type']]);
 			}
-			$dashboards = json_encode($newdashbords);
+			$dashboards = json_encode($newdashbords, JSON_THROW_ON_ERROR);
 			//insert the dasbord
 			$sql = "INSERT INTO userman_users_settings(`uid`,`module`,`key`,`val`,`type`) VALUES(:uid,'ucp|Global',:key,:val,:type)";
 			$sth = $this->db->prepare($sql);
-			$sth->execute(array(':uid' => $userid, ':key' => $results['key'],':val' => $dashboards,':type'=>$results['type']));
+			$sth->execute([':uid' => $userid, ':key' => $results['key'], ':val' => $dashboards, ':type'=>$results['type']]);
 			return ['status'=>true, 'message' => _('User UCP updated')];
 		}else {
 			return ['status'=>false, 'message' => _('No_Dashboards_created')];
@@ -2287,7 +2016,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 	public function removeUCPSideDashboardSettingByID($userid){
 		$sql = "Delete from userman_users_settings where uid=:uid AND `key`='dashboard-simple-layout' ";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':uid' => $userid));
+		$sth->execute([':uid' => $userid]);
 	}
 
 	/*Remove the Main dashbord of a user */
@@ -2295,22 +2024,22 @@ class Userman extends FreePBX_Helpers implements BMO {
 		//remove all dashbord and its layout dashboards
 		$sql = "select * from userman_users_settings where uid=:uid AND `key`='dashboards' ";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':uid' => $userid));
+		$sth->execute([':uid' => $userid]);
 		$results = $sth->fetch(PDO::FETCH_ASSOC);
 		if($results) {
-			$dashbords = json_decode($results['val'],true);
+			$dashbords = json_decode((string) $results['val'],true, 512, JSON_THROW_ON_ERROR);
 			if(is_array($dashbords)){
 				foreach($dashbords as $dash){
 					$id = $dash['id'];
 					$layoutkey = 'dashboard-layout-'.$id;
 					$sql = "DELETE from userman_users_settings where uid=:uid AND `key`=:key ";
 					$sth = $this->db->prepare($sql);
-					$sth->execute(array(':uid' => $userid,':key'=>$layoutkey));
+					$sth->execute([':uid' => $userid, ':key'=>$layoutkey]);
 				}
 			}
 			$sql = "Delete from userman_users_settings where uid=:uid AND `key`='dashboards' ";
 			$sth = $this->db->prepare($sql);
-			$sth->execute(array(':uid' => $userid));
+			$sth->execute([':uid' => $userid]);
 		}
 	}
 	/*Add will delete and add
@@ -2319,18 +2048,18 @@ class Userman extends FreePBX_Helpers implements BMO {
 	public function addTemplateSettings($tempid,$uid,$username = '',$createtemp = 'import'){
 		$sql = "UPDATE userman_ucp_templates SET `hasupdated`=1 Where id=:id";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':id' => $tempid));
+		$sth->execute([':id' => $tempid]);
 		if($createtemp =='import'){
 			$sql = "SELECT a.val, a.type,a.key FROM ".$this->userSettingsTable."  a, ".$this->userTable." b WHERE b.id = a.uid AND b.id = :id AND a.module = 'ucp|Global'";
 			$sth = $this->db->prepare($sql);
-			$sth->execute(array(':id' => $uid));
+			$sth->execute([':id' => $uid]);
 			$results = $sth->fetchAll(PDO::FETCH_ASSOC);
 			if(is_array($results)) {
 				$this->removeUcpTemplatesID($tempid);
 				foreach($results as $result){
 					$sql = "INSERT INTO userman_template_settings(`tid`,`module`,`key`,`val`,`type`) VALUES(:tid,'UCP',:key,:val,:type)";
 					$sth = $this->db->prepare($sql);
-					$sth->execute(array(':tid' => $tempid, ':key' => $result['key'],':val' => $result['val'],':type'=>$result['type']));
+					$sth->execute([':tid' => $tempid, ':key' => $result['key'], ':val' => $result['val'], ':type'=>$result['type']]);
 				}
 			}
 			return ['status'=>true, 'message' => _('Template updated')];
@@ -2350,14 +2079,14 @@ class Userman extends FreePBX_Helpers implements BMO {
 			$sql = "SELECT a.id,a.templatename,a.description,b.key,b.val,b.type FROM userman_ucp_templates a,userman_template_settings b Where a.id =b.tid AND id=:id";
 		}		
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':id' => $id));
+		$sth->execute([':id' => $id]);
 		$result = $sth->fetchAll(PDO::FETCH_ASSOC);
 		return $result;
 	}
 	public function removeUcpTemplatesID($tid) {
 		$sql = "DELETE FROM userman_template_settings WHERE  `tid` = :tid ";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':tid' => $tid));
+		$sth->execute([':tid' => $tid]);
 		return true;
 	}
 	/**
@@ -2383,10 +2112,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 		}
 		$sql = "UPDATE ".$this->userTable." SET auth = :directoryid WHERE id = :id";
 		$sth = $this->db->prepare($sql);
-		return $sth->execute(array(
-			":directoryid" => $directoryid,
-			":id" => $uid
-		));
+		return $sth->execute([":directoryid" => $directoryid, ":id" => $uid]);
 	}
 
 	/**
@@ -2396,18 +2122,18 @@ class Userman extends FreePBX_Helpers implements BMO {
 	 * @param  string              $groupname   The group name
 	 * @param  string              $description The group description
 	 */
-	public function addGroupByDirectory($directory, $groupname, $description=null, $users=array()) {
+	public function addGroupByDirectory($directory, $groupname, $description=null, $users=[]) {
 		if(empty($groupname)) {
 			throw new Exception(_("Groupname can not be blank"));
 		}
 		set_time_limit(0);
 		$dir = $this->getDirectoryByID($directory);
 		if($dir['locked']) {
-			return array("status" => false, "message" => _("Directory is locked. Can not add group"));
+			return ["status" => false, "message" => _("Directory is locked. Can not add group")];
 		}
 		$display = !empty($_REQUEST['display']) ? $_REQUEST['display'] : "";
 		//remove faulty users from group
-		$fusers = array();
+		$fusers = [];
 		foreach($users as $u) {
 			if(!empty($u)) {
 				$fusers[] = $u;
@@ -2426,18 +2152,18 @@ class Userman extends FreePBX_Helpers implements BMO {
 	 * @param  string   $groupname   The Group Name
 	 * @param  string   $description The group description
 	 */
-	public function addGroup($groupname, $description=null, $users=array(), $extraData=array()) {
+	public function addGroup($groupname, $description=null, $users=[], $extraData=[]) {
 		if(empty($groupname)) {
 			throw new Exception(_("Groupname can not be blank"));
 		}
 		set_time_limit(0);
 		$dir = $this->getDefaultDirectory();
 		if($dir['locked']) {
-			return array("status" => false, "message" => _("Directory is locked. Can not add group"));
+			return ["status" => false, "message" => _("Directory is locked. Can not add group")];
 		}
 		$display = !empty($_REQUEST['display']) ? $_REQUEST['display'] : "";
 		//remove faulty users from group
-		$fusers = array();
+		$fusers = [];
 		foreach($users as $u) {
 			if(!empty($u)) {
 				$fusers[] = $u;
@@ -2460,7 +2186,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 	 * @param int $id The User Manager User ID
 	 * @param array $data A hash of data to update (see above)
 	 */
-	public function updateUserExtraData($id,$data=array()) {
+	public function updateUserExtraData($id,$data=[]) {
 		$user = $this->getUserByID($id);
 		if(empty($user)) {
 			return false;
@@ -2478,8 +2204,9 @@ class Userman extends FreePBX_Helpers implements BMO {
 	 * @param int $id The User Manager User ID
 	 * @param array $data A hash of data to update (see above)
 	 */
-	public function updateGroupExtraData($gid,$data=array()) {
-		$group = $this->getGroupByID($id);
+	public function updateGroupExtraData($gid,$data=[]) {
+		$id = null;
+  $group = $this->getGroupByID($id);
 		if(empty($group)) {
 			return false;
 		}
@@ -2501,7 +2228,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 	 * @param string $password The updated password, if null then password isn't updated
 	 * @return array
 	 */
-	public function updateUser($uid, $prevUsername, $username, $default='none', $description=null, $extraData=array(), $password=null, $nodisplay = false) {
+	public function updateUser($uid, $prevUsername, $username, $default='none', $description=null, $extraData=[], $password=null, $nodisplay = false) {
 		if(!is_numeric($uid)) {
 			throw new Exception(_("UID was not numeric"));
 		}
@@ -2518,7 +2245,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 					$error_content .= "<li> ".$item." - ".$error."</li>";
 				}
 				$error_content .= '</div>';
-				return array("status" => false, "message" => $error_content);
+				return ["status" => false, "message" => $error_content];
 			}			
 		}
 
@@ -2532,10 +2259,10 @@ class Userman extends FreePBX_Helpers implements BMO {
 		$u = $this->getUserByID($uid);
 		$dir = $this->getDirectoryByID($u['auth']);
 		if($dir['locked']) {
-			return array("status" => false, "message" => _("Directory is locked. Can not update user"));
+			return ["status" => false, "message" => _("Directory is locked. Can not update user")];
 		}
 
-      	$modules = \FreePBX::Modules();
+      	$modules = FreePBX::Modules();
 		if ($modules->checkStatus('pbxmfa')) {
 			if (!is_null($password)) {
 				$this->FreePBX->Pbxmfa->resetTrustedDevices($username, 'ucp');
@@ -2570,7 +2297,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 	 * @param string $description   The group description
 	 * @param array  $users         Array of users in this Group
 	 */
-	public function updateGroup($gid, $prevGroupname, $groupname, $description=null, $users=array(), $nodisplay = false, $extraData=array()) {
+	public function updateGroup($gid, $prevGroupname, $groupname, $description=null, $users=[], $nodisplay = false, $extraData=[]) {
 		if(!is_numeric($gid)) {
 			throw new Exception(_("GID was not numeric"));
 		}
@@ -2586,7 +2313,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 			$groupname = $prevGroupname;
 		}
 		//remove faulty users from group
-		$fusers = array();
+		$fusers = [];
 		foreach($users as $u) {
 			if(!empty($u)) {
 				$fusers[] = $u;
@@ -2596,7 +2323,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 		$g = $this->getGroupByGID($gid);
 		$dir = $this->getDirectoryByID($g['auth']);
 		if($dir['locked']) {
-			return array("status" => false, "message" => _("Directory is locked. Can not update group"));
+			return ["status" => false, "message" => _("Directory is locked. Can not update group")];
 		}
 		$status = $this->directories[$g['auth']]->updateGroup($gid, $prevGroupname, $groupname, $description, $fusers, $nodisplay, $extraData);
 		if(!$status['status']) {
@@ -2616,13 +2343,13 @@ class Userman extends FreePBX_Helpers implements BMO {
 	public function checkCredentials($username, $password, $alsoCheckDefaultExt = false) {
 		$sql = "SELECT u.username, d.id as dirid from userman_users u, userman_directories d WHERE username = ? AND u.auth = d.id AND d.active = 1 ORDER BY d.order LIMIT 1";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array($username));
+		$sth->execute([$username]);
 		$user = $sth->fetch(PDO::FETCH_ASSOC);
 		if(empty($user)) {
 			if($alsoCheckDefaultExt) {
 				$sql = "SELECT u.username, d.id as dirid from userman_users u, userman_directories d WHERE default_extension = ? AND u.auth = d.id AND d.active = 1 ORDER BY d.order LIMIT 1";
 				$sth = $this->db->prepare($sql);
-				$sth->execute(array($username));
+				$sth->execute([$username]);
 				$user = $sth->fetch(PDO::FETCH_ASSOC);
 				if(empty($user)) {
 					return false;
@@ -2645,7 +2372,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 	 */
 	public function getAssignedDevices($id) {
 		$user = $this->getUserbyID($id);
-		return !empty($user['default_extension']) ? array($user['default_extension']) : array();
+		return !empty($user['default_extension']) ? [$user['default_extension']] : [];
 	}
 
 	/**
@@ -2657,7 +2384,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 	 * @param array $devices The devices to add to this user as an array
 	 * @return array
 	 */
-	public function setAssignedDevices($id,$devices=array()) {
+	public function setAssignedDevices($id,$devices=[]) {
 		return true;
 	}
 
@@ -2672,12 +2399,12 @@ class Userman extends FreePBX_Helpers implements BMO {
 	public function getAllGlobalSettingsByID($uid) {
 		$sql = "SELECT a.val, a.type, a.key FROM ".$this->userSettingsTable." a, ".$this->userTable." b WHERE b.id = a.uid AND b.id = :id AND a.module = 'global'";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':id' => $uid));
+		$sth->execute([':id' => $uid]);
 		$result = $sth->fetchAll(PDO::FETCH_ASSOC);
 		if($result) {
-			$fout = array();
+			$fout = [];
 			foreach($result as $res) {
-				$fout[$res['key']] = (isset($result['type']) && $result['type'] == 'json-arr' && $this->isJson($result['val'])) ? json_decode($result['val'],true) : $result;
+				$fout[$res['key']] = (isset($result['type']) && $result['type'] == 'json-arr' && $this->isJson($result['val'])) ? json_decode((string) $result['val'],true, 512, JSON_THROW_ON_ERROR) : $result;
 			}
 			return $fout;
 		}
@@ -2695,12 +2422,12 @@ class Userman extends FreePBX_Helpers implements BMO {
 	public function getAllGlobalSettingsByGID($gid) {
 		$sql = "SELECT a.val, a.type, a.key FROM ".$this->groupSettingsTable." a, ".$this->groupTable." b WHERE b.id = a.gid AND b.id = :id AND a.module = 'global'";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':id' => $gid));
+		$sth->execute([':id' => $gid]);
 		$result = $sth->fetchAll(PDO::FETCH_ASSOC);
 		if($result) {
-			$fout = array();
+			$fout = [];
 			foreach($result as $res) {
-				$fout[$res['key']] = (isset($result['type']) && $result['type'] == 'json-arr' && $this->isJson($result['val'])) ? json_decode($result['val'],true) : $result;
+				$fout[$res['key']] = (isset($result['type']) && $result['type'] == 'json-arr' && $this->isJson($result['val'])) ? json_decode((string) $result['val'],true, 512, JSON_THROW_ON_ERROR) : $result;
 			}
 			return $fout;
 		}
@@ -2720,10 +2447,10 @@ class Userman extends FreePBX_Helpers implements BMO {
 	public function getGlobalSettingByID($uid,$setting,$null=false) {
 		$sql = "SELECT a.val, a.type FROM ".$this->userSettingsTable." a, ".$this->userTable." b WHERE b.id = a.uid AND b.id = :id AND a.key = :setting AND a.module = 'global'";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':id' => $uid, ':setting' => $setting));
+		$sth->execute([':id' => $uid, ':setting' => $setting]);
 		$result = $sth->fetch(PDO::FETCH_ASSOC);
 		if($result) {
-			return ($result['type'] == 'json-arr' && $this->isJson($result['val'])) ? json_decode($result['val'],true) : $result['val'];
+			return ($result['type'] == 'json-arr' && $this->isJson($result['val'])) ? json_decode((string) $result['val'],true, 512, JSON_THROW_ON_ERROR) : $result['val'];
 		}
 		return ($null) ? null : false;
 	}
@@ -2741,10 +2468,10 @@ class Userman extends FreePBX_Helpers implements BMO {
 	public function getGlobalSettingByGID($gid,$setting,$null=false) {
 		$sql = "SELECT a.val, a.type FROM ".$this->groupSettingsTable." a, ".$this->groupTable." b WHERE b.id = a.gid AND b.id = :id AND a.key = :setting AND a.module = 'global'";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':id' => $gid, ':setting' => $setting));
+		$sth->execute([':id' => $gid, ':setting' => $setting]);
 		$result = $sth->fetch(PDO::FETCH_ASSOC);
 		if($result) {
-			return ($result['type'] == 'json-arr' && $this->isJson($result['val'])) ? json_decode($result['val'],true) : $result['val'];
+			return ($result['type'] == 'json-arr' && $this->isJson($result['val'])) ? json_decode((string) $result['val'],true, 512, JSON_THROW_ON_ERROR) : $result['val'];
 		}
 		return ($null) ? null : false;
 	}
@@ -2761,7 +2488,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 		if(empty($user)) {
 			return null;
 		}
-		$allowed = array("language","timezone","dateformat","timeformat","datetimeformat");
+		$allowed = ["language", "timezone", "dateformat", "timeformat", "datetimeformat"];
 		if(!in_array($keyword,$allowed)) {
 			throw new Exception($keyword . " is not a valid keyword");
 		}
@@ -2840,13 +2567,8 @@ class Userman extends FreePBX_Helpers implements BMO {
 			}
 		}
 		if($detailed) {
-			$grp = ($groupid >= 0) ? $this->getGroupByGID($groupid) : array('groupname' => 'user');
-			return array(
-				"val" => $output,
-				"group" => $groupid,
-				"setting" => $setting,
-				"groupname" => $grp['groupname']
-			);
+			$grp = ($groupid >= 0) ? $this->getGroupByGID($groupid) : ['groupname' => 'user'];
+			return ["val" => $output, "group" => $groupid, "setting" => $setting, "groupname" => $grp['groupname']];
 		} else {
 			return $output;
 		}
@@ -2877,7 +2599,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 		}else {
 			// add the default extension also in the array if the setting is 'assigned'
 			if($setting =='assigned'){
-				$gsoutput = array();
+				$gsoutput = [];
 				$groups = $this->getGroupsByID($id);
 				foreach($groups as $group) {
 					$gs = $this->getModuleSettingByGID($group,$module,$setting,true,$cached);
@@ -2898,15 +2620,8 @@ class Userman extends FreePBX_Helpers implements BMO {
 			}
 		}
 		if($detailed) {
-			$grp = ($groupid >= 0) ? $this->getGroupByGID($groupid) : array('groupname' => 'user');
-			return array(
-				"val" => $output,
-				"null" => is_null($output),
-				"group" => $groupid,
-				"setting" => $setting,
-				"module" => $module,
-				"groupname" => $grp['groupname']
-			);
+			$grp = ($groupid >= 0) ? $this->getGroupByGID($groupid) : ['groupname' => 'user'];
+			return ["val" => $output, "null" => is_null($output), "group" => $groupid, "setting" => $setting, "module" => $module, "groupname" => $grp['groupname']];
 		} else {
 			return $output;
 		}
@@ -2922,7 +2637,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 	 * @param mixed $value Can be an array, boolean or string or integer
 	 * @return mixed false if nothing, else array
 	 */
-	public function setGlobalSettingByID($uid,$setting,$value) {
+	public function setGlobalSettingByID($uid,$setting,mixed $value) {
 		if(is_null($value)) {
 			return $this->removeGlobalSettingByID($uid,$setting);
 		}
@@ -2930,10 +2645,10 @@ class Userman extends FreePBX_Helpers implements BMO {
 			$value = ($value) ? 1 : 0;
 		}
 		$type = is_array($value) ? 'json-arr' : null;
-		$value = is_array($value) ? json_encode($value) : $value;
+		$value = is_array($value) ? json_encode($value, JSON_THROW_ON_ERROR) : $value;
 		$sql = "REPLACE INTO ".$this->userSettingsTable." (`uid`, `module`, `key`, `val`, `type`) VALUES(:uid, :module, :setting, :value, :type)";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':uid' => $uid, ':module' => 'global', ':setting' => $setting, ':value' => $value, ':type' => $type));
+		$sth->execute([':uid' => $uid, ':module' => 'global', ':setting' => $setting, ':value' => $value, ':type' => $type]);
 		return true;
 	}
 
@@ -2945,7 +2660,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 	public function removeGlobalSettingByID($uid,$setting) {
 		$sql = "DELETE FROM ".$this->userSettingsTable." WHERE `module` = :module AND `uid` = :uid AND `key` = :setting";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':uid' => $uid, ':module' => 'global', ':setting' => $setting));
+		$sth->execute([':uid' => $uid, ':module' => 'global', ':setting' => $setting]);
 		return true;
 	}
 
@@ -2959,7 +2674,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 	 * @param mixed $value Can be an array, boolean or string or integer
 	 * @return mixed false if nothing, else array
 	 */
-	public function setGlobalSettingByGID($gid,$setting,$value) {
+	public function setGlobalSettingByGID($gid,$setting,mixed $value) {
 		if(is_null($value)) {
 			return $this->removeGlobalSettingByGID($gid,$setting);
 		}
@@ -2967,10 +2682,10 @@ class Userman extends FreePBX_Helpers implements BMO {
 			$value = ($value) ? 1 : 0;
 		}
 		$type = is_array($value) ? 'json-arr' : null;
-		$value = is_array($value) ? json_encode($value) : $value;
+		$value = is_array($value) ? json_encode($value, JSON_THROW_ON_ERROR) : $value;
 		$sql = "REPLACE INTO ".$this->groupSettingsTable." (`gid`, `module`, `key`, `val`, `type`) VALUES(:gid, :module, :setting, :value, :type)";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':gid' => $gid, ':module' => 'global', ':setting' => $setting, ':value' => $value, ':type' => $type));
+		$sth->execute([':gid' => $gid, ':module' => 'global', ':setting' => $setting, ':value' => $value, ':type' => $type]);
 		return true;
 	}
 
@@ -2982,7 +2697,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 	public function removeGlobalSettingByGID($gid,$setting) {
 		$sql = "DELETE FROM ".$this->groupSettingsTable." WHERE `module` = :module AND `gid` = :gid AND `key` = :setting";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':gid' => $gid, ':module' => 'global', ':setting' => $setting));
+		$sth->execute([':gid' => $gid, ':module' => 'global', ':setting' => $setting]);
 		return true;
 	}
 
@@ -2998,12 +2713,12 @@ class Userman extends FreePBX_Helpers implements BMO {
 	public function getAllModuleSettingsByID($uid,$module) {
 		$sql = "SELECT a.val, a.type, a.key FROM ".$this->userSettingsTable." a, ".$this->userTable." b WHERE b.id = :id AND b.id = a.uid AND a.module = :module";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':id' => $uid, ':module' => $module));
+		$sth->execute([':id' => $uid, ':module' => $module]);
 		$result = $sth->fetchAll(PDO::FETCH_ASSOC);
 		if($result) {
-			$fout = array();
+			$fout = [];
 			foreach($result as $res) {
-				$fout[$res['key']] = ($res['type'] == 'json-arr' && $this->isJson($res['val'])) ? json_decode($res['val'],true) : $res['val'];
+				$fout[$res['key']] = ($res['type'] == 'json-arr' && $this->isJson($res['val'])) ? json_decode((string) $res['val'],true, 512, JSON_THROW_ON_ERROR) : $res['val'];
 			}
 			return $fout;
 		}
@@ -3022,12 +2737,12 @@ class Userman extends FreePBX_Helpers implements BMO {
 	public function getAllModuleSettingsByGID($gid,$module) {
 		$sql = "SELECT a.val, a.type, a.key FROM ".$this->groupSettingsTable." a, ".$this->groupTable." b WHERE b.id = :id AND b.id = a.gid AND a.module = :module";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':id' => $gid, ':module' => $module));
+		$sth->execute([':id' => $gid, ':module' => $module]);
 		$result = $sth->fetchAll(PDO::FETCH_ASSOC);
 		if($result) {
-			$fout = array();
+			$fout = [];
 			foreach($result as $res) {
-				$fout[$res['key']] = ($res['type'] == 'json-arr' && $this->isJson($res['val'])) ? json_decode($res['val'],true) : $res['val'];
+				$fout[$res['key']] = ($res['type'] == 'json-arr' && $this->isJson($res['val'])) ? json_decode((string) $res['val'],true, 512, JSON_THROW_ON_ERROR) : $res['val'];
 			}
 			return $fout;
 		}
@@ -3048,11 +2763,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 	public function getModuleSettingByID($uid,$module,$setting,$null=false,$cached=true) {
 		$settings = $this->getAllModuleUserSettings($cached);
 
-		if(isset($settings[$uid][$module][$setting])) {
-			return $settings[$uid][$module][$setting];
-		}
-
-		return ($null) ? null : false;
+		return $settings[$uid][$module][$setting] ?? (($null) ? null : false);
 	}
 
 	/**
@@ -3066,10 +2777,10 @@ class Userman extends FreePBX_Helpers implements BMO {
 		$sql = "SELECT * FROM ".$this->userSettingsTable;
 		$sth = $this->db->prepare($sql);
 		$sth->execute();
-		$results = $sth->fetchAll(\PDO::FETCH_ASSOC);
-		$final = array();
+		$results = $sth->fetchAll(PDO::FETCH_ASSOC);
+		$final = [];
 		foreach($results as $r) {
-			$val = ($r['type'] == 'json-arr' && $this->isJson($r['val'])) ? json_decode($r['val'],true) : $r['val'];
+			$val = ($r['type'] == 'json-arr' && $this->isJson($r['val'])) ? json_decode((string) $r['val'],true, 512, JSON_THROW_ON_ERROR) : $r['val'];
 			$final[$r['uid']][$r['module']][$r['key']] = $val;
 		}
 		$this->moduleUserSettingsCache = $final;
@@ -3090,11 +2801,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 	public function getModuleSettingByGID($gid,$module,$setting,$null=false,$cached=true) {
 		$settings = $this->getAllModuleGroupSettings($cached);
 
-		if(isset($settings[$gid][$module][$setting])) {
-			return $settings[$gid][$module][$setting];
-		}
-
-		return ($null) ? null : false;
+		return $settings[$gid][$module][$setting] ?? (($null) ? null : false);
 	}
 
 	/**
@@ -3109,9 +2816,9 @@ class Userman extends FreePBX_Helpers implements BMO {
 		$sth = $this->db->prepare($sql);
 		$sth->execute();
 		$results = $sth->fetchAll(PDO::FETCH_ASSOC);
-		$final = array();
+		$final = [];
 		foreach($results as $r) {
-			$val = ($r['type'] == 'json-arr' && $this->isJson($r['val'])) ? json_decode($r['val'],true) : $r['val'];
+			$val = ($r['type'] == 'json-arr' && $this->isJson($r['val'])) ? json_decode((string) $r['val'],true, 512, JSON_THROW_ON_ERROR) : $r['val'];
 			$final[$r['gid']][$r['module']][$r['key']] = $val;
 		}
 		$this->moduleGroupSettingsCache = $final;
@@ -3129,13 +2836,13 @@ class Userman extends FreePBX_Helpers implements BMO {
 	 * @param mixed $value Can be an array, boolean or string or integer
 	 * @return mixed false if nothing, else array
 	 */
-	public function setModuleSettingByID($uid,$module,$setting,$value,$emptyExistingCache = true) {
+	public function setModuleSettingByID($uid,$module,$setting,mixed $value,$emptyExistingCache = true) {
 		if(is_null($value)) {
 			$sql = "DELETE FROM ".$this->userSettingsTable." WHERE uid = :id AND module = :module AND `key` = :setting";
 			$sth = $this->db->prepare($sql);
-			$sth->execute(array(':id' => $uid, ':module' => $module, ':setting' => $setting));
+			$sth->execute([':id' => $uid, ':module' => $module, ':setting' => $setting]);
 			if($emptyExistingCache){
-				$this->moduleUserSettingsCache = array();
+				$this->moduleUserSettingsCache = [];
 			}
 			return true;
 		}
@@ -3143,12 +2850,12 @@ class Userman extends FreePBX_Helpers implements BMO {
 			$value = ($value) ? 1 : 0;
 		}
 		$type = is_array($value) ? 'json-arr' : null;
-		$value = is_array($value) ? json_encode($value) : $value;
+		$value = is_array($value) ? json_encode($value, JSON_THROW_ON_ERROR) : $value;
 		$sql = "REPLACE INTO ".$this->userSettingsTable." (`uid`, `module`, `key`, `val`, `type`) VALUES(:id, :module, :setting, :value, :type)";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':id' => $uid, ':module' => $module, ':setting' => $setting, ':value' => $value, ':type' => $type));
+		$sth->execute([':id' => $uid, ':module' => $module, ':setting' => $setting, ':value' => $value, ':type' => $type]);
 		if($emptyExistingCache){
-			$this->moduleUserSettingsCache = array();
+			$this->moduleUserSettingsCache = [];
 		}
 		return true;
 	}
@@ -3164,23 +2871,23 @@ class Userman extends FreePBX_Helpers implements BMO {
 	 * @param mixed $value Can be an array, boolean or string or integer
 	 * @return mixed false if nothing, else array
 	 */
-	public function setModuleSettingByGID($gid,$module,$setting,$value) {
+	public function setModuleSettingByGID($gid,$module,$setting,mixed $value) {
 		if(is_null($value)) {
 			$sql = "DELETE FROM ".$this->groupSettingsTable." WHERE gid = :id AND module = :module AND `key` = :setting";
 			$sth = $this->db->prepare($sql);
-			$sth->execute(array(':id' => $gid, ':module' => $module, ':setting' => $setting));
-			$this->moduleGroupSettingsCache = array();
+			$sth->execute([':id' => $gid, ':module' => $module, ':setting' => $setting]);
+			$this->moduleGroupSettingsCache = [];
 			return true;
 		}
 		if(is_bool($value)) {
 			$value = ($value) ? 1 : 0;
 		}
 		$type = is_array($value) ? 'json-arr' : null;
-		$value = is_array($value) ? json_encode($value) : $value;
+		$value = is_array($value) ? json_encode($value, JSON_THROW_ON_ERROR) : $value;
 		$sql = "REPLACE INTO ".$this->groupSettingsTable." (`gid`, `module`, `key`, `val`, `type`) VALUES(:id, :module, :setting, :value, :type)";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':id' => $gid, ':module' => $module, ':setting' => $setting, ':value' => $value, ':type' => $type));
-		$this->moduleGroupSettingsCache = array();
+		$sth->execute([':id' => $gid, ':module' => $module, ':setting' => $setting, ':value' => $value, ':type' => $type]);
+		$this->moduleGroupSettingsCache = [];
 		return true;
 	}
 
@@ -3189,7 +2896,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 	 */
 	public function getPasswordResetTokens() {
 		$tokens = $this->getGlobalsetting('passresettoken');
-		$final = array();
+		$final = [];
 		$time = time();
 		if(!empty($tokens)) {
 			foreach($tokens as $token => $data) {
@@ -3207,7 +2914,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 	 * Reset all password tokens
 	 */
 	public function resetAllPasswordTokens() {
-		$this->setGlobalsetting('passresettoken',array());
+		$this->setGlobalsetting('passresettoken',[]);
 	}
 
 	/**
@@ -3223,7 +2930,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 		if(!empty($user)) {
 			$tokens = $this->getPasswordResetTokens();
 			if(empty($tokens) || !is_array($tokens)) {
-				$tokens = array();
+				$tokens = [];
 			}
 			foreach($tokens as $token => $data) {
 				if(($data['id'] == $id) && !empty($token['time']) && $data['valid'] > $time) {
@@ -3233,9 +2940,9 @@ class Userman extends FreePBX_Helpers implements BMO {
 				}
 			}
 			$token = bin2hex(openssl_random_pseudo_bytes(16));
-			$tokens[$token] = array("id" => $id, "time" => $time, "valid" => strtotime($valid, $time));
+			$tokens[$token] = ["id" => $id, "time" => $time, "valid" => strtotime((string) $valid, $time)];
 			$this->setGlobalsetting('passresettoken',$tokens);
-			return array("token" => $token, "valid" => strtotime($valid, $time));
+			return ["token" => $token, "valid" => strtotime((string) $valid, $time)];
 		}
 		return false;
 	}
@@ -3288,7 +2995,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 		$settings[$key] = $value;
 		$sql = "REPLACE INTO module_xml (`id`, `data`) VALUES('userman_data', ?)";
 		$sth = $this->db->prepare($sql);
-		return $sth->execute(array(json_encode($settings)));
+		return $sth->execute([json_encode($settings, JSON_THROW_ON_ERROR)]);
 	}
 
 	/**
@@ -3300,8 +3007,8 @@ class Userman extends FreePBX_Helpers implements BMO {
 		$sth = $this->db->prepare($sql);
 		$sth->execute();
 		$result = $sth->fetch(PDO::FETCH_ASSOC);
-		$results = !empty($result['data']) ? json_decode($result['data'], true) : array();
-		return isset($results[$key]) ? $results[$key] : null;
+		$results = !empty($result['data']) ? json_decode((string) $result['data'], true, 512, JSON_THROW_ON_ERROR) : [];
+		return $results[$key] ?? null;
 	}
 
 	/**
@@ -3312,7 +3019,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 		$sth = $this->db->prepare($sql);
 		$sth->execute();
 		$result = $sth->fetch(PDO::FETCH_ASSOC);
-		return !empty($result['data']) ? json_decode($result['data'], true) : array();
+		return !empty($result['data']) ? json_decode((string) $result['data'], true, 512, JSON_THROW_ON_ERROR) : [];
 	}
 
 	/**
@@ -3320,9 +3027,9 @@ class Userman extends FreePBX_Helpers implements BMO {
 	 * @param string $action Action type
 	 * @param mixed $data   Data to send
 	 */
-	private function callHooks($action,$data=null) {
+	private function callHooks($action,mixed $data=null) {
 		$display = !empty($_REQUEST['display']) ? $_REQUEST['display'] : "";
-		$ret = array();
+		$ret = [];
 		if(isset($this->registeredFunctions[$action])) {
 			foreach($this->registeredFunctions[$action] as $function) {
 				if(function_exists($function) && !empty($data['id'])) {
@@ -3348,7 +3055,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 		}
 
 		foreach($config->ProcessedConfig[$context] as $exten => $vu) {
-			$vars = explode(",",$vu);
+			$vars = explode(",",(string) $vu);
 			$password = $vars[0];
 			$displayname = $vars[1];
 			$email = !empty($vars[2]) ? $vars[2] : '';
@@ -3357,13 +3064,13 @@ class Userman extends FreePBX_Helpers implements BMO {
 				echo "Voicemail User '".$z['username']."' already has '".$exten."' as it's default extension.";
 				if(empty($z['email']) && empty($z['displayname'])) {
 					echo "Updating email and displayname from Voicemail.\\n";
-					$this->updateUser($z['id'], $z['username'], $z['username'], $z['default_extension'], $z['description'], array('email' => $email, 'displayname' => $displayname));
+					$this->updateUser($z['id'], $z['username'], $z['username'], $z['default_extension'], $z['description'], ['email' => $email, 'displayname' => $displayname]);
 				} elseif(empty($z['displayname'])) {
 					echo "Updating displayname from Voicemail.\\n";
-					$this->updateUser($z['id'], $z['username'], $z['username'], $z['default_extension'], $z['description'], array('displayname' => $displayname));
+					$this->updateUser($z['id'], $z['username'], $z['username'], $z['default_extension'], $z['description'], ['displayname' => $displayname]);
 				} elseif(empty($z['email'])) {
 					echo "Updating email from Voicemail.\\n";
-					$this->updateUser($z['id'], $z['username'], $z['username'], $z['default_extension'], $z['description'], array('email' => $email));
+					$this->updateUser($z['id'], $z['username'], $z['username'], $z['default_extension'], $z['description'], ['email' => $email]);
 				} else {
 					echo "\\n";
 				}
@@ -3374,19 +3081,19 @@ class Userman extends FreePBX_Helpers implements BMO {
 				echo "Voicemail User '".$z['username']."' already exists.";
 				if(empty($z['email']) && empty($z['displayname'])) {
 					echo "Updating email and displayname from Voicemail.\\n";
-					$this->updateUser($z['id'], $z['username'], $z['username'], $z['default_extension'], $z['description'], array('email' => $email, 'displayname' => $displayname));
+					$this->updateUser($z['id'], $z['username'], $z['username'], $z['default_extension'], $z['description'], ['email' => $email, 'displayname' => $displayname]);
 				} elseif(empty($z['displayname'])) {
 					echo "Updating displayname from Voicemail.\\n";
-					$this->updateUser($z['id'], $z['username'], $z['username'], $z['default_extension'], $z['description'], array('displayname' => $displayname));
+					$this->updateUser($z['id'], $z['username'], $z['username'], $z['default_extension'], $z['description'], ['displayname' => $displayname]);
 				} elseif(empty($z['email'])) {
 					echo "Updating email from Voicemail.\\n";
-					$this->updateUser($z['id'], $z['username'], $z['username'], $z['default_extension'], $z['description'], array('email' => $email));
+					$this->updateUser($z['id'], $z['username'], $z['username'], $z['default_extension'], $z['description'], ['email' => $email]);
 				} else {
 					echo "\\n";
 				}
 				continue;
 			}
-			$user = $this->addUser($exten, $password, $exten, _('Migrated user from voicemail'), array('email' => $email, 'displayname' => $displayname));
+			$user = $this->addUser($exten, $password, $exten, _('Migrated user from voicemail'), ['email' => $email, 'displayname' => $displayname]);
 			if(!empty($user['id'])) {
 				echo "Added ".$exten." with password of ".$password."\\n";
 				if(!empty($email)) {
@@ -3437,14 +3144,14 @@ class Userman extends FreePBX_Helpers implements BMO {
 			$user['password'] = _("Obfuscated. To reset use the reset link in this email");
 		}
 
-		$mods = $this->callHooks('welcome',array('id' => $user['id'], 'brand' => $user['brand'], 'host' => $user['host']));
+		$mods = $this->callHooks('welcome',['id' => $user['id'], 'brand' => $user['brand'], 'host' => $user['host']]);
 		$user['services'] = '';
 		foreach($mods as $mod) {
 			$user['services'] .= $mod . "\n";
 		}
 
 		$request['display'] = !empty($request['display']) ? $request['display'] : "";
-		$mods = $this->FreePBX->Hooks->processHooks($user['id'], $request['display'], array('id' => $user['id'], 'brand' => $user['brand'], 'host' => $user['host'], 'password' => !empty($password)));
+		$mods = $this->FreePBX->Hooks->processHooks($user['id'], $request['display'], ['id' => $user['id'], 'brand' => $user['brand'], 'host' => $user['host'], 'password' => !empty($password)]);
 		foreach($mods as $mod => $items) {
 			foreach($items as $item) {
 				$user['services'] .= $item . "\n";
@@ -3453,21 +3160,21 @@ class Userman extends FreePBX_Helpers implements BMO {
 
 		$dbemail = $this->getGlobalsetting('emailbody');
 		$template = !empty($dbemail) ? $dbemail : file_get_contents(__DIR__.'/views/emails/welcome_text.tpl');
-		if(preg_match('/\${([\w|\d]*)}/',$template)) {
-			preg_match_all('/\${([\w|\d]*)}/',$template,$matches);
+		if(preg_match('/\${([\w|\d]*)}/',(string) $template)) {
+			preg_match_all('/\${([\w|\d]*)}/',(string) $template,$matches);
 			foreach($matches[1] as $match) {
 				$replacement = !empty($user[$match]) ? $user[$match] : '';
-				$template = str_replace('${'.$match.'}',$replacement,$template);
+				$template = str_replace('${'.$match.'}',$replacement,(string) $template);
 			}
 		} else {
-			preg_match_all('/%([\w|\d]*)%/',$template,$matches);
+			preg_match_all('/%([\w|\d]*)%/',(string) $template,$matches);
 			foreach($matches[1] as $match) {
 				$replacement = !empty($user[$match]) ? $user[$match] : '';
-				$template = str_replace('%'.$match.'%',$replacement,$template);
+				$template = str_replace('%'.$match.'%',$replacement,(string) $template);
 			}
 		}
-		$email_options = array('useragent' => $this->brand, 'protocol' => 'mail');
-		$email = new \CI_Email();
+		$email_options = ['useragent' => $this->brand, 'protocol' => 'mail'];
+		$email = new CI_Email();
 		if(function_exists('fetchFromEmail')) {
 			$from = fetchFromEmail(true);
 		} else {
@@ -3482,10 +3189,10 @@ class Userman extends FreePBX_Helpers implements BMO {
 		$email->to($user['email']);
 		$dbsubject = $this->getGlobalsetting('emailsubject');
 		$subject = !empty($dbsubject) ? $dbsubject : _('Your %brand% Account');
-		preg_match_all('/%([\w|\d]*)%/',$subject,$matches);
+		preg_match_all('/%([\w|\d]*)%/',(string) $subject,$matches);
 		foreach($matches[1] as $match) {
 			$replacement = !empty($user[$match]) ? $user[$match] : '';
-			$subject = str_replace('%'.$match.'%',$replacement,$subject);
+			$subject = str_replace('%'.$match.'%',$replacement,(string) $subject);
 		}
 
 		$this->sendEmail($user['id'],$subject,$template);
@@ -3503,8 +3210,8 @@ class Userman extends FreePBX_Helpers implements BMO {
 		if(empty($user) || empty($user['email'])) {
 			return false;
 		}
-		$email_options = array('useragent' => $this->brand, 'protocol' => 'mail');
-		$email = new \CI_Email();
+		$email_options = ['useragent' => $this->brand, 'protocol' => 'mail'];
+		$email = new CI_Email();
 
 		//TODO: Stop gap until sysadmin becomes a full class
 		if(!function_exists('sysadmin_get_storage_email') && $this->FreePBX->Modules->checkStatus('sysadmin') && file_exists($this->FreePBX->Config()->get('AMPWEBROOT').'/admin/modules/sysadmin/functions.inc.php')) {
@@ -3525,7 +3232,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 			$from = !empty($femail) ? $femail : get_current_user() . '@' . gethostname();
 		}
 
-		$mailtype = (isset($forceType)) ? $forceType : $this->getGlobalsetting('mailtype');
+		$mailtype = $forceType ?? $this->getGlobalsetting('mailtype');
 		$mailtype = $mailtype === 'html' ? 'html' : 'text';
 
 		$email->set_mailtype($mailtype);
@@ -3555,7 +3262,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 		$sth = $this->db->prepare($sql);
 		$sth->execute();
 		$devices = $sth->fetchAll(PDO::FETCH_ASSOC);
-		$used = array();
+		$used = [];
 		foreach($devices as $device) {
 			if($device['default_extension'] == 'none') {
 				continue;
@@ -3568,25 +3275,16 @@ class Userman extends FreePBX_Helpers implements BMO {
 	public function bulkhandlerGetTypes() {
 		$directory = $this->getDefaultDirectory();
 		if(empty($directory)) {
-			return array();
+			return [];
 		}
-		$final = array();
+		$final = [];
 		if($this->getAuthPermission($directory['id'],'addUser')) {
-			$final['usermanusers'] = array(
-				'name' => _('User Manager Users'),
-				'description' => _('User Manager Users')
-			);
+			$final['usermanusers'] = ['name' => _('User Manager Users'), 'description' => _('User Manager Users')];
 		}
 		if($this->getAuthPermission($directory['id'],'addGroup')) {
-			$final['usermangroups'] = array(
-				'name' => _('User Manager Groups'),
-				'description' => _('User Manager Groups')
-			);
+			$final['usermangroups'] = ['name' => _('User Manager Groups'), 'description' => _('User Manager Groups')];
 		}
-		$final['ucptemplates'] = array(
-				'name' => _('UCP Templates'),
-				'description' => _('UCP Templates')
-		);
+		$final['ucptemplates'] = ['name' => _('UCP Templates'), 'description' => _('UCP Templates')];
 		return $final;
 	}
 
@@ -3598,81 +3296,15 @@ class Userman extends FreePBX_Helpers implements BMO {
 	public function bulkhandlerGetHeaders($type) {
 		switch ($type) {
 			case 'usermanusers':
-				$headers = array(
-					'username' => array(
-						'required' => true,
-						'identifier' => _('Login Name'),
-						'description' => _('Login Name'),
-					),
-					'password' => array(
-						'required' => true,
-						'identifier' => _('Password'),
-						'description' => _('Password - plaintext'),
-					),
-					'default_extension' => array(
-						'required' => true,
-						'identifier' => _('Primary Extension'),
-						'description' => _('Primary Linked Extension'),
-					),
-					'description' => array(
-						'identifier' => _('Description'),
-						'description' => _('Description'),
-					),
-					'fname' => array(
-						'identifier' => _('First Name'),
-						'description' => _('First Name'),
-					),
-					'lname' => array(
-						'identifier' => _('Last Name'),
-						'description' => _('Last Name'),
-					),
-					'displayname' => array(
-						'identifier' => _('Display Name'),
-						'description' => _('Display Name'),
-					)
-				);
+				$headers = ['username' => ['required' => true, 'identifier' => _('Login Name'), 'description' => _('Login Name')], 'password' => ['required' => true, 'identifier' => _('Password'), 'description' => _('Password - plaintext')], 'default_extension' => ['required' => true, 'identifier' => _('Primary Extension'), 'description' => _('Primary Linked Extension')], 'description' => ['identifier' => _('Description'), 'description' => _('Description')], 'fname' => ['identifier' => _('First Name'), 'description' => _('First Name')], 'lname' => ['identifier' => _('Last Name'), 'description' => _('Last Name')], 'displayname' => ['identifier' => _('Display Name'), 'description' => _('Display Name')]];
 
 				return $headers;
 			case 'usermangroups':
-				$headers = array(
-					'groupname' => array(
-						'required' => true,
-						'identifier' => _('Group Name'),
-						'description' => _('Group Name'),
-					),
-					'description' => array(
-						'identifier' => _('Description'),
-						'description' => _('Description'),
-					)
-				);
+				$headers = ['groupname' => ['required' => true, 'identifier' => _('Group Name'), 'description' => _('Group Name')], 'description' => ['identifier' => _('Description'), 'description' => _('Description')]];
 
 				return $headers;
 			case 'ucptemplates':
-				$headers = array(
-					'templatename' => array(
-						'required' => true,
-						'identifier' => _('Template Name'),
-						'description' => _('Template Name'),
-					),
-					'description' => array(
-						'identifier' => _('Description'),
-						'description' => _('Description'),
-					),
-					'template_1_key' => array(
-						'required' => true,
-						'identifier' => _('Key'),
-						'description' => _('template_1_key'),
-					),
-					'template_1_val' => array(
-						'required' => true,
-						'identifier' => _('Value'),
-						'description' => _('template_1_val'),
-					),
-					'template_1_type' => array(
-						'identifier' => _('Type'),
-						'description' => _('template_1_type'),
-					),
-				);
+				$headers = ['templatename' => ['required' => true, 'identifier' => _('Template Name'), 'description' => _('Template Name')], 'description' => ['identifier' => _('Description'), 'description' => _('Description')], 'template_1_key' => ['required' => true, 'identifier' => _('Key'), 'description' => _('template_1_key')], 'template_1_val' => ['required' => true, 'identifier' => _('Value'), 'description' => _('template_1_val')], 'template_1_type' => ['identifier' => _('Type'), 'description' => _('template_1_type')]];
 				
 				return $headers;				
 		}
@@ -3691,14 +3323,9 @@ class Userman extends FreePBX_Helpers implements BMO {
 		case 'usermanusers':
 		case 'usermangroups':
 			if (true) {
-				$ret = array(
-					'status' => true,
-				);
+				$ret = ['status' => true];
 			} else {
-				$ret = array(
-					'status' => false,
-					'message' => sprintf(_('%s records failed validation'), count($rawData))
-				);
+				$ret = ['status' => false, 'message' => sprintf(_('%s records failed validation'), count($rawData))];
 			}
 			break;
 		}
@@ -3718,67 +3345,49 @@ class Userman extends FreePBX_Helpers implements BMO {
 			case 'usermanusers':
 				$directory = $this->getDefaultDirectory();
 				if(empty($directory)) {
-					return array("status" => false, "message" => _("Please set a default directory in User Manager"));
+					return ["status" => false, "message" => _("Please set a default directory in User Manager")];
 				}
 				if($this->getAuthPermission($directory['id'], 'addUser')) {
 					if(is_array($rawData)){
 						foreach ($rawData as $data) {
 							if (empty($data['username'])) {
-								return array("status" => false, "message" => _("username is required."));
+								return ["status" => false, "message" => _("username is required.")];
 							}
 							if (empty($data['default_extension'])) {
-								return array("status" => false, "message" => _("default_extension is required."));
+								return ["status" => false, "message" => _("default_extension is required.")];
 							}
 
 							$username = $data['username'];
 							$default_extension = $data['default_extension'];
 							$description = !empty($data['description']) ? $data['description'] : null;
 
-							$extraData = array(
-								'fname' => isset($data['fname']) ? $data['fname'] : null,
-								'lname' => isset($data['lname']) ? $data['lname'] : null,
-								'displayname' => isset($data['displayname']) ? $data['displayname'] : null,
-								'title' => isset($data['title']) ? $data['title'] : null,
-								'company' => isset($data['company']) ? $data['company'] : null,
-								'department' => isset($data['department']) ? $data['department'] : null,
-								'email' => isset($data['email']) ? $data['email'] : null,
-								'cell' => isset($data['cell']) ? $data['cell'] : null,
-								'work' => isset($data['work']) ? $data['work'] : null,
-								'home' => isset($data['home']) ? $data['home'] : null,
-								'fax' => isset($data['fax']) ? $data['fax'] : null,
-							);
+							$extraData = ['fname' => $data['fname'] ?? null, 'lname' => $data['lname'] ?? null, 'displayname' => $data['displayname'] ?? null, 'title' => $data['title'] ?? null, 'company' => $data['company'] ?? null, 'department' => $data['department'] ?? null, 'email' => $data['email'] ?? null, 'cell' => $data['cell'] ?? null, 'work' => $data['work'] ?? null, 'home' => $data['home'] ?? null, 'fax' => $data['fax'] ?? null];
 
 							$existing = $this->getUserByUsername($username,$directory['id']);
 							if(!$replaceExisting && $existing) {
-								return array("status" => false, "message" => _("User already exists"));
+								return ["status" => false, "message" => _("User already exists")];
 							}
 							if ($existing) {
 								try {
 									$status = $this->updateUser($existing['id'], $username, $username, $default_extension, $description, $extraData, !empty($data['password']) ? $data['password'] : null);
 								} catch (Exception $e) {
-									return array("status" => false, "message" => $e->getMessage());
+									return ["status" => false, "message" => $e->getMessage()];
 								}
 								if (!$status['status']) {
-									$ret = array(
-										'status' => false,
-										'message' => $status['message'],
-									);
+									$ret = ['status' => false, 'message' => $status['message']];
 									return $ret;
 								}
 							} else {
 								if (empty($data['password']) && empty($data['encrypted_password'])) {
-									return array("status" => false, "message" => _("password is required."));
+									return ["status" => false, "message" => _("password is required.")];
 								}
 								try {
 									$status = $this->addUser($username, !empty($data['encrypted_password']) ? $data['encrypted_password'] : $data['password'], $default_extension, $description, $extraData, !empty($data['encrypted_password']) ? false : true);
 								} catch (Exception $e) {
-									return array("status" => false, "message" => $e->getMessage());
+									return ["status" => false, "message" => $e->getMessage()];
 								}
 								if (!$status['status']) {
-									$ret = array(
-										'status' => false,
-										'message' => $status['message'],
-									);
+									$ret = ['status' => false, 'message' => $status['message']];
 									return $ret;
 								}
 							}
@@ -3787,39 +3396,31 @@ class Userman extends FreePBX_Helpers implements BMO {
 						}
 
 						needreload();
-						$ret = array(
-							'status' => true,
-						);
+						$ret = ['status' => true];
 					}else{
-						$ret = array(
-							'status' => false,
-							'message' => _("Empty data array."),
-						);
+						$ret = ['status' => false, 'message' => _("Empty data array.")];
 					}
 				} else {
-					$ret = array(
-						'status' => false,
-						'message' => _("This authentication driver does not allow importing"),
-					);
+					$ret = ['status' => false, 'message' => _("This authentication driver does not allow importing")];
 				}
 			break;
 			case 'usermangroups':
 				$directory = $this->getDefaultDirectory();
 				if(empty($directory)) {
-					return array("status" => false, "message" => _("Please set a default directory in User Manager"));
+					return ["status" => false, "message" => _("Please set a default directory in User Manager")];
 				}
 				if($this->getAuthPermission($directory['id'], 'addGroup')) {
 					foreach ($rawData as $data) {
 						if (empty($data['groupname'])) {
-							return array("status" => false, "message" => _("groupname is required."));
+							return ["status" => false, "message" => _("groupname is required.")];
 						}
 
 						$groupname = $data['groupname'];
 						$description = !empty($data['description']) ? $data['description'] : null;
 
-						$users = array();
+						$users = [];
 						if (!empty($data['users'])) {
-							$usernames = explode(',', $data['users']);
+							$usernames = explode(',', (string) $data['users']);
 							foreach ($usernames as $username) {
 								$user = $this->getUserByUsername($username,$directory['id']);
 								if ($user) {
@@ -3830,59 +3431,50 @@ class Userman extends FreePBX_Helpers implements BMO {
 
 						$existing = $this->getGroupByUsername($groupname);
 						if(!$replaceExisting && $existing) {
-							return array("status" => false, "message" => _("Group already exists"));
+							return ["status" => false, "message" => _("Group already exists")];
 						}
 						if ($existing) {
 							try {
 								$status = $this->updateGroup($existing['id'], $groupname, $groupname, $description, $users);
 							} catch (Exception $e) {
-								return array("status" => false, "message" => $e->getMessage());
+								return ["status" => false, "message" => $e->getMessage()];
 							}
 							if (!$status['status']) {
-								$ret = array(
-									'status' => false,
-									'message' => $status['message'],
-								);
+								$ret = ['status' => false, 'message' => $status['message']];
 								return $ret;
 							}
 						} else {
 							try {
 								$status = $this->addGroup($groupname, $description, $users);
 							} catch (Exception $e) {
-								return array("status" => false, "message" => $e->getMessage());
+								return ["status" => false, "message" => $e->getMessage()];
 							}
 							if (!$status['status']) {
-								$ret = array(
-									'status' => false,
-									'message' => $status['message'],
-								);
+								$ret = ['status' => false, 'message' => $status['message']];
 								return $ret;
 							}
 						}
 					}
 				} else {
-					$ret = array(
-						'status' => false,
-						'message' => _("This authentication driver does not allow importing"),
-					);
+					$ret = ['status' => false, 'message' => _("This authentication driver does not allow importing")];
 				}
 			break;
 			case 'ucptemplates':
 					foreach ($rawData as $data) {
 						if (empty($data['templatename'])) {
-							return array("status" => false, "message" => _("templatename is required."));
+							return ["status" => false, "message" => _("templatename is required.")];
 						}
 								//checking if exists using template name
 						$existing = $this->getUCPTemplateByName($data);
 						if(!$replaceExisting && $existing) {
-							return array("status" => false, "message" => _("Template already exists"));
+							return ["status" => false, "message" => _("Template already exists")];
 						}
 						$grep = preg_grep('/^\D+_\d+/', array_keys($data));
 						if(!empty($grep) && is_array($grep)){
 							foreach ($grep as $key) {
-								if (preg_match('/^(.*)_(\d+)_(.*)$/', $key, $matches)) {
+								if (preg_match('/^(.*)_(\d+)_(.*)$/', (string) $key, $matches)) {
 									$extras[$matches[1]][$matches[2] - 1][$matches[3]] = $data[$key];
-								} else if (preg_match('/^(.*)_(\d+)$/', $key, $matches)) {
+								} else if (preg_match('/^(.*)_(\d+)$/', (string) $key, $matches)) {
 									$extras[$matches[1]][$matches[2] - 1] = $data[$key];
 								}
 							}
@@ -3913,24 +3505,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 		case 'usermanusers':
 			$users = $this->getAllUsers();
 			foreach ($users as $user) {
-				$data[$user['id']] = array(
-					'username' => $user['username'],
-					'description' => $user['description'],
-					'default_extension' => $user['default_extension'],
-					'password' => '',
-					'encrypted_password' => $user['password'],
-					'fname' => $user['fname'],
-					'lname' => $user['lname'],
-					'displayname' => $user['displayname'],
-					'title' => $user['title'],
-					'company' => $user['company'],
-					'department' => $user['department'],
-					'email' => $user['email'],
-					'cell' => $user['cell'],
-					'work' => $user['work'],
-					'home' => $user['home'],
-					'fax' => $user['fax'],
-				);
+				$data[$user['id']] = ['username' => $user['username'], 'description' => $user['description'], 'default_extension' => $user['default_extension'], 'password' => '', 'encrypted_password' => $user['password'], 'fname' => $user['fname'], 'lname' => $user['lname'], 'displayname' => $user['displayname'], 'title' => $user['title'], 'company' => $user['company'], 'department' => $user['department'], 'email' => $user['email'], 'cell' => $user['cell'], 'work' => $user['work'], 'home' => $user['home'], 'fax' => $user['fax']];
 			}
 
 			break;
@@ -3938,7 +3513,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 			$users = $this->getAllUsers();
 			$groups = $this->getAllGroups();
 			foreach ($groups as $group) {
-				$gu = array();
+				$gu = [];
 				//FREEPBX-15351 Bulk Export User Manager Groups does not export correct info in "users" field
 				foreach($users as $user){
 					foreach ($group['users'] as $key => $val) {
@@ -3948,17 +3523,13 @@ class Userman extends FreePBX_Helpers implements BMO {
 					}
 				}
 
-				$data[$group['id']] = array(
-					'groupname' => $group['groupname'],
-					'description' => $group['description'],
-					'users' => implode(',', $gu),
-				);
+				$data[$group['id']] = ['groupname' => $group['groupname'], 'description' => $group['description'], 'users' => implode(',', $gu)];
 			}
 
 			break;
 		case 'ucptemplates':
 			$ucptemp = $this->gettemplateCSVData();
-			$data = array();
+			$data = [];
 			$count = 1;
 			foreach($ucptemp as $key => $value){
 				if($value['key'] =='allowLogin'){
@@ -3971,13 +3542,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 				}
 				else{
 					$count=1;
-					$data[$value['id']] = array(
-						'templatename' => $value['templatename'],
-						'description' => $value['description'],
-						'template_'.$count.'_key' => $value['key'],
-						'template_'.$count.'_val' => $value['val'],
-						'template_'.$count.'_type' => $value['type'],
-					);
+					$data[$value['id']] = ['templatename' => $value['templatename'], 'description' => $value['description'], 'template_'.$count.'_key' => $value['key'], 'template_'.$count.'_val' => $value['val'], 'template_'.$count.'_type' => $value['type']];
 				}
 			}
 			break;			
@@ -4023,15 +3588,15 @@ class Userman extends FreePBX_Helpers implements BMO {
 	public function removeTemplateByName($id){
 		$delTemp = "DELETE FROM userman_ucp_templates WHERE id=:id";
 		$sth = $this->db->prepare($delTemp);
-		$sth->execute(array(':id' => $id));
+		$sth->execute([':id' => $id]);
 		$delSettings = "DELETE FROM userman_template_settings WHERE tid=:id";
 		$sth = $this->db->prepare($delSettings);
-		$sth->execute(array(':id' => $id));
+		$sth->execute([':id' => $id]);
 	}
 	public function getUCPTemplateByName($addData){
 		$search = "SELECT * from userman_ucp_templates Where templatename=:name";
 		$sth = $this->db->prepare($search);
-		$sth->execute(array(':name' => $addData['templatename']));
+		$sth->execute([':name' => $addData['templatename']]);
 		$result = $sth->fetch(PDO::FETCH_ASSOC);
 		return $result;
 	}
@@ -4039,7 +3604,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 		//inserting into userman_ucp_templates
 		$sql = "INSERT INTO userman_ucp_templates(`templatename`,`description`,`importedfromuname`)VALUES(:name,:description,'importedfromcsv')";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':name' => $addData['templatename'], ':description' => $addData['description']));
+		$sth->execute([':name' => $addData['templatename'], ':description' => $addData['description']]);
 		$id = $this->db->lastInsertId();
 		//inserting into userman_template_settings
 		foreach ($extras as $key => $type) {
@@ -4047,7 +3612,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 				if(!empty($value['key']) || !empty($value['val']) || !empty($value['type'])){
 					$sql = "INSERT INTO userman_template_settings(`tid`,`module`,`key`,`val`,`type`) VALUES(:tid,'UCP',:key,:val,:type)";
 					$sth = $this->db->prepare($sql);
-					$sth->execute(array(':tid' => $id, ':key' => $value['key'],':val' => $value['val'],':type'=>$value['type']));
+					$sth->execute([':tid' => $id, ':key' => $value['key'], ':val' => $value['val'], ':type'=>$value['type']]);
 				}
 			}								
 		}
@@ -4055,7 +3620,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 	public function addUcpTemplate($addData){
 		$sql = "INSERT INTO userman_ucp_templates(`templatename`,`description`,`importedfromuid`,`importedfromuname`,`defaultexten`)VALUES(:name,:description,:importedfromuid,:importedfromuname,:defaultexten)";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':name' => $addData['templatename'], ':description' => $addData['description'], ':importedfromuid' => $addData['importedfromuid'], ':importedfromuname' => $addData['importedfromuname'], ':defaultexten' => $addData['defaultexten']));
+		$sth->execute([':name' => $addData['templatename'], ':description' => $addData['description'], ':importedfromuid' => $addData['importedfromuid'], ':importedfromuname' => $addData['importedfromuname'], ':defaultexten' => $addData['defaultexten']]);
 		$id = $this->db->lastInsertId();
 		return $id;
 	}
@@ -4063,7 +3628,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 	public function getTemplateById($id) {
 		$sql = "SELECT * from userman_ucp_templates Where id=:id";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':id' => $id));
+		$sth->execute([':id' => $id]);
 		$result = $sth->fetch(PDO::FETCH_ASSOC);
 		return $result;
 	}
@@ -4071,7 +3636,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 	public function updateUcpTemplate($editData){
 		$sql = "UPDATE userman_ucp_templates SET `templatename`=:name,`importedfromuid`=:importedfromuid,`importedfromuname`=:importedfromuname,`defaultexten`=:defaultexten,`description`=:description,`hasupdated`=1 Where id=:id";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':name' => $editData['templatename'],':importedfromuid'=>$editData['importedfromuid'],':importedfromuname'=>$editData['importedfromuname'],':defaultexten'=>$editData['defaultexten'] ,':description' => $editData['description'], ':id' => $editData['id']));
+		$sth->execute([':name' => $editData['templatename'], ':importedfromuid'=>$editData['importedfromuid'], ':importedfromuname'=>$editData['importedfromuname'], ':defaultexten'=>$editData['defaultexten'], ':description' => $editData['description'], ':id' => $editData['id']]);
 		return true;
 	}
 
@@ -4094,15 +3659,15 @@ class Userman extends FreePBX_Helpers implements BMO {
 
 	public function deleteUcpTemplateByID($id) {
 		if(empty($id)) {
-			return array("status" => false, "type" => "danger", "message" => _("Template Does Not Exist"));
+			return ["status" => false, "type" => "danger", "message" => _("Template Does Not Exist")];
 		}
 		$sql = "DELETE from userman_ucp_templates Where id=:id";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':id' => $id));
+		$sth->execute([':id' => $id]);
 		$sql = "DELETE from userman_template_settings Where tid=:id";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':id' => $id));
-		return array("status" => true, "type" => "success", "message" => _("Template Successfully Deleted"));
+		$sth->execute([':id' => $id]);
+		return ["status" => true, "type" => "success", "message" => _("Template Successfully Deleted")];
 	}
 
 	/* This will retrun the freepbx driver based active directory
@@ -4133,7 +3698,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 		$directory = $this->getFreepbxDriverDirectory();
 		$groupid = 1;
 		$email = $this->getNotificationEmail();
-		$ret = $this->addUserByDirectory($directory['id'], $this->getUserNameTemplateCreator(), md5('1a2b3c@fd48jshs03123ld'), $unusedexten, _('Autogenerated user For Template Creation'), array('email' => $email, 'displayname' => $this->displayNameTemplateCreator));
+		$ret = $this->addUserByDirectory($directory['id'], $this->getUserNameTemplateCreator(), md5('1a2b3c@fd48jshs03123ld'), $unusedexten, _('Autogenerated user For Template Creation'), ['email' => $email, 'displayname' => $this->displayNameTemplateCreator]);
 		if($ret['status']) {
 			$directory = $directory['id'];
 			$uid = $ret['id'];
@@ -4149,7 +3714,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 			//set all option to yes
 			$sql = "select * from userman_groups_settings WHERE `gid`=? AND `module` like 'ucp|%' ";
 			$sth = $this->db->prepare($sql);
-			$sth->execute(array($groupid));
+			$sth->execute([$groupid]);
 			$result = $sth->fetchAll(PDO::FETCH_ASSOC);
 			foreach($result as $row){
 				if($row['key'] == 'assigned'){
@@ -4165,7 +3730,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 				if($row['key'] == 'allowLogin'){
 					$val = 1;
 				}
-				$sth->execute(array($uid,$row['module'],$row['key'],$val,$row['type']));
+				$sth->execute([$uid, $row['module'], $row['key'], $val, $row['type']]);
 			}
 			return ['status'=>true, 'uid'=>$uid, 'message' => _('User Created')];
 		}else {
@@ -4177,12 +3742,9 @@ class Userman extends FreePBX_Helpers implements BMO {
 	public function getTemplateCreator(){
 		$sql = "select id,default_extension from userman_users where username = :username";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':username' => $this->getUserNameTemplateCreator()));
+		$sth->execute([':username' => $this->getUserNameTemplateCreator()]);
 		$result = $sth->fetch(PDO::FETCH_ASSOC);
-		if(isset($result['id'])){
-			return $result['id'];
-		}
-		return false;
+		return $result['id'] ?? false;
 	}
 
 	/* set the key in kvstore for the template creator*/
@@ -4218,10 +3780,11 @@ class Userman extends FreePBX_Helpers implements BMO {
 	}
 	/* get/create a virtual unused extension to associate with Template Creator*/
 	private function getUnUsedextension($exten = ''){
-		//get the virtual extension for the templatecreator
+		$data = [];
+  //get the virtual extension for the templatecreator
 		$sql = "SELECT extension,name FROM users WHERE name= :name";
 		$sth = $this->database->prepare($sql);
-		$sth->execute(array(':name' => $this->getUserNameTemplateCreator()));
+		$sth->execute([':name' => $this->getUserNameTemplateCreator()]);
 		$result = $sth->fetch(PDO::FETCH_BOTH);
 		if(isset($result['extension'])){
 			return $result['extension'];
@@ -4229,7 +3792,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 		$email = $this->getNotificationEmail();
 		//We dont have the extension !! lets create a virtual extension
 		if($exten == ''){
-			$exten = 9919988;
+			$exten = 9_919_988;
 		}
 		$data['tech'] = 'virtual';
 		$data['extension'] = $exten;
@@ -4243,7 +3806,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 		$data['vmpwd'] = $exten;
 		try {
 			$this->FreePBX->Core->processQuickCreate($data['tech'], $exten, $data);
-		}catch(Exception $e) {
+		}catch(Exception) {
 			$exten = $exten + 1;
 			$exten = $this->getUnUsedextension($exten);
 		}
@@ -4274,7 +3837,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 	}
 
 	/* rebuild given users template settings*/
-	public function rebuildtemplate($users = array(), $tempid = ""){
+	public function rebuildtemplate($users = [], $tempid = ""){
 		$count = 0;
 		foreach($users as $user){
 			$assigntemplate = $this->getCombinedModuleSettingByID($user,'ucp|template','assigntemplate');
@@ -4338,17 +3901,18 @@ class Userman extends FreePBX_Helpers implements BMO {
 	* Compare and update the widgets
 	*/
 	private function ucpWidgetsCompaireAndUpdate($uid,$templateid){
-		//add the side bar dasboards and its widgets
+		$dasboards = null;
+  //add the side bar dasboards and its widgets
 		$sql = "SELECT a.val, a.type,a.key FROM userman_template_settings a WHERE a.tid = :tid AND `key`='dashboard-simple-layout' ";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':tid' => $templateid));
+		$sth->execute([':tid' => $templateid]);
 		$results = $sth->fetch(PDO::FETCH_ASSOC);
 		if($results) {
 			$usersidebar =  $this->getUCPSideDashboardSettingByID($uid);
 			$this->removeUCPSideDashboardSettingByID($uid);
-			$usersidebarwidgets = json_decode($usersidebar['val'],true);
+			$usersidebarwidgets = json_decode((string) $usersidebar['val'],true, 512, JSON_THROW_ON_ERROR);
 			$usersidebarwidgets = is_array($usersidebarwidgets)?$usersidebarwidgets:[];
-			$dashbords = json_decode($results['val'],true);
+			$dashbords = json_decode((string) $results['val'],true, 512, JSON_THROW_ON_ERROR);
 			$dasboards = is_array($dasboards)?$dasboards:[];
 			$mergedSettings = $this->mergeUserSettings($usersidebarwidgets,$dashbords);
 			$newsidedash = [];
@@ -4362,22 +3926,22 @@ class Userman extends FreePBX_Helpers implements BMO {
 				}
 				$newsidedash[] = $updatedwidget;
 			}
-			$sidedashboards = json_encode($newsidedash);
+			$sidedashboards = json_encode($newsidedash, JSON_THROW_ON_ERROR);
 			//insert sidebar dasboard widgets
 			$sql = "INSERT INTO userman_users_settings(`uid`,`module`,`key`,`val`,`type`) VALUES(:uid,'ucp|Global',:key,:val,:type)";
 			$sth = $this->db->prepare($sql);
-			$sth->execute(array(':uid' => $uid, ':key' => $results['key'],':val' => $sidedashboards,':type'=>$results['type']));
+			$sth->execute([':uid' => $uid, ':key' => $results['key'], ':val' => $sidedashboards, ':type'=>$results['type']]);
 		}
 		// Adding the main dashboards
 		$sql = "SELECT a.val, a.type,a.key FROM userman_template_settings a WHERE a.tid = :tid AND `key`='dashboards' ";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':tid' => $templateid));
+		$sth->execute([':tid' => $templateid]);
 		$results = $sth->fetch(PDO::FETCH_ASSOC);
 		if($results) {
 			$usermaindash =  $this->getUCPMainDashboardSettingByID($uid);
-			$userdash = json_decode($usermaindash['val'],true);
+			$userdash = json_decode((string) $usermaindash['val'],true, 512, JSON_THROW_ON_ERROR);
 			$userdash = is_array($userdash)?$userdash:[];
-			$tempdashbords = json_decode($results['val'],true);
+			$tempdashbords = json_decode((string) $results['val'],true, 512, JSON_THROW_ON_ERROR);
 			$tempdashbords = is_array($tempdashbords)?$tempdashbords:[];
 			$mergedSettings = $this->mergeMainDashboards($userdash,$tempdashbords,$templateid,$uid);
 			$this->removeUCPDashboardSettingByID($uid);
@@ -4386,14 +3950,14 @@ class Userman extends FreePBX_Helpers implements BMO {
 				$sql = "INSERT INTO userman_users_settings(`uid`,`module`,`key`,`val`,`type`) VALUES(:uid,'ucp|Global',:key,:val,:type)";
 				$sth = $this->db->prepare($sql);
 				$key = 'dashboard-layout-'.$k;
-				$jsonval = json_encode($dash);
-				$sth->execute(array(':uid' => $uid, ':key' => $key,':val' => $jsonval,':type'=>'NULL'));
+				$jsonval = json_encode($dash, JSON_THROW_ON_ERROR);
+				$sth->execute([':uid' => $uid, ':key' => $key, ':val' => $jsonval, ':type'=>'NULL']);
 			}
 				//insert the dasbord
 			$sql = "INSERT INTO userman_users_settings(`uid`,`module`,`key`,`val`,`type`) VALUES(:uid,'ucp|Global',:key,:val,:type)";
 			$sth = $this->db->prepare($sql);
-			$dasboards = json_encode($mergedSettings['dashboard']);
-			$sth->execute(array(':uid' => $uid, ':key' => 'dashboards',':val' =>$dasboards ,':type'=>'json-arr'));
+			$dasboards = json_encode($mergedSettings['dashboard'], JSON_THROW_ON_ERROR);
+			$sth->execute([':uid' => $uid, ':key' => 'dashboards', ':val' =>$dasboards, ':type'=>'json-arr']);
 			return ['status'=>true, 'message' => _('User UCP updated')];
 		}else {
 			return ['status'=>false, 'message' => _('No Dashboards created')];
@@ -4402,13 +3966,13 @@ class Userman extends FreePBX_Helpers implements BMO {
 	private function getUCPSideDashboardSettingByID($uid){
 		$sql = "SELECT * FROM  userman_users_settings WHERE `uid`=:uid AND `module`='ucp|Global' AND `key`='dashboard-simple-layout'";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':uid' => $uid));
+		$sth->execute([':uid' => $uid]);
 		return $sth->fetch(PDO::FETCH_ASSOC);
 	}
 	private function getUCPMainDashboardSettingByID($uid){
 		$sql = "SELECT * FROM  userman_users_settings WHERE `uid`=:uid AND `module`='ucp|Global' AND `key`='dashboards'";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':uid' => $uid));
+		$sth->execute([':uid' => $uid]);
 		return $sth->fetch(PDO::FETCH_ASSOC);
 	}
 	/* Merge the userssettings and templateSettings
@@ -4448,11 +4012,11 @@ class Userman extends FreePBX_Helpers implements BMO {
 				$layoutkey = 'dashboard-layout-'.$dash['id'];
 				$sql = "select * from userman_template_settings where tid=:tid AND `key`=:key ";
 				$sth = $this->db->prepare($sql);
-				$sth->execute(array(':tid' => $templateid,':key'=>$layoutkey));
+				$sth->execute([':tid' => $templateid, ':key'=>$layoutkey]);
 				$wids = $sth->fetch(PDO::FETCH_ASSOC);
 				unset($thiswidget);
 				$thiswidget = [];
-				$widgets = json_decode($wids['val'],true);
+				$widgets = json_decode((string) $wids['val'],true, 512, JSON_THROW_ON_ERROR);
 				$widgets = is_array($widgets)?$widgets:[];
 				foreach($widgets as $widget){
 					$updatedwidget = $this->getUserModulesSettingBasedOnTemplate($widget,$uid);
@@ -4469,9 +4033,9 @@ class Userman extends FreePBX_Helpers implements BMO {
 				$id = (string)Uuid::uuid4();
 				$dashbords[] = ['id'=>$id,'name'=>$dash['name']];
 				$layoutkey = 'dashboard-layout-'.$dash['id'];
-				$sth->execute(array(':tid' => $templateid,':key'=>$layoutkey));
+				$sth->execute([':tid' => $templateid, ':key'=>$layoutkey]);
 				$twids = $sth->fetch(PDO::FETCH_ASSOC);
-				$templatewidgetstoconvert = json_decode($twids['val'],true);
+				$templatewidgetstoconvert = json_decode((string) $twids['val'],true, 512, JSON_THROW_ON_ERROR);
 				unset($templatewidgets);
 				foreach($templatewidgetstoconvert as $widget){
 					$updatedwidget = $this->getUserModulesSettingBasedOnTemplate($widget,$uid);
@@ -4485,9 +4049,9 @@ class Userman extends FreePBX_Helpers implements BMO {
 				$sql = "select * from userman_users_settings where uid=:uid AND `key`=:key ";
 				$sth = $this->db->prepare($sql);
 				$layoutkey = 'dashboard-layout-'.$userdashbordid;
-				$sth->execute(array(':uid' => $uid,':key'=>$layoutkey));
+				$sth->execute([':uid' => $uid, ':key'=>$layoutkey]);
 				$uwids = $sth->fetch(PDO::FETCH_ASSOC);
-				$userwidgets = json_decode($uwids['val'],true);
+				$userwidgets = json_decode((string) $uwids['val'],true, 512, JSON_THROW_ON_ERROR);
 				$mergedWidgets = $this->mergeUserSettings($userwidgets,$templatewidgets);
 				$dashbordsettings[$id] = $mergedWidgets;
 			}
@@ -4506,9 +4070,9 @@ class Userman extends FreePBX_Helpers implements BMO {
 				$id = $udash['id'];
 				$widskey = 'dashboard-layout-'.$id;
 				$dashbords[] = ['id'=>$id,'name'=>$udash['name']];
-				$sth->execute(array(':uid' => $uid,':key'=>$widskey));
+				$sth->execute([':uid' => $uid, ':key'=>$widskey]);
 				$twids = $sth->fetch(PDO::FETCH_ASSOC);
-				$templatewidgets = json_decode($twids['val'],true);
+				$templatewidgets = json_decode((string) $twids['val'],true, 512, JSON_THROW_ON_ERROR);
 				$dashbordsettings[$id]= $templatewidgets;
 			}
 		}
@@ -4520,7 +4084,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 		static $pwdExpReminder = false;
 		if (!is_object($pwdExpReminder)) {
 			include_once __DIR__ . "/PasswordExpReminder.php";
-			$pwdExpReminder = new Userman\PasswordExpReminder();
+			$pwdExpReminder = new PasswordExpReminder();
 		}
 		return $pwdExpReminder;
 	}

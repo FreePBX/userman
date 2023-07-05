@@ -1,11 +1,14 @@
 <?php
 
 namespace FreePBX\modules\Userman;
+use FreePBX\Job\TaskInterface;
+use FreePBX;
+use Exception;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputInterface;
-class Job implements \FreePBX\Job\TaskInterface {
+class Job implements TaskInterface {
 	public static function run(InputInterface $input, OutputInterface $output) {
-		$userman = \FreePBX::create()->Userman;
+		$userman = FreePBX::create()->Userman;
 		$directories = $userman->getAllDirectories();
 		foreach($directories as $directory) {
 			self::syncDirectory($userman, $directory,$output);
@@ -14,7 +17,8 @@ class Job implements \FreePBX\Job\TaskInterface {
 	}
 
 	public static function syncDirectory($userman, $directory,$output) {
-		if(!$directory['active']) {
+		$force = null;
+  		if(!$directory['active']) {
 			$output->writeln("Directory '".$directory['name']."' is not active. Skipping");
 			return;
 		}
@@ -51,7 +55,7 @@ class Job implements \FreePBX\Job\TaskInterface {
 				$userman->lockDirectory($directory['id']);
 				try {
 					$dir->sync($output);
-				} catch(\Exception $e) {
+				} catch(Exception $e) {
 					$output->writeln("\t<error>".$e->getMessage()."</error>");
 				}
 				$userman->unlockDirectory($directory['id']);

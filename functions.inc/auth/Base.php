@@ -18,8 +18,8 @@ interface Base {
 	public function getGroupByAuthID($aid);
 	public function linkUser($username, $authid = null);
 	public function linkGroup($groupname, $authid = null);
-	public function updateGroupData($gid, $data = array());
-	public function updateUserData($uid, $data = array());
+	public function updateGroupData($gid, $data = []);
+	public function updateUserData($uid, $data = []);
 	/**
 	 * Get information about this authentication driver
 	 * @param  object $userman The userman object
@@ -170,7 +170,7 @@ interface Base {
 	 * @param bool $encrypt Whether to encrypt the password or not. If this is false the system will still assume its hashed as sha1, so this is only useful if importing accounts with previous sha1 passwords
 	 * @return array
 	 */
-	public function addUser($username, $password, $default='none', $description=null, $extraData=array(), $encrypt = true);
+	public function addUser($username, $password, $default='none', $description=null, $extraData=[], $encrypt = true);
 
 	/**
 	 * Update a User in User Manager
@@ -186,7 +186,7 @@ interface Base {
 	 * @param string $password The updated password, if null then password isn't updated
 	 * @return array
 	 */
-	public function updateUser($uid, $prevUsername, $username, $default='none', $description=null, $extraData=array(), $password=null);
+	public function updateUser($uid, $prevUsername, $username, $default='none', $description=null, $extraData=[], $password=null);
 	/**
 	 * Update Group
 	 * @param string $prevGroupname The group's previous name
@@ -194,7 +194,7 @@ interface Base {
 	 * @param string $description   The group description
 	 * @param array  $users         Array of users in this Group
 	 */
-	public function updateGroup($gid, $prevGroupname, $groupname, $description=null, $users=array());
+	public function updateGroup($gid, $prevGroupname, $groupname, $description=null, $users=[]);
 
 	/**
 	 * Check Credentials against username with a passworded sha
@@ -210,5 +210,5 @@ interface Base {
 	 * @param string $description The group description
 	 * @param array  $users       Array of Userman User IDs
 	 */
-	public function addGroup($groupname, $description=null, $users=array());
+	public function addGroup($groupname, $description=null, $users=[]);
 }

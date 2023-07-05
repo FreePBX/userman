@@ -109,7 +109,7 @@ echo $heading;
 														<div class="col-md-9">
 															<div class="input-group">
 																<div>
-																	<?php echo FreePBX::View()->languageDrawSelect('language',$group['language'],_("Use System Language")); ?>
+																	<?php echo FreePBX::View()->languageDrawSelect('language',$group['language'] ?? '',_("Use System Language")); ?>
 																</div>
 																<div  class="ml-auto">
 																	<!--<span class="input-group-btn">-->
@@ -145,7 +145,7 @@ echo $heading;
 														<div class="col-md-9">
 															<div class="input-group">
 																<div>
-																	<?php echo FreePBX::View()->timezoneDrawSelect('timezone',$group['timezone'],_("Use System Timezone")); ?>
+																	<?php echo FreePBX::View()->timezoneDrawSelect('timezone',$group['timezone'] ?? '',_("Use System Timezone")); ?>
 																</div>
 																<div class="ml-auto">
 																	<!--<span class="input-group-btn">-->

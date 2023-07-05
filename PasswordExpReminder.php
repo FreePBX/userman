@@ -1,17 +1,22 @@
 <?php
 namespace FreePBX\modules\Userman;
 
+use FreePBX;
+use PDO;
+use Exception;
+use PDOException;
+use ampuser;
 class PasswordExpReminder {
 
-    const USER_TYPE_ADMIN = 'admin';
-    const USER_TYPE_UCP = 'ucp';
-    const NOTIFY_USER_BEFORE_X_DAYS_OF_PASSWORD_EXPIRATION = 5;
+    final public const USER_TYPE_ADMIN = 'admin';
+    final public const USER_TYPE_UCP = 'ucp';
+    final public const NOTIFY_USER_BEFORE_X_DAYS_OF_PASSWORD_EXPIRATION = 5;
 
-    private $tokenExpiration = "1 day";
+    private string $tokenExpiration = "1 day";
 
 	public function __construct()
 	{
-		$this->FreePBX = \FreePBX::create();
+		$this->FreePBX = FreePBX::create();
 		$this->db = $this->FreePBX->Database;
 		$this->Userman = $this->FreePBX->Userman;
 	}
@@ -38,66 +43,27 @@ class PasswordExpReminder {
     public function usermanShowPage()
     {
         $request = freepbxGetSanitizedRequest();
-		$isPasswordExpiryReminderEnabledSystemWide = $this->getSettings('passwordExpiryReminder') ? $this->getSettings('passwordExpiryReminder') : 0;
-		$isForcePasswordResetEnabledSystemWide = $this->getSettings('forcePasswordReset') ? $this->getSettings('forcePasswordReset') : 0;
+		$isPasswordExpiryReminderEnabledSystemWide = $this->getSettings('passwordExpiryReminder') ?: 0;
+		$isForcePasswordResetEnabledSystemWide = $this->getSettings('forcePasswordReset') ?: 0;
 		
 		if (!empty($request['action']) && ($isPasswordExpiryReminderEnabledSystemWide || $isForcePasswordResetEnabledSystemWide )) {
 			switch ($request['action']) {
 				case 'showgroup':
 					$passexpiry = ($this->Userman->getModuleSettingByGID($request['group'], 'userman', 'passexpiry'));
 					$forcePasswordReset = ($this->Userman->getModuleSettingByGID($request['group'], 'userman', 'forcepasswordreset'));
-					return array(
-						array(
-							"title" => _("Password Management"),
-							"rawname" => "pwdExpReminder",
-							"content" => load_view(__DIR__ . '/views/password_exp_reminder_hook.php', array(
-								"mode" => "group", 
-								"passexpiry" => $passexpiry, 
-								'forcePasswordReset' => $forcePasswordReset,
-								'isNewUser' => false,
-                                'action' => $request['action'],
-								'isPasswordExpiryReminderEnabledSystemWide' => $isPasswordExpiryReminderEnabledSystemWide,
-								'isForcePasswordResetEnabledSystemWide' => $isForcePasswordResetEnabledSystemWide,
-							))
-						)
-					);
+					return [["title" => _("Password Management"), "rawname" => "pwdExpReminder", "content" => load_view(__DIR__ . '/views/password_exp_reminder_hook.php', ["mode" => "group", "passexpiry" => $passexpiry, 'forcePasswordReset' => $forcePasswordReset, 'isNewUser' => false, 'action' => $request['action'], 'isPasswordExpiryReminderEnabledSystemWide' => $isPasswordExpiryReminderEnabledSystemWide, 'isForcePasswordResetEnabledSystemWide' => $isForcePasswordResetEnabledSystemWide])]];
 					break;
 				case 'showuser':
 					$passexpiry = $this->Userman->getModuleSettingByID($request['user'], 'userman', 'passexpiry', true);
                     $isNewUser = $this->Userman->getModuleSettingByID($request['user'], 'userman', 'isNewUser',  true);
                     if ($isPasswordExpiryReminderEnabledSystemWide) {
-                        return array(
-                            array(
-                                "title" => _("Password Management"),
-                                "rawname" => "pwdExpReminder",
-                                "content" => load_view(__DIR__ . '/views/password_exp_reminder_hook.php', array(
-                                    "mode" => "user",
-                                    "passexpiry" => $passexpiry,
-                                    'isNewUser' => $isNewUser,
-                                    'action' => $request['action'],
-                                    'isPasswordExpiryReminderEnabledSystemWide' => $isPasswordExpiryReminderEnabledSystemWide,
-                                    'isForcePasswordResetEnabledSystemWide' => $isForcePasswordResetEnabledSystemWide
-                                ))
-                            )
-                        );
+                        return [["title" => _("Password Management"), "rawname" => "pwdExpReminder", "content" => load_view(__DIR__ . '/views/password_exp_reminder_hook.php', ["mode" => "user", "passexpiry" => $passexpiry, 'isNewUser' => $isNewUser, 'action' => $request['action'], 'isPasswordExpiryReminderEnabledSystemWide' => $isPasswordExpiryReminderEnabledSystemWide, 'isForcePasswordResetEnabledSystemWide' => $isForcePasswordResetEnabledSystemWide])]];
                     }
 					break;
 				case 'addgroup':
 				case 'adduser':
 					$mode = ($request['action'] == 'addgroup') ? 'group' : 'user';
-					return array(
-						array(
-							"title" => _("Password Management"),
-							"rawname" => "pwdExpReminder",
-							"content" => load_view(__DIR__ . '/views/password_exp_reminder_hook.php', array(
-								"mode" => $mode, 
-								'isNewUser' => $request['action'] == 'adduser' ? 1 : 0,
-                                'action' => $request['action'],
-								'isPasswordExpiryReminderEnabledSystemWide' => $isPasswordExpiryReminderEnabledSystemWide,
-								'isForcePasswordResetEnabledSystemWide' => $isForcePasswordResetEnabledSystemWide
-                            ))
-						)
-					);
+					return [["title" => _("Password Management"), "rawname" => "pwdExpReminder", "content" => load_view(__DIR__ . '/views/password_exp_reminder_hook.php', ["mode" => $mode, 'isNewUser' => $request['action'] == 'adduser' ? 1 : 0, 'action' => $request['action'], 'isPasswordExpiryReminderEnabledSystemWide' => $isPasswordExpiryReminderEnabledSystemWide, 'isForcePasswordResetEnabledSystemWide' => $isForcePasswordResetEnabledSystemWide])]];
 					break;
 			}
 		}
@@ -141,6 +107,8 @@ class PasswordExpReminder {
 
     public function usermanUpdateUser($id, $display, $data, $group = false)
 	{
+        $passData = [];
+        $passExpData = [];
         $isNewUser = isset($_POST['isNewUser']) ? ($_POST['isNewUser'] ? 1 : 0) : $this->Userman->getModuleSettingByID($data['id'], 'userman', 'isNewUser',  true);
 		$user = $this->Userman->getUserByID($id);
 
@@ -197,10 +165,10 @@ class PasswordExpReminder {
     {
         $oldPasswordExpiryReminder = $this->getSettings("passwordExpiryReminder");
         $oldPasswordExpirationDays = $this->getSettings("passwordExpirationDays");
-        $forcePasswordReset = filter_var(!empty($request['forcePasswordReset']) ? $request['forcePasswordReset'] : 0, FILTER_SANITIZE_STRING);
-        $passwordExpiryReminder = filter_var(!empty($request['passwordExpiryReminder']) ? $request['passwordExpiryReminder'] : 0, FILTER_SANITIZE_STRING);
-        $passwordExpirationDays = filter_var(!empty($request['passwordExpirationDays']) ? $request['passwordExpirationDays'] : 90, FILTER_SANITIZE_STRING);
-        $passwordExpiryReminderDays = filter_var(!empty($request['passwordExpiryReminderDays']) ? $request['passwordExpiryReminderDays'] : self::NOTIFY_USER_BEFORE_X_DAYS_OF_PASSWORD_EXPIRATION, FILTER_SANITIZE_STRING);
+        $forcePasswordReset = filter_var(!empty($request['forcePasswordReset']) ? $request['forcePasswordReset'] : 0, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $passwordExpiryReminder = filter_var(!empty($request['passwordExpiryReminder']) ? $request['passwordExpiryReminder'] : 0, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $passwordExpirationDays = filter_var(!empty($request['passwordExpirationDays']) ? $request['passwordExpirationDays'] : 90, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $passwordExpiryReminderDays = filter_var(!empty($request['passwordExpiryReminderDays']) ? $request['passwordExpiryReminderDays'] : self::NOTIFY_USER_BEFORE_X_DAYS_OF_PASSWORD_EXPIRATION, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $passwordSettings = [
             'forcePasswordReset' => $forcePasswordReset,
             'passwordExpiryReminder' => $passwordExpiryReminder,
@@ -255,7 +223,7 @@ class PasswordExpReminder {
         }
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function checkPasswordReminder($request)
@@ -263,12 +231,12 @@ class PasswordExpReminder {
         $response = [];
         $response['status'] = true;
         $response['message'] = "";
-        $username = filter_var(isset($request['username']) ? $request['username'] : '',FILTER_SANITIZE_STRING);
-        $password = filter_var(isset($request['password']) ? $request['password'] : '',FILTER_SANITIZE_STRING);
-        $loginpanel = filter_var(isset($request['loginpanel']) ? $request['loginpanel'] : 'admin',FILTER_SANITIZE_STRING);
+        $username = filter_var($request['username'] ?? '',FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $password = filter_var($request['password'] ?? '',FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $loginpanel = filter_var($request['loginpanel'] ?? 'admin',FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
         // Decoding Password
-        $password = base64_decode(urldecode($password));
+        $password = base64_decode(urldecode((string) $password));
         
         # check whether session is already unlocked
         $isSessionAlreadyUnlocked = false;
@@ -279,7 +247,7 @@ class PasswordExpReminder {
         }
 
         if ($isSessionAlreadyUnlocked) {
-            return array('status' => false, 'isSessionAlreadyUnlocked' => true);
+            return ['status' => false, 'isSessionAlreadyUnlocked' => true];
         }
 
         # Check this user is a UCP user or admin user because ucp users can also login to admin panel
@@ -294,7 +262,7 @@ class PasswordExpReminder {
 
         if ($loginpanel == 'ucp' && $usertype == self::USER_TYPE_ADMIN) {
             $this->logAuthFailure($username);
-            return array('status' => false, 'isSessionAlreadyUnlocked' => false, 'message' =>  _('Invalid Credentials'));
+            return ['status' => false, 'isSessionAlreadyUnlocked' => false, 'message' =>  _('Invalid Credentials')];
         }
 
         # Check for correct credentials
@@ -340,13 +308,13 @@ class PasswordExpReminder {
                 ":username" => $username,
                 ":usertype" => $usertype
             ]);
-            $results = $sth->fetch(\PDO::FETCH_ASSOC);
+            $results = $sth->fetch(PDO::FETCH_ASSOC);
 
             if (!empty($results)) {
-                $uid = isset($results['uid']) ? $results['uid'] : '';
-                $passwordChangedAt = isset($results['passwordChangedAt']) ? $results['passwordChangedAt'] : '';
-                $passwordExpirationDays = isset($pwdExpReminderConfig['passwordExpirationDays']) ? $pwdExpReminderConfig['passwordExpirationDays'] : '';
-                $passwordExpiryReminderDays = isset($pwdExpReminderConfig['passwordExpiryReminderDays']) ? $pwdExpReminderConfig['passwordExpiryReminderDays'] : self::NOTIFY_USER_BEFORE_X_DAYS_OF_PASSWORD_EXPIRATION;
+                $uid = $results['uid'] ?? '';
+                $passwordChangedAt = $results['passwordChangedAt'] ?? '';
+                $passwordExpirationDays = $pwdExpReminderConfig['passwordExpirationDays'] ?? '';
+                $passwordExpiryReminderDays = $pwdExpReminderConfig['passwordExpiryReminderDays'] ?? self::NOTIFY_USER_BEFORE_X_DAYS_OF_PASSWORD_EXPIRATION;
                 $currentDatetime = strtotime(date("Y-m-d H:i:s"));
                 $passwordExpiryDate = strtotime($passwordChangedAt . ' + ' . $passwordExpirationDays . ' days');
 
@@ -393,12 +361,12 @@ class PasswordExpReminder {
     public function resetPasswordExpiry($user, $userType = self::USER_TYPE_UCP, $isNewUser = 0, $updatePassExpiryOnly = false)
     {
         try {
-            $uid = isset($user['id']) ? $user['id'] : '';
-            $username = isset($user['username']) ? $user['username'] : '';
-            $usermail = isset($user['email']) ? $user['email'] : '';
+            $uid = $user['id'] ?? '';
+            $username = $user['username'] ?? '';
+            $usermail = $user['email'] ?? '';
             $pwdExpReminderConfig = $this->Userman->getConfig("pwdExpReminder");
-            $passwordExpirationDays = isset($pwdExpReminderConfig['passwordExpirationDays']) ? $pwdExpReminderConfig['passwordExpirationDays'] : 0;
-            $isPasswordExpiryReminderEnabledSystemWide = isset($pwdExpReminderConfig['passwordExpiryReminder']) ? $pwdExpReminderConfig['passwordExpiryReminder'] : 0;
+            $passwordExpirationDays = $pwdExpReminderConfig['passwordExpirationDays'] ?? 0;
+            $isPasswordExpiryReminderEnabledSystemWide = $pwdExpReminderConfig['passwordExpiryReminder'] ?? 0;
             $passwordChangedAt = date('Y-m-d H:i:s');
             $passwordExpiryDate = date('Y-m-d H:i:s', strtotime($passwordChangedAt . ' + ' . $passwordExpirationDays . ' days'));
     
@@ -426,7 +394,7 @@ class PasswordExpReminder {
                     $stmt = $this->db->prepare($sql);
                     $stmt->bindParam(':uid', $uid);
                     $stmt->execute();
-                    $userPwdReminderExists = $stmt->fetch(\PDO::FETCH_ASSOC);
+                    $userPwdReminderExists = $stmt->fetch(PDO::FETCH_ASSOC);
                 } else {
     
                     // Check Password Reminder Exists if admin
@@ -434,7 +402,7 @@ class PasswordExpReminder {
                     $stmt = $this->db->prepare($sql);
                     $stmt->bindParam(':username', $username);
                     $stmt->execute();
-                    $userPwdReminderExists = $stmt->fetch(\PDO::FETCH_ASSOC);
+                    $userPwdReminderExists = $stmt->fetch(PDO::FETCH_ASSOC);
                 }
     
                 // If exists update password reminder data else add
@@ -485,8 +453,8 @@ class PasswordExpReminder {
                 $stmt = $this->db->prepare($sql);
                 $stmt->execute($values);
             }
-        } catch (\Exception $e) {
-            return array('status' => false, 'message' => _($e->getMessage()));
+        } catch (Exception $e) {
+            return ['status' => false, 'message' => _($e->getMessage())];
         }
     }
 
@@ -498,19 +466,20 @@ class PasswordExpReminder {
             $sth->bindParam(':usertype', $usertype);
             $sth->bindParam(':username', $username);
             $sth->execute();
-        } catch (\Exception $e) {
-            return array('status' => false, 'message' => _($e->getMessage()));
+        } catch (Exception $e) {
+            return ['status' => false, 'message' => _($e->getMessage())];
         }
     }
 
     public function enableOrDisablePasswordReminder($request)
     {
+        $data = [];
         try {
-            $uid = filter_var(isset($request['uid']) ? $request['uid'] : false,FILTER_SANITIZE_STRING);
-            $username = filter_var(isset($request['username']) ? $request['username'] : '',FILTER_SANITIZE_STRING);
-            $enableStatus = filter_var(isset($request['status']) ? $request['status'] : 'disable',FILTER_SANITIZE_STRING);
-            $usertype = filter_var(isset($request['usertype']) ? $request['usertype'] : self::USER_TYPE_ADMIN,FILTER_SANITIZE_STRING);
-            $updatePassExpiryOnly = filter_var(isset($request['updatePassExpiryOnly']) ? $request['updatePassExpiryOnly'] : false,FILTER_SANITIZE_STRING);
+            $uid = filter_var($request['uid'] ?? false,FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $username = filter_var($request['username'] ?? '',FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $enableStatus = filter_var($request['status'] ?? 'disable',FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $usertype = filter_var($request['usertype'] ?? self::USER_TYPE_ADMIN,FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $updatePassExpiryOnly = filter_var($request['updatePassExpiryOnly'] ?? false,FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
             if ($usertype == self::USER_TYPE_ADMIN) {
                 // Do Nothing
@@ -527,9 +496,9 @@ class PasswordExpReminder {
                 $this->deletePasswordReminder($usertype, $username);
             }
 
-            return array('status' => true, 'message' => _("Password expiry reminder Settings updated successfully"));
-        } catch (\Exception $e) {
-            return array('status' => false, 'message' => _($e->getMessage()));
+            return ['status' => true, 'message' => _("Password expiry reminder Settings updated successfully")];
+        } catch (Exception $e) {
+            return ['status' => false, 'message' => _($e->getMessage())];
         }
     }
 
@@ -543,7 +512,7 @@ class PasswordExpReminder {
     public function getAdminPasswordResetTokens()
     {
         $tokens = $this->Userman->getConfig('adminpassresettoken');
-        $final = array();
+        $final = [];
         $time = time();
         if (!empty($tokens)) {
             foreach ($tokens as $token => $data) {
@@ -562,7 +531,7 @@ class PasswordExpReminder {
      */
     public function resetAllPasswordTokens()
     {
-        $this->Userman->setConfig('adminpassresettoken', array());
+        $this->Userman->setConfig('adminpassresettoken', []);
     }
 
     /**
@@ -577,7 +546,7 @@ class PasswordExpReminder {
         if (!empty($user)) {
             $tokens = $this->getAdminPasswordResetTokens();
             if (empty($tokens) || !is_array($tokens)) {
-                $tokens = array();
+                $tokens = [];
             }
             // If token already exists then remove it
             foreach ($tokens as $token => $data) {
@@ -586,9 +555,9 @@ class PasswordExpReminder {
                 }
             }
             $token = bin2hex(openssl_random_pseudo_bytes(16));
-            $tokens[$token] = array("username" => $username, "time" => $time, "valid" => strtotime($valid, $time));
+            $tokens[$token] = ["username" => $username, "time" => $time, "valid" => strtotime((string) $valid, $time)];
             $this->Userman->setConfig('adminpassresettoken', $tokens);
-            return array("token" => $token, "valid" => strtotime($valid, $time));
+            return ["token" => $token, "valid" => strtotime((string) $valid, $time)];
         }
         return false;
     }
@@ -622,24 +591,24 @@ class PasswordExpReminder {
     {
         # Form Validation
         if (!isset($request['token']) || empty($request['token'])) {
-            return array('status' => false, 'message' => _('Invalid Token'));
+            return ['status' => false, 'message' => _('Invalid Token')];
         }
 
         if (!isset($request['newpassword']) || empty($request['newpassword'])) {
-            return array('status' => false, 'message' => _('Password is required'));
+            return ['status' => false, 'message' => _('Password is required')];
         }
 
         if (!isset($request['confirmpassword']) || empty($request['confirmpassword'])) {
-            return array('status' => false, 'message' => _('Confirm password is required'));
+            return ['status' => false, 'message' => _('Confirm password is required')];
         }
 
         if ($request['confirmpassword'] != $request['newpassword']) {
-            return array('status' => false, 'message' => _('Confirm password does not match'));
+            return ['status' => false, 'message' => _('Confirm password does not match')];
         }
 
         $token = $request['token'];
-        $token = filter_var($token['token'],FILTER_SANITIZE_STRING);
-        $newpassword = filter_var($request['newpassword'],FILTER_SANITIZE_STRING);
+        $token = filter_var($token['token'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $newpassword = filter_var($request['newpassword'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $user = $this->validateAdminPasswordResetToken($token);
         if (!empty($user)) {
             $tokens = $this->Userman->getConfig('adminpassresettoken');
@@ -649,12 +618,12 @@ class PasswordExpReminder {
             if ($status) {
                 // If user is logged in using fwconsole unlock then force logout
                 unset($_SESSION['AMP_user']);
-                return array('status' => true, 'message' => _('Your password has been reset successfully'));
+                return ['status' => true, 'message' => _('Your password has been reset successfully')];
             } else {
-                return array('status' => false, 'message' => _('Not able to reset password'));
+                return ['status' => false, 'message' => _('Not able to reset password')];
             }
         } else {
-            return array('status' => false, 'message' => _('Not able to reset password'));
+            return ['status' => false, 'message' => _('Not able to reset password')];
         }
     }
 
@@ -668,25 +637,26 @@ class PasswordExpReminder {
             $stmt = $this->db->prepare($sql);
             $stmt->bindParam(':username', $username);
             $stmt->execute();
-            $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($result) {
                 return $result;
             } else {
                 return false;
             }
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             throw $e;
         }
     }
 
     public function updateAdminUserPassword($username, $password)
     {
+        $data = [];
         if (empty($username) || empty($password)) {
             return false;
         }
         try {
-            $pass = sha1($password);
+            $pass = sha1((string) $password);
             $sql  = "UPDATE ampusers SET password_sha1=:passwordsha1 WHERE username=:username";
             $stmt = $this->db->prepare($sql);
             $stmt->bindParam(':username', $username);
@@ -700,7 +670,7 @@ class PasswordExpReminder {
             } else {
                 return false;
             }
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             throw $e;
         }
     }
@@ -730,28 +700,21 @@ class PasswordExpReminder {
     {
 		$user = $this->Userman->getUserByUsername($username);
 		if (!empty($user)) {
-			return array('status' => true, 'uid' => $user['id']);
+			return ['status' => true, 'uid' => $user['id']];
 		}else{
-			return array('status' => false);
+			return ['status' => false];
 		}
 	}
 
-	public function getRemoteIp()
-	{
-		$return = false;
-		switch (true) {
-			case (!empty($_SERVER['HTTP_X_REAL_IP'])):
-				$return = $_SERVER['HTTP_X_REAL_IP'];
-				break;
-			case (!empty($_SERVER['HTTP_CLIENT_IP'])):
-				$return = $_SERVER['HTTP_CLIENT_IP'];
-				break;
-			case (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])):
-				$return = $_SERVER['HTTP_X_FORWARDED_FOR'];
-				break;
-			default:
-				$return = $_SERVER['REMOTE_ADDR'];
-		}
+    public function getRemoteIp()
+    {
+        $return = false;
+        $return = match (true) {
+            !empty ($_SERVER['HTTP_X_REAL_IP']) => $_SERVER['HTTP_X_REAL_IP'],
+            !empty ($_SERVER['HTTP_CLIENT_IP']) => $_SERVER['HTTP_CLIENT_IP'],
+            !empty ($_SERVER['HTTP_X_FORWARDED_FOR']) => $_SERVER['HTTP_X_FORWARDED_FOR'],
+            default => $_SERVER['REMOTE_ADDR'],
+        };
 		//Return the IP or false if it is invalid or local
 		return filter_var($return, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE);
 	}
@@ -765,7 +728,7 @@ class PasswordExpReminder {
 		if ($ip !== $_SERVER['REMOTE_ADDR']) {
 			freepbx_log_security('Possible proxy detected, forwarded headers for' . (!empty($username) ? $username : 'unknown') . ' set to ' . $ip);
 		}
-		$logData = array();
+		$logData = [];
 	}
 
 	public function checkAdminCredentials($username, $password)
@@ -776,7 +739,7 @@ class PasswordExpReminder {
 		try {
             # Check logged in user is from usermanager 
             $isValidCredentials = false;
-            $ampUser = new \ampuser($username, "usermanager");
+            $ampUser = new ampuser($username, "usermanager");
             if ($ampUser->checkPassword($password)) {
                 if ($this->Userman->getCombinedGlobalSettingByID($ampUser->id, 'pbx_login')) {
                     $isValidCredentials = true;
@@ -785,7 +748,7 @@ class PasswordExpReminder {
 
 				# Check logged in user is from admin users 
 				$isValidCredentials = false;
-				$ampUser = new \ampuser($username);
+				$ampUser = new ampuser($username);
 				if ($ampUser->checkPassword($password)) {
 					$isValidCredentials = true;
 				}
@@ -794,7 +757,7 @@ class PasswordExpReminder {
          
             return $isValidCredentials;
 
-		} catch (\PDOException $e) {
+		} catch (PDOException $e) {
 			throw $e;
 		}
 	}

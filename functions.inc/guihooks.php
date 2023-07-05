@@ -6,10 +6,10 @@ function userman_configpageinit($pagename) {
 	global $currentcomponent;
 	global $amp_conf;
 
-	$action = isset($_REQUEST['action'])?$_REQUEST['action']:null;
-	$extdisplay = isset($_REQUEST['extdisplay'])?$_REQUEST['extdisplay']:null;
-	$extension = isset($_REQUEST['extension'])?$_REQUEST['extension']:null;
-	$tech_hardware = isset($_REQUEST['tech_hardware'])?$_REQUEST['tech_hardware']:null;
+	$action = $_REQUEST['action'] ?? null;
+	$extdisplay = $_REQUEST['extdisplay'] ?? null;
+	$extension = $_REQUEST['extension'] ?? null;
+	$tech_hardware = $_REQUEST['tech_hardware'] ?? null;
 
 	// We only want to hook 'users' or 'extensions' pages.
 	if ($pagename != 'users' && $pagename != 'extensions')  {
@@ -43,10 +43,10 @@ function userman_configpageload() {
 	global $astman;
 	$userman = FreePBX::create()->Userman;
 	// Init vars from $_REQUEST[]
-	$action = isset($_REQUEST['action'])?$_REQUEST['action']:null;
-	$ext = isset($_REQUEST['extdisplay'])?$_REQUEST['extdisplay']:null;
-	$extn = isset($_REQUEST['extension'])?$_REQUEST['extension']:null;
-	$display = isset($_REQUEST['display'])?$_REQUEST['display']:null;
+	$action = $_REQUEST['action'] ?? null;
+	$ext = $_REQUEST['extdisplay'] ?? null;
+	$extn = $_REQUEST['extension'] ?? null;
+	$display = $_REQUEST['display'] ?? null;
 
 	if ($ext==='') {
 		$extdisplay = $extn;
@@ -55,19 +55,16 @@ function userman_configpageload() {
 	}
 
 	if ($action != 'del') {
-		$usersC = array();  // Initialize the array.
+		$usersC = [];  // Initialize the array.
 		foreach(core_users_list() as $user) {
 			$usersC[] = $user[0];
 		}
 		$section = _("User Manager Settings");
 		$category = "general";
 		$defaultDirectory = $userman->getDefaultDirectory();
-		$allDirectories = array();
+		$allDirectories = [];
 		foreach($userman->getAllDirectories() as $dir) {
-			$allDirectories[] = array(
-				"value" => $dir['id'],
-				"text" => $dir['name']
-			);
+			$allDirectories[] = ["value" => $dir['id'], "text" => $dir['name']];
 		}
 
 $js = <<<JS
@@ -168,28 +165,17 @@ JS;
 		//Old Extension
 		if($extdisplay != '') {
 			$userM = $userman->getUserByDefaultExtension($extdisplay);
-			$selarray = array(
-				array(
-					"value" => 'none',
-					"text" => _('None')
-				),
-			);
+			$selarray = [["value" => 'none', "text" => _('None')]];
 			if(!empty($userM)) {
-				$selarray[] = array(
-					"value" => $userM['id'],
-					"text" => $userM['username'] . " (" . _("Linked") . ")"
-				);
+				$selarray[] = ["value" => $userM['id'], "text" => $userM['username'] . " (" . _("Linked") . ")"];
 				$dirid = $userM['auth'];
 			} else {
 				$dirid = $defaultDirectory['id'];
 			}
 
-			$allGroups = array();
+			$allGroups = [];
 			foreach($userman->getAllGroups($dirid) as $g) {
-				$allGroups[] = array(
-					"value" => $g['id'],
-					"text" => $g['groupname']
-				);
+				$allGroups[] = ["value" => $g['id'], "text" => $g['groupname']];
 			}
 
 			$permissions = $userman->getAuthAllPermissions($dirid);
@@ -199,24 +185,18 @@ JS;
 			if($permissions['addUser']) {
 				$customUsernameDisable = false;
 				$passDisable = false;
-				$selarray[]	= array(
-					"value" => 'add',
-					"text" => _('Create New User')
-				);
+				$selarray[]	= ["value" => 'add', "text" => _('Create New User')];
 			}
-			$userarray = array();
-			$uUsers = array();
+			$userarray = [];
+			$uUsers = [];
 			foreach($userman->getAllUsers($dirid) as $user) {
 				$uUsers[] = $user['username'];
 				if($user['default_extension'] != 'none' && in_array($user['default_extension'],$usersC)) {
 					continue;
 				}
-				$userarray[] = array(
-						"value" => $user['id'],
-						"text" => $user['username']
-				);
+				$userarray[] = ["value" => $user['id'], "text" => $user['username']];
 			}
-			$selarray = array_merge($selarray,$userarray);
+			$selarray = [...$selarray, ...$userarray];
 
 			if(!empty($userM)) {
               	$passDisable = true;
@@ -224,11 +204,11 @@ JS;
 				$currentcomponent->addguielem($section, new gui_selectbox('userman_directory', $allDirectories, $dirid, _('Select User Directory:'), _('Select a user directory'), false, 'frm_extensions_changeDirectory();'),$category);
 				$currentcomponent->addguielem($section, new gui_selectbox('userman_assign', $selarray, $userM['id'], _('Link to a Different Default User:'), _('Select a user that this extension should be linked to in User Manager, else select Create New User to have User Manager autogenerate a new user that will be linked to this extension'), false, 'frm_extensions_usermanChangeUsername();'),$category);
 				$groups = $userman->getGroupsByID($userM['id']);
-				$groups = is_array($groups) ? $groups : array();
+				$groups = is_array($groups) ? $groups : [];
 			} else {
 				$currentcomponent->addguielem($section, new gui_selectbox('userman_directory', $allDirectories, $dirid, _('Select User Directory:'), _('Select a user directory'), false, 'frm_extensions_changeDirectory();'),$category);
 				$currentcomponent->addguielem($section, new gui_selectbox('userman_assign', $selarray, '', _('Link to a Default User'), _('Select a user that this extension should be linked to in User Manager, else select Create New User to have User Manager autogenerate a new user that will be linked to this extension'), false, 'frm_'.$display.'_usermanChangeUsername();'),$category);
-				$groups = array();
+				$groups = [];
 			}
 
 			$currentcomponent->addguielem($section, new gui_textbox_check('userman_username','', _('Username'), _('If Create New User is selected this will be the username. If blank the username will be the same number as this device'),'frm_'.$display.'_usermanUsername()', _("Please select a valid username for New User Creation"),false,0,true,_('Use Custom Username'),"",'true',$customUsernameDisable),$category);
@@ -236,12 +216,7 @@ JS;
 			$currentcomponent->addguielem($section, new gui_multiselectbox('userman_group', $allGroups, $groups, _('Groups'), _('Groups that this user is a part of. You can add and remove this user from groups in this view as well'), false, '',!$permissions['modifyUser'],"chosenmultiselect"),$category);
 		} else {
 			//New Extension
-			$selarray = array(
-				array(
-					"value" => 'none',
-					"text" => _('None')
-				),
-			);
+			$selarray = [["value" => 'none', "text" => _('None')]];
 			$permissions = $userman->getAuthAllPermissions($defaultDirectory['id']);
 			$groups = $userman->getDefaultGroups($defaultDirectory['id']);
 			$passDisable = true;
@@ -249,28 +224,19 @@ JS;
 			if($permissions['addUser']) {
 				$passDisable = false;
 				$customUsernameDisable = false;
-				$selarray[]	= array(
-					"value" => 'add',
-					"text" => _('Create New User')
-				);
+				$selarray[]	= ["value" => 'add', "text" => _('Create New User')];
 			}
-			$allGroups = array();
+			$allGroups = [];
 			foreach($userman->getAllGroups($defaultDirectory['id']) as $g) {
-				$allGroups[] = array(
-					"value" => $g['id'],
-					"text" => $g['groupname']
-				);
+				$allGroups[] = ["value" => $g['id'], "text" => $g['groupname']];
 			}
-			$uUsers = array();
+			$uUsers = [];
 			foreach($userman->getAllUsers($defaultDirectory['id']) as $user) {
 				$uUsers[] = $user['username'];
 				if($user['default_extension'] != 'none' && in_array($user['default_extension'],$usersC)) {
 					continue;
 				}
-				$selarray[] = array(
-						"value" => $user['id'],
-						"text" => $user['username']
-				);
+				$selarray[] = ["value" => $user['id'], "text" => $user['username']];
 			}
 
 			$currentcomponent->addguielem($section, new gui_selectbox('userman_directory', $allDirectories, $defaultDirectory['id'], _('Select User Directory:'), _('Select a user directory'), false, 'frm_extensions_changeDirectory();'),$category);
@@ -283,15 +249,15 @@ JS;
 }
 
 function userman_configprocess() {
-	$action = isset($_REQUEST['action'])?$_REQUEST['action']:null;
-	$extension = isset($_REQUEST['extdisplay'])?$_REQUEST['extdisplay']:null;
+	$action = $_REQUEST['action'] ?? null;
+	$extension = $_REQUEST['extdisplay'] ?? null;
 	$userman = FreePBX::create()->Userman;
 	$directory = $userman->getDefaultDirectory();
 	$usettings = $userman->getAuthAllPermissions($directory['id']);
 	//if submitting form, update database
 	switch ($action) {
 		case "add":
-			$extension = isset($_REQUEST['extension']) ? $_REQUEST['extension'] : null;
+			$extension = $_REQUEST['extension'] ?? null;
 			if(isset($_REQUEST['userman_assign']) && !empty($extension)) {
 				if($_REQUEST['userman_assign'] == 'add') {
 					$username = (!empty($_REQUEST['userman_username_cb']) && !empty($_REQUEST['userman_username'])) ? $_REQUEST['userman_username'] : $extension;
@@ -299,7 +265,7 @@ function userman_configprocess() {
 					$email = !empty($_REQUEST['email']) ? $_REQUEST['email'] : '';
 					$password = $_REQUEST['userman_password'];
 					$directory = $_REQUEST['userman_directory'];
-					$ret = $userman->addUserByDirectory($directory, $username, $password, $extension, _('Autogenerated user on new device creation'), array('email' => $email, 'displayname' => $displayname));
+					$ret = $userman->addUserByDirectory($directory, $username, $password, $extension, _('Autogenerated user on new device creation'), ['email' => $email, 'displayname' => $displayname]);
 					if($ret['status']) {
 						if($usettings['modifyGroup']) {
 							if(!empty($_POST['userman_group'])) {
@@ -309,7 +275,7 @@ function userman_configprocess() {
 										$group['users'][] = $ret['id'];
 										$userman->updateGroup($group['id'],$group['groupname'], $group['groupname'], $group['description'], $group['users']);
 									} elseif(!in_array($group['id'],$_POST['userman_group']) && in_array($ret['id'],$group['users'])) {
-										$group['users'] = array_diff($group['users'], array($ret['id']));
+										$group['users'] = array_diff($group['users'], [$ret['id']]);
 										$userman->updateGroup($group['id'],$group['groupname'], $group['groupname'], $group['description'], $group['users']);
 									}
 								}
@@ -317,7 +283,7 @@ function userman_configprocess() {
 								$groups = $userman->getGroupsByID($ret['id']);
 								foreach($groups as $gid) {
 									$group = $userman->getGroupByGID($gid);
-									$group['users'] = array_diff($group['users'], array($ret['id']));
+									$group['users'] = array_diff($group['users'], [$ret['id']]);
 									$userman->updateGroup($group['id'],$group['groupname'], $group['groupname'], $group['description'], $group['users']);
 								}
 							}
@@ -349,7 +315,7 @@ function userman_configprocess() {
 									$group['users'][] = $ret['id'];
 									$userman->updateGroup($group['id'],$group['groupname'], $group['groupname'], $group['description'], $group['users']);
 								} elseif(!in_array($group['id'],$_POST['userman_group']) && in_array($ret['id'],$group['users'])) {
-									$group['users'] = array_diff($group['users'], array($ret['id']));
+									$group['users'] = array_diff($group['users'], [$ret['id']]);
 									$userman->updateGroup($group['id'],$group['groupname'], $group['groupname'], $group['description'], $group['users']);
 								}
 							}
@@ -357,7 +323,7 @@ function userman_configprocess() {
 							$groups = $userman->getGroupsByID($ret['id']);
 							foreach($groups as $gid) {
 								$group = $userman->getGroupByGID($gid);
-								$group['users'] = array_diff($group['users'], array($ret['id']));
+								$group['users'] = array_diff($group['users'], [$ret['id']]);
 								$userman->updateGroup($group['id'],$group['groupname'], $group['groupname'], $group['description'], $group['users']);
 							}
 						}
@@ -376,7 +342,7 @@ function userman_configprocess() {
 				$email = !empty($_REQUEST['email']) ? $_REQUEST['email'] : '';
 				$password = $_REQUEST['userman_password'];
 				$directory = $_REQUEST['userman_directory'];
-				$ret = $userman->addUserByDirectory($directory, $username, $password, $extension, _('Autogenerated user on new device creation'), array('email' => $email, 'displayname' => $displayname));
+				$ret = $userman->addUserByDirectory($directory, $username, $password, $extension, _('Autogenerated user on new device creation'), ['email' => $email, 'displayname' => $displayname]);
 				if($ret['status'] && $usettings['modifyGroup']) {
 					if(!empty($_POST['userman_group'])) {
 						$groups = $userman->getAllGroups($directory);
@@ -385,7 +351,7 @@ function userman_configprocess() {
 								$group['users'][] = $ret['id'];
 								$userman->updateGroup($group['id'],$group['groupname'], $group['groupname'], $group['description'], $group['users']);
 							} elseif(!in_array($group['id'],$_POST['userman_group']) && in_array($ret['id'],$group['users'])) {
-								$group['users'] = array_diff($group['users'], array($ret['id']));
+								$group['users'] = array_diff($group['users'], [$ret['id']]);
 								$userman->updateGroup($group['id'],$group['groupname'], $group['groupname'], $group['description'], $group['users']);
 							}
 						}
@@ -393,7 +359,7 @@ function userman_configprocess() {
 						$groups = $userman->getGroupsByID($ret['id']);
 						foreach($groups as $gid) {
 							$group = $userman->getGroupByGID($gid);
-							$group['users'] = array_diff($group['users'], array($ret['id']));
+							$group['users'] = array_diff($group['users'], [$ret['id']]);
 							$userman->updateGroup($group['id'],$group['groupname'], $group['groupname'], $group['description'], $group['users']);
 						}
 					}
@@ -437,7 +403,7 @@ function userman_configprocess() {
 								$group['users'][] = $ret['id'];
 								$userman->updateGroup($group['id'],$group['groupname'], $group['groupname'], $group['description'], $group['users']);
 							} elseif(!in_array($group['id'],$_POST['userman_group']) && in_array($ret['id'],$group['users'])) {
-								$group['users'] = array_diff($group['users'], array($ret['id']));
+								$group['users'] = array_diff($group['users'], [$ret['id']]);
 								$userman->updateGroup($group['id'],$group['groupname'], $group['groupname'], $group['description'], $group['users']);
 							}
 						}
@@ -445,7 +411,7 @@ function userman_configprocess() {
 						$groups = $userman->getGroupsByID($ret['id']);
 						foreach($groups as $gid) {
 							$group = $userman->getGroupByGID($gid);
-							$group['users'] = array_diff($group['users'], array($ret['id']));
+							$group['users'] = array_diff($group['users'], [$ret['id']]);
 							$userman->updateGroup($group['id'],$group['groupname'], $group['groupname'], $group['description'], $group['users']);
 						}
 					}

@@ -1,11 +1,12 @@
 <?php
 namespace App\Schemas;
 
-class Openldap2 extends \Adldap\Schemas\OpenLDAP {
+use Adldap\Schemas\OpenLDAP;
+class Openldap2 extends OpenLDAP {
 	private $config;
 
 	public function __construct($config = null) {
-		$this->config = ((is_null($config)) ? array() : $config);
+		$this->config = ((is_null($config)) ? [] : $config);
 	}
 
 	// objectClassPerson has to be used as adldap2 determines the objectClass of users with it

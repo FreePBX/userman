@@ -3,8 +3,9 @@
 namespace Illuminate\Contracts\Container;
 
 use Closure;
+use Psr\Container\ContainerInterface;
 
-interface Container
+interface Container extends ContainerInterface
 {
     /**
      * Determine if the given abstract type has been bound.
@@ -20,6 +21,8 @@ interface Container
      * @param  string  $abstract
      * @param  string  $alias
      * @return void
+     *
+     * @throws \LogicException
      */
     public function alias($abstract, $alias);
 
@@ -27,7 +30,7 @@ interface Container
      * Assign a set of tags to a given binding.
      *
      * @param  array|string  $abstracts
-     * @param  array|mixed   ...$tags
+     * @param  array|mixed  ...$tags
      * @return void
      */
     public function tag($abstracts, $tags);
@@ -35,20 +38,29 @@ interface Container
     /**
      * Resolve all of the bindings for a given tag.
      *
-     * @param  array  $tag
-     * @return array
+     * @param  string  $tag
+     * @return iterable
      */
     public function tagged($tag);
 
     /**
      * Register a binding with the container.
      *
-     * @param  string|array  $abstract
+     * @param  string  $abstract
      * @param  \Closure|string|null  $concrete
      * @param  bool  $shared
      * @return void
      */
     public function bind($abstract, $concrete = null, $shared = false);
+
+    /**
+     * Bind a callback to resolve with Container::call.
+     *
+     * @param  array|string  $method
+     * @param  \Closure  $callback
+     * @return void
+     */
+    public function bindMethod($method, $callback);
 
     /**
      * Register a binding if it hasn't already been registered.
@@ -63,16 +75,43 @@ interface Container
     /**
      * Register a shared binding in the container.
      *
-     * @param  string|array  $abstract
+     * @param  string  $abstract
      * @param  \Closure|string|null  $concrete
      * @return void
      */
     public function singleton($abstract, $concrete = null);
 
     /**
+     * Register a shared binding if it hasn't already been registered.
+     *
+     * @param  string  $abstract
+     * @param  \Closure|string|null  $concrete
+     * @return void
+     */
+    public function singletonIf($abstract, $concrete = null);
+
+    /**
+     * Register a scoped binding in the container.
+     *
+     * @param  string  $abstract
+     * @param  \Closure|string|null  $concrete
+     * @return void
+     */
+    public function scoped($abstract, $concrete = null);
+
+    /**
+     * Register a scoped binding if it hasn't already been registered.
+     *
+     * @param  string  $abstract
+     * @param  \Closure|string|null  $concrete
+     * @return void
+     */
+    public function scopedIf($abstract, $concrete = null);
+
+    /**
      * "Extend" an abstract type in the container.
      *
-     * @param  string    $abstract
+     * @param  string  $abstract
      * @param  \Closure  $closure
      * @return void
      *
@@ -84,15 +123,25 @@ interface Container
      * Register an existing instance as shared in the container.
      *
      * @param  string  $abstract
-     * @param  mixed   $instance
-     * @return void
+     * @param  mixed  $instance
+     * @return mixed
      */
     public function instance($abstract, $instance);
 
     /**
-     * Define a contextual binding.
+     * Add a contextual binding to the container.
      *
      * @param  string  $concrete
+     * @param  string  $abstract
+     * @param  \Closure|string  $implementation
+     * @return void
+     */
+    public function addContextualBinding($concrete, $abstract, $implementation);
+
+    /**
+     * Define a contextual binding.
+     *
+     * @param  string|array  $concrete
      * @return \Illuminate\Contracts\Container\ContextualBindingBuilder
      */
     public function when($concrete);
@@ -106,12 +155,22 @@ interface Container
     public function factory($abstract);
 
     /**
+     * Flush the container of all bindings and resolved instances.
+     *
+     * @return void
+     */
+    public function flush();
+
+    /**
      * Resolve the given type from the container.
      *
      * @param  string  $abstract
+     * @param  array  $parameters
      * @return mixed
+     *
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    public function make($abstract);
+    public function make($abstract, array $parameters = []);
 
     /**
      * Call the given Closure / class@method and inject its dependencies.
@@ -126,15 +185,24 @@ interface Container
     /**
      * Determine if the given abstract type has been resolved.
      *
-     * @param  string $abstract
+     * @param  string  $abstract
      * @return bool
      */
     public function resolved($abstract);
 
     /**
+     * Register a new before resolving callback.
+     *
+     * @param  \Closure|string  $abstract
+     * @param  \Closure|null  $callback
+     * @return void
+     */
+    public function beforeResolving($abstract, Closure $callback = null);
+
+    /**
      * Register a new resolving callback.
      *
-     * @param  string    $abstract
+     * @param  \Closure|string  $abstract
      * @param  \Closure|null  $callback
      * @return void
      */
@@ -143,7 +211,7 @@ interface Container
     /**
      * Register a new after resolving callback.
      *
-     * @param  string    $abstract
+     * @param  \Closure|string  $abstract
      * @param  \Closure|null  $callback
      * @return void
      */

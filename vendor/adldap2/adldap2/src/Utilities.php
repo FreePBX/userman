@@ -57,6 +57,10 @@ class Utilities
      */
     public static function binarySidToString($value)
     {
+        if (empty($value)) {
+            return;
+        }
+
         // Revision - 8bit unsigned int (C1)
         // Count - 8bit unsigned int (C1)
         // 2 null bytes
@@ -105,7 +109,7 @@ class Utilities
      */
     public static function binaryGuidToString($binGuid)
     {
-        if (trim($binGuid) == '' || is_null($binGuid)) {
+        if ($binGuid === null || trim($binGuid) === '') {
             return;
         }
 

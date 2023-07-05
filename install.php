@@ -1,15 +1,15 @@
 <?php
 
-$freepbx = \FreePBX::Create();
+$freepbx = FreePBX::Create();
 
 /* When Legacy restore(less than 2.12) where authtype itself missing from advanced settings **/
 $sql = "Update freepbx_settings SET `readonly`='0',`value` = 'usermanager' WHERE `keyword` ='AUTHTYPE'";
-\FreePBX::Database()->query($sql);
+FreePBX::Database()->query($sql);
 if($freepbx->Config->get('AUTHTYPE') == '') {
 	out('AUTHTYPE is missing we are adding back');
 	$description = "Authentication type to use for web admin. If type set to database, the primary AMP admin credentials will be the AMPDBUSER/AMPDBPASS above. When using database you can create users that are restricted to only certain module pages. When set to none, you should make sure you have provided security at the apache level. When set to webserver, FreePBX will expect authentication to happen at the apache level, but will take the user credentials and apply any restrictions as if it were in database mode.";
 	$sql = "INSERT INTO freepbx_settings (`keyword`,`value`,`name`,`description`,`type`,`options`,`defaultval`,`readonly`,`category`) VALUES('AUTHTYPE','usermanager','Authorization Type','$description','select','database,none,webserver,usermanager','usermanager','0','System Setup')";
-	\FreePBX::Database()->query($sql);
+	FreePBX::Database()->query($sql);
 	out("Added the AUTHTYPE settings");
 }
 createDefaultUCPTemplate();
@@ -18,7 +18,7 @@ if($freepbx->Config->get('AUTHTYPE') == "database") {
 	$freepbx->Config->update('AUTHTYPE','usermanager');
 }
 
-$set = array();
+$set = [];
 $set['value'] = '';
 $set['defaultval'] =& $set['value'];
 $set['readonly'] = 0;
@@ -39,7 +39,7 @@ function cronjobEntry($freepbx){
 		$freepbxCron = $freepbx->Cron($AMPASTERISKWEBUSER);
 		$crons = $freepbxCron->getAll();
 		foreach($crons as $cron) {
-			if(preg_match("/fwconsole userman sync$/",$cron) || preg_match("/fwconsole userman --syncall /",$cron)) {
+			if(preg_match("/fwconsole userman sync$/",(string) $cron) || preg_match("/fwconsole userman --syncall /",(string) $cron)) {
 				$freepbxCron->remove($cron);
 				out('Removed existing Cron entry '.$cron);
 			}
@@ -51,38 +51,38 @@ function cronjobEntry($freepbx){
 function createDefaultUCPTemplate(){
 	//No harm if delete templatecreator on install  ,as we auto generated this from Userman page
 	$delete = "delete from kvstore_FreePBX_modules_Userman where `id` = 'templatecreator'";
-	$sth = \FreePBX::Database()->prepare($delete);
+	$sth = FreePBX::Database()->prepare($delete);
 	$sth->execute();
 	//check any entries are there before we insert
 	$select = "SELECT COUNT(*) as rowcount FROM userman_ucp_templates ";
-	$sth = \FreePBX::Database()->prepare($select);
+	$sth = FreePBX::Database()->prepare($select);
 	$sth->execute();
 	$count = $sth->fetch(PDO::FETCH_ASSOC);
 	if($count['rowcount'] == 0) {
 		// add default template if it is not added
 		$sql = "SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_NAME ='userman_ucp_templates'";
-		$sth = \FreePBX::Database()->prepare($sql);
+		$sth = FreePBX::Database()->prepare($sql);
 		$sth->execute();
 		$row = $sth->fetch(PDO::FETCH_ASSOC);
 		if($row['AUTO_INCREMENT'] == 1){
-			$brand = \FreePBX::Config()->get('DASHBOARD_FREEPBX_BRAND');
+			$brand = FreePBX::Config()->get('DASHBOARD_FREEPBX_BRAND');
 			$brandtemp = $brand.'-Template';
 			out("Adding default template settings ".$brandtemp );
 			// add the defult template
 			$insert = "INSERT INTO userman_ucp_templates(`templatename`,`description`,`importedfromuname`)VALUES(?,'Template with Vm and CDR widgets','Default-Template')";
-			$sth = \FreePBX::Database()->prepare($insert);
-			$sth->execute(array($brandtemp));
+			$sth = FreePBX::Database()->prepare($insert);
+			$sth->execute([$brandtemp]);
 			//insert the template dashboard
 			$truncate = "truncate userman_template_settings";
-			$sth = \FreePBX::Database()->prepare($truncate);
+			$sth = FreePBX::Database()->prepare($truncate);
 			$sth->execute();
 			$sql = "INSERT INTO userman_template_settings(`tid`,`module`,`key`,`val`,`type`) VALUES(:tid,'UCP',:key,:val,:type)";
-			$sth = \FreePBX::Database()->prepare($sql);
-			$sth->execute(array(':tid' => 1, ':key' => 'dashboards',':val' => '[{"id":"513cb28f-f834-4b66-8d36-4405bd302520","name":"'.$brand.'-dashboard"}]',':type'=>'json-arr'));
+			$sth = FreePBX::Database()->prepare($sql);
+			$sth->execute([':tid' => 1, ':key' => 'dashboards', ':val' => '[{"id":"513cb28f-f834-4b66-8d36-4405bd302520","name":"'.$brand.'-dashboard"}]', ':type'=>'json-arr']);
 			//insert template settings
 			$sql = "INSERT INTO userman_template_settings(`tid`,`module`,`key`,`val`,`type`) VALUES(:tid,'UCP',:key,:val,:type)";
-			$sth = \FreePBX::Database()->prepare($sql);
-			$sth->execute(array(':tid' => 1, ':key' => 'dashboard-layout-513cb28f-f834-4b66-8d36-4405bd302520',':val' => '[{"id":"eac6afa4-2a21-43bc-9b4d-e34d06ceeaa6","widget_module_name":"Call History","name":"XXXX","rawname":"cdr","widget_type_id":"XXX","has_settings":false,"size_x":0,"size_y":0,"col":6,"row":7,"locked":false},{"id":"122acb19-b22f-4e71-9ba6-5e0f201c9142","widget_module_name":"Voicemail","name":"XXXX","rawname":"voicemail","widget_type_id":"XXX","has_settings":true,"size_x":6,"size_y":0,"col":6,"row":7,"locked":false}]',':type'=>''));	
+			$sth = FreePBX::Database()->prepare($sql);
+			$sth->execute([':tid' => 1, ':key' => 'dashboard-layout-513cb28f-f834-4b66-8d36-4405bd302520', ':val' => '[{"id":"eac6afa4-2a21-43bc-9b4d-e34d06ceeaa6","widget_module_name":"Call History","name":"XXXX","rawname":"cdr","widget_type_id":"XXX","has_settings":false,"size_x":0,"size_y":0,"col":6,"row":7,"locked":false},{"id":"122acb19-b22f-4e71-9ba6-5e0f201c9142","widget_module_name":"Voicemail","name":"XXXX","rawname":"voicemail","widget_type_id":"XXX","has_settings":true,"size_x":6,"size_y":0,"col":6,"row":7,"locked":false}]', ':type'=>'']);	
 		} else {
 			out("Default template already added");
 		}

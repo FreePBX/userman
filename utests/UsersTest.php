@@ -39,19 +39,19 @@ class ModulesTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testUpdateUserExtraData() {
-		$r = self::$u->updateUserExtraData(self::$id, array("email" => "test@domain.com"));
+		$r = self::$u->updateUserExtraData(self::$id, ["email" => "test@domain.com"]);
 		$this->assertTrue($r, "Unable to update user extra info for reason: " . $r['message']);
 	}
 
 	public function testAddGroup() {
-		$r = self::$u->addGroup("usermanTest", "Test", array(self::$id));
+		$r = self::$u->addGroup("usermanTest", "Test", [self::$id]);
 		self::$gid = $r['id'];
 		$this->assertTrue($r['status'], "Unable to add group user for reason: " . $r['message']);
 	}
 
 	public function testUpdateGroup() {
 		//$gid, $prevGroupname, $groupname, $description=null, $users=array()
-		$r = self::$u->updateGroup(self::$gid, "usermanTest", "usermanTest", "Test", array(self::$id));
+		$r = self::$u->updateGroup(self::$gid, "usermanTest", "usermanTest", "Test", [self::$id]);
 		$this->assertTrue($r['status'], "Unable to update group user for reason: " . $r['message']);
 	}
 
@@ -61,7 +61,7 @@ class ModulesTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function searchUser() {
-		$results = array();
+		$results = [];
 		$r = self::$u->search("usermanTest", $results);
 		$this->assertTrue(!empty($r), "No users were returned!");
 	}

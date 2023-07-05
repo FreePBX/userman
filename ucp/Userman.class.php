@@ -72,13 +72,9 @@ class Userman extends Modules
 	 */
 	public function ajaxHandler()
 	{
-		switch ($_REQUEST['command']) {
-			case 'checkPasswordReminder':
-				return $this->userman->pwdExpReminder()->checkPasswordReminder($_REQUEST);
-				break;
-			default:
-				return false;
-				break;
-		}
+		return match ($_REQUEST['command']) {
+      'checkPasswordReminder' => $this->userman->pwdExpReminder()->checkPasswordReminder($_REQUEST),
+      default => false,
+  };
 	}
 }

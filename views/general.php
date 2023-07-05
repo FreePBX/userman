@@ -536,7 +536,7 @@
 							</span>
 						</div>
 						<div class="col-md-5">
-							<input type="number" class="form-control" id="passwordExpirationDays" min="1" name="passwordExpirationDays" value=<?php echo $passwordExpirationDays ? $passwordExpirationDays : "90" ?>>
+							<input type="number" class="form-control" id="passwordExpirationDays" min="1" name="passwordExpirationDays" value=<?php echo $passwordExpirationDays ?: "90" ?>>
 						</div>
 					</div>
 				</div>
@@ -555,7 +555,7 @@
 							</span>
 						</div>
 						<div class="col-md-5">
-							<input type="number" class="form-control" id="passwordExpiryReminderDays" min="1" name="passwordExpiryReminderDays" value=<?php echo $passwordExpiryReminderDays ? $passwordExpiryReminderDays : "5" ?>>
+							<input type="number" class="form-control" id="passwordExpiryReminderDays" min="1" name="passwordExpiryReminderDays" value=<?php echo $passwordExpiryReminderDays ?: "5" ?>>
 						</div>
 					</div>
 				</div>

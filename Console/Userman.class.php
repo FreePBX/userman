@@ -3,6 +3,9 @@
 namespace FreePBX\Console\Command;
 
 //Symfony stuff all needed add these
+use FreePBX;
+use Exception;
+use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -17,28 +20,20 @@ class Userman extends Command {
 	protected function configure() {
 		$this->setName('userman')
 			->setDescription(_('User Manager'))
-			->setDefinition(array(
-				new InputOption('syncall', null, InputOption::VALUE_NONE, _('Syncronize all directories')),
-				new InputOption('sync', null, InputOption::VALUE_REQUIRED, _('Syncronize a single directory by id (obtained from --list)')),
-				new InputOption('force', null, InputOption::VALUE_NONE, _('Force syncronization')),
-				new InputOption('list', null, InputOption::VALUE_NONE, _('List directories')),
-				new InputOption('deletegenerictemplate', null, InputOption::VALUE_NONE, _('Delete generic templates user'))
-			));
+			->setDefinition([new InputOption('syncall', null, InputOption::VALUE_NONE, _('Syncronize all directories')), new InputOption('sync', null, InputOption::VALUE_REQUIRED, _('Syncronize a single directory by id (obtained from --list)')), new InputOption('force', null, InputOption::VALUE_NONE, _('Force syncronization')), new InputOption('list', null, InputOption::VALUE_NONE, _('List directories')), new InputOption('deletegenerictemplate', null, InputOption::VALUE_NONE, _('Delete generic templates user'))]);
 	}
 	protected function execute(InputInterface $input, OutputInterface $output){
-		$force = $input->getOption('force');
+		$status = [];
+  		$force = $input->getOption('force');
 		$sync = $input->getOption('sync');
-		$userman = \FreePBX::create()->Userman;
+		$userman = FreePBX::create()->Userman;
 		if($input->getOption('list')) {
 			$table = new Table($output);
-			$table->setHeaders(array(_('ID'),_('Name')));
-			$rows = array();
+			$table->setHeaders([_('ID'), _('Name')]);
+			$rows = [];
 			$directories = $userman->getAllDirectories();
 			foreach($directories as $directory) {
-				$rows[] = array(
-					$directory['id'],
-					$directory['name']
-				);
+				$rows[] = [$directory['id'], $directory['name']];
 			}
 			$table->setRows($rows);
 			$table->render();
@@ -58,7 +53,7 @@ class Userman extends Command {
 		if($input->getOption('deletegenerictemplate')) {
 			try {
 				$status = $userman->deletetemplatecreator();
-			} catch(\Exception $e) {
+			} catch(Exception $e) {
 				$output->writeln("\t<error>".$e->getMessage()."</error>");
 				$output->writeln("\t Already Deleted ");
 			}
@@ -81,7 +76,7 @@ class Userman extends Command {
 	}
 
 	private function syncDirectory($directory,$output,$force=false) {
-		$userman = \FreePBX::create()->Userman;
+		$userman = FreePBX::create()->Userman;
 		if(!$directory['active']) {
 			$output->writeln("Directory '".$directory['name']."' is not active. Skipping");
 			return;
@@ -119,7 +114,7 @@ class Userman extends Command {
 				$userman->lockDirectory($directory['id']);
 				try {
 					$dir->sync($output);
-				} catch(\Exception $e) {
+				} catch(Exception $e) {
 					$output->writeln("\t<error>".$e->getMessage()."</error>");
 				}
 				$userman->unlockDirectory($directory['id']);
@@ -134,7 +129,7 @@ class Userman extends Command {
 	}
 
 	private function setLock() {
-		$ASTRUNDIR = \FreePBX::Config()->get("ASTRUNDIR");
+		$ASTRUNDIR = FreePBX::Config()->get("ASTRUNDIR");
 		$lock = $ASTRUNDIR."/userman.lock";
 
 		if(!$this->checkLock()) {
@@ -143,13 +138,13 @@ class Userman extends Command {
 			return true;
 		} else {
 			$pid = file_get_contents($lock);
-			throw new \Exception("User Manager is already syncing (Process: ".$pid.")");
+			throw new Exception("User Manager is already syncing (Process: ".$pid.")");
 		}
 		return false;
 	}
 
 	private function checkLock() {
-		$ASTRUNDIR = \FreePBX::Config()->get("ASTRUNDIR");
+		$ASTRUNDIR = FreePBX::Config()->get("ASTRUNDIR");
 		$lock = $ASTRUNDIR."/userman.lock";
 		if(file_exists($lock)) {
 			$pid = file_get_contents($lock);
@@ -163,7 +158,7 @@ class Userman extends Command {
 	}
 
 	private function removeLock() {
-		$ASTRUNDIR = \FreePBX::Config()->get("ASTRUNDIR");
+		$ASTRUNDIR = FreePBX::Config()->get("ASTRUNDIR");
 		$lock = $ASTRUNDIR."/userman.lock";
 		if(file_exists($lock)) {
 			unlink($lock);
@@ -172,12 +167,10 @@ class Userman extends Command {
 	}
 
 	/**
-	 * @param InputInterface $input
-	 * @param OutputInterface $output
-	 * @return int
-	 * @throws \Symfony\Component\Console\Exception\ExceptionInterface
-	 */
-	protected function outputHelp(InputInterface $input, OutputInterface $output)	 {
+  * @return int
+  * @throws ExceptionInterface
+  */
+ protected function outputHelp(InputInterface $input, OutputInterface $output)	 {
 		$help = new HelpCommand();
 		$help->setCommand($this);
 		return $help->run($input, $output);

@@ -6,20 +6,20 @@
 //
 namespace FreePBX\modules\Userman\Auth;
 
+use Exception;
+use FreePBX;
 class Voicemail extends Auth {
 
-	private static $defaults = array(
-		"context" => "default"
-	);
+	private static array $defaults = ["context" => "default"];
 
-	public function __construct($userman, $freepbx, $config=array()) {
+	public function __construct($userman, $freepbx, $config=[]) {
 		parent::__construct($userman, $freepbx, $config);
 		$this->FreePBX = $freepbx;
 		$this->userman = $userman;
 
 		$validKeys = array_merge(self::$defaults);
 		foreach($validKeys as $key => $value) {
-			$this->config[$key] = (isset($config[$key])) ? $config[$key] : '';
+			$this->config[$key] = $config[$key] ?? '';
 		}
 	}
 
@@ -30,9 +30,7 @@ class Voicemail extends Auth {
 	* @return array          Array of information about this driver
 	*/
 	public static function getInfo($userman, $freepbx) {
-		return array(
-			"name" => _("Asterisk Voicemail")
-		);
+		return ["name" => _("Asterisk Voicemail")];
 	}
 
 	/**
@@ -46,23 +44,8 @@ class Voicemail extends Auth {
 		$config['context'] = !empty($config['context']) ? $config['context'] : self::$defaults['context'];
 		
 		$typeauth = self::getShortName();
-		$form_data = array(
-			array(
-				'name'		=> $typeauth.'-context',
-				'title'		=> _("Context"),
-				'type' 		=> 'text',
-				'index'		=> true,
-				'required'	=> false,
-				'opts'		=> array(
-					'value' => isset($config['context']) ? $config['context'] : '',
-				),
-				'help'		=> _("The voicemail context to get users from"),
-			),
-		);
-		return array(
-			'auth' => $typeauth,
-			'data' => $form_data,
-		);
+		$form_data = [['name'		=> $typeauth.'-context', 'title'		=> _("Context"), 'type' 		=> 'text', 'index'		=> true, 'required'	=> false, 'opts'		=> ['value' => $config['context'] ?? ''], 'help'		=> _("The voicemail context to get users from")]];
+		return ['auth' => $typeauth, 'data' => $form_data];
 	}
 
 	/**
@@ -73,17 +56,14 @@ class Voicemail extends Auth {
 	 */
 	public static function saveConfig($userman, $freepbx) {
 		$typeauth = self::getShortName();
-		$config = array(
-			'authtype' => $typeauth,
-			"context" => $_REQUEST[$typeauth.'-context']
-		);
+		$config = ['authtype' => $typeauth, "context" => $_REQUEST[$typeauth.'-context']];
 		return $config;
 	}
 
 	public function sync($output=null) {
 		if(php_sapi_name() !== 'cli') {
 			$path = $this->FreePBX->Config->get("AMPSBIN");
-			exec($path."/fwconsole userman --sync ".escapeshellarg($this->config['id'])." --force");
+			exec($path."/fwconsole userman --sync ".escapeshellarg((string) $this->config['id'])." --force");
 			return;
 		}
 
@@ -91,16 +71,11 @@ class Voicemail extends Auth {
 
 		$d = $this->FreePBX->Voicemail->getVoicemail(false);
 		if(!empty($d[$this->config['context']])) {
-			$valid = array();
+			$valid = [];
 			foreach($d[$this->config['context']] as $username => $d) {
 				$um = $this->linkUser($username, $username);
 				if($um['status']) {
-					$data = array(
-						"description" => $d['name'],
-						"displayname" => $d['name'],
-						"email" => str_replace("|",",",$d['email']),
-						"default_extension" => $username
-					);
+					$data = ["description" => $d['name'], "displayname" => $d['name'], "email" => str_replace("|",",",(string) $d['email']), "default_extension" => $username];
 					$this->updateUserData($um['id'], $data);
 					if($um['new']) {
 						$this->out("\t".sprintf(_("Added Voicemail User %s"),$username));
@@ -129,17 +104,7 @@ class Voicemail extends Auth {
 	 * Return an array of permissions for this adaptor
 	 */
 	public function getPermissions() {
-		return array(
-			"addGroup" => true,
-			"addUser" => false,
-			"modifyGroup" => true,
-			"modifyUser" => false,
-			"modifyGroupAttrs" => true,
-			"modifyUserAttrs" => false,
-			"removeGroup" => true,
-			"removeUser" => false,
-			"changePassword" => false
-		);
+		return ["addGroup" => true, "addUser" => false, "modifyGroup" => true, "modifyUser" => false, "modifyGroupAttrs" => true, "modifyUserAttrs" => false, "removeGroup" => true, "removeUser" => false, "changePassword" => false];
 	}
 
 	/**
@@ -177,8 +142,8 @@ class Voicemail extends Auth {
 	* @param bool $encrypt Whether to encrypt the password or not. If this is false the system will still assume its hashed as sha1, so this is only useful if importing accounts with previous sha1 passwords
 	* @return array
 	*/
-	public function addUser($username, $password, $default='none', $description=null, $extraData=array(), $encrypt = true) {
-		return array("status" => false, "type" => "danger", "message" => _("Voicemail is in Read Only Mode. Addition denied"));
+	public function addUser($username, $password, $default='none', $description=null, $extraData=[], $encrypt = true) {
+		return ["status" => false, "type" => "danger", "message" => _("Voicemail is in Read Only Mode. Addition denied")];
 	}
 
 	/**
@@ -190,18 +155,18 @@ class Voicemail extends Auth {
 	 * @param string $description The group description
 	 * @param array  $users       users to add to said group (by ID)
 	 */
-	public function addGroup($groupname, $description=null, $users=array()) {
+	public function addGroup($groupname, $description=null, $users=[]) {
 		$sql = "INSERT INTO ".$this->groupTable." (`groupname`,`description`,`users`, `auth`) VALUES (:groupname,:description,:users,:directory)";
 		$sth = $this->db->prepare($sql);
 		try {
-		$sth->execute(array(':directory' => $this->config['id'],':groupname' => $groupname, ':description' => $description, ':users' => json_encode($users)));
-		} catch (\Exception $e) {
-			return array("status" => false, "type" => "danger", "message" => $e->getMessage());
+		$sth->execute([':directory' => $this->config['id'], ':groupname' => $groupname, ':description' => $description, ':users' => json_encode($users, JSON_THROW_ON_ERROR)]);
+		} catch (Exception $e) {
+			return ["status" => false, "type" => "danger", "message" => $e->getMessage()];
 		}
 
 		$id = $this->db->lastInsertId();
 		$this->addGroupHook($id, $groupname, $description, $users);
-		return array("status" => true, "type" => "success", "message" => _("Group Successfully Added"), "id" => $id);
+		return ["status" => true, "type" => "success", "message" => _("Group Successfully Added"), "id" => $id];
 	}
 
 	/**
@@ -217,16 +182,16 @@ class Voicemail extends Auth {
 	 * @param string $password The updated password, if null then password isn't updated
 	 * @return array
 	 */
-	public function updateUser($uid, $prevUsername, $username, $default='none', $description=null, $extraData=array(), $password=null,$nodisplay=false) {
+	public function updateUser($uid, $prevUsername, $username, $default='none', $description=null, $extraData=[], $password=null,$nodisplay=false) {
 		$sql = "UPDATE ".$this->userTable." SET `default_extension` = :default_extension WHERE `id` = :uid";
 		$sth = $this->db->prepare($sql);
 		try {
-			$sth->execute(array(':uid' => $uid, ':default_extension' => $default));
-		} catch (\Exception $e) {
-			return array("status" => false, "type" => "danger", "message" => $e->getMessage());
+			$sth->execute([':uid' => $uid, ':default_extension' => $default]);
+		} catch (Exception $e) {
+			return ["status" => false, "type" => "danger", "message" => $e->getMessage()];
 		}
 		$this->updateUserHook($uid, $prevUsername, $username, $description, $password, $extraData, $nodisplay);
-		return array("status" => true, "type" => "success", "message" => _("User updated"), "id" => $uid);
+		return ["status" => true, "type" => "success", "message" => _("User updated"), "id" => $uid];
 	}
 
 	/**
@@ -236,21 +201,21 @@ class Voicemail extends Auth {
 	 * @param string $description   The group description
 	 * @param array  $users         Array of users in this Group
 	 */
-	public function updateGroup($gid, $prevGroupname, $groupname, $description=null, $users=array(), $nodisplay=false) {
+	public function updateGroup($gid, $prevGroupname, $groupname, $description=null, $users=[], $nodisplay=false) {
 		$group = $this->getGroupByUsername($prevGroupname);
 		if(!$group || empty($group)) {
-			return array("status" => false, "type" => "danger", "message" => sprintf(_("Group '%s' Does Not Exist"),$group));
+			return ["status" => false, "type" => "danger", "message" => sprintf(_("Group '%s' Does Not Exist"),$group)];
 		}
 		$sql = "UPDATE ".$this->groupTable." SET `groupname` = :groupname, `description` = :description, `users` = :users WHERE  `id` = :gid";
 		$sth = $this->db->prepare($sql);
 		try {
-		 $sth->execute(array(':groupname' => $groupname, ':gid' => $gid, ':description' => $description, ':users' => json_encode($users)));
-		} catch (\Exception $e) {
-			return array("status" => false, "type" => "danger", "message" => $e->getMessage());
+		 $sth->execute([':groupname' => $groupname, ':gid' => $gid, ':description' => $description, ':users' => json_encode($users, JSON_THROW_ON_ERROR)]);
+		} catch (Exception $e) {
+			return ["status" => false, "type" => "danger", "message" => $e->getMessage()];
 		}
 		$message = _("Updated Group");
 		$this->updateGroupHook($gid, $prevGroupname, $groupname, $description, $users, $nodisplay);
-		return array("status" => true, "type" => "success", "message" => $message, "id" => $gid);
+		return ["status" => true, "type" => "success", "message" => $message, "id" => $gid];
 	}
 
 	/**
@@ -261,14 +226,14 @@ class Voicemail extends Auth {
 	public function checkCredentials($username, $password) {
 		try {
 			$d = $this->FreePBX->Voicemail->getVoicemail();
-		} catch(\Exception $e) {
+		} catch(Exception) {
 			$path = $this->FreePBX->Config->get("AMPWEBROOT");
 			$moduledir = $path."/admin/modules/voicemail";
 			$modulename = "voicemail";
 			$mn = ucfirst($modulename);
 			$bmofile = "$moduledir/$mn.class.php";
 			if (file_exists($bmofile)) {
-				\FreePBX::create()->injectClass($mn, $bmofile);
+				FreePBX::create()->injectClass($mn, $bmofile);
 			}
 			$d = $this->FreePBX->Voicemail->getVoicemail();
 		}
@@ -276,7 +241,7 @@ class Voicemail extends Auth {
 			if($password === $d[$this->config['context']][$username]['pwd']) {
 				//Injecting breaks how FreePBX protects itself
 				//To fix this just force a refresh of modules
-				$this->FreePBX->Modules->active_modules = array();
+				$this->FreePBX->Modules->active_modules = [];
 				$user = $this->getUserByUsername($username);
 				return !empty($user['id']) ? $user['id'] : false;
 			}

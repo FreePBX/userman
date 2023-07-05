@@ -4,6 +4,8 @@
 //	Copyright 2013 Schmooze Com Inc.
 //
 namespace FreePBX\modules\Userman\Auth;
+use PDO;
+use Exception;
 use Hautelook\Phpass\PasswordHash;
 
 class Freepbx extends Auth {
@@ -20,9 +22,7 @@ class Freepbx extends Auth {
 	 */
 	public static function getInfo($userman, $freepbx) {
 		$brand = \FreePBX::Config()->get("DASHBOARD_FREEPBX_BRAND");
-		return array(
-			"name" => sprintf(_("%s Internal Directory"),$brand)
-		);
+		return ["name" => sprintf(_("%s Internal Directory"),$brand)];
 	}
 
 	public function getDefaultGroups() {
@@ -39,29 +39,12 @@ class Freepbx extends Auth {
 	public static function getConfig($userman, $freepbx, $config) {
 		$sql = "SELECT * FROM userman_groups WHERE auth = ? ORDER BY priority";
 		$sth = $freepbx->Database->prepare($sql);
-		$sth->execute(array($config['id']));
-		$groups = $sth->fetchAll(\PDO::FETCH_ASSOC);
+		$sth->execute([$config['id'] ?? '']);
+		$groups = $sth->fetchAll(PDO::FETCH_ASSOC);
 
 		$typeauth = self::getShortName();
-		$form_data = array(
-			array(
-				'name'		=> $typeauth.'-default-groups',
-				'title'		=> _('Default Groups'),
-				'type' 		=> 'list_multiple',
-				'index'		=> true,
-				'list'		=> $groups,
-				'value'		=> (! empty($config['default-groups']) ? $config['default-groups'] : array()),
-				'keys'		=> array(
-					'value' => 'id',
-					'text' 	=> 'groupname',
-				),
-				'help'		=> _("Select which groups new users are added to when they are created"),
-			),
-		);
-		return array(
-			'auth' => $typeauth,
-			'data' => $form_data,
-		);
+		$form_data = [['name'		=> $typeauth.'-default-groups', 'title'		=> _('Default Groups'), 'type' 		=> 'list_multiple', 'index'		=> true, 'list'		=> $groups, 'value'		=> (! empty($config['default-groups']) ? $config['default-groups'] : []), 'keys'		=> ['value' => 'id', 'text' 	=> 'groupname'], 'help'		=> _("Select which groups new users are added to when they are created")]];
+		return ['auth' => $typeauth, 'data' => $form_data];
 	}
 
 	/**
@@ -71,10 +54,7 @@ class Freepbx extends Auth {
 	 */
 	public static function saveConfig($userman, $freepbx) {
 		$typeauth = self::getShortName();
-		$config = array(
-			'authtype' => $typeauth,
-			"default-groups" => $_REQUEST[$typeauth.'-default-groups']
-		);
+		$config = ['authtype' => $typeauth, "default-groups" => $_REQUEST[$typeauth.'-default-groups']];
 		return $config;
 	}
 
@@ -113,15 +93,15 @@ class Freepbx extends Auth {
 	* @param bool $encrypt Whether to encrypt the password or not. If this is false the system will still assume its hashed, so this is only useful if importing accounts with previous hashed passwords
 	* @return array
 	*/
-	public function addUser($username, $password, $default='none', $description=null, $extraData=array(), $encrypt = true) {
+	public function addUser($username, $password, $default='none', $description=null, $extraData=[], $encrypt = true) {
 		$request = $_REQUEST;
 		$display = !empty($request['display']) ? $request['display'] : "";
 		$description = !empty($description) ? $description : null;
 		if(empty($username) || empty($password)) {
-			return array("status" => false, "type" => "danger", "message" => _("Username/Password Can Not Be Blank!"));
+			return ["status" => false, "type" => "danger", "message" => _("Username/Password Can Not Be Blank!")];
 		}
 		if($this->getUserByUsername($username)) {
-			return array("status" => false, "type" => "danger", "message" => sprintf(_("User '%s' Already Exists"),$username));
+			return ["status" => false, "type" => "danger", "message" => sprintf(_("User '%s' Already Exists"),$username)];
 		}
 		$sql = "INSERT INTO ".$this->userTable." (`username`,`auth`,`password`,`description`,`default_extension`) VALUES (:username,:directory,:password,:description,:default_extension)";
 		$sth = $this->db->prepare($sql);
@@ -132,30 +112,30 @@ class Freepbx extends Auth {
 			$pw = $password;
 		}
 		try {
-			$sth->execute(array(':directory' => $this->config['id'], ':username' => $username, ':password' => $pw, ':description' => $description, ':default_extension' => $default));
-		} catch (\Exception $e) {
-			return array("status" => false, "type" => "danger", "message" => $e->getMessage());
+			$sth->execute([':directory' => $this->config['id'], ':username' => $username, ':password' => $pw, ':description' => $description, ':default_extension' => $default]);
+		} catch (Exception $e) {
+			return ["status" => false, "type" => "danger", "message" => $e->getMessage()];
 		}
 
 		$id = $this->db->lastInsertId();
 		$this->updateUserData($id,$extraData);
 		$this->addUserHook($id, $username, $description, $password, $encrypt, $extraData);
-		return array("status" => true, "type" => "success", "message" => _("User Successfully Added"), "id" => $id);
+		return ["status" => true, "type" => "success", "message" => _("User Successfully Added"), "id" => $id];
 	}
 
-	public function addGroup($groupname, $description=null, $users=array(), $extraData=array()) {
+	public function addGroup($groupname, $description=null, $users=[], $extraData=[]) {
 		$sql = "INSERT INTO ".$this->groupTable." (`groupname`,`description`,`users`, `auth`) VALUES (:groupname,:description,:users,:directory)";
 		$sth = $this->db->prepare($sql);
 		try {
-			$sth->execute(array(':directory' => $this->config['id'],':groupname' => $groupname, ':description' => $description, ':users' => json_encode($users)));
-		} catch (\Exception $e) {
-			return array("status" => false, "type" => "danger", "message" => $e->getMessage());
+			$sth->execute([':directory' => $this->config['id'], ':groupname' => $groupname, ':description' => $description, ':users' => json_encode($users, JSON_THROW_ON_ERROR)]);
+		} catch (Exception $e) {
+			return ["status" => false, "type" => "danger", "message" => $e->getMessage()];
 		}
 
 		$id = $this->db->lastInsertId();
 		$this->updateGroupData($id,$extraData);
 		$this->addGroupHook($id, $groupname, $description, $users);
-		return array("status" => true, "type" => "success", "message" => _("Group Successfully Added"), "id" => $id);
+		return ["status" => true, "type" => "success", "message" => _("Group Successfully Added"), "id" => $id];
 	}
 
 	/**
@@ -172,13 +152,13 @@ class Freepbx extends Auth {
 	* @param string $password The updated password, if null then password isn't updated
 	* @return array
 	*/
-	public function updateUser($uid, $prevUsername, $username, $default='none', $description=null, $extraData=array(), $password=null, $nodisplay = false) {
+	public function updateUser($uid, $prevUsername, $username, $default='none', $description=null, $extraData=[], $password=null, $nodisplay = false) {
 		$request = $_REQUEST;
 		$display = !empty($request['display']) ? $request['display'] : "";
 		$description = !empty($description) ? $description : null;
 		$user = $this->getUserByUsername($prevUsername);
 		if(!$user || empty($user)) {
-			return array("status" => false, "type" => "danger", "message" => sprintf(_("User '%s' Does Not Exist"),$prevUsername));
+			return ["status" => false, "type" => "danger", "message" => sprintf(_("User '%s' Does Not Exist"),$prevUsername)];
 		}
 
 		if(isset($password)) {
@@ -186,29 +166,29 @@ class Freepbx extends Auth {
 			$sth = $this->db->prepare($sql);
 			try {
 				$passwordHasher = new PasswordHash(8,false);
-				$sth->execute(array(':username' => $username, ':uid' => $uid, ':description' => $description, ':password' => $passwordHasher->HashPassword($password), ':default_extension' => $default));
-			} catch (\Exception $e) {
-				return array("status" => false, "type" => "danger", "message" => $e->getMessage());
+				$sth->execute([':username' => $username, ':uid' => $uid, ':description' => $description, ':password' => $passwordHasher->HashPassword($password), ':default_extension' => $default]);
+			} catch (Exception $e) {
+				return ["status" => false, "type" => "danger", "message" => $e->getMessage()];
 			}
 		} elseif(($prevUsername != $username) || ($user['description'] != $description) || $user['default_extension'] != $default) {
 			if(($prevUsername != $username) && $this->getUserByUsername($username)) {
-				return array("status" => false, "type" => "danger", "message" => sprintf(_("User '%s' Already Exists"),$username));
+				return ["status" => false, "type" => "danger", "message" => sprintf(_("User '%s' Already Exists"),$username)];
 			}
 			$sql = "UPDATE ".$this->userTable." SET `username` = :username, `description` = :description, `default_extension` = :default_extension WHERE `id` = :uid";
 			$sth = $this->db->prepare($sql);
 			try {
-				$sth->execute(array(':username' => $username, ':uid' => $uid, ':description' => $description, ':default_extension' => $default));
-			} catch (\Exception $e) {
-				return array("status" => false, "type" => "danger", "message" => $e->getMessage());
+				$sth->execute([':username' => $username, ':uid' => $uid, ':description' => $description, ':default_extension' => $default]);
+			} catch (Exception $e) {
+				return ["status" => false, "type" => "danger", "message" => $e->getMessage()];
 			}
 		}
 		$message = _("Updated User");
 
 		if(!$this->updateUserData($user['id'],$extraData)) {
-			return array("status" => false, "type" => "danger", "message" => _("An Unknown error occured while trying to update user data"));
+			return ["status" => false, "type" => "danger", "message" => _("An Unknown error occured while trying to update user data")];
 		}
 		$this->updateUserHook($uid, $prevUsername, $username, $description, $password, $extraData, $nodisplay);
-		return array("status" => true, "type" => "success", "message" => $message, "id" => $user['id']);
+		return ["status" => true, "type" => "success", "message" => $message, "id" => $user['id']];
 	}
 
 	/**
@@ -218,24 +198,24 @@ class Freepbx extends Auth {
 	* @param string $description   The group description
 	* @param array  $users         Array of users in this Group
 	*/
-	public function updateGroup($gid, $prevGroupname, $groupname, $description=null, $users=array(), $nodisplay = false, $extraData=array()) {
+	public function updateGroup($gid, $prevGroupname, $groupname, $description=null, $users=[], $nodisplay = false, $extraData=[]) {
 		$group = $this->getGroupByUsername($prevGroupname);
 		if(!$group || empty($group)) {
-			return array("status" => false, "type" => "danger", "message" => sprintf(_("Group '%s' Does Not Exist"),$group));
+			return ["status" => false, "type" => "danger", "message" => sprintf(_("Group '%s' Does Not Exist"),$group)];
 		}
 		$sql = "UPDATE ".$this->groupTable." SET `groupname` = :groupname, `description` = :description, `users` = :users WHERE `id` = :gid";
 		$sth = $this->db->prepare($sql);
 		try {
-			$sth->execute(array(':groupname' => $groupname, ':gid' => $gid, ':description' => $description, ':users' => json_encode($users)));
-		} catch (\Exception $e) {
-			return array("status" => false, "type" => "danger", "message" => $e->getMessage());
+			$sth->execute([':groupname' => $groupname, ':gid' => $gid, ':description' => $description, ':users' => json_encode($users, JSON_THROW_ON_ERROR)]);
+		} catch (Exception $e) {
+			return ["status" => false, "type" => "danger", "message" => $e->getMessage()];
 		}
 		if(!$this->updateGroupData($gid,$extraData)) {
-			return array("status" => false, "type" => "danger", "message" => _("An Unknown error occured while trying to update user data"));
+			return ["status" => false, "type" => "danger", "message" => _("An Unknown error occured while trying to update user data")];
 		}
 		$message = _("Updated Group");
 		$this->updateGroupHook($gid, $prevGroupname, $groupname, $description, $users, $nodisplay);
-		return array("status" => true, "type" => "success", "message" => $message, "id" => $gid);
+		return ["status" => true, "type" => "success", "message" => $message, "id" => $gid];
 	}
 
 	/**
@@ -246,16 +226,16 @@ class Freepbx extends Auth {
 	public function checkCredentials($username, $password) {
 		$sql = "SELECT id, password FROM ".$this->userTable." WHERE username = :username AND auth = :directory";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':username' => $username, ':directory' => $this->config['id']));
-		$result = $sth->fetch(\PDO::FETCH_ASSOC);
+		$sth->execute([':username' => $username, ':directory' => $this->config['id']]);
+		$result = $sth->fetch(PDO::FETCH_ASSOC);
 
 		$passwordHasher = new PasswordHash(8,false);
 
-		if(!empty($result) && (strlen($result['password']) === 40) && (sha1($password) === $result['password'])) {
+		if(!empty($result) && (strlen((string) $result['password']) === 40) && (sha1((string) $password) === $result['password'])) {
 			$hash = $passwordHasher->HashPassword($password);
 			$sql = "UPDATE ".$this->userTable." SET password = :password WHERE username = :username";
 			$sth = $this->db->prepare($sql);
-			$sth->execute(array(':password' => $hash, ':username' => $username));
+			$sth->execute([':password' => $hash, ':username' => $username]);
 			return $result['id'];
 		} elseif(!empty($result)) {
 			$passwordMatch = $passwordHasher->CheckPassword($password, $result['password']);

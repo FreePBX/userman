@@ -5,78 +5,80 @@
 //
 namespace FreePBX\modules\Userman\Auth;
 
+use ReflectionClass;
+use FreePBX\modules\Userman;
+use PDO;
+use Exception;
 abstract class Auth {
 	protected $userTable = 'userman_users';
 	protected $userSettingsTable = 'userman_users_settings';
 	protected $groupTable = 'userman_groups';
 	protected $groupSettingsTable = 'userman_groups_settings';
 	protected $directoryTable = 'userman_directories';
-	protected $contacts = array();
+	protected $contacts = [];
 	protected $auth;
-	protected $config;
 
-	public function __construct($userman, $freepbx, $config=array()) {
+	public function __construct($userman, $freepbx, protected $config=[]) {
 		$this->FreePBX = $freepbx;
 		$this->db = $freepbx->Database;
 		$this->userman = $userman;
-		$f = new \ReflectionClass($this);
+		$f = new ReflectionClass($this);
 		$this->auth = strtolower($f->getShortName());
-		$this->config = $config;
 	}
 
 	public static function getShortName() {
-		$f = new \ReflectionClass(get_called_class());
+		$f = new ReflectionClass(static::class);
 		return strtolower($f->getShortName());
 	}
 
 	public function addUserHook($id, $username, $description, $password, $encrypt, $extraData) {
-		$display = isset($_REQUEST['display']) ? $_REQUEST['display'] : "";
-		$this->FreePBX->Hooks->processHooksByClassMethod("FreePBX\\modules\\Userman", "addUser", array($id, $display, array("id" => $id, "username" => $username, "description" => $description, "password" => $password, "encrypted" => $encrypt, "extraData" => $extraData)));
+		$display = $_REQUEST['display'] ?? "";
+		$this->FreePBX->Hooks->processHooksByClassMethod(Userman::class, "addUser", [$id, $display, ["id" => $id, "username" => $username, "description" => $description, "password" => $password, "encrypted" => $encrypt, "extraData" => $extraData]]);
 	}
 
 	public function updateUserHook($id, $prevUsername, $username, $description, $password, $extraData, $nodisplay=false) {
 		$display = !$nodisplay && isset($_REQUEST['display']) ? $_REQUEST['display'] : "";
-		$this->FreePBX->Hooks->processHooksByClassMethod("FreePBX\\modules\\Userman", "updateUser", array($id, $display, array("id" => $id, "prevUsername" => $prevUsername, "username" => $username, "description" => $description, "password" => $password, "extraData" => $extraData)));
+		$this->FreePBX->Hooks->processHooksByClassMethod(Userman::class, "updateUser", [$id, $display, ["id" => $id, "prevUsername" => $prevUsername, "username" => $username, "description" => $description, "password" => $password, "extraData" => $extraData]]);
 	}
 
 	public function delUserHook($id, $data) {
-		$display = isset($_REQUEST['display']) ? $_REQUEST['display'] : "";
-		$this->FreePBX->Hooks->processHooksByClassMethod("FreePBX\\modules\\Userman", "delUser", array($id, $display, $data));
+		$display = $_REQUEST['display'] ?? "";
+		$this->FreePBX->Hooks->processHooksByClassMethod(Userman::class, "delUser", [$id, $display, $data]);
 	}
 
 	public function addGroupHook($id, $groupname, $description, $users) {
-		$display = isset($_REQUEST['display']) ? $_REQUEST['display'] : "";
-		$this->FreePBX->Hooks->processHooksByClassMethod("FreePBX\\modules\\Userman", "addGroup", array($id, $display, array("id" => $id, "groupname" => $groupname, "description" => $description, "users" => $users)));
+		$display = $_REQUEST['display'] ?? "";
+		$this->FreePBX->Hooks->processHooksByClassMethod(Userman::class, "addGroup", [$id, $display, ["id" => $id, "groupname" => $groupname, "description" => $description, "users" => $users]]);
 	}
 
 	public function updateGroupHook($id, $prevGroupname, $groupname, $description, $users, $nodisplay=false) {
 		$display = !$nodisplay && isset($_REQUEST['display']) ? $_REQUEST['display'] : "";
-		$this->FreePBX->Hooks->processHooksByClassMethod("FreePBX\\modules\\Userman", "updateGroup", array($id, $display, array("id" => $id, "prevGroupname" => $prevGroupname, "groupname" => $groupname, "description" => $description, "users" => $users)));
+		$this->FreePBX->Hooks->processHooksByClassMethod(Userman::class, "updateGroup", [$id, $display, ["id" => $id, "prevGroupname" => $prevGroupname, "groupname" => $groupname, "description" => $description, "users" => $users]]);
 	}
 
 	public function delGroupHook($gid, $data) {
-		$display = isset($_REQUEST['display']) ? $_REQUEST['display'] : "";
-		$this->FreePBX->Hooks->processHooksByClassMethod("FreePBX\\modules\\Userman", "delGroup", array($gid, $display, $data));
+		$display = $_REQUEST['display'] ?? "";
+		$this->FreePBX->Hooks->processHooksByClassMethod(Userman::class, "delGroup", [$gid, $display, $data]);
 	}
 
 	public function getDefaultGroups() {
-		return array();
+		return [];
 	}
 
-	public function addUser($username, $password, $default='none', $description=null, $extraData=array(), $encrypt = true) {
-		return array("status" => false, "type" => "danger", "message" => _("Add User is not defined"));
+	public function addUser($username, $password, $default='none', $description=null, $extraData=[], $encrypt = true) {
+		return ["status" => false, "type" => "danger", "message" => _("Add User is not defined")];
 	}
 
-	public function updateUser($uid, $prevUsername, $username, $default='none', $description=null, $extraData=array(), $password=null, $nodisplay=false) {
-		return array("status" => false, "type" => "danger", "message" => _("Update User is not defined"));
+	public function updateUser($uid, $prevUsername, $username, $default='none', $description=null, $extraData=[], $password=null, $nodisplay=false) {
+		return ["status" => false, "type" => "danger", "message" => _("Update User is not defined")];
 	}
 
-	public function addGroup($groupname, $description=null, $users=array()) {
-		return array("status" => false, "type" => "danger", "message" => _("Add Group is not defined"));
+	public function addGroup($groupname, $description=null, $users=[]) {
+		return ["status" => false, "type" => "danger", "message" => _("Add Group is not defined")];
 	}
 
-	public function updateGroup($gid, $prevGroupname, $groupname, $description=null, $users=array(), $nodisplay=false) {
-		return array("status" => false, "type" => "danger", "message" => _("Update Group is not defined"));
+	public function updateGroup($gid, $prevGroupname, $groupname, $description=null, $users=[], $nodisplay=false) {
+		return ["status" => false, "type" => "danger", "message" => _("Update Group is not defined")];
 	}
 
 	/**
@@ -86,7 +88,7 @@ abstract class Auth {
 	 * @return array          Array of information about this driver
 	 */
 	public static function getInfo($userman, $freepbx) {
-		return array();
+		return [];
 	}
 
 	/**
@@ -106,24 +108,15 @@ abstract class Auth {
 	 * @return mixed          Return true if valid. Otherwise return error string
 	 */
 	public static function saveConfig($userman, $freepbx) {
-		return $config;
+		$config = null;
+  return $config;
 	}
 
 	/**
 	 * Return an array of permissions for this adaptor
 	 */
 	public function getPermissions() {
-		return array(
-			"addGroup" => true,
-			"addUser" => true,
-			"modifyGroup" => true,
-			"modifyUser" => true,
-			"modifyGroupAttrs" => true,
-			"modifyUserAttrs" => true,
-			"removeGroup" => true,
-			"removeUser" => true,
-			"changePassword" => true
-		);
+		return ["addGroup" => true, "addUser" => true, "modifyGroup" => true, "modifyUser" => true, "modifyGroupAttrs" => true, "modifyUserAttrs" => true, "removeGroup" => true, "removeUser" => true, "changePassword" => true];
 	}
 
 	/**
@@ -138,13 +131,13 @@ abstract class Auth {
 		if(!empty($this->config['id'])) {
 			$sql = "SELECT * FROM ".$this->userTable." WHERE username = :username AND auth = :auth LIMIT 1";
 			$sth = $this->db->prepare($sql);
-			$sth->execute(array(':username' => $username, ':auth' => $this->config['id']));
+			$sth->execute([':username' => $username, ':auth' => $this->config['id']]);
 		} else {
 			$sql = "SELECT u.* FROM ".$this->userTable." u, ".$this->directoryTable." d WHERE username = :username AND u.auth = d.id ORDER BY d.order LIMIT 1";
 			$sth = $this->db->prepare($sql);
-			$sth->execute(array(':username' => $username));
+			$sth->execute([':username' => $username]);
 		}
-		$user = $sth->fetch(\PDO::FETCH_ASSOC);
+		$user = $sth->fetch(PDO::FETCH_ASSOC);
 		if($extraInfo) {
 			$user = $this->userman->getExtraContactInfo($user);
 		}
@@ -163,13 +156,13 @@ abstract class Auth {
 		if(!empty($this->config['id'])) {
 			$sql = "SELECT * FROM ".$this->userTable." WHERE email = :email AND auth = :auth LIMIT 1";
 			$sth = $this->db->prepare($sql);
-			$sth->execute(array(':email' => $username, ':auth' => $this->config['id']));
+			$sth->execute([':email' => $username, ':auth' => $this->config['id']]);
 		} else {
 			$sql = "SELECT u.* FROM ".$this->userTable." u, ".$this->directoryTable." d WHERE email = :email AND u.auth = d.id ORDER BY d.order LIMIT 1";
 			$sth = $this->db->prepare($sql);
-			$sth->execute(array(':email' => $username));
+			$sth->execute([':email' => $username]);
 		}
-		$user = $sth->fetch(\PDO::FETCH_ASSOC);
+		$user = $sth->fetch(PDO::FETCH_ASSOC);
 		if($extraInfo) {
 			$user = $this->userman->getExtraContactInfo($user);
 		}
@@ -188,13 +181,13 @@ abstract class Auth {
 		if(!empty($this->config['id'])) {
 			$sql = "SELECT * FROM ".$this->userTable." WHERE id = :id AND auth = :auth LIMIT 1";
 			$sth = $this->db->prepare($sql);
-			$sth->execute(array(':id' => $id, ':auth' => $this->config['id']));
+			$sth->execute([':id' => $id, ':auth' => $this->config['id']]);
 		} else {
 			$sql = "SELECT * FROM ".$this->userTable." WHERE id = :id LIMIT 1";
 			$sth = $this->db->prepare($sql);
-			$sth->execute(array(':id' => $id));
+			$sth->execute([':id' => $id]);
 		}
-		$user = $sth->fetch(\PDO::FETCH_ASSOC);
+		$user = $sth->fetch(PDO::FETCH_ASSOC);
 		if($extraInfo) {
 			$user = $this->userman->getExtraContactInfo($user);
 		}
@@ -210,13 +203,13 @@ abstract class Auth {
 		if(!empty($this->config['id'])) {
 			$sql = "SELECT * FROM ".$this->userTable." WHERE authid = :id AND auth = :auth LIMIT 1";
 			$sth = $this->db->prepare($sql);
-			$sth->execute(array(':id' => $id, ':auth' => $this->config['id']));
-			$user = $sth->fetch(\PDO::FETCH_ASSOC);
+			$sth->execute([':id' => $id, ':auth' => $this->config['id']]);
+			$user = $sth->fetch(PDO::FETCH_ASSOC);
 		} else { //TODO: authids could clash. This function should not allow without directory id
 			$sql = "SELECT * FROM ".$this->userTable." WHERE authid = :id LIMIT 1";
 			$sth = $this->db->prepare($sql);
-			$sth->execute(array(':id' => $id));
-			$user = $sth->fetch(\PDO::FETCH_ASSOC);
+			$sth->execute([':id' => $id]);
+			$user = $sth->fetch(PDO::FETCH_ASSOC);
 		}
 		if($extraInfo) {
 			$user = $this->userman->getExtraContactInfo($user);
@@ -235,13 +228,13 @@ abstract class Auth {
 		if(!empty($this->config['id'])) {
 			$sql = "SELECT *, coalesce(displayname, username) as dn FROM ".$this->userTable." WHERE auth = :auth ORDER BY username";
 			$sth = $this->db->prepare($sql);
-			$sth->execute(array(":auth" => $this->config['id']));
+			$sth->execute([":auth" => $this->config['id']]);
 		} else {
 			$sql = "SELECT *, coalesce(displayname, username) as dn FROM ".$this->userTable." ORDER BY username";
 			$sth = $this->db->prepare($sql);
 			$sth->execute();
 		}
-		return $sth->fetchAll(\PDO::FETCH_ASSOC);
+		return $sth->fetchAll(PDO::FETCH_ASSOC);
 	}
 
 	/**
@@ -254,14 +247,14 @@ abstract class Auth {
 		if(!empty($this->config['id'])) {
 			$sql = "SELECT id FROM ".$this->userTable." WHERE auth = :auth";
 			$sth = $this->db->prepare($sql);
-			$sth->execute(array(':auth' => $this->config['id']));
+			$sth->execute([':auth' => $this->config['id']]);
 		} else {
 			$sql = "SELECT id FROM ".$this->userTable;
 			$sth = $this->db->prepare($sql);
 			$sth->execute();
 		}
-		$u = $sth->fetchAll(\PDO::FETCH_ASSOC);
-		$users = array();
+		$u = $sth->fetchAll(PDO::FETCH_ASSOC);
+		$users = [];
 		foreach($u as $ud) {
 			$users[] = $ud['id'];
 		}
@@ -279,16 +272,16 @@ abstract class Auth {
 		if(!empty($this->config['id'])) {
 			$sql = "SELECT * FROM ".$this->groupTable." WHERE auth = :auth ORDER BY priority";
 			$sth = $this->db->prepare($sql);
-			$sth->execute(array(":auth" => $this->config['id']));
+			$sth->execute([":auth" => $this->config['id']]);
 		} else {
 			$sql = "SELECT * FROM ".$this->groupTable." ORDER BY priority";
 			$sth = $this->db->prepare($sql);
 			$sth->execute();
 		}
-		$groups = $sth->fetchAll(\PDO::FETCH_ASSOC);
+		$groups = $sth->fetchAll(PDO::FETCH_ASSOC);
 		foreach($groups as &$group) {
-			$group['users'] = json_decode($group['users'],true);
-			$group['users'] = is_array($group['users']) ? $group['users'] : array();
+			$group['users'] = json_decode((string) $group['users'],true, 512, JSON_THROW_ON_ERROR);
+			$group['users'] = is_array($group['users']) ? $group['users'] : [];
 		}
 		return $groups;
 	}
@@ -305,13 +298,13 @@ abstract class Auth {
 		if(!empty($this->config['id'])) {
 			$sql = "SELECT * FROM ".$this->userTable." WHERE default_extension = :extension AND auth = :auth LIMIT 1";
 			$sth = $this->db->prepare($sql);
-			$sth->execute(array(':extension' => $extension, ':auth' => $this->config['id']));
+			$sth->execute([':extension' => $extension, ':auth' => $this->config['id']]);
 		} else {
 			$sql = "SELECT * FROM ".$this->userTable." WHERE default_extension = :extension LIMIT 1";
 			$sth = $this->db->prepare($sql);
-			$sth->execute(array(':extension' => $extension));
+			$sth->execute([':extension' => $extension]);
 		}
-		$user = $sth->fetch(\PDO::FETCH_ASSOC);
+		$user = $sth->fetch(PDO::FETCH_ASSOC);
 		return $user;
 	}
 
@@ -327,16 +320,16 @@ abstract class Auth {
 		if(!empty($this->config['id'])) {
 			$sql = "SELECT * FROM ".$this->groupTable." WHERE groupname = :groupname AND auth = :auth LIMIT 1";
 			$sth = $this->db->prepare($sql);
-			$sth->execute(array(':groupname' => $groupname, ':auth' => $this->config['id']));
+			$sth->execute([':groupname' => $groupname, ':auth' => $this->config['id']]);
 		} else {
 			$sql = "SELECT * FROM ".$this->groupTable." WHERE groupname = :groupname LIMIT 1";
 			$sth = $this->db->prepare($sql);
-			$sth->execute(array(':groupname' => $groupname));
+			$sth->execute([':groupname' => $groupname]);
 		}
-		$group = $sth->fetch(\PDO::FETCH_ASSOC);
+		$group = $sth->fetch(PDO::FETCH_ASSOC);
 		if(!empty($group)) {
-			$group['users'] = json_decode($group['users'],true);
-			$group['users'] = is_array($group['users']) ? $group['users'] : array();
+			$group['users'] = json_decode((string) $group['users'],true, 512, JSON_THROW_ON_ERROR);
+			$group['users'] = is_array($group['users']) ? $group['users'] : [];
 		}
 		return $group;
 	}
@@ -353,23 +346,23 @@ abstract class Auth {
 		if(!empty($this->config['id'])) {
 			$sql = "SELECT * FROM ".$this->groupTable." WHERE id = :gid AND auth = :auth LIMIT 1";
 			$sth = $this->db->prepare($sql);
-			$sth->execute(array(':gid' => $gid, ':auth' => $this->config['id']));
-			$group = $sth->fetch(\PDO::FETCH_ASSOC);
+			$sth->execute([':gid' => $gid, ':auth' => $this->config['id']]);
+			$group = $sth->fetch(PDO::FETCH_ASSOC);
 		} else {
 			$sql = "SELECT * FROM ".$this->groupTable." WHERE id = :gid LIMIT 1";
 			$sth = $this->db->prepare($sql);
-			$sth->execute(array(':gid' => $gid));
-			$group = $sth->fetch(\PDO::FETCH_ASSOC);
+			$sth->execute([':gid' => $gid]);
+			$group = $sth->fetch(PDO::FETCH_ASSOC);
 		}
 		if(empty($group)) {
 			return false;
 		}
 
-		$group['users'] = json_decode($group['users'],true);
-		$group['users'] = is_array($group['users']) ? $group['users'] : array();
+		$group['users'] = json_decode((string) $group['users'],true, 512, JSON_THROW_ON_ERROR);
+		$group['users'] = is_array($group['users']) ? $group['users'] : [];
 
-		$users = $this->getAllUserIDs($group['auth']);
-		$final = array();
+		$users = $this->getAllUserIDs();
+		$final = [];
 		foreach($group['users'] as $u) {
 			if(in_array($u,$users)) {
 				$final[] = $u;
@@ -378,7 +371,7 @@ abstract class Auth {
 		if($group['users'] != $final) {
 			$sql = "UPDATE ".$this->groupTable." SET users = :users WHERE id = :gid";
 			$sth = $this->db->prepare($sql);
-			$sth->execute(array(':gid' => $gid, ':users' => json_encode($final)));
+			$sth->execute([':gid' => $gid, ':users' => json_encode($final, JSON_THROW_ON_ERROR)]);
 		}
 		$group['users'] = $final;
 		return $group;
@@ -393,16 +386,16 @@ abstract class Auth {
 		if(!empty($this->config['id'])) {
 			$sql = "SELECT * FROM ".$this->groupTable." WHERE authid = :aid AND auth = :auth LIMIT 1";
 			$sth = $this->db->prepare($sql);
-			$sth->execute(array(':aid' => $aid, ':auth' => $this->config['id']));
+			$sth->execute([':aid' => $aid, ':auth' => $this->config['id']]);
 		} else { //TODO: authids could clash. This function should not allow without directory id
 			$sql = "SELECT * FROM ".$this->groupTable." WHERE authid = :aid LIMIT 1";
 			$sth = $this->db->prepare($sql);
-			$sth->execute(array(':aid' => $aid));
+			$sth->execute([':aid' => $aid]);
 		}
-		$group = $sth->fetch(\PDO::FETCH_ASSOC);
+		$group = $sth->fetch(PDO::FETCH_ASSOC);
 		if(!empty($group)) {
-			$group['users'] = json_decode($group['users'],true);
-			$group['users'] = is_array($group['users']) ? $group['users'] : array();
+			$group['users'] = json_decode((string) $group['users'],true, 512, JSON_THROW_ON_ERROR);
+			$group['users'] = is_array($group['users']) ? $group['users'] : [];
 		}
 		return $group;
 	}
@@ -413,7 +406,7 @@ abstract class Auth {
 	*/
 	public function getGroupsByID($uid) {
 		$groups = $this->getAllGroups();
-		$final = array();
+		$final = [];
 		foreach($groups as $group) {
 			if(in_array($uid,$group['users'])) {
 				$final[] = $group['id'];
@@ -435,19 +428,19 @@ abstract class Auth {
 	public function deleteUserByID($id, $processHooks=true) {
 		$user = $this->getUserByID($id);
 		if(empty($user)) {
-			return array("status" => false, "type" => "danger", "message" => _("User Does Not Exist"));
+			return ["status" => false, "type" => "danger", "message" => _("User Does Not Exist")];
 		}
 		$sql = "DELETE FROM ".$this->userTable." WHERE `id` = :id";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':id' => $id));
+		$sth->execute([':id' => $id]);
 
 		$sql = "DELETE FROM ".$this->userSettingsTable." WHERE `uid` = :uid";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':uid' => $id));
+		$sth->execute([':uid' => $id]);
 		if($processHooks) {
 			$this->delUserHook($id, $user);
 		}
-		return array("status" => true, "type" => "success", "message" => _("User Successfully Deleted"));
+		return ["status" => true, "type" => "success", "message" => _("User Successfully Deleted")];
 	}
 
 	/**
@@ -458,19 +451,19 @@ abstract class Auth {
 	public function deleteGroupByGID($gid, $processHooks=true) {
 		$group = $this->getGroupByGID($gid);
 		if(empty($group)) {
-			return array("status" => false, "type" => "danger", "message" => _("Group Does Not Exist"));
+			return ["status" => false, "type" => "danger", "message" => _("Group Does Not Exist")];
 		}
 		$sql = "DELETE FROM ".$this->groupTable." WHERE `id` = :id";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':id' => $gid));
+		$sth->execute([':id' => $gid]);
 
 		$sql = "DELETE FROM ".$this->groupSettingsTable." WHERE `gid` = :gid";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array(':gid' => $gid));
+		$sth->execute([':gid' => $gid]);
 		if($processHooks) {
 			$this->delGroupHook($gid, $group);
 		}
-		return array("status" => true, "type" => "success", "message" => _("Group Successfully Deleted"));
+		return ["status" => true, "type" => "success", "message" => _("Group Successfully Deleted")];
 	}
 
 	/**
@@ -485,15 +478,15 @@ abstract class Auth {
 		if(!empty($this->config['id'])) {
 			$sql = "SELECT id, default_extension as internal, username, description, fname, lname, coalesce(displayname, CONCAT_WS(' ', fname, lname)) AS displayname, title, company, department, email, cell, work, home, fax FROM ".$this->userTable." WHERE auth = :auth LIMIT 1";
 			$sth = $this->db->prepare($sql);
-			$sth->execute(array(":auth" => $this->config['id']));
+			$sth->execute([":auth" => $this->config['id']]);
 		} else {
 			$sql = "SELECT id, default_extension as internal, username, description, fname, lname, coalesce(displayname, CONCAT_WS(' ', fname, lname)) AS displayname, title, company, department, email, cell, work, home, fax FROM ".$this->userTable." LIMIT 1";
 			$sth = $this->db->prepare($sql);
 			$sth->execute();
 		}
-		$users = $sth->fetchAll(\PDO::FETCH_ASSOC);
+		$users = $sth->fetchAll(PDO::FETCH_ASSOC);
 		if(empty($users)) {
-			return array();
+			return [];
 		}
 		foreach($users as &$user) {
 			//dont let displayname escape without a value
@@ -513,42 +506,42 @@ abstract class Auth {
 	 */
 	public function linkUser($username, $authid = null) {
 		if(empty($this->config['id'])) {
-			throw new \Exception(_("Unable to link user to an invalid directory"));
+			throw new Exception(_("Unable to link user to an invalid directory"));
 		}
 		$request = $_REQUEST;
 		$display = !empty($request['display']) ? $request['display'] : "";
 		$description = !empty($description) ? $description : null;
 		if(empty($username)) {
-			return array("status" => false, "type" => "danger", "message" => _("Username Can Not Be Blank!"));
+			return ["status" => false, "type" => "danger", "message" => _("Username Can Not Be Blank!")];
 		}
 		$sql = "SELECT * FROM ".$this->userTable." WHERE auth = :auth AND authid = :authid";
 		$sth = $this->db->prepare($sql);
 		try {
-			$sth->execute(array(':auth' => $this->config['id'], ":authid" => $authid));
-			$previous = $sth->fetch(\PDO::FETCH_ASSOC);
-		} catch (\Exception $e) {
-			return array("status" => false, "type" => "danger", "message" => $e->getMessage());
+			$sth->execute([':auth' => $this->config['id'], ":authid" => $authid]);
+			$previous = $sth->fetch(PDO::FETCH_ASSOC);
+		} catch (Exception $e) {
+			return ["status" => false, "type" => "danger", "message" => $e->getMessage()];
 		}
 		if(!$previous) {
 			$sql = "INSERT INTO ".$this->userTable." (`username`,`auth`,`authid`) VALUES (:username,:auth,:authid)";
 			$sth = $this->db->prepare($sql);
 			try {
-				$sth->execute(array(':username' => $username, ':auth' => $this->config['id'], ":authid" => $authid));
-			} catch (\Exception $e) {
-				return array("status" => false, "type" => "danger", "message" => $e->getMessage());
+				$sth->execute([':username' => $username, ':auth' => $this->config['id'], ":authid" => $authid]);
+			} catch (Exception $e) {
+				return ["status" => false, "type" => "danger", "message" => $e->getMessage()];
 			}
 
 			$id = $this->db->lastInsertId();
-			return array("status" => true, "type" => "success", "message" => _("User Successfully Added"), "id" => $id, "new" => true);
+			return ["status" => true, "type" => "success", "message" => _("User Successfully Added"), "id" => $id, "new" => true];
 		} else {
 			$sql = "UPDATE ".$this->userTable." SET username = :username WHERE auth = :auth AND authid = :authid AND id = :id";
 			$sth = $this->db->prepare($sql);
 			try {
-				$sth->execute(array(':username' => $username, ':auth' => $this->config['id'], ":authid" => $authid, ":id" => $previous['id']));
-			} catch (\Exception $e) {
-				return array("status" => false, "type" => "danger", "message" => $e->getMessage());
+				$sth->execute([':username' => $username, ':auth' => $this->config['id'], ":authid" => $authid, ":id" => $previous['id']]);
+			} catch (Exception $e) {
+				return ["status" => false, "type" => "danger", "message" => $e->getMessage()];
 			}
-			return array("status" => true, "type" => "success", "message" => _("User Successfully Updated"), "id" => $previous['id'], "prevUsername" => $previous['username'], "new" => false);
+			return ["status" => true, "type" => "success", "message" => _("User Successfully Updated"), "id" => $previous['id'], "prevUsername" => $previous['username'], "new" => false];
 		}
 	}
 
@@ -559,42 +552,42 @@ abstract class Auth {
 	*/
 	public function linkGroup($groupname, $authid = null) {
 		if(empty($this->config['id'])) {
-			throw new \Exception(_("Unable to link group to an invalid directory"));
+			throw new Exception(_("Unable to link group to an invalid directory"));
 		}
 		$request = $_REQUEST;
 		$display = !empty($request['display']) ? $request['display'] : "";
 		$description = !empty($description) ? $description : null;
 		if(empty($groupname)) {
-			return array("status" => false, "type" => "danger", "message" => _("Groupname Can Not Be Blank!"));
+			return ["status" => false, "type" => "danger", "message" => _("Groupname Can Not Be Blank!")];
 		}
 		$sql = "SELECT * FROM ".$this->groupTable." WHERE auth = :auth AND authid = :authid";
 		$sth = $this->db->prepare($sql);
 		try {
-			$sth->execute(array(':auth' => $this->config['id'], ":authid" => $authid));
-			$previous = $sth->fetch(\PDO::FETCH_ASSOC);
-		} catch (\Exception $e) {
-			return array("status" => false, "type" => "danger", "message" => $e->getMessage());
+			$sth->execute([':auth' => $this->config['id'], ":authid" => $authid]);
+			$previous = $sth->fetch(PDO::FETCH_ASSOC);
+		} catch (Exception $e) {
+			return ["status" => false, "type" => "danger", "message" => $e->getMessage()];
 		}
 		if(!$previous) {
 			$sql = "INSERT INTO ".$this->groupTable." (`groupname`,`auth`,`authid`) VALUES (:groupname,:auth,:authid)";
 			$sth = $this->db->prepare($sql);
 			try {
-				$sth->execute(array(':groupname' => $groupname, ':auth' => $this->config['id'], ":authid" => $authid));
-			} catch (\Exception $e) {
-				return array("status" => false, "type" => "danger", "message" => $e->getMessage());
+				$sth->execute([':groupname' => $groupname, ':auth' => $this->config['id'], ":authid" => $authid]);
+			} catch (Exception $e) {
+				return ["status" => false, "type" => "danger", "message" => $e->getMessage()];
 			}
 
 			$id = $this->db->lastInsertId();
-			return array("status" => true, "type" => "success", "message" => _("group Successfully Added"), "id" => $id, "new" => true);
+			return ["status" => true, "type" => "success", "message" => _("group Successfully Added"), "id" => $id, "new" => true];
 		} else {
 			$sql = "UPDATE ".$this->groupTable." SET groupname = :groupname WHERE auth = :auth AND authid = :authid AND id = :id";
 			$sth = $this->db->prepare($sql);
 			try {
-				$sth->execute(array(':groupname' => $groupname, ':auth' => $this->config['id'], ":authid" => $authid, ":id" => $previous['id']));
-			} catch (\Exception $e) {
-				return array("status" => false, "type" => "danger", "message" => $e->getMessage());
+				$sth->execute([':groupname' => $groupname, ':auth' => $this->config['id'], ":authid" => $authid, ":id" => $previous['id']]);
+			} catch (Exception $e) {
+				return ["status" => false, "type" => "danger", "message" => $e->getMessage()];
 			}
-			return array("status" => true, "type" => "success", "message" => _("Group Successfully Updated"), "id" => $previous['id'], "prevGroupname" => $previous['groupname'], "new" => false);
+			return ["status" => true, "type" => "success", "message" => _("Group Successfully Updated"), "id" => $previous['id'], "prevGroupname" => $previous['groupname'], "new" => false];
 		}
 	}
 
@@ -604,31 +597,22 @@ abstract class Auth {
 	 * @param  array  $data Group data
 	 * @return Boolean       True is success
 	 */
-	public function updateGroupData($gid, $data = array()) {
+	public function updateGroupData($gid, $data = []) {
 		$sql = "UPDATE ".$this->groupTable." SET `description` = :description, `language` = :language, `timezone` = :timezone, `dateformat` = :dateformat, `timeformat` = :timeformat, `datetimeformat` = :datetimeformat, `users` = :users WHERE `id` = :gid";
 		$sth = $this->db->prepare($sql);
 		$defaults = $this->getGroupByGID($gid);
-		$description = isset($data['description']) ? $data['description'] : (!isset($data['description']) && !empty($defaults['description']) ? $defaults['description'] : null);
-		$users = isset($data['users']) ? $data['users'] : (!isset($data['users']) && !empty($defaults['users']) ? $defaults['users'] : null);
-		$language = isset($data['language']) ? $data['language'] : (!isset($data['language']) && !empty($defaults['language']) ? $defaults['language'] : null);
-		$timezone = isset($data['timezone']) ? $data['timezone'] : (!isset($data['timezone']) && !empty($defaults['timezone']) ? $defaults['timezone'] : null);
-		$datetimeformat = isset($data['datetimeformat']) ? $data['datetimeformat'] : (!isset($data['datetimeformat']) && !empty($defaults['datetimeformat']) ? $defaults['datetimeformat'] : null);
-		$timeformat = isset($data['timeformat']) ? $data['timeformat'] : (!isset($data['timeformat']) && !empty($defaults['timeformat']) ? $defaults['timeformat'] : null);
-		$dateformat = isset($data['dateformat']) ? $data['dateformat'] : (!isset($data['dateformat']) && !empty($defaults['dateformat']) ? $defaults['dateformat'] : null);
+		$description = $data['description'] ?? (!isset($data['description']) && !empty($defaults['description']) ? $defaults['description'] : null);
+		$users = $data['users'] ?? (!isset($data['users']) && !empty($defaults['users']) ? $defaults['users'] : null);
+		$language = $data['language'] ?? (!isset($data['language']) && !empty($defaults['language']) ? $defaults['language'] : null);
+		$timezone = $data['timezone'] ?? (!isset($data['timezone']) && !empty($defaults['timezone']) ? $defaults['timezone'] : null);
+		$datetimeformat = $data['datetimeformat'] ?? (!isset($data['datetimeformat']) && !empty($defaults['datetimeformat']) ? $defaults['datetimeformat'] : null);
+		$timeformat = $data['timeformat'] ?? (!isset($data['timeformat']) && !empty($defaults['timeformat']) ? $defaults['timeformat'] : null);
+		$dateformat = $data['dateformat'] ?? (!isset($data['dateformat']) && !empty($defaults['dateformat']) ? $defaults['dateformat'] : null);
 		try {
 			$sth->execute(
-				array(
-					':description' => $description,
-					':language' => $language,
-					':timezone' => $timezone,
-					':timeformat' => $timeformat,
-					':dateformat' => $dateformat,
-					':datetimeformat' => $datetimeformat,
-					':users' => json_encode($users),
-					':gid' => $gid
-				)
+				[':description' => $description, ':language' => $language, ':timezone' => $timezone, ':timeformat' => $timeformat, ':dateformat' => $dateformat, ':datetimeformat' => $datetimeformat, ':users' => json_encode($users, JSON_THROW_ON_ERROR), ':gid' => $gid]
 			);
-		} catch (\Exception $e) {
+		} catch (Exception $e) {
 			dbug($e->getMessage());
 			return false;
 		}
@@ -641,26 +625,26 @@ abstract class Auth {
 	 * @param  array  $data The user Data to update
 	 * @return Boolean       True if success
 	 */
-	public function updateUserData($uid, $data = array()) {
+	public function updateUserData($uid, $data = []) {
 		if(empty($data)) {
 			return true;
 		}
 		$sql = "UPDATE ".$this->userTable." SET `fname` = :fname, `lname` = :lname, `default_extension` = :default_extension, `displayname` = :displayname, `company` = :company, `title` = :title, `email` = :email, `cell` = :cell, `work` = :work, `home` = :home, `fax` = :fax, `department` = :department, `language` = :language, `timezone` = :timezone, `dateformat` = :dateformat, `timeformat` = :timeformat, `datetimeformat` = :datetimeformat, `description` = :description, `primary_group` = :primary_group WHERE `id` = :uid";
 		$defaults = $this->getUserByID($uid);
 		$sth = $this->db->prepare($sql);
-		$fname = isset($data['fname']) ? $data['fname'] : (!isset($data['fname']) && !empty($defaults['fname']) ? $defaults['fname'] : null);
-		$lname = isset($data['lname']) ? $data['lname'] : (!isset($data['lname']) && !empty($defaults['lname']) ? $defaults['lname'] : null);
-		$default_extension = isset($data['default_extension']) ? $data['default_extension'] : (!isset($data['default_extension']) && !empty($defaults['default_extension']) ? $defaults['default_extension'] : 'none');
-		$title = isset($data['title']) ? $data['title'] : (!isset($data['title']) && !empty($defaults['title']) ? $defaults['title'] : null);
-		$company = isset($data['company']) ? $data['company'] : (!isset($data['company']) && !empty($defaults['company']) ? $defaults['company'] : null);
-		$email = isset($data['email']) ? $data['email'] : (!isset($data['email']) && !empty($defaults['email']) ? $defaults['email'] : null);
-		$cell = isset($data['cell']) ? $data['cell'] : (!isset($data['cell']) && !empty($defaults['cell']) ? $defaults['cell'] : null);
-		$home = isset($data['home']) ? $data['home'] : (!isset($data['home']) && !empty($defaults['home']) ? $defaults['home'] : null);
-		$work = isset($data['work']) ? $data['work'] : (!isset($data['work']) && !empty($defaults['work']) ? $defaults['work'] : null);
-		$fax = isset($data['fax']) ? $data['fax'] : (!isset($data['fax']) && !empty($defaults['fax']) ? $defaults['fax'] : null);
-		$displayname = isset($data['displayname']) ? $data['displayname'] : (!isset($data['displayname']) && !empty($defaults['displayname']) ? $defaults['displayname'] : null);
-		$department = isset($data['department']) ? $data['department'] : (!isset($data['department']) && !empty($defaults['department']) ? $defaults['department'] : null);
-		$description = isset($data['description']) ? $data['description'] : (!isset($data['description']) && !empty($defaults['description']) ? $defaults['description'] : null);
+		$fname = $data['fname'] ?? (!isset($data['fname']) && !empty($defaults['fname']) ? $defaults['fname'] : null);
+		$lname = $data['lname'] ?? (!isset($data['lname']) && !empty($defaults['lname']) ? $defaults['lname'] : null);
+		$default_extension = $data['default_extension'] ?? (!isset($data['default_extension']) && !empty($defaults['default_extension']) ? $defaults['default_extension'] : 'none');
+		$title = $data['title'] ?? (!isset($data['title']) && !empty($defaults['title']) ? $defaults['title'] : null);
+		$company = $data['company'] ?? (!isset($data['company']) && !empty($defaults['company']) ? $defaults['company'] : null);
+		$email = $data['email'] ?? (!isset($data['email']) && !empty($defaults['email']) ? $defaults['email'] : null);
+		$cell = $data['cell'] ?? (!isset($data['cell']) && !empty($defaults['cell']) ? $defaults['cell'] : null);
+		$home = $data['home'] ?? (!isset($data['home']) && !empty($defaults['home']) ? $defaults['home'] : null);
+		$work = $data['work'] ?? (!isset($data['work']) && !empty($defaults['work']) ? $defaults['work'] : null);
+		$fax = $data['fax'] ?? (!isset($data['fax']) && !empty($defaults['fax']) ? $defaults['fax'] : null);
+		$displayname = $data['displayname'] ?? (!isset($data['displayname']) && !empty($defaults['displayname']) ? $defaults['displayname'] : null);
+		$department = $data['department'] ?? (!isset($data['department']) && !empty($defaults['department']) ? $defaults['department'] : null);
+		$description = $data['description'] ?? (!isset($data['description']) && !empty($defaults['description']) ? $defaults['description'] : null);
 		$primary_group = isset($data['primary_group']) && is_numeric($data['primary_group']) ? $data['primary_group'] : ( !isset($data['primary_group']) && !empty($defaults['primary_group']) ? $defaults['primary_group'] : null);
 
 		//special case
@@ -672,30 +656,9 @@ abstract class Auth {
 
 		try {
 			$sth->execute(
-				array(
-					':fname' => $fname,
-					':lname' => $lname,
-					':default_extension' => $default_extension,
-					':displayname' => $displayname,
-					':title' => $title,
-					':company' => $company,
-					':email' => $email,
-					':cell' => $cell,
-					':work' => $work,
-					':home' => $home,
-					':fax' => $fax,
-					':department' => $department,
-					':language' => $language,
-					':timezone' => $timezone,
-					':timeformat' => $timeformat,
-					':dateformat' => $dateformat,
-					':datetimeformat' => $datetimeformat,
-					':description' => $description,
-					':primary_group' => $primary_group,
-					':uid' => $uid
-				)
+				[':fname' => $fname, ':lname' => $lname, ':default_extension' => $default_extension, ':displayname' => $displayname, ':title' => $title, ':company' => $company, ':email' => $email, ':cell' => $cell, ':work' => $work, ':home' => $home, ':fax' => $fax, ':department' => $department, ':language' => $language, ':timezone' => $timezone, ':timeformat' => $timeformat, ':dateformat' => $dateformat, ':datetimeformat' => $datetimeformat, ':description' => $description, ':primary_group' => $primary_group, ':uid' => $uid]
 			);
-		} catch (\Exception $e) {
+		} catch (Exception $e) {
 			dbug($e->getMessage());
 			return false;
 		}

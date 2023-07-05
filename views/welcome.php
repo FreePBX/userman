@@ -156,17 +156,17 @@
 							</div>
 							<div role="tabpane" id="settings" class="tab-pane display">
 								<div class="container-fluid">
-								<?php echo load_view(dirname(__FILE__).'/general.php', array("hostname" => $hostname, "host" => $host, "remoteips" => $remoteips, "sync" => $sync, "brand" => $brand, "auths" => $auths, "authtype" => $authtype, "autoEmail" => $autoEmail,"emailbody" => $emailbody, "emailsubject" => $emailsubject, "mailtype" => $mailtype, "pwdSettings" => json_decode($pwdSettings, true), "passwordReminder" => $passwordReminder)); ?></div>
+								<?php echo load_view(__DIR__.'/general.php', ["hostname" => $hostname, "host" => $host, "remoteips" => $remoteips, "sync" => $sync, "brand" => $brand, "auths" => $auths, "authtype" => $authtype, "autoEmail" => $autoEmail, "emailbody" => $emailbody, "emailsubject" => $emailsubject, "mailtype" => $mailtype, "pwdSettings" => json_decode((string) $pwdSettings, true, 512, JSON_THROW_ON_ERROR), "passwordReminder" => $passwordReminder]); ?></div>
 							</div>
 						</div>
 					</div>
-					<?php echo load_view(dirname(__FILE__).'/passwordmodal.php')?>
+					<?php echo load_view(__DIR__.'/passwordmodal.php')?>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
 <script>
-	var drivers = <?php echo json_encode($auths)?>;
-	var directoryMapValues = <?php echo json_encode($directoryMap)?>;
+	var drivers = <?php echo json_encode($auths, JSON_THROW_ON_ERROR)?>;
+	var directoryMapValues = <?php echo json_encode($directoryMap, JSON_THROW_ON_ERROR)?>;
 </script>

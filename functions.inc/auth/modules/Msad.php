@@ -6,15 +6,19 @@
 //	https://msdn.microsoft.com/en-us/library/windows/desktop/ms677605(v=vs.85).aspx
 //
 namespace FreePBX\modules\Userman\Auth;
+use Adldap\Connections\ProviderInterface;
+use Exception;
+use FreePBX;
+use DB;
+use PDO;
 use Adldap\Adldap;
 use Adldap\Connections\Provider;
 use Adldap\Exceptions\Auth\BindException;
 class Msad extends Auth {
 	/**
-	 * LDAP Object
-	 * @var object
-	 */
-	private $ldap = null;
+  * LDAP Object
+  */
+ private ?ProviderInterface $ldap = null;
 	/**
 	 * LDAP Host
 	 * @var string
@@ -46,39 +50,34 @@ class Msad extends Auth {
 	 */
 	private $password = "";
 	/**
-	 * User cache
-	 * cache requests throughout this class
-	 * @var array
-	 */
-	private $ucache = array();
+  * User cache
+  * cache requests throughout this class
+  */
+ private array $ucache = [];
 	/**
-	 * Group Cache
-	 * cache requests throughout this class
-	 * @var array
-	 */
-	private $gcache = array();
+  * Group Cache
+  * cache requests throughout this class
+  */
+ private array $gcache = [];
 
-	private $active = 0;
+	private int $active = 0;
 
 	/**
-	 * Private Group Cache
-	 * cache requests throughout this class
-	 * @var array
-	 */
-	private $pucache = array();
+  * Private Group Cache
+  * cache requests throughout this class
+  */
+ private array $pucache = [];
 
 	/**
-	 * Results Limit.
-	 * Everything is paginated but we have to define a limit
-	 * @var integer
-	 */
-	private $limit = 900;
+  * Results Limit.
+  * Everything is paginated but we have to define a limit
+  */
+ private int $limit = 900;
 
 	/**
-	 * The Adldap2 connector
-	 * @var object
-	 */
-	private $ad = null;
+  * The Adldap2 connector
+  */
+ private ?Adldap $ad = null;
 
 	/**
 	 * The account suffix taken from configuration
@@ -92,19 +91,11 @@ class Msad extends Auth {
 	 */
 	private $use_tls;
 
-	private $userHooks = array(
-		'add' => array(),
-		'update' => array(),
-		'remove' => array()
-	);
+	private array $userHooks = ['add' => [], 'update' => [], 'remove' => []];
 
-	private $groupHooks = array(
-		'add' => array(),
-		'update' => array(),
-		'remove' => array()
-	);
+	private array $groupHooks = ['add' => [], 'update' => [], 'remove' => []];
 
-	public function __construct($userman, $freepbx, $config=array()) {
+	public function __construct($userman, $freepbx, $config=[]) {
 		parent::__construct($userman, $freepbx, $config);
 		$this->FreePBX = $freepbx;
 		$this->host = $config['host'];
@@ -113,9 +104,9 @@ class Msad extends Auth {
 		$this->domain = $config['domain'];
 		$this->user = $config['username'];
 		$this->password = $config['password'];
-		$this->linkAttr = isset($config['la']) ? strtolower($config['la']) : '';
+		$this->linkAttr = isset($config['la']) ? strtolower((string) $config['la']) : '';
 		$this->account_suffix = !empty($config['account_suffix']) ? $config['account_suffix'] : $config['domain'];
-		$this->use_tls = isset($config['use_tls']) ? $config['use_tls'] : false;
+		$this->use_tls = $config['use_tls'] ?? false;
 		$this->output = null;
 	}
 
@@ -127,11 +118,9 @@ class Msad extends Auth {
 	*/
 	public static function getInfo($userman, $freepbx) {
 		if(!function_exists('ldap_connect')) {
-			return array();
+			return [];
 		}
-		return array(
-			"name" => _("Microsoft Active Directory (Legacy)")
-		);
+		return ["name" => _("Microsoft Active Directory (Legacy)")];
 	}
 
 	/**
@@ -142,134 +131,22 @@ class Msad extends Auth {
 	 * 						   with all the configurations of this authentication device 
 	 */
 	public static function getConfig($userman, $freepbx, $config) {
-		$status = array(
-			"connected" => false,
-			"type" => "info",
-			"message" => _("Not Connected")
-		);
+		$status = ["connected" => false, "type" => "info", "message" => _("Not Connected")];
 		if(!empty($config['host']) && !empty($config['username']) && !empty($config['password']) && !empty($config['domain'])) {
 			$msad = new static($userman, $freepbx, $config);
 			try {
 				$msad->connect();
-				$status = array(
-					"connected" => true,
-					"type" => "success",
-					"message" => _("Connected")
-				);
-			} catch(\Exception $e) {
-				$status = array(
-					"connected" => false,
-					"type" => "danger",
-					"message" => $e->getMessage()
-				);
+				$status = ["connected" => true, "type" => "success", "message" => _("Connected")];
+			} catch(Exception $e) {
+				$status = ["connected" => false, "type" => "danger", "message" => $e->getMessage()];
 			}
 		} elseif(!empty($config['host']) || !empty($config['username']) || !empty($config['password']) || !empty($config['domain'])) {
-			$status = array(
-				"connected" => false,
-				"type" => "warning",
-				"message" => _("Not all of the connection parameters have been filled out")
-			);
+			$status = ["connected" => false, "type" => "warning", "message" => _("Not all of the connection parameters have been filled out")];
 		}
 
 		$typeauth = self::getShortName();
-		$form_data = array(
-			array(
-				'name'		=> $typeauth.'-host',
-				'title'		=> _("Host"),
-				'type' 		=> 'text',
-				'index'		=> true,
-				'required'	=> true,
-				'default'	=> 'dc.domain.local',
-				'opts'		=> array(
-					'value' => isset($config['host']) ? $config['host'] : '',
-				),
-				'help'		=> _("The active directory host"),
-			),
-			array(
-				'name'		=> $typeauth.'-port',
-				'title'		=> _("Port"),
-				'type'		=> 'number',
-				'index'		=> true,
-				'required'	=> true,
-				'default'	=> 389,
-				'opts'		=> array(
-					'min' => "1",
-					'max' => "65535",
-					'value' => isset($config['port']) ? $config['port'] : '389',
-				),
-				'help'		=> sprintf("The active directory port, default 389"),
-			),
-			array(
-				'name'		=> $typeauth.'-username',
-				'title'		=> _("Username"),
-				'type' 		=> 'text',
-				'index'		=> true,
-				'required'	=> true,
-				'opts'		=> array(
-					'value' => isset($config['username']) ? $config['username'] : '',
-				),
-				'help'		=> _("The active directory username"),
-			),
-			array(
-				'name'		=> $typeauth.'-password',
-				'title'		=> _("Password"),
-				'type' 		=> 'password',
-				'index'		=> true,
-				'required'	=> false,
-				'opts'		=> array(
-					'value' => '',
-				),
-				'help'		=> _("The active directory password. Only write the password if we want to modify it. If none is defined, the current password will be kept."),
-			),
-			array(
-				'name'		=> $typeauth.'-domain',
-				'title'		=> _("Domain"),
-				'type' 		=> 'text',
-				'index'		=> true,
-				'required'	=> true,
-				'default'	=> 'domain.local',
-				'opts'		=> array(
-					'value' => isset($config['domain']) ? $config['domain'] : '',
-				),
-				'help'		=> _("The active directory domain"),
-			),
-			array(
-				'name'		=> $typeauth.'-dn',
-				'title'		=> _("Base DN"),
-				'type' 		=> 'text',
-				'index'		=> true,
-				'required'	=> true,
-				'default'	=> 'cn=Users,dc=domain,dc=local',
-				'opts'		=> array(
-					'value' => isset($config['dn']) ? $config['dn'] : '',
-				),
-				'help'		=> _("The base DN. Usually in the format of CN=Users,DC=domain,DC=local"),
-			),
-			array(
-				'name'		=> $typeauth.'-la',
-				'title'		=> _("Extension Link Attribute"),
-				'type' 		=> 'text',
-				'index'		=> true,
-				'required'	=> false,
-				'opts'		=> array(
-					'value' => isset($config['la']) ? $config['la'] : '',
-				),
-				'help'		=> _("If this is set then User Manager will use the defined attribute of the user from the Active Directory server as the extension link. NOTE: If this field is set it will overwrite any manually linked extensions where this attribute extists!!"),
-			),
-			array(
-				'name'		=> $typeauth.'-status',
-				'title'		=> _("Status"),
-				'type' 		=> 'raw',
-				'index'		=> true,
-				'value'		=> sprintf('<div id="%s-status" class="bg-%s conection-status"><i class="fa fa-%s"></i>&nbsp; %s</div>', $typeauth, $status['type'],  ($status['type'] == "success" ? 'check' : 'exclamation')  , $status['message']),
-				'value_raw' => $status,
-				'help'		=> _("The connection status of the Active Directory Server"),
-			),
-		);
-		return array(
-			'auth' => $typeauth,
-			'data' => $form_data,
-		);
+		$form_data = [['name'		=> $typeauth.'-host', 'title'		=> _("Host"), 'type' 		=> 'text', 'index'		=> true, 'required'	=> true, 'default'	=> 'dc.domain.local', 'opts'		=> ['value' => $config['host'] ?? ''], 'help'		=> _("The active directory host")], ['name'		=> $typeauth.'-port', 'title'		=> _("Port"), 'type'		=> 'number', 'index'		=> true, 'required'	=> true, 'default'	=> 389, 'opts'		=> ['min' => "1", 'max' => "65535", 'value' => $config['port'] ?? '389'], 'help'		=> sprintf("The active directory port, default 389")], ['name'		=> $typeauth.'-username', 'title'		=> _("Username"), 'type' 		=> 'text', 'index'		=> true, 'required'	=> true, 'opts'		=> ['value' => $config['username'] ?? ''], 'help'		=> _("The active directory username")], ['name'		=> $typeauth.'-password', 'title'		=> _("Password"), 'type' 		=> 'password', 'index'		=> true, 'required'	=> false, 'opts'		=> ['value' => ''], 'help'		=> _("The active directory password. Only write the password if we want to modify it. If none is defined, the current password will be kept.")], ['name'		=> $typeauth.'-domain', 'title'		=> _("Domain"), 'type' 		=> 'text', 'index'		=> true, 'required'	=> true, 'default'	=> 'domain.local', 'opts'		=> ['value' => $config['domain'] ?? ''], 'help'		=> _("The active directory domain")], ['name'		=> $typeauth.'-dn', 'title'		=> _("Base DN"), 'type' 		=> 'text', 'index'		=> true, 'required'	=> true, 'default'	=> 'cn=Users,dc=domain,dc=local', 'opts'		=> ['value' => $config['dn'] ?? ''], 'help'		=> _("The base DN. Usually in the format of CN=Users,DC=domain,DC=local")], ['name'		=> $typeauth.'-la', 'title'		=> _("Extension Link Attribute"), 'type' 		=> 'text', 'index'		=> true, 'required'	=> false, 'opts'		=> ['value' => $config['la'] ?? ''], 'help'		=> _("If this is set then User Manager will use the defined attribute of the user from the Active Directory server as the extension link. NOTE: If this field is set it will overwrite any manually linked extensions where this attribute extists!!")], ['name'		=> $typeauth.'-status', 'title'		=> _("Status"), 'type' 		=> 'raw', 'index'		=> true, 'value'		=> sprintf('<div id="%s-status" class="bg-%s conection-status"><i class="fa fa-%s"></i>&nbsp; %s</div>', $typeauth, $status['type'],  ($status['type'] == "success" ? 'check' : 'exclamation')  , $status['message']), 'value_raw' => $status, 'help'		=> _("The connection status of the Active Directory Server")]];
+		return ['auth' => $typeauth, 'data' => $form_data];
 	}
 
 	/**
@@ -280,17 +157,7 @@ class Msad extends Auth {
 	 */
 	public static function saveConfig($userman, $freepbx) {
 		$typeauth = self::getShortName();
-		$config = array(
-			'authtype' => $typeauth,
-			"host" => $_REQUEST[$typeauth.'-host'],
-			"port" => $_REQUEST[$typeauth.'-port'],
-			"username" => $_REQUEST[$typeauth.'-username'],
-			"password" => $_REQUEST[$typeauth.'-password'],
-			"domain" => $_REQUEST[$typeauth.'-domain'],
-			"dn" => $_REQUEST[$typeauth.'-dn'],
-			"la" => $_REQUEST[$typeauth.'-la'],
-			"sync" => $_REQUEST['sync']
-		);
+		$config = ['authtype' => $typeauth, "host" => $_REQUEST[$typeauth.'-host'], "port" => $_REQUEST[$typeauth.'-port'], "username" => $_REQUEST[$typeauth.'-username'], "password" => $_REQUEST[$typeauth.'-password'], "domain" => $_REQUEST[$typeauth.'-domain'], "dn" => $_REQUEST[$typeauth.'-dn'], "la" => $_REQUEST[$typeauth.'-la'], "sync" => $_REQUEST['sync']];
 		return $config;
 	}
 
@@ -299,7 +166,8 @@ class Msad extends Auth {
 	 * @return object The LDAP object
 	 */
 	public function getLDAPObject() {
-		$msad->connect();
+		$msad = null;
+  $msad->connect();
 		return $this->ldap;
 	}
 
@@ -317,14 +185,14 @@ class Msad extends Auth {
 				'password'        => $this->password,
 			];
 
-			$this->provider = new \Adldap\Connections\Provider($config);
-			$this->ad = new Adldap(array("default" => $config));
+			$this->provider = new Provider($config);
+			$this->ad = new Adldap(["default" => $config]);
 			$this->ad->addProvider($this->provider, 'default');
 
 			try {
 				$this->ldap = $this->ad->connect();
 			} catch (BindException $e) {
-				throw new \Exception("Unable to Connect to host! Reason: ".$e->getMessage());
+				throw new Exception("Unable to Connect to host! Reason: ".$e->getMessage());
 			}
 		}
 	}
@@ -336,7 +204,7 @@ class Msad extends Auth {
 
 		if(php_sapi_name() !== 'cli') {
 			$path = $this->FreePBX->Config->get("AMPSBIN");
-			exec($path."/fwconsole userman --sync ".escapeshellarg($this->config['id'])." --force");
+			exec($path."/fwconsole userman --sync ".escapeshellarg((string) $this->config['id'])." --force");
 			return;
 		}
 
@@ -359,32 +227,32 @@ class Msad extends Auth {
 	public function executeHooks() {
 		foreach($this->userHooks['add'] as $user) {
 			$this->out("\tAdding User ".$user[1]."...",false);
-			call_user_func_array(array($this,"addUserHook"),$user);
+			call_user_func_array($this->addUserHook(...),$user);
 			$this->out("done");
 		}
 		foreach($this->userHooks['update'] as $user) {
 			$this->out("\tUpdating User ".$user[1]."...",false);
-			call_user_func_array(array($this,"updateUserHook"),$user);
+			call_user_func_array($this->updateUserHook(...),$user);
 			$this->out("done");
 		}
 		foreach($this->userHooks['remove'] as $user) {
 			$this->out("\tRemoving User ".$user[1]."...",false);
-			call_user_func_array(array($this,"delUserHook"),$user);
+			call_user_func_array($this->delUserHook(...),$user);
 			$this->out("done");
 		}
 		foreach($this->groupHooks['add'] as $group) {
 			$this->out("\tAdding Group ".$group[1]."...",false);
-			call_user_func_array(array($this,"addGroupHook"),$group);
+			call_user_func_array($this->addGroupHook(...),$group);
 			$this->out("done");
 		}
 		foreach($this->groupHooks['update'] as $group) {
 			$this->out("\tUpdating Group ".$group[1]."...",false);
-			call_user_func_array(array($this,"updateGroupHook"),$group);
+			call_user_func_array($this->updateGroupHook(...),$group);
 			$this->out("done");
 		}
 		foreach($this->groupHooks['remove'] as $group) {
 			$this->out("\tRemoving Group ".$group[1]."...",false);
-			call_user_func_array(array($this,"delGroupHook"),$group);
+			call_user_func_array($this->delGroupHook(...),$group);
 			$this->out("done");
 		}
 	}
@@ -393,17 +261,7 @@ class Msad extends Auth {
 	 * Return an array of permissions for this adaptor
 	 */
 	public function getPermissions() {
-		return array(
-			"addGroup" => false,
-			"addUser" => false,
-			"modifyGroup" => false,
-			"modifyUser" => false,
-			"modifyGroupAttrs" => false,
-			"modifyUserAttrs" => false,
-			"removeGroup" => false,
-			"removeUser" => false,
-			"changePassword" => false
-		);
+		return ["addGroup" => false, "addUser" => false, "modifyGroup" => false, "modifyUser" => false, "modifyGroupAttrs" => false, "modifyUserAttrs" => false, "removeGroup" => false, "removeUser" => false, "changePassword" => false];
 	}
 
 	/**
@@ -441,8 +299,8 @@ class Msad extends Auth {
 	* @param bool $encrypt Whether to encrypt the password or not. If this is false the system will still assume its hashed as sha1, so this is only useful if importing accounts with previous sha1 passwords
 	* @return array
 	*/
-	public function addUser($username, $password, $default='none', $description=null, $extraData=array(), $encrypt = true) {
-		return array("status" => false, "type" => "danger", "message" => _("LDAP is in Read Only Mode. Addition denied"));
+	public function addUser($username, $password, $default='none', $description=null, $extraData=[], $encrypt = true) {
+		return ["status" => false, "type" => "danger", "message" => _("LDAP is in Read Only Mode. Addition denied")];
 	}
 
 	/**
@@ -454,8 +312,8 @@ class Msad extends Auth {
 	 * @param string $description The group description
 	 * @param array  $users       users to add to said group (by ID)
 	 */
-	public function addGroup($groupname, $description=null, $users=array()) {
-		return array("status" => false, "type" => "danger", "message" => _("LDAP is in Read Only Mode. Addition denied"));
+	public function addGroup($groupname, $description=null, $users=[]) {
+		return ["status" => false, "type" => "danger", "message" => _("LDAP is in Read Only Mode. Addition denied")];
 	}
 
 	/**
@@ -471,16 +329,16 @@ class Msad extends Auth {
 	 * @param string $password The updated password, if null then password isn't updated
 	 * @return array
 	 */
-	public function updateUser($uid, $prevUsername, $username, $default='none', $description=null, $extraData=array(), $password=null, $nodisplay=false) {
+	public function updateUser($uid, $prevUsername, $username, $default='none', $description=null, $extraData=[], $password=null, $nodisplay=false) {
 		$sql = "UPDATE ".$this->userTable." SET `default_extension` = :default_extension WHERE `id` = :uid";
 		$sth = $this->db->prepare($sql);
 		try {
-			$sth->execute(array(':default_extension' => $default, ':uid' => $uid));
-		} catch (\Exception $e) {
-			return array("status" => false, "type" => "danger", "message" => $e->getMessage());
+			$sth->execute([':default_extension' => $default, ':uid' => $uid]);
+		} catch (Exception $e) {
+			return ["status" => false, "type" => "danger", "message" => $e->getMessage()];
 		}
 		$this->updateUserHook($uid, $prevUsername, $username, $description, $password, $extraData, $nodisplay);
-		return array("status" => true, "type" => "success", "message" => _("User updated"), "id" => $uid);
+		return ["status" => true, "type" => "success", "message" => _("User updated"), "id" => $uid];
 	}
 
 	/**
@@ -490,11 +348,11 @@ class Msad extends Auth {
 	 * @param string $description   The group description
 	 * @param array  $users         Array of users in this Group
 	 */
-	public function updateGroup($gid, $prevGroupname, $groupname, $description=null, $users=array(), $nodisplay=false, $extraData=array()) {
+	public function updateGroup($gid, $prevGroupname, $groupname, $description=null, $users=[], $nodisplay=false, $extraData=[]) {
 		$group = $this->getGroupByUsername($prevGroupname);
 		$this->updateGroupData($gid, $extraData);
 		$this->updateGroupHook($gid, $prevGroupname, $groupname, $description, $group['users'],$nodisplay);
-		return array("status" => true, "type" => "success", "message" => _("Group updated"), "id" => $gid);
+		return ["status" => true, "type" => "success", "message" => _("Group updated"), "id" => $gid];
 	}
 
 	/**
@@ -503,14 +361,15 @@ class Msad extends Auth {
 	 * @param {string} $password_sha1 The sha
 	 */
 	public function checkCredentials($username, $password) {
-		$this->connect();
+		$user = [];
+  $this->connect();
 		$ldap = ldap_connect($this->host,$this->port);
 		if($ldap === false) {
 			return false;
 		}
 		ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
 
-		if(strpos($username,"@") === false) {
+		if(!str_contains((string) $username,"@")) {
 			$res = @ldap_bind($ldap, $username."@".$this->domain, $password);
 		} else {
 			$res = @ldap_bind($ldap, $username, $password);
@@ -531,12 +390,12 @@ class Msad extends Auth {
 			$this->updateAllGroups();
 		}
 
-		$groups = array();
+		$groups = [];
 		foreach($this->gcache as $gsid => $group) {
 			$groups[$gsid] = $this->getGroupByAuthID($gsid);
 		}
 
-		$process = array();
+		$process = [];
 		foreach($this->pucache as $usid => $group) {
 			$u = $this->getUserByAuthID($usid);
 			$gsid = $this->limitString($group->getSid());
@@ -544,12 +403,7 @@ class Msad extends Auth {
 				$group = $groups[$gsid];
 				$this->out("\tAdding ".$u['username']." to ".$group['groupname']."...",false);
 				if(empty($process[$group['id']])) {
-					$process[$group['id']] = array(
-						"id" => $group['id'],
-						"description" => $group['description'],
-						"users" => $group['users'],
-						"name" => $group['groupname']
-					);
+					$process[$group['id']] = ["id" => $group['id'], "description" => $group['description'], "users" => $group['users'], "name" => $group['groupname']];
 				}
 				if(!in_array($u['id'],$process[$group['id']]['users'])) {
 					$process[$group['id']]['users'][] = $u['id'];
@@ -559,14 +413,11 @@ class Msad extends Auth {
 		}
 
 		foreach($process as $id => $g) {
-			$this->updateGroupData($g['id'], array(
-				"description" => $g['description'],
-				"users" => $g['users']
-			));
+			$this->updateGroupData($g['id'], ["description" => $g['description'], "users" => $g['users']]);
 			if(isset($this->groupHooks['update'][$g['id']])) {
-				$this->groupHooks['update'][$g['id']] = array($g['id'], $this->groupHooks['update'][$g['id']][2], $g['name'], $g['description'], $g['users']);
+				$this->groupHooks['update'][$g['id']] = [$g['id'], $this->groupHooks['update'][$g['id']][2], $g['name'], $g['description'], $g['users']];
 			} else {
-				$this->groupHooks['update'][$g['id']] = array($g['id'], $g['name'], $g['name'], $g['description'], $g['users']);
+				$this->groupHooks['update'][$g['id']] = [$g['id'], $g['name'], $g['name'], $g['description'], $g['users']];
 			}
 		}
 	}
@@ -585,7 +436,7 @@ class Msad extends Auth {
 		$paginator = $search->groups()->paginate($this->limit, 1);
 		$results = $paginator->getResults();
 
-		$this->out("Found ".count($results). " groups");
+		$this->out("Found ".(is_countable($results) ? count($results) : 0). " groups");
 
 		$sql = "DROP TABLE IF EXISTS msad_procs_temp";
 		$sth = $this->FreePBX->Database->prepare($sql);
@@ -604,7 +455,7 @@ class Msad extends Auth {
 			mkdir($tpath,0777,true);
 		}
 		declare(ticks = 1);
-		pcntl_signal(SIGCHLD, array($this,"sig_handler"));
+		pcntl_signal(SIGCHLD, $this->sig_handler(...));
 		$max = getCpuCount() * 7;
 		$this->active = 0;
 		$this->out("Forking out $max active children at a time");
@@ -619,8 +470,8 @@ class Msad extends Auth {
 			$pid = pcntl_fork();
 			if (!$pid) {
 				$iid = getmypid().time();
-				\FreePBX::Database()->__construct();
-				$db = new \DB();
+				FreePBX::Database()->__construct();
+				$db = new DB();
 				$this->out("\tGetting users from ".$result->getName()."...");
 				$this->connect(true);
 				$search = $this->ad->search();
@@ -632,7 +483,7 @@ class Msad extends Auth {
 				file_put_contents($tpath."/".$iid."-group",$sgroup);
 				$sql = "INSERT INTO msad_procs_temp (`pid`,`udata`,`gdata`) VALUES (?,?,?)";
 				$sth = $this->FreePBX->Database->prepare($sql);
-				$sth->execute(array($i,$iid."-users",$iid."-group"));
+				$sth->execute([$i, $iid."-users", $iid."-group"]);
 				$this->out("\tFork $i finished Getting users from ".$result->getName());
 				exit($i);
 			}
@@ -640,8 +491,8 @@ class Msad extends Auth {
 		while (pcntl_waitpid(0, $status) != -1) {
 			$status = pcntl_wexitstatus($status);
 		}
-		\FreePBX::Database()->__construct();
-		$db = new \DB();
+		FreePBX::Database()->__construct();
+		$db = new DB();
 		//$this->connect(true); //Do we have to reconnect?
 
 		$this->out("Child processes have finished");
@@ -649,7 +500,7 @@ class Msad extends Auth {
 		$sql = "SELECT * FROM msad_procs_temp";
 		$sth = $this->FreePBX->Database->prepare($sql);
 		$sth->execute();
-		$children = $sth->fetchAll(\PDO::FETCH_ASSOC);
+		$children = $sth->fetchAll(PDO::FETCH_ASSOC);
 		$this->out("Adding Users from non-primary groups...");
 		foreach($children as $child) {
 			if(!file_exists($tpath."/".$child['udata']) || !file_exists($tpath."/".$child['gdata'])) {
@@ -663,10 +514,10 @@ class Msad extends Auth {
 			$group = unserialize($gdata);
 
 			if(empty($users) || empty($group)) {
-				throw new \Exception("Users or Groups are empty");
+				throw new Exception("Users or Groups are empty");
 			}
 
-			$members = array();
+			$members = [];
 			foreach($users as $user) {
 				$usid = $this->limitString($user->getSid());
 				$u = $this->getUserByAuthID($usid);
@@ -674,21 +525,18 @@ class Msad extends Auth {
 					$members[] = $u['id'];
 				}
 			}
-			$sid = $this->limitString($$group->getSid());
+			$sid = $this->limitString(${$group}->getSid());
 			$this->gcache[$sid] = $group;
 			$um = $this->linkGroup($group->getName(), $sid);
 			if($um['status']) {
 				$this->out("\t".$group->getAccountName(). ": ".$um['message']);
-				$this->out("\t\tFound ".count($users). " users in ".$group->getName());
+				$this->out("\t\tFound ".(is_countable($users) ? count($users) : 0). " users in ".$group->getName());
 				$description = !empty($group->getAttribute('description',0)) ? $group->getAttribute('description',0) : '';
-				$this->updateGroupData($um['id'], array(
-					"description" => $description,
-					"users" => $members
-				));
+				$this->updateGroupData($um['id'], ["description" => $description, "users" => $members]);
 				if($um['new']) {
-					$this->groupHooks['add'][$um['id']] = array($um['id'], $group->getName(), $description, $members);
+					$this->groupHooks['add'][$um['id']] = [$um['id'], $group->getName(), $description, $members];
 				} else {
-					$this->groupHooks['update'][$um['id']] = array($um['id'], $um['prevGroupname'], $group->getName(), $description, $members);
+					$this->groupHooks['update'][$um['id']] = [$um['id'], $um['prevGroupname'], $group->getName(), $description, $members];
 				}
 			}
 		}
@@ -698,7 +546,7 @@ class Msad extends Auth {
 		foreach($fgroups as $group) {
 			if(!isset($this->gcache[$group['authid']])) {
 				$this->deleteGroupByGID($group['id'], false);
-				$this->groupHooks['remove'][$group['id']] = array($group['id'], $group);
+				$this->groupHooks['remove'][$group['id']] = [$group['id'], $group];
 			}
 		}
 		$sql = "DROP TABLE msad_procs_temp";
@@ -721,7 +569,7 @@ class Msad extends Auth {
 		$paginator = $search->users()->paginate($this->limit, 1);
 		$results = $paginator->getResults();
 
-		$this->out("Found ".count($results). " users");
+		$this->out("Found ".(is_countable($results) ? count($results) : 0). " users");
 
 		foreach($results as $result) {
 			$sid = $this->limitString($result->getSid());
@@ -732,17 +580,7 @@ class Msad extends Auth {
 			$um = $this->linkUser($result->getAccountName(), $sid);
 			if($um['status']) {
 				$this->out("\t".$result->getAccountName(). ": ".$um['message']);
-				$data = array(
-					"description" => !empty($result->getAttribute('description',0)) ? $result->getAttribute('description',0) : '',
-					"primary_group" => !empty($result->getPrimaryGroupId()) ? $result->getPrimaryGroupId() : '',
-					"fname" => !empty($result->getFirstName()) ? $result->getFirstName() : '',
-					"lname" => !empty($result->getLastName()) ? $result->getLastName() : '',
-					"displayname" => !empty($result->getDisplayName()) ? $result->getDisplayName() : '',
-					"department" => !empty($result->getDepartment()) ? $result->getDepartment() : '',
-					"email" => !empty($result->getEmail()) ? $result->getEmail() : '',
-					"cell" => !empty($result->getAttribute('mobile',0)) ? $result->getAttribute('mobile',0) : '',
-					"work" => !empty($result->getTelephoneNumber()) ? $result->getTelephoneNumber() : '',
-				);
+				$data = ["description" => !empty($result->getAttribute('description',0)) ? $result->getAttribute('description',0) : '', "primary_group" => !empty($result->getPrimaryGroupId()) ? $result->getPrimaryGroupId() : '', "fname" => !empty($result->getFirstName()) ? $result->getFirstName() : '', "lname" => !empty($result->getLastName()) ? $result->getLastName() : '', "displayname" => !empty($result->getDisplayName()) ? $result->getDisplayName() : '', "department" => !empty($result->getDepartment()) ? $result->getDepartment() : '', "email" => !empty($result->getEmail()) ? $result->getEmail() : '', "cell" => !empty($result->getAttribute('mobile',0)) ? $result->getAttribute('mobile',0) : '', "work" => !empty($result->getTelephoneNumber()) ? $result->getTelephoneNumber() : ''];
 				//automatically assign Extension to this User
 				if(!empty($this->linkAttr) && !empty($result->getAttribute($this->linkAttr,0))) {
 					$ext = $result->getAttribute($this->linkAttr,0);
@@ -758,9 +596,9 @@ class Msad extends Auth {
 				}
 				$this->updateUserData($um['id'], $data);
 				if($um['new']) {
-					$this->userHooks['add'][$um['id']] = array($um['id'], $result->getAccountName(), $data['description'], null, false, $data);
+					$this->userHooks['add'][$um['id']] = [$um['id'], $result->getAccountName(), $data['description'], null, false, $data];
 				} else {
-					$this->userHooks['update'][$um['id']] = array($um['id'], $um['prevUsername'], $result->getAccountName(), $data['description'], null, $data);
+					$this->userHooks['update'][$um['id']] = [$um['id'], $um['prevUsername'], $result->getAccountName(), $data['description'], null, $data];
 				}
 			}
 		}
@@ -769,7 +607,7 @@ class Msad extends Auth {
 		foreach($fusers as $user) {
 			if(!isset($this->ucache[$user['authid']])) {
 				$this->deleteUserByID($user['id'], false);
-				$this->userHooks['remove'][$user['id']] = array($user['id'],$user);
+				$this->userHooks['remove'][$user['id']] = [$user['id'], $user];
 			}
 		}
 	}
@@ -779,7 +617,8 @@ class Msad extends Auth {
 	 * @param  string $binsid The binary string
 	 */
 	public function binToStrSid($binsid) {
-		$hex_sid = bin2hex($binsid);
+		$subauth = [];
+  $hex_sid = bin2hex($binsid);
 		$rev = hexdec(substr($hex_sid, 0, 2));
 		$subcount = hexdec(substr($hex_sid, 2, 2));
 		$auth = hexdec(substr($hex_sid, 4, 12));
@@ -787,7 +626,7 @@ class Msad extends Auth {
 
 		for ($x=0;$x < $subcount; $x++) {
 			$subauth[$x] =
-			hexdec($this->littleEndian(substr($hex_sid, 16 + ($x * 8), 8)));
+			hexdec((string) $this->littleEndian(substr($hex_sid, 16 + ($x * 8), 8)));
 			$result .= "-" . $subauth[$x];
 		}
 
@@ -841,6 +680,6 @@ class Msad extends Auth {
 	}
 
 	private function limitString($string) {
-		return (strlen($string) > 255) ? substr($string,0,255) : $string;
+		return (strlen((string) $string) > 255) ? substr((string) $string,0,255) : $string;
 	}
 }

@@ -15,7 +15,7 @@ class Restore Extends Base\RestoreBase{
 			$this->log(_("Importing Module XML userman"));
 			$sql = "REPLACE INTO module_xml (`id`, `data`) VALUES('userman_data', ?)";
 			$sth = $this->FreePBX->Database->prepare($sql);
-			$sth->execute(array(json_encode($configs['modulexml'])));
+			$sth->execute([json_encode($configs['modulexml'], JSON_THROW_ON_ERROR)]);
 		}
 
 		$this->processData($configs['usermantables']);
@@ -44,8 +44,8 @@ class Restore Extends Base\RestoreBase{
 		foreach ($usermantables as $table => $datas) {
 			if ($table == 'userman_directories' || $table == 'userman_users') {
 				if($defaultDir) {
-					$addDir = array("auth" => $defaultDir);
-					$datawithDir = array();
+					$addDir = ["auth" => $defaultDir];
+					$datawithDir = [];
 					foreach ($datas as $data) {
 						$datawithDir[] = array_merge($data,$addDir);
 					}
@@ -61,7 +61,7 @@ class Restore Extends Base\RestoreBase{
 			if ($table == 'userman_groups') {
 				$cleandata = [];
 				foreach($datas as $row) {
-					$row['users'] =  stripslashes($row['users']);
+					$row['users'] =  stripslashes((string) $row['users']);
 					$cleandata[] = $row;
 				}
 				$this->addDataToTableFromArray($table,$cleandata);
@@ -72,7 +72,7 @@ class Restore Extends Base\RestoreBase{
 				$cleandata = [];
 				foreach($datas as $row) {
 					if ($row['type'] == 'json-arr') {
-						$row['val'] = stripslashes($row['val']);
+						$row['val'] = stripslashes((string) $row['val']);
 					}
 					$cleandata[] = $row;
 				}

@@ -6,7 +6,7 @@ $disfkey = "SET FOREIGN_KEY_CHECKS=0";
 $db->query($disfkey);
 
 out('Remove all User Management tables');
-$tables = array('userman_users', 'userman_users_settings', 'userman_groups', 'userman_groups_settings');
+$tables = ['userman_users', 'userman_users_settings', 'userman_groups', 'userman_groups_settings'];
 $error_mysql = "";
 foreach ($tables as $table) {
 	$sql = "DROP TABLE IF EXISTS {$table}";

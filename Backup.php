@@ -1,5 +1,6 @@
 <?php
 namespace FreePBX\modules\Userman;
+use FreePBX;
 use FreePBX\modules\Backup as Base;
 class Backup Extends Base\BackupBase{
   public function runBackup($id,$transaction){
@@ -9,7 +10,7 @@ class Backup Extends Base\BackupBase{
 
     // Backup > Email Settings
     $this->log(_("Exporting Module XML userman"));
-    $userman = \FreePBX::Userman();
+    $userman = FreePBX::Userman();
     $modulexml = $userman->getGlobalsettings();
 
     $configs   = [
