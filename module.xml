@@ -35,14 +35,14 @@
 			<method callingMethod="export" class="Userman" namespace="FreePBX\modules">bulkhandlerExport</method>
 		</bulkhandler>
 		<userman class="Userman" namespace="FreePBX\modules">
-        	<method callingMethod="addGroup" class="Userman" namespace="FreePBX\modules">pwdAddGroup</method>
-         	<method callingMethod="updateGroup" class="Userman" namespace="FreePBX\modules">pwdUpdateGroup</method>
-         	<method callingMethod="addUser" class="Userman" namespace="FreePBX\modules">pwdAddUser</method>
-         	<method callingMethod="updateUser" class="Userman" namespace="FreePBX\modules">pwdUpdateUser</method>
-         	<method callingMethod="myShowPage" class="Userman" namespace="FreePBX\modules">pwdShowPage</method>
-         	<method callingMethod="delUser" class="Userman" namespace="FreePBX\modules">pwdDeleteUser</method>
-         	<method callingMethod="resetPasswordWithToken" class="Userman" namespace="FreePBX\modules">resetPasswordExpiry</method>
- 		</userman>
+			<method callingMethod="addGroup" class="Userman" namespace="FreePBX\modules">pwdAddGroup</method>
+			<method callingMethod="updateGroup" class="Userman" namespace="FreePBX\modules">pwdUpdateGroup</method>
+			<method callingMethod="addUser" class="Userman" namespace="FreePBX\modules">pwdAddUser</method>
+			<method callingMethod="updateUser" class="Userman" namespace="FreePBX\modules">pwdUpdateUser</method>
+			<method callingMethod="myShowPage" class="Userman" namespace="FreePBX\modules">pwdShowPage</method>
+			<method callingMethod="delUser" class="Userman" namespace="FreePBX\modules">pwdDeleteUser</method>
+			<method callingMethod="resetPasswordWithToken" class="Userman" namespace="FreePBX\modules">resetPasswordExpiry</method>
+		</userman>
 	</hooks>
 	<database>
 		<table name="userman_users">
@@ -175,14 +175,14 @@
 			</key>
 		</table>
 		<table name="userman_password_reminder">
-            <field name="id" type="integer" primarykey="true" autoincrement="true"/>
-            <field name="uid" type="string" length="40" default=""/>
-            <field name="username" type="string" length="40" default=""/>
-            <field name="usermail" type="string" length="40" default=""/>
-            <field name="usertype" type="string" length="20" default=""/>
-            <field name="passwordChangedAt" type="datetime"/>
-            <field name="passwordExpiryDate" type="datetime"/>
-     	</table>
+			<field name="id" type="integer" primarykey="true" autoincrement="true"/>
+			<field name="uid" type="string" length="40" default=""/>
+			<field name="username" type="string" length="40" default=""/>
+			<field name="usermail" type="string" length="40" default=""/>
+			<field name="usertype" type="string" length="20" default=""/>
+			<field name="passwordChangedAt" type="datetime"/>
+			<field name="passwordExpiryDate" type="datetime"/>
+		</table>
 	</database>
 	<supported>
 		<version>17.0</version>
