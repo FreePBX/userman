@@ -40,7 +40,7 @@ class Userman extends Modules
 		$this->astman = $this->UCP->FreePBX->astman;
 		$this->userman = $this->UCP->FreePBX->Userman;
 		//Setting retrieved from the UCP Interface in User Manager in Admin
-		$this->enabled = $this->UCP->getCombinedSettingByID($this->user['id'], $this->module, 'enabled');
+		$this->enabled = $this->UCP->getCombinedSettingByID($this->user['id']??'', $this->module, 'enabled');
 	}
 
 	/**
