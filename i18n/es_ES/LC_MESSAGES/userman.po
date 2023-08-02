@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-08 07:19+0000\n"
+"POT-Creation-Date: 2023-08-02 15:01+0000\n"
 "PO-Revision-Date: 2016-12-11 08:33+0200\n"
 "Last-Translator: Ernesto <ecasas@sangoma.com>\n"
 "Language-Team: Spanish <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -1830,7 +1830,7 @@ msgstr "El contexto del buzón de voz los usuarios"
 
 #: views/templatemembers.php:17
 msgid ""
-"There is NO members associated with this template. Please use Groups->UCP-"
+"There are NO members associated with this template. Please use Groups->UCP-"
 ">General or User->UCP->General To associate this template to Users ."
 msgstr ""
 
