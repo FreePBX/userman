@@ -14,7 +14,7 @@ function showMiddle() {
 		if(!is_array($members['members']) || count($members['members']) == 0){
 	?>
 	<div class="alert alert-warning">
-		<?php echo _("There is NO members associated with this template. Please use Groups->UCP->General or User->UCP->General To associate this template to Users .");?>
+		<?php echo _("There are NO members associated with this template. Please use Groups->UCP->General or User->UCP->General To associate this template to Users .");?>
 	</div>
 	<?php
 		}
