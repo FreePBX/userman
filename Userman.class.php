@@ -649,19 +649,19 @@ class Userman extends FreePBX_Helpers implements BMO {
 						$this->addTemplateSettings($request['id'],$uid);
 					} else {
 						$id = $this->addUcpTemplate($templateData);
-						$this->addTemplateSettings($id,$uid,$userdata['username'],$request['createtemp']);
+						$this->addTemplateSettings($id,$uid,$userdata['username'] ?? '',$request['createtemp']);
 					}
 				break;
 				case 'rebuilducp':
 					switch($request['actiontype']){
 						case 'rebuild' :
-							$users = is_array($request['users_selected'])?$request['users_selected']:[];
+							$users = (isset($request['users_selected']) && is_array($request['users_selected'])) ? $request['users_selected'] : [];
 							$userids = array_unique($users);
 							$templateid = $request['templateid'];
 							$this->rebuildtemplate($userids,$templateid);
 						break;
 						case 'merge':
-							$users = is_array($request['users_selected'])?$request['users_selected']:[];
+							$users = (isset($request['users_selected']) && is_array($request['users_selected'])) ? $request['users_selected'] : [];
 							$userids = array_unique($users);
 							$templateid = $request['templateid'];
 							$this->mergeTemplateWithExistingUserSettings($userids,$templateid);

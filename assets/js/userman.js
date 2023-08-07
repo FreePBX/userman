@@ -363,7 +363,13 @@ $( document ).ready(function() {
 	$(".nav-tabs a[href="+hash+"]").tab('show');
 	//we should be at the user tab by default so we will show add user.
 	//on first load of groups tab disable add button as all directories is selected by default
-	$("#add-groups").addClass('addgrpdisable');
+	if($("#directory-groups").val() == '') {
+		$("#add-groups").attr('disabled', true);
+		$("#add-groups").addClass('addgrpdisable');
+	} else {
+		$("#add-groups").attr('disabled', false);
+		$("#add-groups").removeClass('addgrpdisable');
+	}
 });
 //this fires when you change tabs
 $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {

@@ -11,7 +11,7 @@ function showMiddle() {
 <div class="fpbx-container">
 	<h1>UCP Templates Users</h1>
 	<?php 
-		if(!is_array($members['members']) || count($members['members']) == 0){
+		if(isset($members['members']) && (!is_array($members['members']) || count($members['members']) == 0)){
 	?>
 	<div class="alert alert-warning">
 		<?php echo _("There is NO members associated with this template. Please use Groups->UCP->General or User->UCP->General To associate this template to Users .");?>
@@ -32,11 +32,13 @@ function showMiddle() {
 				<fieldset class='users_list ui-sortable left col-sm-5' id='users_deny' data-otherid='users_allow'>
 					<legend> <?php echo _("Members")?> </legend>
 					<?php 
-					if(!is_array($members['members'])){
+					if(isset($members['members']) && !is_array($members['members'])){
 						$members['members'] = [];
 					}
-					foreach ($members['members'] as $u) {
-						echo "    <span class='dragitem' data-userid='".$u['id']."'>".$u['username']."</span>\n";
+					if(isset($members['members'])) {
+						foreach ($members['members'] as $u) {
+							echo "    <span class='dragitem' data-userid='".$u['id']."'>".$u['username']."</span>\n";
+						}
 					}
 					?>
 					</fieldset>
