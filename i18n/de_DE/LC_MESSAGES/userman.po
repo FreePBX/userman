@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-02 15:01+0000\n"
+"POT-Creation-Date: 2023-08-08 07:55+0000\n"
 "PO-Revision-Date: 2018-10-24 01:00+0000\n"
 "Last-Translator: Bastian Mertgen <b.mertgen@bastian-mertgen.de>\n"
 "Language-Team: German <http://*/projects/freepbx/userman/de/>\n"
@@ -2035,7 +2035,7 @@ msgstr "Typ"
 
 #: views/welcome.php:121
 msgid ""
-"UCP Template association with users is done through Groups->UCP->General Or "
+"UCP Template association with users are done through Groups->UCP->General Or "
 "users->UCP->General. For More details "
 msgstr ""
 
