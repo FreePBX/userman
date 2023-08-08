@@ -459,13 +459,13 @@ class Userman extends FreePBX_Helpers implements BMO {
 					if(!empty($request['id'])) {
 						if ( empty ( $config['password'] ) ) {
 							$auth_settings = $this->getConfig("auth-settings", $request['id']);
-							$config['password'] = $auth_settings['password'];
+							$config['password'] = $auth_settings['password'] ?? '';
 						}
 						$id = $this->updateDirectory($request['id'], $request['name'], $request['enable'], $config);
 					} else {
 						$id = $this->addDirectory($request['authtype'], $request['name'], $request['enable'], $config);
 					}
-					if(method_exists($this->directories[$id],'sync')) {
+					if(method_exists($this->directories[$id] ?? '','sync')) {
 						$this->directories[$id]->sync();
 					}
 				break;

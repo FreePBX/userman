@@ -54,7 +54,7 @@ class Freepbx extends Auth {
 	 */
 	public static function saveConfig($userman, $freepbx) {
 		$typeauth = self::getShortName();
-		$config = ['authtype' => $typeauth, "default-groups" => $_REQUEST[$typeauth.'-default-groups']];
+		$config = ['authtype' => $typeauth, "default-groups" => $_REQUEST[$typeauth.'-default-groups'] ?? ''];
 		return $config;
 	}
 
