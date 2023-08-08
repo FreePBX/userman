@@ -1873,7 +1873,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 			//Default New Group Settings
 			$this->setModuleSettingByGID($gid,'contactmanager','show', true);
 			$this->setModuleSettingByGID($gid,'contactmanager','groups',array($gid));
-			$this->setModuleSettingByGID($gid,'fax','enabled',true);
+			$this->setModuleSettingByGID($gid,'fax','enabled', false);
 			$this->setModuleSettingByGID($gid,'fax','attachformat',"pdf");
 			$this->setModuleSettingByGID($gid,'faxpro','localstore',"true");
 			//$this->setModuleSettingByGID($gid,'restapi','restapi_token_status', true);
@@ -1904,7 +1904,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 			$this->setModuleSettingByGID($gid,'ucp|Endpoint','enable', true);
 			$this->setModuleSettingByGID($gid,'ucp|Endpoint','assigned', array("self"));
 			$this->setModuleSettingByGID($gid,'ucp|Conferencespro','assigned', array("linked"));
-			$this->setModuleSettingByGID($gid,'conferencespro','link', true);
+			$this->setModuleSettingByGID($gid,'conferencespro','link', false);
 			$this->setModuleSettingByGID($gid,'conferencespro','ivr', true);
 			$this->setModuleSettingByGID($gid,'ucp|Sysadmin','vpn_enable', true);
 			$tfsettings = array(
