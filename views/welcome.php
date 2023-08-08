@@ -118,7 +118,7 @@
 							</div>
 							<div role="tabpanel" id="ucptemplates" class="tab-pane display">
 								<div class="table-responsive">
-									<div class="alert alert-info"><?php echo _("UCP Template association with users is done through Groups->UCP->General Or users->UCP->General. For More details ")?><a href="https://wiki.sangoma.com/display/FPG/UCP+User+Templates"> Wiki</a></div>
+									<div class="alert alert-info"><?php echo _("UCP Template association with users are done through Groups->UCP->General Or users->UCP->General. For More details ")?><a href="https://wiki.sangoma.com/display/FPG/UCP+User+Templates"> Wiki</a></div>
 									<div class="alert alert-warning">
 										<?php echo _("Template rows highlighted yellow have not been rebuilt since changes were made to the template.");?>
 										</div>
