@@ -649,7 +649,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 						$this->addTemplateSettings($request['id'],$uid);
 					} else {
 						$id = $this->addUcpTemplate($templateData);
-						$this->addTemplateSettings($id,$uid,$userdata['username'] ?? '',$request['createtemp']);
+						$this->addTemplateSettings($id,$uid,$userdata['username']??"" ,$request['createtemp']);
 					}
 				break;
 				case 'rebuilducp':
@@ -1985,7 +1985,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 				$wids = $sth->fetch(PDO::FETCH_ASSOC);
 				unset($thiswidget);
 				$thiswidget = [];
-				$widgets = json_decode((string) $wids['val'],true, 512, JSON_THROW_ON_ERROR);
+				$widgets = json_decode((string) $wids['val']??'',true, 512, JSON_THROW_ON_ERROR);
 				$widgets = is_array($widgets)?$widgets:[];
 				unset($allowedwidget);
 				$allowedwidget = [];
@@ -2074,12 +2074,14 @@ class Userman extends FreePBX_Helpers implements BMO {
 	private function gettemplateCSVData($id = ""){
 		if(empty($id)){
 			$sql = "SELECT a.id,a.templatename,a.description,b.key,b.val,b.type FROM userman_ucp_templates a,userman_template_settings b Where a.id =b.tid";
+			$params = []; 
 		}
 		else{	
 			$sql = "SELECT a.id,a.templatename,a.description,b.key,b.val,b.type FROM userman_ucp_templates a,userman_template_settings b Where a.id =b.tid AND id=:id";
+			$params = [':id' => $id]; 
 		}		
 		$sth = $this->db->prepare($sql);
-		$sth->execute([':id' => $id]);
+		$sth->execute($params);
 		$result = $sth->fetchAll(PDO::FETCH_ASSOC);
 		return $result;
 	}
