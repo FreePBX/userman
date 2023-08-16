@@ -2253,6 +2253,10 @@ class Userman extends FreePBX_Helpers implements BMO {
 				$sth = $this->db->prepare($sql);
 				$sth->execute(array(':tid' => $templateid,':key'=>$layoutkey));
 				$wids = $sth->fetch(PDO::FETCH_ASSOC);
+				// no results continue to next loop
+				if(!is_array($wids)) {
+					continue;
+				}
 				unset($thiswidget);
 				$thiswidget = [];
 				$widgets = json_decode($wids['val'],true);
