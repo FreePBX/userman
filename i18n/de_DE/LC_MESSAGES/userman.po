@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-16 10:02+0000\n"
+"POT-Creation-Date: 2023-08-23 10:56+0000\n"
 "PO-Revision-Date: 2018-10-24 01:00+0000\n"
 "Last-Translator: Bastian Mertgen <b.mertgen@bastian-mertgen.de>\n"
 "Language-Team: German <http://*/projects/freepbx/userman/de/>\n"
@@ -243,7 +243,7 @@ msgid "Could not find the voicemail context"
 msgstr "Konnte den Kontext für Sprachnachrichten nicht finden"
 
 #: views/welcome.php:136
-msgid "Create Generic Templates"
+msgid "Create Generic User"
 msgstr ""
 
 #: functions.inc/auth/modules/Msad2.php:305
@@ -265,6 +265,11 @@ msgstr "Benutzermanager Benutzer erstellen"
 
 #: views/ucptemplates.php:82
 msgid "Create Using Template Creator"
+msgstr ""
+
+#: Userman.class.php:4173
+#, php-format
+msgid "Created the Generic User '%s'. This user is listed in the users table."
 msgstr ""
 
 #: views/groups.php:241 views/users.php:616
@@ -293,15 +298,11 @@ msgid "Delete"
 msgstr "Löschen"
 
 #: views/welcome.php:140
-msgid "Delete Generic Templates"
+msgid "Delete Generic User"
 msgstr ""
 
 #: Console/Userman.class.php:25
 msgid "Delete generic templates user"
-msgstr ""
-
-#: Userman.class.php:4130
-msgid "Deleted User and Device"
 msgstr ""
 
 #: views/users.php:353
@@ -1045,10 +1046,6 @@ msgstr "Kein*e"
 msgid "Not Connected"
 msgstr "Nicht verbunden"
 
-#: Userman.class.php:4175
-msgid "Not able to create User under"
-msgstr ""
-
 #: PasswordExpReminder.php:654 PasswordExpReminder.php:657
 msgid "Not able to reset password"
 msgstr ""
@@ -1163,10 +1160,6 @@ msgstr ""
 #: Userman.class.php:312
 #, php-format
 msgid "Password should have minimum %s value of %d, detected = %d"
-msgstr ""
-
-#: Userman.class.php:1389
-msgid "Please Create Generic Template to View /Edit Template"
 msgstr ""
 
 #: Userman.class.php:1379
@@ -2151,10 +2144,6 @@ msgstr "Attribut für die Mobiltelefonnummer des Benutzers"
 #: functions.inc/auth/modules/Openldap2.php:501
 msgid "User Company attribute"
 msgstr "Attribut für die Firma des Benutzers"
-
-#: Userman.class.php:4173
-msgid "User Created"
-msgstr ""
 
 #: functions.inc/auth/modules/Msad2.php:372
 #: functions.inc/auth/modules/Openldap.php:274

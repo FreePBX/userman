@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: User Management\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-16 10:02+0000\n"
+"POT-Creation-Date: 2023-08-23 10:56+0000\n"
 "PO-Revision-Date: 2022-04-21 09:01+0000\n"
 "Last-Translator: Dmitriy Q <krotesk@ya.ru>\n"
 "Language-Team: Russian <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -240,7 +240,7 @@ msgid "Could not find the voicemail context"
 msgstr "Не удалось найти контекст голосовой почты"
 
 #: views/welcome.php:136
-msgid "Create Generic Templates"
+msgid "Create Generic User"
 msgstr ""
 
 #: functions.inc/auth/modules/Msad2.php:305
@@ -262,6 +262,11 @@ msgstr "Создание пользователя Менеджера польз�
 
 #: views/ucptemplates.php:82
 msgid "Create Using Template Creator"
+msgstr ""
+
+#: Userman.class.php:4173
+#, php-format
+msgid "Created the Generic User '%s'. This user is listed in the users table."
 msgstr ""
 
 #: views/groups.php:241 views/users.php:616
@@ -290,15 +295,11 @@ msgid "Delete"
 msgstr "Удалить"
 
 #: views/welcome.php:140
-msgid "Delete Generic Templates"
+msgid "Delete Generic User"
 msgstr ""
 
 #: Console/Userman.class.php:25
 msgid "Delete generic templates user"
-msgstr ""
-
-#: Userman.class.php:4130
-msgid "Deleted User and Device"
 msgstr ""
 
 #: views/users.php:353
@@ -1010,10 +1011,6 @@ msgstr "Отсутствует"
 msgid "Not Connected"
 msgstr "Не подключено"
 
-#: Userman.class.php:4175
-msgid "Not able to create User under"
-msgstr ""
-
 #: PasswordExpReminder.php:654 PasswordExpReminder.php:657
 msgid "Not able to reset password"
 msgstr ""
@@ -1127,10 +1124,6 @@ msgstr ""
 #: Userman.class.php:312
 #, php-format
 msgid "Password should have minimum %s value of %d, detected = %d"
-msgstr ""
-
-#: Userman.class.php:1389
-msgid "Please Create Generic Template to View /Edit Template"
 msgstr ""
 
 #: Userman.class.php:1379
@@ -1998,10 +1991,6 @@ msgstr ""
 #: functions.inc/auth/modules/Msad2.php:504
 #: functions.inc/auth/modules/Openldap2.php:501
 msgid "User Company attribute"
-msgstr ""
-
-#: Userman.class.php:4173
-msgid "User Created"
 msgstr ""
 
 #: functions.inc/auth/modules/Msad2.php:372
