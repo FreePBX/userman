@@ -603,7 +603,7 @@ $("#generatetemplatecreator").click(function(e) {
 	});
 });
 $("#deletetemplatecreator").click(function(e) {
-	if(confirm(_("Are you sure to delete this Generic template ?"))) {
+	if(confirm(_("Are you sure to delete the Generic User?"))) {
 		$.post("ajax.php?module=userman&command=deletetemplatecreator", {}, function( data ) {
 			if(data.status) {
 				alert(data.message);
