@@ -1384,9 +1384,9 @@ class Userman extends FreePBX_Helpers implements BMO {
 						$ret = $this->updateUserUcpByTemplate($uID, $request['id']);
 						return array("status" => true,'key'=>$key);
 					}
-					return array("status" => false, 'message' => ('Please Create Generic Template to View /Edit Template'));
+					return array("status" => false, 'message'=> 'Please Create the Generic User to View /Edit Template');
 				}else {
-					return array("status" => false, 'message' => _('Please Create Generic Template to View /Edit Template'));
+					return array("status" => false, 'message'=> 'Please Create the Generic User to View /Edit Template');
 				}
 			break;
 			case "rebuildtemplate":
@@ -4127,7 +4127,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 		$this->FreePBX->Core->delUser($unusedexten);
 		$status = $this->deleteUserByID($uid);
 		$this->delConfig('unlockkey','templatecreator');
-		return ['status'=>$status, 'message' => _('Deleted User and Device')];
+		return ['status'=>$status,'message'=> 'Deleted the Generic User and Device'];
 	}
 
 /*Generate a User for Template creation,view/edit */
@@ -4170,9 +4170,9 @@ class Userman extends FreePBX_Helpers implements BMO {
 				}
 				$sth->execute(array($uid,$row['module'],$row['key'],$val,$row['type']));
 			}
-			return ['status'=>true, 'uid'=>$uid, 'message' => _('User Created')];
+			return ['status'=>true,'uid'=>$uid,'message'=> sprintf(_("Created the Generic User '%s'. This user is listed in the users table."), $this->displayNameTemplateCreator)];
 		}else {
-			return ['status'=>false, 'message' => _('Not able to create User under')];
+			return ['status'=>false,'message'=>'Unable to create the Generic User'];
 		}
 	}
 

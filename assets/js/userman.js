@@ -645,7 +645,7 @@ $("#generatetemplatecreator").click(function(e) {
 });
 $("#deletetemplatecreator").click(function(e) {
 	fpbxConfirm(
-		_("Are you sure to delete this Generic template?"),
+		_("Are you sure to delete the Generic User?"),
 		_("Yes"), _("No"),
 		function() {
 			$.post(window.FreePBX.ajaxurl, {command: "deletetemplatecreator", module: "userman"}, function( data ) {
