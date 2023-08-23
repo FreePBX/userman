@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-02 09:23+0000\n"
+"POT-Creation-Date: 2023-08-23 10:56+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -171,7 +171,7 @@ msgid "Are you sure rebuild all Users widgets associated with this Template ?"
 msgstr ""
 
 #: assets/js/userman.js:606
-msgid "Are you sure to delete this Generic template ?"
+msgid "Are you sure to delete the Generic User?"
 msgstr ""
 
 #: assets/js/userman.js:198
@@ -259,7 +259,7 @@ msgid "Could not find the voicemail context"
 msgstr ""
 
 #: views/welcome.php:141
-msgid "Create Generic Templates"
+msgid "Create Generic User"
 msgstr ""
 
 #: views/msad2.php:189
@@ -282,6 +282,11 @@ msgstr ""
 
 #: views/ucptemplates.php:82
 msgid "Create Using Template Creator"
+msgstr ""
+
+#: Userman.class.php:4121
+#, php-format
+msgid "Created the Generic User '%s'. This user is listed in the users table."
 msgstr ""
 
 #: views/groups.php:240
@@ -318,7 +323,7 @@ msgid "Delete"
 msgstr ""
 
 #: views/welcome.php:145
-msgid "Delete Generic Templates"
+msgid "Delete Generic User"
 msgstr ""
 
 #: Console/Userman.class.php:25
