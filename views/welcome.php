@@ -130,19 +130,19 @@
 
 									<div id="toolbar-ucptemplates">
 										<a href="?display=userman&amp;action=adducptemplate" id="add-ucptemplates" class="btn btn-add" data-type="ucptemplates" data-section="ucptemplates">
-											<i class="fa fa-user-plus"></i> <span><?php echo _('Add')?></span>
+											<i class="fa fa-clipboard"></i> <span><?php echo _('Add')?></span>
 										</a>
 										<button id="remove-ucptemplates" class="btn btn-danger btn-remove" data-type="ucptemplates" data-section="ucptemplates" disabled>
-											<i class="fa fa-user-times"></i> <span><?php echo _('Delete')?></span>
+											<i class="fa fa-eraser"></i> <span><?php echo _('Delete')?></span>
 										</button>
 <?php
 										if($allgenratebutton){ ?>
 											<button id="generatetemplatecreator" class="btn" >
-												<i class="fa fa-street-view"></i> <span><?php echo _('Create Generic Templates')?></span>
+												<i class="fa fa-user-plus"></i> <span><?php echo _('Create Generic User')?></span>
 											</button>
 										<?php }else { ?>
 											<button id="deletetemplatecreator" class="btn"   >
-												<i class="fa fa-street-view"></i> <span><?php echo _('Delete Generic Templates')?></span>
+												<i class="fa fa-user-times"></i> <span><?php echo _('Delete Generic User')?></span>
 											</button>
 										<?php   } ?>
 									</div>
