@@ -2549,7 +2549,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 			}
 		}
 
-		if ($modules->checkStatus('missedcall') && empty($extraData["email"])) {
+		if ($modules->checkStatus('missedcall') && !empty($extraData) && empty($extraData["email"])) {
 			$res = $this->FreePBX->Missedcall->checkFieldValidationForUserman($uid, $_POST);
 			if (!$res['status']) {
 				return $res;
