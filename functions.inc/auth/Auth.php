@@ -9,6 +9,7 @@ use ReflectionClass;
 use FreePBX\modules\Userman;
 use PDO;
 use Exception;
+#[\AllowDynamicProperties]
 abstract class Auth {
 	protected $userTable = 'userman_users';
 	protected $userSettingsTable = 'userman_users_settings';

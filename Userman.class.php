@@ -1282,14 +1282,18 @@ class Userman extends FreePBX_Helpers implements BMO {
 	private function loadActiveDirectories() {
 		$directories = $this->getAllDirectories();
 		foreach($directories as $directory) {
-			if(file_exists(__DIR__."/functions.inc/auth/modules/".$directory['driver'].".php")) {
-				$class = 'FreePBX\modules\Userman\Auth\\'.$directory['driver'];
-				if(!class_exists($class)) {
-					include(__DIR__."/functions.inc/auth/modules/".$directory['driver'].".php");
+			try {
+				if(file_exists(__DIR__."/functions.inc/auth/modules/".$directory['driver'].".php")) {
+					$class = 'FreePBX\modules\Userman\Auth\\'.$directory['driver'];
+					if(!class_exists($class)) {
+						include(__DIR__."/functions.inc/auth/modules/".$directory['driver'].".php");
+					}
+					$o = $this->getDirectoryByID($directory['id']);
+					$o['config']['id'] = $directory['id'];
+					$this->directories[$directory['id']] = new $class($this, $this->FreePBX, $o['config']);
 				}
-				$o = $this->getDirectoryByID($directory['id']);
-				$o['config']['id'] = $directory['id'];
-				$this->directories[$directory['id']] = new $class($this, $this->FreePBX, $o['config']);
+			} catch(\Exception $e) {
+				dump($e->getMessage());
 			}
 		}
 		$class = GlobalAuth::class;
