@@ -27,6 +27,7 @@ namespace UCP\Modules;
 //Use UCP\Modules as Modules for simplicity
 use \UCP\Modules as Modules;
 //Module class should always extend Modules
+#[\AllowDynamicProperties]
 class Userman extends Modules
 {
 	//Always declare the module name here

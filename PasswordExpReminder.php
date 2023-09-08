@@ -6,6 +6,8 @@ use PDO;
 use Exception;
 use PDOException;
 use ampuser;
+
+#[\AllowDynamicProperties]
 class PasswordExpReminder {
 
     final public const USER_TYPE_ADMIN = 'admin';
