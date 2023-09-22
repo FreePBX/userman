@@ -1949,7 +1949,10 @@ class Userman extends FreePBX_Helpers implements BMO {
 		$results = $sth->fetch(PDO::FETCH_ASSOC);
 		$this->removeUCPSideDashboardSettingByID($userid);
 		if($results) {
-			$dashbords = json_decode((string) $results['val'],true, 512, JSON_THROW_ON_ERROR);
+			$dashbords = [];
+			if(!empty($results['val'])) {
+				$dashbords = json_decode((string) $results['val'],true, 512, JSON_THROW_ON_ERROR);
+			}
 			$newsidedash = [];
 			foreach($dashbords as $dash){
 				$id = (string)Uuid::uuid4();
@@ -3916,9 +3919,15 @@ class Userman extends FreePBX_Helpers implements BMO {
 		if($results) {
 			$usersidebar =  $this->getUCPSideDashboardSettingByID($uid);
 			$this->removeUCPSideDashboardSettingByID($uid);
-			$usersidebarwidgets = json_decode((string) $usersidebar['val'],true, 512, JSON_THROW_ON_ERROR);
+			$usersidebarwidgets = [];
+			if(!empty($usersidebar['val'])) {
+				$usersidebarwidgets = json_decode((string) $usersidebar['val'],true, 512, JSON_THROW_ON_ERROR);
+			}
 			$usersidebarwidgets = is_array($usersidebarwidgets)?$usersidebarwidgets:[];
-			$dashbords = json_decode((string) $results['val'],true, 512, JSON_THROW_ON_ERROR);
+			$dashbords = [];
+			if(!empty($results['val'])) {
+				$dashbords = json_decode((string) $results['val'],true, 512, JSON_THROW_ON_ERROR);
+			}
 			$dasboards = is_array($dasboards)?$dasboards:[];
 			$mergedSettings = $this->mergeUserSettings($usersidebarwidgets,$dashbords);
 			$newsidedash = [];
@@ -3945,9 +3954,15 @@ class Userman extends FreePBX_Helpers implements BMO {
 		$results = $sth->fetch(PDO::FETCH_ASSOC);
 		if($results) {
 			$usermaindash =  $this->getUCPMainDashboardSettingByID($uid);
-			$userdash = json_decode((string) $usermaindash['val'],true, 512, JSON_THROW_ON_ERROR);
+			$userdash = [];
+			if(!empty($usermaindash['val'])) {
+				$userdash = json_decode((string) $usermaindash['val'],true, 512, JSON_THROW_ON_ERROR);
+			}
 			$userdash = is_array($userdash)?$userdash:[];
-			$tempdashbords = json_decode((string) $results['val'],true, 512, JSON_THROW_ON_ERROR);
+			$tempdashbords = [];
+			if(!empty($results['val'])) {
+				$tempdashbords = json_decode((string) $results['val'],true, 512, JSON_THROW_ON_ERROR);
+			}
 			$tempdashbords = is_array($tempdashbords)?$tempdashbords:[];
 			$mergedSettings = $this->mergeMainDashboards($userdash,$tempdashbords,$templateid,$uid);
 			$this->removeUCPDashboardSettingByID($uid);
