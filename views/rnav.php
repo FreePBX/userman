@@ -50,4 +50,20 @@
 			</tr>
 		</thead>
 	</table>
+	<?php break;
+	case "showcallactivitygroup":
+	case "addcallactivitygroup":?>
+	<div id="toolbar-all">
+		<a href="?display=userman#users" class="btn btn-default"><i class="fa fa-list"></i> <?php echo _("List Users")?></a>
+		<a href="?display=userman#call_activity_groups" class="btn btn-default"><i class="fa fa-list"></i> <?php echo _("List Call Activity Groups")?></a>
+		<a href="?display=userman&amp;action=addcallactivitygroup&amp;" class="btn btn-default"><i class="fa fa-plus"></i> <?php echo _("Add Call Activity Group")?></a>
+	</div>
+	<table id="call-activity-groups-side" data-url="ajax.php?module=userman&amp;command=getCallActivityGroups&amp;" data-cache="false" data-toolbar="#toolbar-all" data-toggle="table" data-search="true" class="table">
+		<thead>
+			<tr>
+				<th data-field="groupname"><?php echo _("Call Activity Group Name")?></th>
+				<th data-field="description"><?php echo _("Description")?></th>
+			</tr>
+		</thead>
+	</table>
 	<?php break; }?>

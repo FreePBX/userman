@@ -27,6 +27,9 @@
 							<li role="presentation"><a href="#directories" aria-controls="directories" role="tab" data-toggle="tab"><?php echo _("Directories"); ?></a></li>
 							<li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab"><?php echo _("Settings"); ?></a></li>
 							<li role="presentation"><a href="#ucptemplates" aria-controls="settings" role="tab" data-toggle="tab"><?php echo _("UCP Templates"); ?></a></li>
+							<?php if($isCallActivityEnabled){ ?> 
+							<li role="presentation"><a href="#call_activity_groups" aria-controls="settings" role="tab" data-toggle="tab"><?php echo _("Call Activity Groups"); ?></a></li>
+							<?php } ?>
 						</ul>
 						<div class="tab-content">
 							<div role="tabpanel" id="users" class="tab-pane display active">
@@ -159,6 +162,32 @@
 									</table>
 								</div>
 							</div>
+							<?php if($isCallActivityEnabled){ ?> 
+							<div role="tabpanel" id="call_activity_groups" class="tab-pane display">
+								<div class="table-responsive">
+									<div class="alert alert-info"><?php echo _("A group designed for call-related tasks. Use it to efficiently organize users for specific call operations, such as streamlining call monitoring assignments. <br/> Note: This feature is not actively used but offers potential for future applications.")?></div>
+									<div id="toolbar-call_activity_groups">
+										<a href="?display=userman&amp;action=addcallactivitygroup" id="add-call-perm-groups" class="btn btn-add" data-type="call_activity_groups" data-section="call_activity_groups">
+											<i class="fa fa-user-plus"></i> <span><?php echo _('Add')?></span>
+										</a>
+										<button id="remove-call_activity_groups" class="btn btn-danger btn-remove" disabled data-type="call_activity_groups" data-section="call_activity_groups">
+											<i class="fa fa-user-times"></i> <span><?php echo _('Delete')?></span>
+										</button>
+									</div>
+									<table data-reorderable-rows="true" data-use-row-attr-func="true" data-sort-name="priority" data-toolbar="#toolbar-call_activity_groups" data-url="ajax.php?module=userman&amp;command=getCallActivityGroups" data-cache="false" data-toggle="table" data-show-columns="true" data-pagination="false" data-search="true" class="table table-striped" id="table-call_activity_groups" data-type="call_activity_groups"  data-show-refresh="true">
+										<thead>
+											<tr>
+												<th data-checkbox="true"></th>
+												<th data-field="groupname"><?php echo _("Call Activity Group Name") ?></th>
+												<th data-field="description"><?php echo _("Description") ?></th>
+												<th data-formatter="callActivityGroupActions"><?php echo _("Action") ?></th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+							</div>
+							<?php } ?>
+																
 							<div role="tabpane" id="settings" class="tab-pane display">
 								<div class="container-fluid">
 								<?php echo load_view(dirname(__FILE__).'/general.php', array("hostname" => $hostname, "host" => $host, "remoteips" => $remoteips, "sync" => $sync, "brand" => $brand, "auths" => $auths, "authtype" => $authtype, "autoEmail" => $autoEmail,"emailbody" => $emailbody, "emailsubject" => $emailsubject, "mailtype" => $mailtype, "pwdSettings" => json_decode($pwdSettings, true) )); ?></div>

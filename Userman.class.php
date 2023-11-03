@@ -167,7 +167,8 @@ class Userman extends FreePBX_Helpers implements BMO {
 		return $this->getConfig("autoGroup");
 	}
 	public function uninstall() {
-
+		$settings_to_remove = array('AMPUSERMANEMAILFROM, USERMAN_ENABLE_CALL_ACTIVITY_GROUPS', 'USERMAN_CALL_ACTIVITY_GRP_USER_LIMIT');
+		$this->FreePBX->Config->remove_conf_settings($settings_to_remove);
 	}
 	public function backup(){
 
@@ -736,6 +737,20 @@ class Userman extends FreePBX_Helpers implements BMO {
 						$this->addTemplateSettings($id,$uid,$userdata['username'],$request['createtemp']);
 					}
 				break;
+				case 'callactivitygroup':
+					$groupid = $request['id']?? null;
+					$callActivityGroupDetails = [
+						'groupname' =>  $request['callactivitygroupname']?? null,
+						'description' => $request['description']?? null,
+						'users' => $request['users']?? null
+					];
+					if($groupid){
+						$callActivityGroupDetails['id'] = $groupid;
+						$this->updateCallActivityGroup($callActivityGroupDetails);
+					} else {
+						$this->addCallActivityGroup($callActivityGroupDetails);
+					}
+				break;
 				case 'rebuilducp':
 					switch($request['actiontype']){
 						case 'rebuild' :
@@ -1101,6 +1116,23 @@ class Userman extends FreePBX_Helpers implements BMO {
 					)
 				);
 			break;
+			case 'showcallactivitygroup': 
+			case 'addcallactivitygroup':
+				if($action == "showcallactivitygroup" && !empty($request['callactivitygroup'])) {
+					$callactivitygroup = $this->getCallActivityGroupById($request['callactivitygroup']);
+				} else {
+					$callactivitygroup = [];
+				}
+				$html .= load_view(
+					dirname(__FILE__).'/views/call_activity_group.php',
+					array(
+						'callactivitygroup' => $callactivitygroup,
+						'users'=>$this->getAllUsers(),
+						"isCallActivityEnabled" => $this->FreePBX->Config()->get('USERMAN_ENABLE_CALL_ACTIVITY_GROUPS'),
+						"callActivityUserLimit" => $this->FreePBX->Config()->get('USERMAN_CALL_ACTIVITY_GRP_USER_LIMIT'),
+					)
+				);
+			break;
 			case 'showmembers':
 				$members = $this->getallMemberOfTemplate($request['template']);
 				$template = $this->getTemplateById($request['template']);
@@ -1184,7 +1216,8 @@ class Userman extends FreePBX_Helpers implements BMO {
 						"mailtype" => $mailtype,
 						"dirwarn" => $dirwarn,
 						"allgenratebutton" => $allgenratebutton,
-						"pwdSettings" => $this->getConfig('pwdSettings')
+						"pwdSettings" => $this->getConfig('pwdSettings'),
+						"isCallActivityEnabled" => $this->FreePBX->Config()->get('USERMAN_ENABLE_CALL_ACTIVITY_GROUPS')
 					)
 				);
 			break;
@@ -1284,6 +1317,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 			case "delete":
 			case "email":
 			case "getUcpTemplates":
+			case "getCallActivityGroups":
 			case "redirectUCP":
 			case "generatetemplatecreator":
 			case "deletetemplatecreator":
@@ -1408,6 +1442,8 @@ class Userman extends FreePBX_Helpers implements BMO {
 				return $this->getAllGroups($directory);
 			case "getUcpTemplates":
 				return $this->getAllUcpTemplates();
+			case "getCallActivityGroups":
+				return $this->getAllCallActivityGroups();
 			case "deletetemplatecreator":
 				return $this->deletetemplatecreator();
 			case "generatetemplatecreator":
@@ -1475,6 +1511,17 @@ class Userman extends FreePBX_Helpers implements BMO {
 							$ret[$ext] = $this->deleteUcpTemplateByID($ext);
 						}
 						return array('status' => true, 'message' => $ret);
+					break;
+					case 'call_activity_groups':
+						$ret = array();
+						$extensions = filter_input(INPUT_POST, 'extensions', FILTER_SANITIZE_STRING, FILTER_REQUIRE_ARRAY);
+						if (is_array($extensions)){
+							foreach($extensions as $ext){
+								$ret[$ext] = $this->deleteCallActivityGroupByID($ext);
+							}
+							return array('status' => true, 'message' => $ret);
+						}
+						return array('status' => false, 'message' => 'sanitization error');
 					break;
 				}
 			break;
@@ -4026,6 +4073,160 @@ class Userman extends FreePBX_Helpers implements BMO {
 		return true;
 	}
 
+	public function addCallActivityGroup($addData) {
+		if (empty($addData['groupname']) || empty($addData['users'])) {
+			return false;
+		}
+
+		$gid = $this->_addCallActivityGroup($addData);
+		if ($gid && $this->_addCallActivityUsers($gid, $addData['users'])) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public function _addCallActivityGroup($addData) {
+		if (empty($addData['groupname'])) {
+			return false;
+		}
+
+		$sql = "INSERT INTO userman_call_activity_groups(`groupname`,`description`)VALUES(:name,:description)";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array( ':name' => $addData['groupname'], ':description' => $addData['description'] ));
+		return $this->db->lastInsertId();
+	}
+
+	public function _addCallActivityUsers($gid, $users) {
+		if (empty($gid) || empty($users)) {
+			return false;
+		}
+		$userIds = explode(',', $users);
+		$sql     = "INSERT INTO userman_call_activity_users(`uid`, `act_grp_id`) VALUES ";
+		$values  = array();
+		foreach ($userIds as $userId) {
+			$values[] = "(:uid{$userId}, :act_grp_id{$userId})";
+		}
+		$sql .= implode(',', $values);
+		$sth = $this->db->prepare($sql);
+		foreach ($userIds as $userId) {
+			$sth->bindValue(":uid{$userId}", $userId);
+			$sth->bindValue(":act_grp_id{$userId}", $gid);
+		}
+		$sth->execute();
+		$id = $this->db->lastInsertId();
+		return $id;
+	}
+
+	public function updateCallActivityGroup($editData) {
+		if (empty($editData['groupname']) || empty($editData['users'])) {
+			return false;
+		}
+		if ($this->_updateCallActivityGroup($editData)) {
+			if ($this->_updateCallActivityUsers($editData['id'], $editData['users'])) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public function _updateCallActivityGroup($editData) {
+		if (empty($editData['groupname']) || empty($editData['id'])) {
+			return false;
+		}
+		$sql = "UPDATE userman_call_activity_groups SET `groupname`=:name,`description`=:description Where id=:id";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array( ':name' => $editData['groupname'], ':description' => $editData['description'], ':id' => $editData['id'] ));
+		return true;
+	}
+
+	public function _updateCallActivityUsers($gid, $users) {
+		if (empty($gid) || empty($users)) {
+			return false;
+		}
+		$userIds = explode(',', $users);
+		$sql     = "DELETE FROM userman_call_activity_users WHERE act_grp_id=:gid";
+		$sth     = $this->db->prepare($sql);
+		$sth->execute(array( ':gid' => $gid ));
+		$sql    = "INSERT INTO userman_call_activity_users(`uid`, `act_grp_id`) VALUES ";
+		$values = array();
+		foreach ($userIds as $userId) {
+			$values[] = "(:uid{$userId}, :act_grp_id{$userId})";
+		}
+		$sql .= implode(',', $values);
+		$sth = $this->db->prepare($sql);
+		foreach ($userIds as $userId) {
+			$sth->bindValue(":uid{$userId}", $userId);
+			$sth->bindValue(":act_grp_id{$userId}", $gid);
+		}
+		$sth->execute();
+		return true;
+	}
+
+	public function getCallActivityGroupById($id) {
+		if (empty($id)) {
+			return false;
+		}
+		$result = $this->_getCallActivityGroupById($id);
+		if (!empty($result)) {
+			$result['users']      = $this->_getCallActivityUsersByGID($id);
+			$result['usersarray'] = array_column($result['users'], 'uid');
+			$result['userslist']  = implode(',', $result['usersarray']);
+		}
+
+		return $result;
+	}
+
+	public function _getCallActivityGroupById($id) {
+		if (empty($id)) {
+			return false;
+		}
+		$sql = "SELECT * from userman_call_activity_groups Where id=:id";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array( ':id' => $id ));
+		$result = $sth->fetch(PDO::FETCH_ASSOC);
+		return $result;
+	}
+
+	public function _getCallActivityUsersByGID($gid) {
+		if (empty($gid)) {
+			return false;
+		}
+		$sql = "SELECT * from userman_call_activity_users Where act_grp_id=:gid";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array( ':gid' => $gid ));
+		$result = $sth->fetchAll(PDO::FETCH_ASSOC);
+		return $result;
+	}
+	public function getAllCallActivityGroups() {
+		$results = [];
+		$sql     = "SELECT * from userman_call_activity_groups";
+		$sth     = $this->db->prepare($sql);
+		$sth->execute();
+		$result = $sth->fetchAll(PDO::FETCH_ASSOC);
+		if (empty($result)) {
+			debug("RETURNING EMPTY RESULT");
+			return [];
+		}
+		foreach ($result as $row) {
+			$row['users']     = $this->_getCallActivityUsersByGID($row['id']);
+			$row['userslist'] = implode(',', array_column($row['users'], 'uid'));
+			$results[]        = $row;
+		}
+		return $results;
+	}
+	function deleteCallActivityGroupByID($id) {
+		if (empty($id)) {
+			return array( "status" => false, "type" => "danger", "message" => _("Group Does Not Exist") );
+		}
+		$sql = "DELETE from userman_call_activity_groups Where id=:id";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array( ':id' => $id ));
+		$sql = "DELETE from userman_call_activity_users Where act_grp_id=:id";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array( ':id' => $id ));
+		return array( "status" => true, "type" => "success", "message" => _("Group Successfully Deleted") );
+	}
 	public function getAllUcpTemplates() {
 		$sql = "SELECT * from userman_ucp_templates";
 		$sth = $this->db->prepare($sql);

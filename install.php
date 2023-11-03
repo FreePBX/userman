@@ -31,6 +31,34 @@ $set['name'] = 'Email "From:" Address';
 $set['description'] = 'The From: field for emails when using the user management email feature.';
 $set['type'] = CONF_TYPE_TEXT;
 $freepbx->Config->define_conf_setting('AMPUSERMANEMAILFROM',$set,true);
+
+$set['value'] = false;
+$set['defaultval'] =& $set['value'];
+$set['options'] = '';
+$set['sortorder'] = 1;
+$set['name'] = _('Enable Call Activity Groups');
+$set['description'] = _("When set to 'Yes',The User Management UI will be having a new tab 'Call Activity Groups'."
+." This group is designed for call-related tasks. Use it to efficiently organize users for specific call operations, such as streamlining call monitoring assignments.");
+$set['emptyok'] = 0;
+$set['level'] = 1;
+$set['readonly'] = 0;
+$set['type'] = CONF_TYPE_BOOL;
+$set['hidden'] = 0;
+$freepbx->Config->define_conf_setting('USERMAN_ENABLE_CALL_ACTIVITY_GROUPS',$set);
+
+$set['value'] = '30';
+$set['defaultval'] =& $set['value'];
+$set['options'] = array(1,50);
+$set['sortorder'] = 2;
+$set['name'] = _('Call Activity Groups Max User Limit');
+$set['description'] = _("This is the limit for the number of users that can be added to a Call Activity Group.");
+$set['emptyok'] = 0;
+$set['level'] = 1;
+$set['readonly'] = 0;
+$set['type'] = CONF_TYPE_INT;
+$set['hidden'] = 0;
+$freepbx->Config->define_conf_setting('USERMAN_CALL_ACTIVITY_GRP_USER_LIMIT',$set);
+
 cronjobEntry($freepbx);
 
 function cronjobEntry($freepbx){
