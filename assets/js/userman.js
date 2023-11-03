@@ -1,3 +1,10 @@
+let call_activity_group_user_limit = 50;
+let call_activity_group_user_limit_msg = function () {
+	return _("User limit reached. The Call Activity Group can only have up to ") 
+		+ call_activity_group_user_limit 
+		+ _(" users.") + "</br>" + _("Please remove some users before adding more.");
+} 
+
 var deleteExts = {
 	'users': [],
 	'groups': [],
@@ -59,6 +66,21 @@ if($("#editT").length) {
 			}
             $("#submit").prop("disabled",true);
    });
+}
+if ($("#editCallActivityGroup").length) {
+	$("#editCallActivityGroup").submit(function (e) {
+		if ($("#callactivitygroupname").val().trim() === "") {
+			return warnInvalid($("#callactivitygroupname"), _("Group Name can not be blank!"));
+		}
+		var users = $('#call_activity_group_users option:selected');
+		if (users.length > call_activity_group_user_limit) {
+			return warnInvalid($("#call_activity_group_users"),_(call_activity_group_user_limit_msg()));
+		}
+		if ($("#call_activity_users").val().trim() === "") {
+			return warnInvalid($("#call_activity_group_users"), _("Please select a user to add to the group!"));
+		}
+		$("#submit").prop("disabled", true);
+	});
 }
 
 $("#email-users").click(function() {
@@ -275,7 +297,7 @@ $("#submit").click(function(e) {
 		}
 	});
 	if(!invalid) {
-		if($("form.fpbx-submit").attr("name") === "directory" || $("form.fpbx-submit").attr("name") === "editT") {
+		if (["directory", "editT", "editCallActivityGroup"].includes($("form.fpbx-submit").attr("name"))) {
 			$(".fpbx-submit").submit();
 		} else {
 			setLocales(function() {
@@ -334,6 +356,7 @@ function setLocales(callback) {
 var params={};window.location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi,function(str,key,value){params[key] = value;});
 //Tab and Button stuff
 $( document ).ready(function() {
+	call_activity_group_user_limit = $('#call_activity_user_limit').val();
 	var hash = (window.location.hash !== "") ? window.location.hash : "users";
 	if(hash == '#settings'){
 		$('input[name="submit"]').removeClass('hidden');
@@ -345,7 +368,7 @@ $( document ).ready(function() {
 		$('input[name="submit"]').removeClass('hidden');
 		$('input[name="reset"]').removeClass('hidden');
 		$('input[name="delete"]').removeClass('hidden');
-	}else if(params.action == 'addgroup' || params.action == 'showgroup' || params.action == 'adddirectory' || params.action == 'showdirectory' || params.action == 'adducptemplate' ||  params.action == 'showucptemplate') {
+	} else if (['addgroup', 'showgroup', 'adddirectory', 'showdirectory', 'adducptemplate', 'showucptemplate','addcallactivitygroup','showcallactivitygroup'].includes(params.action)) {
 		$('input[name="submit"]').removeClass('hidden');
 		$('input[name="reset"]').removeClass('hidden');
 		$('input[name="delete"]').removeClass('hidden');
@@ -391,6 +414,11 @@ $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
 			// onlyOneGroup();
 		break;
 		case "#ucptemplates":
+			$("#action-bar").addClass("hidden");
+			$('input[name="submit"]').addClass('hidden');
+			$('input[name="reset"]').addClass('hidden');
+		break;
+		case "#call_activity_groups":
 			$("#action-bar").addClass("hidden");
 			$('input[name="submit"]').addClass('hidden');
 			$('input[name="reset"]').addClass('hidden');
@@ -464,11 +492,35 @@ $('#group_users').multiselect({
 		$("#users").val(selected.toString());
 	}
 });
+$('#call_activity_group_users').multiselect({
+	maxHeight: 300,
+	includeSelectAllOption: true,
+	enableFiltering: true,
+	enableCaseInsensitiveFiltering: true,
+	selectAllValue: 'select-all-value',
+	onChange: function (element, checked) {
+		var users = $('#call_activity_group_users option:selected');
+		if (users.length > call_activity_group_user_limit) {
+			fpbxToast(_(call_activity_group_user_limit_msg()), 'User limit reached.', 'warning');
+			if (checked) {
+				element.prop('checked', false).prop('selected', false);
+				$('#call_activity_group_users').multiselect('refresh').multiselect('rebuild');
+				return;
+			}
+		}
+		var selected = [];
+		$(users).each(function (index, user) {
+			selected.push([$(this).val()]);
+		});
+		$("#call_activity_users").val(selected.toString());
+	}
+});
 $('#defaultextension').multiselect({
 	maxHeight: 300,
 	enableFiltering: true,
 	enableCaseInsensitiveFiltering: true
 });
+
 
 // function onlyOneGroup(){
 // 	if($("#directory-groups option").length == 2 && $("#directory-groups option:selected" ).text() != ""){
@@ -517,6 +569,11 @@ function groupActions(value, row, index) {
 	return html;
 }
 
+function callActivityGroupActions(value, row, index) {
+	var html = '<a href="?display=userman&amp;action=showcallactivitygroup&amp;callactivitygroup='+row.id+'"><i class="fa fa-edit"></i></a>';
+	html += '<a class="clickable"><i class="fa fa-trash-o" data-section="call_activity_groups" data-type="call_activity_group"  data-id="'+row.id+'"></i></a>';
+	return html;
+}
 function updateTimeDisplay() {
 	var userdtf = $("#datetimeformat").val();
 	userdtf = (userdtf !== "") ? userdtf : datetimeformat;
@@ -551,6 +608,9 @@ $("#user-side").on("click-row.bs.table", function(row, $element) {
 
 $("#group-side").on("click-row.bs.table", function(row, $element) {
 	window.location = "?display=userman&action=showgroup&group="+$element.id;
+});
+$("#call-activity-groups-side").on("click-row.bs.table", function(row, $element) {
+	window.location = "?display=userman&action=showcallactivitygroup&callactivitygroup="+$element.id;
 });
 $("#browserlang").on("click", function(e){
 	e.preventDefault();
