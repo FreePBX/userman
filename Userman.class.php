@@ -738,11 +738,11 @@ class Userman extends FreePBX_Helpers implements BMO {
 					}
 				break;
 				case 'callactivitygroup':
-					$groupid = $request['id']?? null;
+					$groupid = $request['id'] ? $request['id'] : null;
 					$callActivityGroupDetails = [
-						'groupname' =>  $request['callactivitygroupname']?? null,
-						'description' => $request['description']?? null,
-						'users' => $request['users']?? null
+						'groupname' =>  $request['callactivitygroupname'] ? $request['callactivitygroupname'] : null,
+						'description' => $request['description'] ? $request['description'] : null,
+						'users' => $request['users']? $request['users'] : null
 					];
 					if($groupid){
 						$callActivityGroupDetails['id'] = $groupid;
