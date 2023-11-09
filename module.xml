@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>15.0.69.18</version>
+	<version>15.0.69.19</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -11,6 +11,7 @@
 	</description>
   	<more-info>https://wiki.freepbx.org/display/FPG/User+Management+Module</more-info>
 	<changelog>
+		*15.0.69.19* Packaging of ver 15.0.69.19
 		*15.0.69.18* Packaging of ver 15.0.69.18
 		*15.0.69.17* FREEI-261 
 		*15.0.69.16* FREEI-132 
@@ -263,7 +264,7 @@
 		<table name="userman_call_activity_users">
 			<field name="id" type="integer" primarykey="true" autoincrement="true"/>
 			<field name="uid" type="string" length="40" default=""/>
-			<field name="act_grp_id" type="string" length="40" default="" />
+			<field name="act_grp_id" type="string" length="40" default=""/>
 			<key name="call_act_gid_idx" type="index">
 				<column name="act_grp_id"/>
 			</key>
@@ -272,7 +273,7 @@
 			</key>
 			<key name="call_act_gid_uid_unique" type="unique">
 				<column name="uid"/>
-				<column name="act_grp_id" />
+				<column name="act_grp_id"/>
 			</key>
 		</table>
 	</database>
