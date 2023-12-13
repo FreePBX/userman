@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-29 16:52-0800\n"
-"PO-Revision-Date: 2023-11-29 02:00+0000\n"
+"PO-Revision-Date: 2023-12-14 01:00+0000\n"
 "Last-Translator: Szymon Wysokinski <szymon.wysokinski@sqspolska.pl>\n"
 "Language-Team: Polish <http://weblate.freepbx.org/projects/freepbx/userman/"
 "pl/>\n"
@@ -1181,11 +1181,11 @@ msgstr ""
 
 #: userman.i18n.php:4 userman.i18n.php:10
 msgid "User Management"
-msgstr "Zarządzanie użytkownikami"
+msgstr "Menedżer użytkowników"
 
 #: userman.i18n.php:16
 msgid "User Management Module"
-msgstr "Moduł zarządzania użytkownikami"
+msgstr "Menedżer użytkowników"
 
 #: Console/Userman.class.php:18 views/welcome.php:6
 msgid "User Manager"
