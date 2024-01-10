@@ -204,6 +204,7 @@ $("table").on("post-body.bs.table", function () {
 							field: "id",
 							values: [id.toString()]
 						});
+						$("#table-"+section).bootstrapTable('refresh');
 					} else {
 						fpbxToast(data.message, '', 'error');
 					}
