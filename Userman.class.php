@@ -171,7 +171,8 @@ class Userman extends FreePBX_Helpers implements BMO {
 		return $this->getConfig("autoGroup");
 	}
 	public function uninstall() {
-
+		$settings_to_remove = array('AMPUSERMANEMAILFROM, USERMAN_ENABLE_CALL_ACTIVITY_GROUPS', 'USERMAN_CALL_ACTIVITY_GRP_USER_LIMIT');
+		$this->FreePBX->Config->remove_conf_settings($settings_to_remove);
 	}
 	public function backup(){
 
@@ -652,6 +653,20 @@ class Userman extends FreePBX_Helpers implements BMO {
 						$this->addTemplateSettings($id,$uid,$userdata['username']??"" ,$request['createtemp']);
 					}
 				break;
+				case 'callactivitygroup':
+					$groupid = $request['id']?? null;
+					$callActivityGroupDetails = [
+						'groupname' =>  $request['callactivitygroupname']?? null,
+						'description' => $request['description']?? null,
+						'users' => $request['users']?? null
+					];
+					if($groupid){
+						$callActivityGroupDetails['id'] = $groupid;
+						$this->updateCallActivityGroup($callActivityGroupDetails);
+					} else {
+						$this->addCallActivityGroup($callActivityGroupDetails);
+					}
+				break;
 				case 'rebuilducp':
 					switch($request['actiontype']){
 						case 'rebuild' :
@@ -909,6 +924,23 @@ class Userman extends FreePBX_Helpers implements BMO {
 					['template' => $template, 'users'=>$this->getAllUsers()]
 				);
 			break;
+			case 'showcallactivitygroup': 
+			case 'addcallactivitygroup':
+				if($action == "showcallactivitygroup" && !empty($request['callactivitygroup'])) {
+					$callactivitygroup = $this->getCallActivityGroupById($request['callactivitygroup']);
+				} else {
+					$callactivitygroup = [];
+				}
+				$html .= load_view(
+					dirname(__FILE__).'/views/call_activity_group.php',
+					array(
+						'callactivitygroup' => $callactivitygroup,
+						'users'=>$this->getAllUsers(),
+						"isCallActivityEnabled" => $this->FreePBX->Config()->get('USERMAN_ENABLE_CALL_ACTIVITY_GROUPS'),
+						"callActivityUserLimit" => $this->FreePBX->Config()->get('USERMAN_CALL_ACTIVITY_GRP_USER_LIMIT'),
+					)
+				);
+			break;
 			case 'showmembers':
 				$members = $this->getallMemberOfTemplate($request['template']);
 				$template = $this->getTemplateById($request['template']);
@@ -971,8 +1003,33 @@ class Userman extends FreePBX_Helpers implements BMO {
 				$passwordReminder = ['forcePasswordReset' => $this->pwdExpReminder()->getSettings('forcePasswordReset'), 'passwordExpiryReminder' => $this->pwdExpReminder()->getSettings('passwordExpiryReminder'), 'passwordExpirationDays' => $this->pwdExpReminder()->getSettings('passwordExpirationDays'), 'passwordExpiryReminderDays' => $this->pwdExpReminder()->getSettings('passwordExpiryReminderDays'), 'errors' => $errors];
 
 				$html .= load_view(
-					__DIR__.'/views/welcome.php',
-					["directoryMap" => $directoryMap, "directories" => $directories, "directoryOneId" => $directoryOneId, "auths" => $auths, "hostname" => $hostname, "host" => $host, "autoEmail" => $autoEmail, "remoteips" => $remoteips, "sync" => $this->getConfig("sync"), "authtype" => $this->getConfig("auth"), "auths" => $auths, "brand" => $this->brand, "groups" => $groups, "users" => $users, "sections" => $sections, "message" => $this->message, "emailbody" => $emailbody, "emailsubject" => $emailsubject, "mailtype" => $mailtype, "dirwarn" => $dirwarn, "allgenratebutton" => $allgenratebutton, "pwdSettings" => $this->getConfig('pwdSettings'), "passwordReminder" => $passwordReminder]
+					dirname(__FILE__).'/views/welcome.php',
+					[	
+						"directoryMap" => $directoryMap,
+						"directories" => $directories,
+						"directoryOneId" => $directoryOneId,
+						"auths" => $auths,
+						"hostname" => $hostname,
+						"host" => $host,
+						"autoEmail" => $autoEmail,
+						"remoteips" => $remoteips,
+						"sync" => $this->getConfig("sync"),
+						"authtype" => $this->getConfig("auth"),
+						"auths" => $auths,
+						"brand" => $this->brand,
+						"groups" => $groups,
+						"users" => $users,
+						"sections" => $sections,
+						"message" => $this->message,
+						"emailbody" => $emailbody,
+						"emailsubject" => $emailsubject,
+						"mailtype" => $mailtype,
+						"dirwarn" => $dirwarn,
+						"allgenratebutton" => $allgenratebutton,
+						"pwdSettings" => $this->getConfig('pwdSettings'),
+						"passwordReminder" => $passwordReminder,
+						"isCallActivityEnabled" => $this->FreePBX->Config()->get('USERMAN_ENABLE_CALL_ACTIVITY_GROUPS'), 
+					]
 				);
 			break;
 		}
@@ -1058,6 +1115,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 			case "delete":
 			case "email":
 			case "getUcpTemplates":
+			case "getCallActivityGroups":
 			case "redirectUCP":
 			case "generatetemplatecreator":
 			case "deletetemplatecreator":
@@ -1186,6 +1244,8 @@ class Userman extends FreePBX_Helpers implements BMO {
 				return $this->getAllGroups($directory);
 			case "getUcpTemplates":
 				return $this->getAllUcpTemplates();
+			case "getCallActivityGroups":
+				return $this->getAllCallActivityGroups();
 			case "deletetemplatecreator":
 				return $this->deletetemplatecreator();
 			case "generatetemplatecreator":
@@ -1253,6 +1313,17 @@ class Userman extends FreePBX_Helpers implements BMO {
 							$ret[$ext] = $this->deleteUcpTemplateByID($ext);
 						}
 						return ['status' => true, 'message' => $ret];
+					break;
+					case 'call_activity_groups':
+						$ret = array();
+						$extensions = filter_input(INPUT_POST, 'extensions', FILTER_SANITIZE_STRING, FILTER_REQUIRE_ARRAY);
+						if (is_array($extensions)){
+							foreach($extensions as $ext){
+								$ret[$ext] = $this->deleteCallActivityGroupByID($ext);
+							}
+							return array('status' => true, 'message' => $ret);
+						}
+						return array('status' => false, 'message' => 'sanitization error');
 					break;
 				}
 			break;
@@ -1627,7 +1698,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 			//Default New Group Settings
 			$this->setModuleSettingByGID($gid,'contactmanager','show', true);
 			$this->setModuleSettingByGID($gid,'contactmanager','groups',[$gid]);
-			$this->setModuleSettingByGID($gid,'fax','enabled',true);
+			$this->setModuleSettingByGID($gid,'fax','enabled', false);
 			$this->setModuleSettingByGID($gid,'fax','attachformat',"pdf");
 			$this->setModuleSettingByGID($gid,'faxpro','localstore',"true");
 			//$this->setModuleSettingByGID($gid,'restapi','restapi_token_status', true);
@@ -1658,7 +1729,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 			$this->setModuleSettingByGID($gid,'ucp|Endpoint','enable', true);
 			$this->setModuleSettingByGID($gid,'ucp|Endpoint','assigned', ["self"]);
 			$this->setModuleSettingByGID($gid,'ucp|Conferencespro','assigned', ["linked"]);
-			$this->setModuleSettingByGID($gid,'conferencespro','link', true);
+			$this->setModuleSettingByGID($gid,'conferencespro','link', false);
 			$this->setModuleSettingByGID($gid,'conferencespro','ivr', true);
 			$this->setModuleSettingByGID($gid,'ucp|Sysadmin','vpn_enable', true);
 			$tfsettings = ["login", "menuover", "conference_enable", "queue_enable", "timecondition_enable", "callflow_enable", "contact_enable", "voicemail_enable", "presence_enable", "parking_enable", "fmfm_enable", "dnd_enable", "cf_enable", "qa_enable", "lilo_enable"];
@@ -1990,6 +2061,10 @@ class Userman extends FreePBX_Helpers implements BMO {
 				$sth = $this->db->prepare($sql);
 				$sth->execute([':tid' => $templateid, ':key'=>$layoutkey]);
 				$wids = $sth->fetch(PDO::FETCH_ASSOC);
+				// no results continue to next loop
+				if(!is_array($wids)) {
+					continue;
+				}
 				unset($thiswidget);
 				$thiswidget = [];
 				$widgets = json_decode((string) $wids['val']??'',true, 512, JSON_THROW_ON_ERROR);
@@ -2282,7 +2357,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 			}
 		}
 
-		if ($modules->checkStatus('missedcall') && empty($extraData["email"])) {
+		if ($modules->checkStatus('missedcall') && !empty($extraData) && empty($extraData["email"])) {
 			$res = $this->FreePBX->Missedcall->checkFieldValidationForUserman($uid, $_POST);
 			if (!$res['status']) {
 				return $res;
@@ -3649,6 +3724,160 @@ class Userman extends FreePBX_Helpers implements BMO {
 		return true;
 	}
 
+	public function addCallActivityGroup($addData) {
+		if (empty($addData['groupname']) || empty($addData['users'])) {
+			return false;
+		}
+
+		$gid = $this->_addCallActivityGroup($addData);
+		if ($gid && $this->_addCallActivityUsers($gid, $addData['users'])) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public function _addCallActivityGroup($addData) {
+		if (empty($addData['groupname'])) {
+			return false;
+		}
+
+		$sql = "INSERT INTO userman_call_activity_groups(`groupname`,`description`)VALUES(:name,:description)";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array( ':name' => $addData['groupname'], ':description' => $addData['description'] ));
+		return $this->db->lastInsertId();
+	}
+
+	public function _addCallActivityUsers($gid, $users) {
+		if (empty($gid) || empty($users)) {
+			return false;
+		}
+		$userIds = explode(',', $users);
+		$sql     = "INSERT INTO userman_call_activity_users(`uid`, `act_grp_id`) VALUES ";
+		$values  = array();
+		foreach ($userIds as $userId) {
+			$values[] = "(:uid{$userId}, :act_grp_id{$userId})";
+		}
+		$sql .= implode(',', $values);
+		$sth = $this->db->prepare($sql);
+		foreach ($userIds as $userId) {
+			$sth->bindValue(":uid{$userId}", $userId);
+			$sth->bindValue(":act_grp_id{$userId}", $gid);
+		}
+		$sth->execute();
+		$id = $this->db->lastInsertId();
+		return $id;
+	}
+
+	public function updateCallActivityGroup($editData) {
+		if (empty($editData['groupname']) || empty($editData['users'])) {
+			return false;
+		}
+		if ($this->_updateCallActivityGroup($editData)) {
+			if ($this->_updateCallActivityUsers($editData['id'], $editData['users'])) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public function _updateCallActivityGroup($editData) {
+		if (empty($editData['groupname']) || empty($editData['id'])) {
+			return false;
+		}
+		$sql = "UPDATE userman_call_activity_groups SET `groupname`=:name,`description`=:description Where id=:id";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array( ':name' => $editData['groupname'], ':description' => $editData['description'], ':id' => $editData['id'] ));
+		return true;
+	}
+
+	public function _updateCallActivityUsers($gid, $users) {
+		if (empty($gid) || empty($users)) {
+			return false;
+		}
+		$userIds = explode(',', $users);
+		$sql     = "DELETE FROM userman_call_activity_users WHERE act_grp_id=:gid";
+		$sth     = $this->db->prepare($sql);
+		$sth->execute(array( ':gid' => $gid ));
+		$sql    = "INSERT INTO userman_call_activity_users(`uid`, `act_grp_id`) VALUES ";
+		$values = array();
+		foreach ($userIds as $userId) {
+			$values[] = "(:uid{$userId}, :act_grp_id{$userId})";
+		}
+		$sql .= implode(',', $values);
+		$sth = $this->db->prepare($sql);
+		foreach ($userIds as $userId) {
+			$sth->bindValue(":uid{$userId}", $userId);
+			$sth->bindValue(":act_grp_id{$userId}", $gid);
+		}
+		$sth->execute();
+		return true;
+	}
+
+	public function getCallActivityGroupById($id) {
+		if (empty($id)) {
+			return false;
+		}
+		$result = $this->_getCallActivityGroupById($id);
+		if (!empty($result)) {
+			$result['users']      = $this->_getCallActivityUsersByGID($id);
+			$result['usersarray'] = array_column($result['users'], 'uid');
+			$result['userslist']  = implode(',', $result['usersarray']);
+		}
+
+		return $result;
+	}
+
+	public function _getCallActivityGroupById($id) {
+		if (empty($id)) {
+			return false;
+		}
+		$sql = "SELECT * from userman_call_activity_groups Where id=:id";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array( ':id' => $id ));
+		$result = $sth->fetch(PDO::FETCH_ASSOC);
+		return $result;
+	}
+
+	public function _getCallActivityUsersByGID($gid) {
+		if (empty($gid)) {
+			return false;
+		}
+		$sql = "SELECT * from userman_call_activity_users Where act_grp_id=:gid";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array( ':gid' => $gid ));
+		$result = $sth->fetchAll(PDO::FETCH_ASSOC);
+		return $result;
+	}
+	public function getAllCallActivityGroups() {
+		$results = [];
+		$sql     = "SELECT * from userman_call_activity_groups";
+		$sth     = $this->db->prepare($sql);
+		$sth->execute();
+		$result = $sth->fetchAll(PDO::FETCH_ASSOC);
+		if (empty($result)) {
+			debug("RETURNING EMPTY RESULT");
+			return [];
+		}
+		foreach ($result as $row) {
+			$row['users']     = $this->_getCallActivityUsersByGID($row['id']);
+			$row['userslist'] = implode(',', array_column($row['users'], 'uid'));
+			$results[]        = $row;
+		}
+		return $results;
+	}
+	function deleteCallActivityGroupByID($id) {
+		if (empty($id)) {
+			return array( "status" => false, "type" => "danger", "message" => _("Group Does Not Exist") );
+		}
+		$sql = "DELETE from userman_call_activity_groups Where id=:id";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array( ':id' => $id ));
+		$sql = "DELETE from userman_call_activity_users Where act_grp_id=:id";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array( ':id' => $id ));
+		return array( "status" => true, "type" => "success", "message" => _("Group Successfully Deleted") );
+	}
 	public function getAllUcpTemplates() {
 		$sql = "SELECT * from userman_ucp_templates";
 		$sth = $this->db->prepare($sql);
@@ -3698,7 +3927,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 		$this->FreePBX->Core->delUser($unusedexten);
 		$status = $this->deleteUserByID($uid);
 		$this->delConfig('unlockkey','templatecreator');
-		return ['status'=>$status, 'message' => _('Deleted User and Device')];
+		return ['status'=>$status,'message'=> 'Deleted the Generic User and Device'];
 	}
 
 /*Generate a User for Template creation,view/edit */
@@ -3741,9 +3970,9 @@ class Userman extends FreePBX_Helpers implements BMO {
 				}
 				$sth->execute([$uid, $row['module'], $row['key'], $val, $row['type']]);
 			}
-			return ['status'=>true, 'uid'=>$uid, 'message' => _('User Created')];
+			return ['status'=>true,'uid'=>$uid,'message'=> sprintf(_("Created the Generic User '%s'. This user is listed in the users table."), $this->displayNameTemplateCreator)];
 		}else {
-			return ['status'=>false, 'message' => _('Not able to create User under')];
+			return ['status'=>false,'message'=>'Unable to create the Generic User'];
 		}
 	}
 
