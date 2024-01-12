@@ -365,14 +365,14 @@ $( document ).ready(function() {
 		$('input[name="reset"]').removeClass('d-none');
 		$("#action-bar").removeClass("d-none");
 	} else if(params.action == 'adduser' || params.action == 'showuser'){
-		$('input[name="submitsend"]').removeClass('hidden');
-		$('input[name="submit"]').removeClass('hidden');
-		$('input[name="reset"]').removeClass('hidden');
-		$('input[name="delete"]').removeClass('hidden');
+		$('input[name="submitsend"]').removeClass('d-none');
+		$('input[name="submit"]').removeClass('d-none');
+		$('input[name="reset"]').removeClass('d-none');
+		$('input[name="delete"]').removeClass('d-none');
 	} else if (['addgroup', 'showgroup', 'adddirectory', 'showdirectory', 'adducptemplate', 'showucptemplate','addcallactivitygroup','showcallactivitygroup'].includes(params.action)) {
-		$('input[name="submit"]').removeClass('hidden');
-		$('input[name="reset"]').removeClass('hidden');
-		$('input[name="delete"]').removeClass('hidden');
+		$('input[name="submit"]').removeClass('d-none');
+		$('input[name="reset"]').removeClass('d-none');
+		$('input[name="delete"]').removeClass('d-none');
 	} else if(params.action == "showmembers"){
 		$('input[name="cancel"]').removeClass('d-none');
 		$('input[name="merge"]').removeClass('d-none');
