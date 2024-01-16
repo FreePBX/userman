@@ -1316,7 +1316,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 					break;
 					case 'call_activity_groups':
 						$ret = array();
-						$extensions = filter_input(INPUT_POST, 'extensions', FILTER_SANITIZE_STRING, FILTER_REQUIRE_ARRAY);
+						$extensions = filter_input(INPUT_POST, 'extensions', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 						if (is_array($extensions)){
 							foreach($extensions as $ext){
 								$ret[$ext] = $this->deleteCallActivityGroupByID($ext);
