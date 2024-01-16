@@ -183,6 +183,26 @@
 			<field name="passwordChangedAt" type="datetime"/>
 			<field name="passwordExpiryDate" type="datetime"/>
 		</table>
+		<table name="userman_call_activity_groups">
+			<field name="id" type="integer" primarykey="true" autoincrement="true"/>
+			<field name="groupname" type="string" length="150" notnull="false"/>
+			<field name="description" type="string" length="255" notnull="false"/>
+		</table>
+		<table name="userman_call_activity_users">
+			<field name="id" type="integer" primarykey="true" autoincrement="true"/>
+			<field name="uid" type="string" length="40" default=""/>
+			<field name="act_grp_id" type="string" length="40" default="" />
+			<key name="call_act_gid_idx" type="index">
+				<column name="act_grp_id"/>
+			</key>
+			<key name="call_act_uid_idx" type="index">
+				<column name="uid"/>
+			</key>
+			<key name="call_act_gid_uid_unique" type="unique">
+				<column name="uid"/>
+				<column name="act_grp_id" />
+			</key>
+		</table>
 	</database>
 	<supported>
 		<version>17.0</version>
