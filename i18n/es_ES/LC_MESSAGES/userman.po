@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-11 04:58-0500\n"
+"POT-Creation-Date: 2024-02-14 02:01-0500\n"
 "PO-Revision-Date: 2016-12-11 08:33+0200\n"
 "Last-Translator: Ernesto <ecasas@sangoma.com>\n"
 "Language-Team: Spanish <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -562,7 +562,7 @@ msgstr "Numero de teléfono de Fax"
 msgid "First Name"
 msgstr "Primer Nombre"
 
-#: views/password_exp_reminder_hook.php:46
+#: views/password_exp_reminder_hook.php:48
 msgid "Force Password Reset"
 msgstr ""
 
@@ -762,13 +762,13 @@ msgid ""
 "will be created and linked to this user if one does not exist previously"
 msgstr ""
 
-#: views/password_exp_reminder_hook.php:32
+#: views/password_exp_reminder_hook.php:34
 msgid ""
 "If enabled, user will be notified to reset their password after password "
 "expiration days"
 msgstr ""
 
-#: views/general.php:491 views/password_exp_reminder_hook.php:70
+#: views/general.php:491 views/password_exp_reminder_hook.php:72
 msgid ""
 "If the option is set to yes, the user will be forced to reset the password "
 "on first time login."
@@ -856,8 +856,8 @@ msgstr ""
 "esos dispositivos. Por ejemplo, un nuevo usuario se puede entrar al Panel de "
 "control de usuario y acceder al correo de voz de otras 3 cuentas."
 
-#: views/password_exp_reminder_hook.php:22
-#: views/password_exp_reminder_hook.php:60 views/users.php:383
+#: views/password_exp_reminder_hook.php:24
+#: views/password_exp_reminder_hook.php:62 views/users.php:383
 #: views/users.php:419 views/users.php:660 views/users.php:687
 msgid "Inherit"
 msgstr "Heredar"
@@ -1044,8 +1044,8 @@ msgstr ""
 #: views/general.php:62 views/general.php:171 views/general.php:212
 #: views/general.php:253 views/general.php:294 views/general.php:335
 #: views/general.php:376 views/general.php:417 views/groups.php:281
-#: views/groups.php:306 views/password_exp_reminder_hook.php:19
-#: views/password_exp_reminder_hook.php:57 views/quickCreate.php:16
+#: views/groups.php:306 views/password_exp_reminder_hook.php:21
+#: views/password_exp_reminder_hook.php:59 views/quickCreate.php:16
 #: views/users.php:658 views/users.php:685 assets/js/userman.js:683
 msgid "No"
 msgstr "No"
@@ -1127,7 +1127,7 @@ msgstr "Contraseña - texto sin formato"
 msgid "Password Expiration Days"
 msgstr ""
 
-#: views/general.php:510 views/password_exp_reminder_hook.php:11
+#: views/general.php:510 views/password_exp_reminder_hook.php:13
 msgid "Password Expiry Reminder"
 msgstr ""
 
@@ -2380,8 +2380,8 @@ msgstr ""
 #: views/general.php:60 views/general.php:169 views/general.php:210
 #: views/general.php:251 views/general.php:292 views/general.php:333
 #: views/general.php:374 views/general.php:415 views/groups.php:279
-#: views/groups.php:304 views/password_exp_reminder_hook.php:17
-#: views/password_exp_reminder_hook.php:55 views/quickCreate.php:14
+#: views/groups.php:304 views/password_exp_reminder_hook.php:19
+#: views/password_exp_reminder_hook.php:57 views/quickCreate.php:14
 #: views/users.php:656 views/users.php:683 assets/js/userman.js:683
 msgid "Yes"
 msgstr "Si"
