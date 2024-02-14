@@ -1,6 +1,7 @@
 
 <?php
 if ($isPasswordExpiryReminderEnabledSystemWide) {
+	$passexpiry = $passexpiry ?? null;
 ?>
 <div class="element-container">
 	<div class="row">
