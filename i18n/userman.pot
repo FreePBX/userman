@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-06 00:22-0500\n"
+"POT-Creation-Date: 2024-02-14 01:24-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -605,7 +605,7 @@ msgstr ""
 msgid "First Name"
 msgstr ""
 
-#: views/password_exp_reminder_hook.php:46
+#: views/password_exp_reminder_hook.php:47
 msgid "Force Password Reset"
 msgstr ""
 
@@ -811,14 +811,14 @@ msgid ""
 "will be created and linked to this user if one does not exist previously"
 msgstr ""
 
-#: views/password_exp_reminder_hook.php:32
+#: views/password_exp_reminder_hook.php:33
 msgid ""
 "If enabled, user will be notified to reset their password after password "
 "expiration days"
 msgstr ""
 
 #: views/general.php:491
-#: views/password_exp_reminder_hook.php:70
+#: views/password_exp_reminder_hook.php:71
 msgid ""
 "If the option is set to yes, the user will be forced to reset the password "
 "on first time login."
@@ -895,8 +895,8 @@ msgid ""
 "access the voicemail of 3 other accounts."
 msgstr ""
 
-#: views/password_exp_reminder_hook.php:22
-#: views/password_exp_reminder_hook.php:60
+#: views/password_exp_reminder_hook.php:23
+#: views/password_exp_reminder_hook.php:61
 #: views/users.php:383
 #: views/users.php:419
 #: views/users.php:660
@@ -1103,8 +1103,8 @@ msgstr ""
 #: views/general.php:417
 #: views/groups.php:281
 #: views/groups.php:306
-#: views/password_exp_reminder_hook.php:19
-#: views/password_exp_reminder_hook.php:57
+#: views/password_exp_reminder_hook.php:20
+#: views/password_exp_reminder_hook.php:58
 #: views/quickCreate.php:16
 #: views/users.php:658
 #: views/users.php:685
@@ -1196,7 +1196,7 @@ msgid "Password Expiration Days"
 msgstr ""
 
 #: views/general.php:510
-#: views/password_exp_reminder_hook.php:11
+#: views/password_exp_reminder_hook.php:12
 msgid "Password Expiry Reminder"
 msgstr ""
 
@@ -2455,8 +2455,8 @@ msgstr ""
 #: views/general.php:415
 #: views/groups.php:279
 #: views/groups.php:304
-#: views/password_exp_reminder_hook.php:17
-#: views/password_exp_reminder_hook.php:55
+#: views/password_exp_reminder_hook.php:18
+#: views/password_exp_reminder_hook.php:56
 #: views/quickCreate.php:14
 #: views/users.php:656
 #: views/users.php:683
