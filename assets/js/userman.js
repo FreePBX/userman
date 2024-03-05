@@ -490,7 +490,7 @@ $('#group_users').multiselect({
 	enableFiltering: true,
 	enableCaseInsensitiveFiltering: true,
 	selectAllValue: 'select-all-value',
-	onDropdownHide: function (element, checked) {
+	onChange: function (element, checked) {
 		var users = $('#group_users option:selected');
 		var selected = [];
 		$(users).each(function (index, user) {
