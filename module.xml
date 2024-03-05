@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>17.0.6.12</version>
+	<version>17.0.6.13</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -9,9 +9,9 @@
 	<description>
 		This Module manages all PBX users. It allows an Administrator to create a User Account that can be used by other applications for login or API purposes.
 	</description>
-  	<more-info>https://wiki.freepbx.org/display/FPG/User+Management+Module</more-info>
+  	<more-info>https://sangomakb.atlassian.net/wiki/spaces/PG/pages/20024012/User+Management+Module</more-info>
 	<changelog>
-		*17.0.6.12 Packaging of ver 17.0.6.12
+		*17.0.6.13 Packaging of ver 17.0.6.13
 	</changelog>
 	<info/>
 	<category>Admin</category>
