@@ -489,39 +489,43 @@ $('#group_users').multiselect({
 	includeSelectAllOption: true,
 	enableFiltering: true,
 	enableCaseInsensitiveFiltering: true,
-	selectAllValue: 'select-all-value',
-	onChange: function (element, checked) {
-		var users = $('#group_users option:selected');
-		var selected = [];
-		$(users).each(function (index, user) {
-			selected.push([$(this).val()]);
-		});
-		$("#users").val(selected.toString());
-	}
+	selectAllValue: 'select-all-value'
 });
+
+$('#group_users').change(function () {
+	var users = $('#group_users option:selected');
+	var selected = [];
+	$(users).each(function (index, user) {
+		selected.push([$(this).val()]);
+	});
+	$("#users").val(selected.toString());
+});
+
 $('#call_activity_group_users').multiselect({
 	maxHeight: 300,
 	includeSelectAllOption: true,
 	enableFiltering: true,
 	enableCaseInsensitiveFiltering: true,
-	selectAllValue: 'select-all-value',
-	onChange: function (element, checked) {
-		var users = $('#call_activity_group_users option:selected');
-		if (users.length > call_activity_group_user_limit) {
-			fpbxToast(_(call_activity_group_user_limit_msg()), 'User limit reached.', 'warning');
-			if (checked) {
-				element.prop('checked', false).prop('selected', false);
-				$('#call_activity_group_users').multiselect('refresh').multiselect('rebuild');
-				return;
-			}
-		}
-		var selected = [];
-		$(users).each(function (index, user) {
-			selected.push([$(this).val()]);
-		});
-		$("#call_activity_users").val(selected.toString());
-	}
+	selectAllValue: 'select-all-value'
 });
+
+$('#call_activity_group_users').change(function () {
+	var users = $('#call_activity_group_users option:selected');
+	if (users.length > call_activity_group_user_limit) {
+		fpbxToast(_(call_activity_group_user_limit_msg()), 'User limit reached.', 'warning');
+		if (checked) {
+			element.prop('checked', false).prop('selected', false);
+			$('#call_activity_group_users').multiselect('refresh').multiselect('rebuild');
+			return;
+		}
+	}
+	var selected = [];
+	$(users).each(function (index, user) {
+		selected.push([$(this).val()]);
+	});
+	$("#call_activity_users").val(selected.toString());
+});
+
 $('#defaultextension').multiselect({
 	maxHeight: 300,
 	enableFiltering: true,
