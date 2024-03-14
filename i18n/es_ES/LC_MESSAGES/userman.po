@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-14 02:01-0500\n"
+"POT-Creation-Date: 2024-03-14 05:49-0400\n"
 "PO-Revision-Date: 2016-12-11 08:33+0200\n"
 "Last-Translator: Ernesto <ecasas@sangoma.com>\n"
 "Language-Team: Spanish <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -176,7 +176,7 @@ msgstr ""
 msgid "Apply Changes Bar"
 msgstr "Barra Aplicar Cambios"
 
-#: assets/js/userman.js:682
+#: assets/js/userman.js:686
 msgid "Are you sure rebuild all Users widgets associated with this Template?"
 msgstr ""
 
@@ -550,7 +550,7 @@ msgstr ""
 msgid "Extension Link Attribute"
 msgstr "Atributo de enlace de extensión"
 
-#: assets/js/userman.js:555
+#: assets/js/userman.js:559
 msgid "False"
 msgstr ""
 
@@ -1046,7 +1046,7 @@ msgstr ""
 #: views/general.php:376 views/general.php:417 views/groups.php:281
 #: views/groups.php:306 views/password_exp_reminder_hook.php:21
 #: views/password_exp_reminder_hook.php:59 views/quickCreate.php:16
-#: views/users.php:658 views/users.php:685 assets/js/userman.js:683
+#: views/users.php:658 views/users.php:685 assets/js/userman.js:687
 msgid "No"
 msgstr "No"
 
@@ -1523,11 +1523,11 @@ msgstr ""
 msgid "The Active Directoy user object class type to use when loading users."
 msgstr ""
 
-#: assets/js/userman.js:627
+#: assets/js/userman.js:631
 msgid "The Browser Language could not be determined"
 msgstr ""
 
-#: assets/js/userman.js:647
+#: assets/js/userman.js:651
 msgid "The Browser Timezone could not be determined"
 msgstr ""
 
@@ -1605,11 +1605,11 @@ msgstr ""
 msgid "The OpenLDAP username"
 msgstr "usuario OpenLDAP"
 
-#: assets/js/userman.js:637
+#: assets/js/userman.js:641
 msgid "The PBX Language is not set"
 msgstr ""
 
-#: assets/js/userman.js:657
+#: assets/js/userman.js:661
 msgid "The PBX Timezone is not set"
 msgstr ""
 
@@ -2004,7 +2004,7 @@ msgstr ""
 msgid "Title"
 msgstr "Titulo"
 
-#: assets/js/userman.js:555
+#: assets/js/userman.js:559
 msgid "True"
 msgstr ""
 
@@ -2382,7 +2382,7 @@ msgstr ""
 #: views/general.php:374 views/general.php:415 views/groups.php:279
 #: views/groups.php:304 views/password_exp_reminder_hook.php:19
 #: views/password_exp_reminder_hook.php:57 views/quickCreate.php:14
-#: views/users.php:656 views/users.php:683 assets/js/userman.js:683
+#: views/users.php:656 views/users.php:683 assets/js/userman.js:687
 msgid "Yes"
 msgstr "Si"
 
