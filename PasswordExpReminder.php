@@ -120,8 +120,8 @@ class PasswordExpReminder {
 			$this->Userman->setModuleSettingByID($id, 'userman', 'passexpiry',  $passwordExpiryField == 'inherit' ? null : ($passwordExpiryField  == 'true' ? 1 : 0));
 			if($isNewUser ){
 				$passData['id'] = $id;
-				$passData['username'] = $user['username'];
-				$passData['email'] = $user['email'];
+				$passData['username'] = $user['username'] ?? '';
+				$passData['email'] = $user['email'] ?? '';
 				$this->resetPasswordExpiry($passData, 'ucp', 1);
 			}else{
 				if($passwordExpiryField == 'inherit'){
