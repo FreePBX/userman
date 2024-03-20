@@ -2,8 +2,8 @@
 	<input type="hidden" name="type" value="general">
 	<input type="hidden" name="submittype" value="gui">
 	<div class="nav-container setting-navs">
-		<div class="scroller scroller-left"><i class="glyphicon glyphicon-chevron-left"></i></div>
-		<div class="scroller scroller-right"><i class="glyphicon glyphicon-chevron-right"></i></div>
+		<div class="scroller scroller-left"><i class="fa fa-chevron-left"></i></div>
+		<div class="scroller scroller-right"><i class="fa fa-chevron-right"></i></div>
 		<div class="wrapper">
 			<ul class="nav nav-tabs list" role="tablist">
 				<li data-name="tab1" class="change-tab active"><a href="#tab1" aria-controls="tab1" role="tab" data-toggle="tab"><?php echo _("Email Settings")?></a></li>
