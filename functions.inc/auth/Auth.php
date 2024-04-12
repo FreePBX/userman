@@ -359,7 +359,7 @@ abstract class Auth {
 			return false;
 		}
 
-		$group['users'] = json_decode((string) $group['users'],true, 512, JSON_THROW_ON_ERROR);
+		$group['users'] = isset($group['users']) ? json_decode((string) $group['users'],true, 512, JSON_THROW_ON_ERROR) : [];
 		$group['users'] = is_array($group['users']) ? $group['users'] : [];
 
 		$users = $this->getAllUserIDs();

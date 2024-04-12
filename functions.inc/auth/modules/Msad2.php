@@ -629,7 +629,7 @@ class Msad2 extends Auth {
 							$settings = $this->FreePBX->Core->generateDefaultDeviceSettings($tech,$extension,$dn);
 							if($this->FreePBX->Core->addDevice($extension,$tech,$settings)) {
 								$settings = $this->FreePBX->Core->generateDefaultUserSettings($tech,$dn);
-								$settings['outboundcid'] = $data['outboundcid'];
+								$settings['outboundcid'] = $data['outboundcid'] ?? '';
 								try {
 									if(!$this->FreePBX->Core->addUser($extension, $settings)) {
 										//cleanup
