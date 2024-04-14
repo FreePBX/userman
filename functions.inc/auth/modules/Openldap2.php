@@ -96,6 +96,7 @@ class Openldap2 extends Auth {
 		'usergroupmemberattr' => 'memberOf', /** memberOf **/
 		'userpasswordattr' => 'userPassword', /** Unicode Password **/
 		'userprimarygroupattr' => 'gidNumber', /** primaryGroupId **/
+		'realmedpasswdattr' => 'AstAccountRealmedPassword', /** Hashed MD5 password in form MD5(extension:realm:password) **/
 		'la' => 'AstExtension'
 	);
 
@@ -567,6 +568,18 @@ class Openldap2 extends Auth {
 					'value' => isset($config['userfaxphoneattr']) ? $config['userfaxphoneattr'] : $defaults['userfaxphoneattr'],
 				),
 				'help'		=> _("The attribute field to use when loading the user fax."),
+			),
+			array(
+				'name'		=> $typeauth.'-realmedpasswdattr',
+				'title'		=> _("MD5 hashed credentials"),
+				'type' 		=> 'text',
+				'index'		=> false,
+				'required'	=> false,
+				'default'	=> $defaults['realmedpasswd'],
+				'opts'		=> array(
+					'value' => isset($config['realmedpasswdattr']) ? $config['realmedpasswdattr'] : $defaults['realmedpasswdattr'],
+				),
+				'help'		=> _("Hashed password in form MD5(extension:realm:password) where default realm is 'asterisk'"),
 			),
 			array(
 				'name'		=> $typeauth.'-la',
@@ -1159,6 +1172,10 @@ class Openldap2 extends Auth {
 							$tech = $this->config['createextensions'];
 							$this->out("\t\t\tCreating ".$tech." Extension ".$extension);
 							$settings = $this->FreePBX->Core->generateDefaultDeviceSettings($tech,$extension,$dn);
+							if (!empty($this->config['realmedpasswdattr']) && !is_null($result->getAttribute($this->config['realmedpasswdattr'],0))) {
+								//$a = $result->getAttribute($this->config['realmedpasswdattr'],0);
+								$settings['md5_cred']['value'] = $result->getAttribute($this->config['realmedpasswdattr'],0);
+							}
 							if($this->FreePBX->Core->addDevice($extension,$tech,$settings)) {
 								$settings = $this->FreePBX->Core->generateDefaultUserSettings($tech,$dn);
 								$settings['outboundcid'] = $data['outboundcid'];
