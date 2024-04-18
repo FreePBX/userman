@@ -1086,6 +1086,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 						"pbx_landing" => $pbx_landing,
 						"pbx_login" => empty($request['user']) ? false : $this->getGlobalSettingByID($request['user'],'pbx_login',true),
 						"pbx_admin" => empty($request['user']) ? false : $this->getGlobalSettingByID($request['user'],'pbx_admin',true),
+						"sngConnect_enabled" => empty($request['user']) ? false : $this->getModuleSettingByID($request['user'],'sangomaconnect',"enable"),
 						"modules" => $module_list,
 						"brand" => $this->brand,
 						"dfpbxusers" => $dfpbxusers,
@@ -1729,6 +1730,15 @@ class Userman extends FreePBX_Helpers implements BMO {
 		return $user;
 	}
 
+
+	public function getAllUsersByEmail($email, $directory=null, $extraInfo= array()) {
+		if(!empty($directory)) {
+				$user = $this->directories[$directory]->getAllUsersByEmail($email, $extraInfo);
+		} else {
+				$user = $this->globalDirectory->getAllUsersByEmail($email, $extraInfo);
+		}
+		return $user;
+	}
 	/**
 	 * Get User Information by User ID
 	 *
