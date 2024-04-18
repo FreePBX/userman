@@ -44,9 +44,11 @@ echo $usage_html;
 						<input type="hidden" name="type" value="user">
 						<input type="hidden" name="directory" value="<?php echo htmlentities($directory) ?>">
 						<input type="hidden" name="prevUsername" value="<?php echo !empty($user['username']) ? htmlentities($user['username']) : ''; ?>">
-						<input type="hidden" name="prevEmail" value="<?php echo !empty($user['email']) ? htmlentities($user['email']) : ''; ?>">
+						<input type="hidden" name="prevEmail" id="prevEmail" value="<?php echo !empty($user['email']) ? htmlentities($user['email']) : ''; ?>">
 						<input type="hidden" name="prevLinkdExt" value="<?php echo !empty($user['default_extension']) ? htmlentities($user['default_extension']) : ''; ?>">
-						<input type="hidden" name="user" value="<?php echo !empty($user['id']) ? htmlentities($user['id']) : ''; ?>">
+						<input type="hidden" name="user" id="userid" value="<?php echo !empty($user['id']) ? htmlentities($user['id']) : ''; ?>">
+						<input type="hidden" id="sngConnect_enabled" value="<?php echo isset($sngConnect_enabled) ? $sngConnect_enabled : ''; ?>">
+						<input type="hidden" name="disable_sngConnect" id="disable_sngConnect" value="" />
 						<input type="hidden" name="submittype" value="gui">
 						<div class="tab-content">
 						<!--Login Details -->

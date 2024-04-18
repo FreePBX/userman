@@ -176,6 +176,27 @@ abstract class Auth {
 		return $user;
 	}
 
+	public function getAllUsersByEmail($username, $extraInfo = array()) {
+		if (!empty($this->config['id'])) {
+				$sql = "SELECT * FROM ".$this->userTable." WHERE email = :email AND auth = :auth";
+				$sth = $this->db->prepare($sql);
+				$sth->execute(array(':email' => $username, ':auth' => $this->config['id']));
+		} else {
+				$sql = "SELECT u.* FROM ".$this->userTable." u, ".$this->directoryTable." d WHERE email = :email AND u.auth = d.id ORDER BY d.order";
+				$sth = $this->db->prepare($sql);
+				$sth->execute(array(':email' => $username));
+		}
+		$user = $sth->fetchAll(\PDO::FETCH_ASSOC);
+		if (isset($extraInfo['fetchuser_sangomaconnect_enabled'])) {
+				foreach ($user as $user_row) {
+						if ($this->userman->getModuleSettingByID($user_row['id'],"sangomaconnect","enable")) {
+								return $user_row;
+						}
+				}
+				$user=[];
+		}
+		return $user;
+}
 	/**
 	 * Get User Information by User ID
 	 *
