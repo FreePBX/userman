@@ -909,7 +909,31 @@ class Userman extends FreePBX_Helpers implements BMO {
 
 				$html .= load_view(
 					__DIR__.'/views/users.php',
-					["users" => $users, "groups" => $groups, "dgroups" => $this->getDefaultGroups($directory), "sections" => $sections, "pbx_modules" => empty($request['user']) ? [] : $this->getGlobalSettingByID($request['user'],'pbx_modules'), "pbx_low" => empty($request['user']) ? '' : $this->getGlobalSettingByID($request['user'],'pbx_low'), "pbx_high" => empty($request['user']) ? '' : $this->getGlobalSettingByID($request['user'],'pbx_high'), "pbx_landing" => $pbx_landing, "pbx_login" => empty($request['user']) ? false : $this->getGlobalSettingByID($request['user'],'pbx_login',true), "pbx_admin" => empty($request['user']) ? false : $this->getGlobalSettingByID($request['user'],'pbx_admin',true), "modules" => $module_list, "brand" => $this->brand, "dfpbxusers" => $dfpbxusers, "fpbxusers" => $fpbxusers, "user" => $user, "message" => $this->message, "permissions" => $this->getAuthAllPermissions($directory), "extrauserdetails" => $extrauserdetails, "locked" => $dir['locked'], "directory" => $directory, "usage_html" => $usage_html, "landing_page_list" => $landing_page_list]
+					array(
+						"users" => $users,
+						"groups" => $groups,
+						"dgroups" => $this->getDefaultGroups($directory),
+						"sections" => $sections,
+						"pbx_modules" => empty($request['user']) ? array() : $this->getGlobalSettingByID($request['user'],'pbx_modules'),
+						"pbx_low" => empty($request['user']) ? '' : $this->getGlobalSettingByID($request['user'],'pbx_low'),
+						"pbx_high" => empty($request['user']) ? '' : $this->getGlobalSettingByID($request['user'],'pbx_high'),
+						"pbx_landing" => $pbx_landing,
+						"pbx_login" => empty($request['user']) ? false : $this->getGlobalSettingByID($request['user'],'pbx_login',true),
+						"pbx_admin" => empty($request['user']) ? false : $this->getGlobalSettingByID($request['user'],'pbx_admin',true),
+						"sngConnect_enabled" => empty($request['user']) ? false : $this->getModuleSettingByID($request['user'],'sangomaconnect',"enable"),
+						"modules" => $module_list,
+						"brand" => $this->brand,
+						"dfpbxusers" => $dfpbxusers,
+						"fpbxusers" => $fpbxusers,
+						"user" => $user,
+						"message" => $this->message,
+						"permissions" => $this->getAuthAllPermissions($directory),
+						"extrauserdetails" => $extrauserdetails,
+						"locked" => $dir['locked'],
+						"directory" => $directory,
+						"usage_html" => $usage_html,
+						"landing_page_list" => $landing_page_list
+					)
 				);
 			break;
 			case 'adducptemplate':
@@ -1539,6 +1563,15 @@ class Userman extends FreePBX_Helpers implements BMO {
 		return $user;
 	}
 
+
+	public function getAllUsersByEmail($email, $directory=null, $extraInfo= array()) {
+		if(!empty($directory)) {
+				$user = $this->directories[$directory]->getAllUsersByEmail($email, $extraInfo);
+		} else {
+				$user = $this->globalDirectory->getAllUsersByEmail($email, $extraInfo);
+		}
+		return $user;
+	}
 	/**
 	 * Get User Information by User ID
 	 *
