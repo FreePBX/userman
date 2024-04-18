@@ -575,7 +575,7 @@ class Openldap2 extends Auth {
 				'type' 		=> 'text',
 				'index'		=> false,
 				'required'	=> false,
-				'default'	=> $defaults['realmedpasswd'],
+				'default'	=> $defaults['realmedpasswdattr'],
 				'opts'		=> array(
 					'value' => isset($config['realmedpasswdattr']) ? $config['realmedpasswdattr'] : $defaults['realmedpasswdattr'],
 				),

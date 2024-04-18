@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>16.0.44.6</version>
+	<version>16.0.44.7</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -11,6 +11,7 @@
 	</description>
   	<more-info>https://wiki.freepbx.org/display/FPG/User+Management+Module</more-info>
 	<changelog>
+		*16.0.44.7* Packaging of ver 16.0.44.7
 		*16.0.44.6* Packaging of ver 16.0.44.6
 		*16.0.44.5* FREEI-345 validate fields only if extra data is present 
 		*16.0.44.4* FREEI-261 
