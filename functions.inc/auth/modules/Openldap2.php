@@ -993,7 +993,7 @@ class Openldap2 extends Auth {
 		$this->out("\tRetrieving all groups...");
 
 		$search = $this->ldap->search();
-		$paginator = $search->in($groupdn)->rawFilter("(&".$this->config['groupobjectfilter']."(objectclass=".$this->config['groupobjectclass']."))")->select(["*",$this->config['groupgidnumberattr'],$this->config['descriptionattr'],$this->config['groupnameattr'], $this->config['externalidattr'], $this->config['groupmemberattr']])->paginate($this->limit, 1);
+		$paginator = $search->in($groupdn)->rawFilter("(&".$this->config['groupobjectfilter']."(objectclass=".$this->config['groupobjectclass']."))")->select(["*",$this->config['groupgidnumberattr'],$this->config['descriptionattr'],($this->config['groupnameattr'] ?? ''), $this->config['externalidattr'], $this->config['groupmemberattr']])->paginate($this->limit, 1);
 		$results = $paginator->getResults();
 
 		if((is_countable($results) ? count($results) : 0) == 0) {
@@ -1130,7 +1130,7 @@ class Openldap2 extends Auth {
 							}
 							if($this->FreePBX->Core->addDevice($extension,$tech,$settings)) {
 								$settings = $this->FreePBX->Core->generateDefaultUserSettings($tech,$dn);
-								$settings['outboundcid'] = $data['outboundcid'];
+								$settings['outboundcid'] = $data['outboundcid'] ?? '';
 								try {
 									if(!$this->FreePBX->Core->addUser($extension, $settings)) {
 										//cleanup
