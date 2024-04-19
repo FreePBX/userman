@@ -77,11 +77,14 @@ class Userman extends Base {
 				$response->withJson(false);
 			}
 
-			$user = $userman->getUserByDefaultExtension($args['id']);
-			if ($user) {
-				$user['assigned'] = $userman->getAssignedDevices($user['id']);
+			$userman = setup_userman();
+			$user = false;
+			if ($userman) {
+				$user = $this->freepbx->Userman->getUserByDefaultExtension($args['id']);
+				if ($user) {
+					$user['assigned'] = $this->freepbx->Userman->getAssignedDevices($user['id']);
+				}
 			}
-
 			return $response->withJson($user);
 		})->add($this->checkAllReadScopeMiddleware());
 	}
