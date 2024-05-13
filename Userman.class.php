@@ -1731,7 +1731,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 			$this->setModuleSettingByGID($gid,'ucp|Conferencespro','assigned', ["linked"]);
 			$this->setModuleSettingByGID($gid,'conferencespro','link', false);
 			$this->setModuleSettingByGID($gid,'conferencespro','ivr', true);
-			$this->setModuleSettingByGID($gid,'ucp|Sysadmin','vpn_enable', true);
+			$this->setModuleSettingByGID($gid,'ucp|Sysadmin','vpn_enable', false);
 			$tfsettings = ["login", "menuover", "conference_enable", "queue_enable", "timecondition_enable", "callflow_enable", "contact_enable", "voicemail_enable", "presence_enable", "parking_enable", "fmfm_enable", "dnd_enable", "cf_enable", "qa_enable", "lilo_enable"];
 			foreach($tfsettings as $setting) {
 				$this->setModuleSettingByGID($gid,'restapps',$setting, true);
@@ -1743,7 +1743,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 			}
 			$this->setModuleSettingByGID($gid,"contactmanager","showingroups",["*"]);
 			$this->setModuleSettingByGID($gid,'contactmanager','groups',["*"]);
-			$this->setModuleSettingByGID($gid,'sysadmin','vpn_link', true);
+			$this->setModuleSettingByGID($gid,'sysadmin','vpn_link', false);
 			$this->setModuleSettingByGID($gid,'zulu','enable', true);
 			$this->setModuleSettingByGID($gid,'zulu','enable_fax', true);
 			$this->setModuleSettingByGID($gid,'zulu','enable_sms', true);
