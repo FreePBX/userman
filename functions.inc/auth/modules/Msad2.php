@@ -221,12 +221,12 @@ class Msad2 extends Auth {
 				// Mandatory Configuration Options
 				'hosts'    		  => preg_split("/[ ,]/", (string) $this->config['host']),
 				'base_dn'         => $this->config['dn'],
-				'username'        => $this->config['username'].'@'.$this->config['domain'],
+				'username'        => (preg_match('/^(([^,=\\+<>#;\"\\n]+)=([^,=\\+<>#;\"\\n]+),)*([^,=\\+<>#;\"\\n]+)=([^,=\\+<>#;\"\\n]+)$/', $this->config['username'])===1) ? $this->config['username'] : $this->config['username'].'@'.$this->config['domain'],
 				'password'        => $this->config['password'],
 
 				// Optional Configuration Options
 				'schema'				=> \App\Schemas\Msad2::class,
-				'account_suffix'        => '@'.$this->config['domain'],
+				'account_suffix'        => (preg_match('/^(([^,=\\+<>#;\"\\n]+)=([^,=\\+<>#;\"\\n]+),)*([^,=\\+<>#;\"\\n]+)=([^,=\\+<>#;\"\\n]+)$/', $this->config['username'])===1) ? $this->config['domain'] : '@'.$this->config['domain'],
 				'port'                  => $this->config['port'],
 				'follow_referrals'      => false,
 				'use_ssl'               => ($this->config['connection'] == 'ssl'),
