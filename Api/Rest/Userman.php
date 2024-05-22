@@ -11,15 +11,17 @@ class Userman extends Base {
 		 * @returns - list of users
 		 * @uri /userman/users
 		 */
-		$app->get('/users', function ($request, $response, $args) {
-			$users = $this->freepbx->Userman->getAllUsers();
+		$freepbx = $this->freepbx;
+		$app->get('/users', function ($request, $response, $args) use($freepbx) {
+			$users = $freepbx->Userman->getAllUsers();
 			$list = [];
 			foreach ($users as $user) {
-				$user['assigned'] = $this->freepbx->Userman->getAssignedDevices($user['id']);
+				$user['assigned'] = $freepbx->Userman->getAssignedDevices($user['id']);
 
 				$list[] = $user;
 			}
-			return $response->withJson($list);
+			$response->getBody()->write(json_encode($list));
+			return $response->withHeader('Content-Type', 'application/json');
 		})->add($this->checkAllReadScopeMiddleware());
 
 		/**
@@ -27,7 +29,52 @@ class Userman extends Base {
 		 * @returns - a userman user
 		 * @uri /userman/users/:id
 		 */
-		$app->get('/users/{id}', function ($request, $response, $args) {
+		$app->get('/users/{id}', function ($request, $response, $args) use($freepbx) {
+			FreePBX::Modules()->loadFunctionsInc('userman');
+			if ($args['id'] == 'none') {
+				/* Don't do that. */
+				$response->getBody()->write(json_encode(false));
+			}
+
+			$userman = setup_userman();
+			$user = false;
+			if ($userman) {
+				$user = $freepbx->Userman->getUserByUsername($args['id']);
+				if ($user) {
+					$user['assigned'] = $freepbx->Userman->getAssignedDevices($user['id']);
+				}
+			}
+			$response->getBody()->write(json_encode($user));
+			return $response->withHeader('Content-Type', 'application/json');
+		})->add($this->checkAllReadScopeMiddleware());
+
+		/**
+		 * @verb GET
+		 * @returns - list of extensions
+		 * @uri /userman/extensions
+		 */
+		$app->get('/extensions', function ($request, $response, $args) use($freepbx) {
+			$list = [];
+			FreePBX::Modules()->loadFunctionsInc('userman');
+			$users = $freepbx->Userman->getAllUsers();
+			foreach ($users as $user) {
+				if ($user['default_extension'] == NULL || $user['default_extension'] == 'none') {
+					continue;
+				}
+
+				$list[$user['default_extension']] = ["id" => $user['id'], "username" => $user['username'], "description" => $user['description']];
+			}
+			$response->getBody()->write(json_encode($list));
+			return $response->withHeader('Content-Type', 'application/json');
+		})->add($this->checkAllReadScopeMiddleware());
+
+		/**
+		 * @verb GET
+		 * @returns - a userman user
+		 * @uri /userman/extensions/:id
+		 */
+		$app->get('/extensions/{id}', function ($request, $response, $args) use($freepbx) {
+			$userman = null;
 			FreePBX::Modules()->loadFunctionsInc('userman');
 			if ($args['id'] == 'none') {
 				/* Don't do that. */
@@ -37,55 +84,13 @@ class Userman extends Base {
 			$userman = setup_userman();
 			$user = false;
 			if ($userman) {
-				$user = $this->freepbx->Userman->getUserByUsername($args['id']);
+				$user = $freepbx->Userman->getUserByDefaultExtension($args['id']);
 				if ($user) {
-					$user['assigned'] = $this->freepbx->Userman->getAssignedDevices($user['id']);
+					$user['assigned'] = $freepbx->Userman->getAssignedDevices($user['id']);
 				}
 			}
-			return $response->withJson($user);
-		})->add($this->checkAllReadScopeMiddleware());
-
-		/**
-		 * @verb GET
-		 * @returns - list of extensions
-		 * @uri /userman/extensions
-		 */
-		$app->get('/extensions', function ($request, $response, $args) {
-			$list = [];
-   FreePBX::Modules()->loadFunctionsInc('userman');
-			$users = $this->freepbx->Userman->getAllUsers();
-			foreach ($users as $user) {
-				if ($user['default_extension'] == NULL || $user['default_extension'] == 'none') {
-					continue;
-				}
-
-				$list[$user['default_extension']] = ["id" => $user['id'], "username" => $user['username'], "description" => $user['description']];
-			}
-			return $response->withJson($list);
-		})->add($this->checkAllReadScopeMiddleware());
-
-		/**
-		 * @verb GET
-		 * @returns - a userman user
-		 * @uri /userman/extensions/:id
-		 */
-		$app->get('/extensions/{id}', function ($request, $response, $args) {
-			$userman = null;
-   FreePBX::Modules()->loadFunctionsInc('userman');
-			if ($args['id'] == 'none') {
-				/* Don't do that. */
-				$response->withJson(false);
-			}
-
-			$userman = setup_userman();
-			$user = false;
-			if ($userman) {
-				$user = $this->freepbx->Userman->getUserByDefaultExtension($args['id']);
-				if ($user) {
-					$user['assigned'] = $this->freepbx->Userman->getAssignedDevices($user['id']);
-				}
-			}
-			return $response->withJson($user);
+			$response->getBody()->write(json_encode($user));
+			return $response->withHeader('Content-Type', 'application/json');
 		})->add($this->checkAllReadScopeMiddleware());
 	}
 }
