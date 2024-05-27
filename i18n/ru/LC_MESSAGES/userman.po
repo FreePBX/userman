@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: User Management\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-27 03:50+0000\n"
+"POT-Creation-Date: 2024-05-27 12:16+0000\n"
 "PO-Revision-Date: 2022-04-21 09:01+0000\n"
 "Last-Translator: Dmitriy Q <krotesk@ya.ru>\n"
 "Language-Team: Russian <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -172,11 +172,11 @@ msgstr "Неизвестная ошибка при попытке обновит
 msgid "Apply Changes Bar"
 msgstr "Панель \"Применить изменения\""
 
-#: assets/js/userman.js:631
+#: assets/js/userman.js:646
 msgid "Are you sure rebuild all Users widgets associated with this Template ?"
 msgstr ""
 
-#: assets/js/userman.js:666
+#: assets/js/userman.js:681
 msgid "Are you sure to delete the Generic User?"
 msgstr ""
 
@@ -529,7 +529,7 @@ msgstr ""
 msgid "Extension Link Attribute"
 msgstr ""
 
-#: assets/js/userman.js:505
+#: assets/js/userman.js:520
 msgid "False"
 msgstr "Нет"
 
@@ -1036,7 +1036,7 @@ msgstr ""
 msgid "Password should have minimum %s value of %d, detected = %d"
 msgstr ""
 
-#: assets/js/userman.js:262 assets/js/userman.js:284
+#: assets/js/userman.js:262 assets/js/userman.js:299
 msgid "Please fill all missing fields"
 msgstr ""
 
@@ -1120,6 +1120,12 @@ msgstr ""
 msgid ""
 "Restrict this user's view to only Extensions, Ring Groups, and Queues within "
 "this range."
+msgstr ""
+
+#: assets/js/userman.js:273
+msgid ""
+"Sangoma Talk is enabled for this user, so changing the email will disable "
+"this service. Do you want to continue?"
 msgstr ""
 
 #: Userman.class.php:714
@@ -1313,11 +1319,11 @@ msgstr ""
 msgid "The Active Directory secure connection type"
 msgstr ""
 
-#: assets/js/userman.js:577
+#: assets/js/userman.js:592
 msgid "The Browser Language could not be determined"
 msgstr ""
 
-#: assets/js/userman.js:597
+#: assets/js/userman.js:612
 msgid "The Browser Timezone could not be determined"
 msgstr ""
 
@@ -1383,11 +1389,11 @@ msgstr ""
 msgid "The OpenLDAP username"
 msgstr ""
 
-#: assets/js/userman.js:587
+#: assets/js/userman.js:602
 msgid "The PBX Language is not set"
 msgstr ""
 
-#: assets/js/userman.js:607
+#: assets/js/userman.js:622
 msgid "The PBX Timezone is not set"
 msgstr ""
 
@@ -1734,7 +1740,7 @@ msgstr "Часовой пояс для этого пользователя"
 msgid "Title"
 msgstr "Заголовок"
 
-#: assets/js/userman.js:505
+#: assets/js/userman.js:520
 msgid "True"
 msgstr "Да"
 
@@ -1776,7 +1782,7 @@ msgstr ""
 msgid "Update Group is not defined"
 msgstr ""
 
-#: views/passwordmodal.php:35 assets/js/userman.js:403 assets/js/userman.js:425
+#: views/passwordmodal.php:35 assets/js/userman.js:418 assets/js/userman.js:440
 msgid "Update Password"
 msgstr ""
 
@@ -1798,7 +1804,7 @@ msgstr ""
 msgid "Updated Voicemail User %s"
 msgstr ""
 
-#: assets/js/userman.js:407
+#: assets/js/userman.js:422
 msgid "Updating"
 msgstr "Обновление"
 

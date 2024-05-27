@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-27 03:50+0000\n"
+"POT-Creation-Date: 2024-05-27 12:16+0000\n"
 "PO-Revision-Date: 2018-10-24 01:00+0000\n"
 "Last-Translator: Bastian Mertgen <b.mertgen@bastian-mertgen.de>\n"
 "Language-Team: German <http://*/projects/freepbx/userman/de/>\n"
@@ -175,11 +175,11 @@ msgstr ""
 msgid "Apply Changes Bar"
 msgstr "Änderungen anwenden"
 
-#: assets/js/userman.js:631
+#: assets/js/userman.js:646
 msgid "Are you sure rebuild all Users widgets associated with this Template ?"
 msgstr ""
 
-#: assets/js/userman.js:666
+#: assets/js/userman.js:681
 msgid "Are you sure to delete the Generic User?"
 msgstr ""
 
@@ -540,7 +540,7 @@ msgstr ""
 msgid "Extension Link Attribute"
 msgstr "Verknüpfungsattribut der Nebenstelle"
 
-#: assets/js/userman.js:505
+#: assets/js/userman.js:520
 msgid "False"
 msgstr "Falsch"
 
@@ -1074,7 +1074,7 @@ msgstr ""
 msgid "Password should have minimum %s value of %d, detected = %d"
 msgstr ""
 
-#: assets/js/userman.js:262 assets/js/userman.js:284
+#: assets/js/userman.js:262 assets/js/userman.js:299
 msgid "Please fill all missing fields"
 msgstr "Bitte füllen Sie alle fehlenden Angaben aus"
 
@@ -1163,6 +1163,12 @@ msgid ""
 msgstr ""
 "Diesem Benutzer ausschließlich erlauben, Nebenstellen, Rufgruppen und "
 "Warteshlangen in diesem Bereich zu sehen."
+
+#: assets/js/userman.js:273
+msgid ""
+"Sangoma Talk is enabled for this user, so changing the email will disable "
+"this service. Do you want to continue?"
+msgstr ""
 
 #: Userman.class.php:714
 msgid "Saved"
@@ -1373,11 +1379,11 @@ msgstr ""
 msgid "The Active Directory secure connection type"
 msgstr "Art der sicheren Verbindung zum Active-Directory"
 
-#: assets/js/userman.js:577
+#: assets/js/userman.js:592
 msgid "The Browser Language could not be determined"
 msgstr "Die Browser-Sprache konnte nicht bestimmt werden"
 
-#: assets/js/userman.js:597
+#: assets/js/userman.js:612
 msgid "The Browser Timezone could not be determined"
 msgstr "Die Browser-Zeitzone konnte nicht bestimmt werden"
 
@@ -1450,11 +1456,11 @@ msgstr "Die Art der sicheren Verbindung für OpenLDAP"
 msgid "The OpenLDAP username"
 msgstr "Der OpenLDAP-Benutzername"
 
-#: assets/js/userman.js:587
+#: assets/js/userman.js:602
 msgid "The PBX Language is not set"
 msgstr "Die TK-Anlagen Sprache ist nicht definiert"
 
-#: assets/js/userman.js:607
+#: assets/js/userman.js:622
 msgid "The PBX Timezone is not set"
 msgstr "Die TK-Anlagen Zeitzone ist nicht definiert"
 
@@ -1890,7 +1896,7 @@ msgstr "Die Zeitzone dieses Benutzers"
 msgid "Title"
 msgstr "Titel"
 
-#: assets/js/userman.js:505
+#: assets/js/userman.js:520
 msgid "True"
 msgstr "Wahr"
 
@@ -1932,7 +1938,7 @@ msgstr "Attribut für die eindeutige Kennung"
 msgid "Update Group is not defined"
 msgstr "Zu aktualisierende Gruppe ist nicht definiert"
 
-#: views/passwordmodal.php:35 assets/js/userman.js:403 assets/js/userman.js:425
+#: views/passwordmodal.php:35 assets/js/userman.js:418 assets/js/userman.js:440
 msgid "Update Password"
 msgstr "Passwort aktualisieren"
 
@@ -1954,7 +1960,7 @@ msgstr "Benutzer aktualisiert"
 msgid "Updated Voicemail User %s"
 msgstr "Voicemail-Benutzer %s aktualisiert"
 
-#: assets/js/userman.js:407
+#: assets/js/userman.js:422
 msgid "Updating"
 msgstr "Aktualisiere"
 
