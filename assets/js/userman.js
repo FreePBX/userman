@@ -297,13 +297,28 @@ $("#submit").click(function(e) {
 			invalid = true;
 		}
 	});
-	if(!invalid) {
-		if (["directory", "editT", "editCallActivityGroup"].includes($("form.fpbx-submit").attr("name"))) {
-			$(".fpbx-submit").submit();
-		} else {
-			setLocales(function() {
+	if (!invalid) {
+		const prevEmail = $('#prevEmail').val();
+		const updateEmail = $('#email').val();
+		const sngConnect_enabled = $('#sngConnect_enabled').val();
+		$('#disable_sngConnect').val('');
+		let proceed = true;
+		if (prevEmail != '' && updateEmail != prevEmail && sngConnect_enabled > 0) {
+			if (confirm(_("Sangoma Talk is enabled for this user, so changing the email will disable this service. Do you want to continue?"))) {
+				$('#disable_sngConnect').val('disable');
+			} else {
+				$('#email').val(prevEmail);
+				proceed = false;
+			}
+		}
+		if (proceed) {
+			if (["directory", "editT", "editCallActivityGroup"].includes($("form.fpbx-submit").attr("name"))) {
 				$(".fpbx-submit").submit();
-			});
+			} else {
+				setLocales(function () {
+					$(".fpbx-submit").submit();
+				});
+			}
 		}
 	}
 	return false;
@@ -770,17 +785,5 @@ $("#editM").submit(function (e) {
 	}
 	if(!invalid){
 		$('#editM')[0].submit();
-	}
-});
-
-$('#email').on('blur',function() {
-	var userid = $('#userid').val();
-	var prevEmail = $('#prevEmail').val();
-	var updateEmail = $(this).val();
-	var sngConnect_enabled = $('#sngConnect_enabled').val();
-	   $('#disable_sngConnect').val('');
-	if (userid !='' && prevEmail !='' && updateEmail !=prevEmail && sngConnect_enabled >0) {
-			 $('#disable_sngConnect').val('disable');
-	  alert("If you are change this email, the sangomaconnect option will disabled for this user");
 	}
 });
