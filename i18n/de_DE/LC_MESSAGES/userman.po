@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-27 03:43+0000\n"
+"POT-Creation-Date: 2024-05-27 12:08+0000\n"
 "PO-Revision-Date: 2018-10-24 01:00+0000\n"
 "Last-Translator: Bastian Mertgen <b.mertgen@bastian-mertgen.de>\n"
 "Language-Team: German <http://*/projects/freepbx/userman/de/>\n"
@@ -172,7 +172,7 @@ msgstr ""
 msgid "Apply Changes Bar"
 msgstr "Änderungen anwenden"
 
-#: assets/js/userman.js:675
+#: assets/js/userman.js:690
 msgid "Are you sure rebuild all Users widgets associated with this Template?"
 msgstr ""
 
@@ -548,7 +548,7 @@ msgstr ""
 msgid "Extension Link Attribute"
 msgstr "Verknüpfungsattribut der Nebenstelle"
 
-#: assets/js/userman.js:548
+#: assets/js/userman.js:563
 msgid "False"
 msgstr "Falsch"
 
@@ -1069,7 +1069,7 @@ msgstr ""
 #: views/general.php:376 views/general.php:417 views/groups.php:273
 #: views/groups.php:298 views/password_exp_reminder_hook.php:19
 #: views/password_exp_reminder_hook.php:57 views/quickCreate.php:16
-#: views/users.php:652 views/users.php:679 assets/js/userman.js:676
+#: views/users.php:652 views/users.php:679 assets/js/userman.js:691
 msgid "No"
 msgstr "Nein"
 
@@ -1542,11 +1542,11 @@ msgstr ""
 msgid "The Active Directoy user object class type to use when loading users."
 msgstr ""
 
-#: assets/js/userman.js:620
+#: assets/js/userman.js:635
 msgid "The Browser Language could not be determined"
 msgstr "Die Browser-Sprache konnte nicht bestimmt werden"
 
-#: assets/js/userman.js:640
+#: assets/js/userman.js:655
 msgid "The Browser Timezone could not be determined"
 msgstr "Die Browser-Zeitzone konnte nicht bestimmt werden"
 
@@ -1620,11 +1620,11 @@ msgstr "Die Art der sicheren Verbindung für OpenLDAP"
 msgid "The OpenLDAP username"
 msgstr "Der OpenLDAP-Benutzername"
 
-#: assets/js/userman.js:630
+#: assets/js/userman.js:645
 msgid "The PBX Language is not set"
 msgstr "Die TK-Anlagen Sprache ist nicht definiert"
 
-#: assets/js/userman.js:650
+#: assets/js/userman.js:665
 msgid "The PBX Timezone is not set"
 msgstr "Die TK-Anlagen Zeitzone ist nicht definiert"
 
@@ -2083,7 +2083,7 @@ msgstr "Die Zeitzone dieses Benutzers"
 msgid "Title"
 msgstr "Titel"
 
-#: assets/js/userman.js:548
+#: assets/js/userman.js:563
 msgid "True"
 msgstr "Wahr"
 
@@ -2126,7 +2126,7 @@ msgstr "Attribut für die eindeutige Kennung"
 msgid "Update Group is not defined"
 msgstr "Zu aktualisierende Gruppe ist nicht definiert"
 
-#: views/passwordmodal.php:35 assets/js/userman.js:438 assets/js/userman.js:460
+#: views/passwordmodal.php:35 assets/js/userman.js:453 assets/js/userman.js:475
 msgid "Update Password"
 msgstr "Passwort aktualisieren"
 
@@ -2148,7 +2148,7 @@ msgstr "Benutzer aktualisiert"
 msgid "Updated Voicemail User %s"
 msgstr "Voicemail-Benutzer %s aktualisiert"
 
-#: assets/js/userman.js:442
+#: assets/js/userman.js:457
 msgid "Updating"
 msgstr "Aktualisiere"
 
@@ -2456,7 +2456,7 @@ msgstr ""
 #: views/general.php:374 views/general.php:415 views/groups.php:271
 #: views/groups.php:296 views/password_exp_reminder_hook.php:17
 #: views/password_exp_reminder_hook.php:55 views/quickCreate.php:14
-#: views/users.php:650 views/users.php:677 assets/js/userman.js:676
+#: views/users.php:650 views/users.php:677 assets/js/userman.js:691
 msgid "Yes"
 msgstr "Ja"
 

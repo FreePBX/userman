@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-27 03:54+0000\n"
+"POT-Creation-Date: 2024-05-27 12:08+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -183,7 +183,7 @@ msgstr ""
 msgid "Apply Changes Bar"
 msgstr ""
 
-#: assets/js/userman.js:675
+#: assets/js/userman.js:690
 msgid "Are you sure rebuild all Users widgets associated with this Template?"
 msgstr ""
 
@@ -587,7 +587,7 @@ msgstr ""
 msgid "Extension Link Attribute"
 msgstr ""
 
-#: assets/js/userman.js:548
+#: assets/js/userman.js:563
 msgid "False"
 msgstr ""
 
@@ -1118,7 +1118,7 @@ msgstr ""
 #: views/quickCreate.php:16
 #: views/users.php:652
 #: views/users.php:679
-#: assets/js/userman.js:676
+#: assets/js/userman.js:691
 msgid "No"
 msgstr ""
 
@@ -1591,11 +1591,11 @@ msgstr ""
 msgid "The Active Directoy user object class type to use when loading users."
 msgstr ""
 
-#: assets/js/userman.js:620
+#: assets/js/userman.js:635
 msgid "The Browser Language could not be determined"
 msgstr ""
 
-#: assets/js/userman.js:640
+#: assets/js/userman.js:655
 msgid "The Browser Timezone could not be determined"
 msgstr ""
 
@@ -1664,11 +1664,11 @@ msgstr ""
 msgid "The OpenLDAP username"
 msgstr ""
 
-#: assets/js/userman.js:630
+#: assets/js/userman.js:645
 msgid "The PBX Language is not set"
 msgstr ""
 
-#: assets/js/userman.js:650
+#: assets/js/userman.js:665
 msgid "The PBX Timezone is not set"
 msgstr ""
 
@@ -2047,7 +2047,7 @@ msgstr ""
 msgid "Title"
 msgstr ""
 
-#: assets/js/userman.js:548
+#: assets/js/userman.js:563
 msgid "True"
 msgstr ""
 
@@ -2094,8 +2094,8 @@ msgid "Update Group is not defined"
 msgstr ""
 
 #: views/passwordmodal.php:35
-#: assets/js/userman.js:438
-#: assets/js/userman.js:460
+#: assets/js/userman.js:453
+#: assets/js/userman.js:475
 msgid "Update Password"
 msgstr ""
 
@@ -2117,7 +2117,7 @@ msgstr ""
 msgid "Updated Voicemail User %s"
 msgstr ""
 
-#: assets/js/userman.js:442
+#: assets/js/userman.js:457
 msgid "Updating"
 msgstr ""
 
@@ -2450,7 +2450,7 @@ msgstr ""
 #: views/quickCreate.php:14
 #: views/users.php:650
 #: views/users.php:677
-#: assets/js/userman.js:676
+#: assets/js/userman.js:691
 msgid "Yes"
 msgstr ""
 
