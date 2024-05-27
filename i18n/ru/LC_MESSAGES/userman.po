@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: User Management\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-26 23:53-0400\n"
+"POT-Creation-Date: 2024-05-27 10:26-0400\n"
 "PO-Revision-Date: 2022-04-21 09:01+0000\n"
 "Last-Translator: Dmitriy Q <krotesk@ya.ru>\n"
 "Language-Team: Russian <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -173,7 +173,7 @@ msgstr "Неизвестная ошибка при попытке обновит
 msgid "Apply Changes Bar"
 msgstr "Панель \"Применить изменения\""
 
-#: assets/js/userman.js:686
+#: assets/js/userman.js:701
 msgid "Are you sure rebuild all Users widgets associated with this Template?"
 msgstr ""
 
@@ -545,7 +545,7 @@ msgstr ""
 msgid "Extension Link Attribute"
 msgstr ""
 
-#: assets/js/userman.js:559
+#: assets/js/userman.js:574
 msgid "False"
 msgstr "Нет"
 
@@ -1037,7 +1037,7 @@ msgstr ""
 #: views/general.php:376 views/general.php:417 views/groups.php:281
 #: views/groups.php:306 views/password_exp_reminder_hook.php:21
 #: views/password_exp_reminder_hook.php:59 views/quickCreate.php:16
-#: views/users.php:660 views/users.php:687 assets/js/userman.js:687
+#: views/users.php:660 views/users.php:687 assets/js/userman.js:702
 msgid "No"
 msgstr "Нет"
 
@@ -1490,11 +1490,11 @@ msgstr ""
 msgid "The Active Directoy user object class type to use when loading users."
 msgstr ""
 
-#: assets/js/userman.js:631
+#: assets/js/userman.js:646
 msgid "The Browser Language could not be determined"
 msgstr ""
 
-#: assets/js/userman.js:651
+#: assets/js/userman.js:666
 msgid "The Browser Timezone could not be determined"
 msgstr ""
 
@@ -1568,11 +1568,11 @@ msgstr ""
 msgid "The OpenLDAP username"
 msgstr ""
 
-#: assets/js/userman.js:641
+#: assets/js/userman.js:656
 msgid "The PBX Language is not set"
 msgstr ""
 
-#: assets/js/userman.js:661
+#: assets/js/userman.js:676
 msgid "The PBX Timezone is not set"
 msgstr ""
 
@@ -1954,7 +1954,7 @@ msgstr "Часовой пояс для этого пользователя"
 msgid "Title"
 msgstr "Заголовок"
 
-#: assets/js/userman.js:559
+#: assets/js/userman.js:574
 msgid "True"
 msgstr "Да"
 
@@ -1997,7 +1997,7 @@ msgstr ""
 msgid "Update Group is not defined"
 msgstr ""
 
-#: views/passwordmodal.php:35 assets/js/userman.js:445 assets/js/userman.js:467
+#: views/passwordmodal.php:35 assets/js/userman.js:460 assets/js/userman.js:482
 msgid "Update Password"
 msgstr ""
 
@@ -2019,7 +2019,7 @@ msgstr ""
 msgid "Updated Voicemail User %s"
 msgstr ""
 
-#: assets/js/userman.js:449
+#: assets/js/userman.js:464
 msgid "Updating"
 msgstr "Обновление"
 
@@ -2328,7 +2328,7 @@ msgstr ""
 #: views/general.php:374 views/general.php:415 views/groups.php:279
 #: views/groups.php:304 views/password_exp_reminder_hook.php:19
 #: views/password_exp_reminder_hook.php:57 views/quickCreate.php:14
-#: views/users.php:658 views/users.php:685 assets/js/userman.js:687
+#: views/users.php:658 views/users.php:685 assets/js/userman.js:702
 msgid "Yes"
 msgstr "Да"
 
