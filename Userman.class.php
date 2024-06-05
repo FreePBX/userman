@@ -4751,7 +4751,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 
 	public function pwdAddGroup($id, $display, $data)
 	{
-		$this->pwdExpReminder()->usermanAddUser($id, $display, $data);
+		$this->pwdExpReminder()->usermanAddGroup($id, $display, $data);
 	}
 
 	public function pwdUpdateGroup($id, $display, $data)
