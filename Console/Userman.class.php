@@ -107,10 +107,10 @@ class Userman extends Command {
 					$secondsSince = 3600;
 				break;
 				case "0 */6 * * *":
-					$secondsSince = 7200;
+					$secondsSince = 21600;
 				break;
 				case "0 0 * * *":
-					$secondsSince = 14400;
+					$secondsSince = 86400;
 				break;
 			}
 			if($force || ($timeNow > ($timeSince + $secondsSince))) {
