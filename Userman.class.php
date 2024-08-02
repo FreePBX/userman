@@ -1776,7 +1776,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 			}
 			$this->setModuleSettingByGID($gid,"contactmanager","showingroups",["*"]);
 			$this->setModuleSettingByGID($gid,'contactmanager','groups',["*"]);
-			$this->setModuleSettingByGID($gid,'sysadmin','vpn_link', false);
+			$this->setModuleSettingByGID($gid,'sysadmin','vpn_link', true);
 			$this->setModuleSettingByGID($gid,'zulu','enable', true);
 			$this->setModuleSettingByGID($gid,'zulu','enable_fax', true);
 			$this->setModuleSettingByGID($gid,'zulu','enable_sms', true);
