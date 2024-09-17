@@ -629,7 +629,7 @@ function defaultSelector(value, row, index) {
 }
 
 $("#user-side").on("click-row.bs.table", function(row, $element) {
-	window.location = "?display=userman&action=showuser&user="+$element.id;
+	window.location = "?display=userman&action=showuser&user="+$element.id+"&directory="+$element.auth;
 });
 
 $("#group-side").on("click-row.bs.table", function(row, $element) {
