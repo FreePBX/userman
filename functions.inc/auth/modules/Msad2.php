@@ -434,13 +434,30 @@ class Msad2 extends Auth {
 	 */
 	public function checkCredentials($username, $password) {
 		$user = [];
-  $this->connect();
-
-		$res = $this->provider->auth()->attempt($username, $password);
+  		$this->connect();
+		$res = false;
+		if (isset($this->config['usernameattr']) && strtolower($this->config['usernameattr']) =='mail') {
+			$res = $this->attemptLogin($username, $password, 'mail');
+		}
+		else if (isset($this->config['usernameattr']) && strtolower($this->config['usernameattr']) =='userprinicipalname') {
+			$res = $this->attemptLogin($username, $password, 'userPrincipalName');
+		} else {
+			$res = $this->provider->auth()->attempt($username, $password);
+		}
 		if($res) {
 			$user = $this->getUserByUsername($username);
 		}
 		return !empty($user['id']) ? $user['id'] : false;
+	}
+
+	private function attemptLogin($username, $password, $attribute) {
+		$user = $this->provider->search()->where($attribute, '=', $username)->first();
+		if ($user) {
+			$username = $user->getFirstAttribute('sAMAccountName');
+			return $this->provider->auth()->attempt($username, $password);
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -602,6 +619,10 @@ class Msad2 extends Auth {
 				continue;
 			}
 			$username = $result->getAccountName();
+			if ($result->hasAttribute('userprincipalname') && empty($username)) {
+				$userPrincipalName = $result->getAttribute('userprincipalname');
+				$username = isset($userPrincipalName[0]) ? $userPrincipalName[0] :'';
+			}
 			if(empty($username)) {
 				$this->out("\t\tUsername is blank! Skipping unknown user");
 				continue;
