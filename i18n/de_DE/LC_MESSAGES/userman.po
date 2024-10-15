@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-27 12:08+0000\n"
+"POT-Creation-Date: 2024-10-15 10:01+0000\n"
 "PO-Revision-Date: 2018-10-24 01:00+0000\n"
 "Last-Translator: Bastian Mertgen <b.mertgen@bastian-mertgen.de>\n"
 "Language-Team: German <http://*/projects/freepbx/userman/de/>\n"
@@ -139,6 +139,10 @@ msgstr "„Benutzer hinzufügen“ ist nicht definiert"
 #, php-format
 msgid "Added Voicemail User %s"
 msgstr "Anrufbeantworter-Benutzer %s hinzugefügt"
+
+#: userman.i18n.php:6
+msgid "Admin"
+msgstr "Administrator"
 
 #: views/groups.php:338 views/users.php:721
 msgid "Administration Access"
@@ -440,6 +444,10 @@ msgstr ""
 #: views/users.php:3
 msgid "Edit User"
 msgstr "Benutzer bearbeiten"
+
+#: userman.i18n.php:12
+msgid "Email "
+msgstr "E-Mail "
 
 #: views/users.php:443
 msgid "Email Address"
@@ -1558,6 +1566,13 @@ msgstr ""
 msgid "The Directory ID is not valid!"
 msgstr ""
 
+#: userman.i18n.php:16
+msgid ""
+"The From: field for emails when using the user management email feature."
+msgstr ""
+"Das Absender-Feld für E-Mails wenn die E-Mail-Funktion der "
+"Benutzerverwaltung verwendet wird."
+
 #: views/call_activity_group.php:62
 msgid "The Group description"
 msgstr ""
@@ -1989,6 +2004,16 @@ msgid ""
 "in User Manager's Settings."
 msgstr ""
 
+#: userman.i18n.php:8
+msgid ""
+"This Module manages all PBX users. It allows an Administrator to create a "
+"User Account that can be used by other applications for login or API "
+"purposes."
+msgstr ""
+"Dieses Modul verwaltet alle Benutzer der Telefonanlage. Es erlaubt einem "
+"Administrator, ein Benutzerkonto anzulegen, das von anderen Anwendungen zur "
+"Anmeldung oder für den Zugriff auf API-Funktionen verwendet werden kann."
+
 #: Userman.class.php:3862 Userman.class.php:3926
 msgid "This authentication driver does not allow importing"
 msgstr "Dieser Authentifizierungstreiber erlaubt keinen Import"
@@ -2242,6 +2267,14 @@ msgstr "Attribut für die Private Telefonnummer des Benutzers"
 #: functions.inc/auth/modules/Openldap.php:250
 msgid "User Identity"
 msgstr "Benutzerkennung"
+
+#: userman.i18n.php:4 userman.i18n.php:10
+msgid "User Management"
+msgstr "Benutzerverwaltung"
+
+#: userman.i18n.php:14
+msgid "User Management Module"
+msgstr "Benutzerverwaltungs-Modul"
 
 #: Console/Userman.class.php:19 views/welcome.php:6
 msgid "User Manager"
@@ -2563,34 +2596,6 @@ msgstr "Benutzer"
 #: Userman.class.php:4509
 msgid "widgets not reconfigured"
 msgstr ""
-
-#~ msgid "Admin"
-#~ msgstr "Administrator"
-
-#~ msgid "Email "
-#~ msgstr "E-Mail "
-
-#~ msgid ""
-#~ "The From: field for emails when using the user management email feature."
-#~ msgstr ""
-#~ "Das Absender-Feld für E-Mails wenn die E-Mail-Funktion der "
-#~ "Benutzerverwaltung verwendet wird."
-
-#~ msgid ""
-#~ "This Module manages all PBX users. It allows an Administrator to create a "
-#~ "User Account that can be used by other applications for login or API "
-#~ "purposes."
-#~ msgstr ""
-#~ "Dieses Modul verwaltet alle Benutzer der Telefonanlage. Es erlaubt einem "
-#~ "Administrator, ein Benutzerkonto anzulegen, das von anderen Anwendungen "
-#~ "zur Anmeldung oder für den Zugriff auf API-Funktionen verwendet werden "
-#~ "kann."
-
-#~ msgid "User Management"
-#~ msgstr "Benutzerverwaltung"
-
-#~ msgid "User Management Module"
-#~ msgstr "Benutzerverwaltungs-Modul"
 
 #~ msgid ""
 #~ "%s User Manager is taking the place of several modules which have "

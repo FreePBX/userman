@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-27 12:08+0000\n"
+"POT-Creation-Date: 2024-10-15 10:01+0000\n"
 "PO-Revision-Date: 2016-12-11 08:33+0200\n"
 "Last-Translator: Ernesto <ecasas@sangoma.com>\n"
 "Language-Team: Spanish <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -140,6 +140,10 @@ msgstr ""
 #, php-format
 msgid "Added Voicemail User %s"
 msgstr "Agregado Voicemail usuario: %s"
+
+#: userman.i18n.php:6
+msgid "Admin"
+msgstr "Administrador"
 
 #: views/groups.php:338 views/users.php:721
 msgid "Administration Access"
@@ -436,6 +440,10 @@ msgstr ""
 #: views/users.php:3
 msgid "Edit User"
 msgstr "Editar Usuario"
+
+#: userman.i18n.php:12
+msgid "Email "
+msgstr "Correo Electrónico "
 
 #: views/users.php:443
 msgid "Email Address"
@@ -1543,6 +1551,13 @@ msgstr ""
 msgid "The Directory ID is not valid!"
 msgstr ""
 
+#: userman.i18n.php:16
+msgid ""
+"The From: field for emails when using the user management email feature."
+msgstr ""
+"El Campo \"De:\" para los correos cuando se esta usando la función de correo "
+"de la gestión de usuario."
+
 #: views/call_activity_group.php:62
 msgid "The Group description"
 msgstr ""
@@ -1907,6 +1922,13 @@ msgid ""
 "in User Manager's Settings."
 msgstr ""
 
+#: userman.i18n.php:8
+msgid ""
+"This Module manages all PBX users. It allows an Administrator to create a "
+"User Account that can be used by other applications for login or API "
+"purposes."
+msgstr ""
+
 #: Userman.class.php:3862 Userman.class.php:3926
 msgid "This authentication driver does not allow importing"
 msgstr "Este controlador de autenticación no permite la importación"
@@ -2153,6 +2175,14 @@ msgstr ""
 #: functions.inc/auth/modules/Openldap.php:250
 msgid "User Identity"
 msgstr ""
+
+#: userman.i18n.php:4 userman.i18n.php:10
+msgid "User Management"
+msgstr "Gestión de Usuario"
+
+#: userman.i18n.php:14
+msgid "User Management Module"
+msgstr "Modulo de Gestión de Usuario"
 
 #: Console/Userman.class.php:19 views/welcome.php:6
 msgid "User Manager"
@@ -2470,24 +2500,6 @@ msgstr "usuarios"
 #: Userman.class.php:4509
 msgid "widgets not reconfigured"
 msgstr ""
-
-#~ msgid "Admin"
-#~ msgstr "Administrador"
-
-#~ msgid "Email "
-#~ msgstr "Correo Electrónico "
-
-#~ msgid ""
-#~ "The From: field for emails when using the user management email feature."
-#~ msgstr ""
-#~ "El Campo \"De:\" para los correos cuando se esta usando la función de "
-#~ "correo de la gestión de usuario."
-
-#~ msgid "User Management"
-#~ msgstr "Gestión de Usuario"
-
-#~ msgid "User Management Module"
-#~ msgstr "Modulo de Gestión de Usuario"
 
 #~ msgid "General Settings"
 #~ msgstr "Configuración General"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-27 12:08+0000\n"
+"POT-Creation-Date: 2024-10-15 10:01+0000\n"
 "PO-Revision-Date: 2017-07-03 12:33-0400\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -137,6 +137,10 @@ msgstr ""
 #: functions.inc/auth/modules/Voicemail.php:106
 #, php-format
 msgid "Added Voicemail User %s"
+msgstr ""
+
+#: userman.i18n.php:6
+msgid "Admin"
 msgstr ""
 
 #: views/groups.php:338 views/users.php:721
@@ -430,6 +434,10 @@ msgstr ""
 
 #: views/users.php:3
 msgid "Edit User"
+msgstr ""
+
+#: userman.i18n.php:12
+msgid "Email "
 msgstr ""
 
 #: views/users.php:443
@@ -1490,6 +1498,11 @@ msgstr ""
 msgid "The Directory ID is not valid!"
 msgstr ""
 
+#: userman.i18n.php:16
+msgid ""
+"The From: field for emails when using the user management email feature."
+msgstr ""
+
 #: views/call_activity_group.php:62
 msgid "The Group description"
 msgstr ""
@@ -1848,6 +1861,13 @@ msgid ""
 "in User Manager's Settings."
 msgstr ""
 
+#: userman.i18n.php:8
+msgid ""
+"This Module manages all PBX users. It allows an Administrator to create a "
+"User Account that can be used by other applications for login or API "
+"purposes."
+msgstr ""
+
 #: Userman.class.php:3862 Userman.class.php:3926
 msgid "This authentication driver does not allow importing"
 msgstr ""
@@ -2084,6 +2104,14 @@ msgstr ""
 
 #: functions.inc/auth/modules/Openldap.php:250
 msgid "User Identity"
+msgstr ""
+
+#: userman.i18n.php:4 userman.i18n.php:10
+msgid "User Management"
+msgstr ""
+
+#: userman.i18n.php:14
+msgid "User Management Module"
 msgstr ""
 
 #: Console/Userman.class.php:19 views/welcome.php:6
