@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>17.0.6.39</version>
+	<version>17.0.6.40</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -11,6 +11,7 @@
 	</description>
   	<more-info>https://sangomakb.atlassian.net/wiki/spaces/PG/pages/20024012/User+Management+Module</more-info>
 	<changelog>
+		*17.0.6.40* FREEI-2071,FREEI-2075 advr scd setting and userman settings issue after restore is resolved 
 		*17.0.6.39* FREEI-2058 issue with UCP Template Not Applying Widgets to New User 
 		*17.0.6.38* #754 Userman sync failed for MS LDAP 
 		*17.0.6.37* #720 freepbx 16 usermanager settings password management undefined index 
