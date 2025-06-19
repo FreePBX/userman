@@ -79,7 +79,7 @@ class Restore Extends Base\RestoreBase{
 				$this->addDataToTableFromArray($table,$cleandata);
 			}
 
-			if ($table == 'userman_template_settings' || $table == 'userman_ucp_templates') {
+			if ($table == 'userman_template_settings' || $table == 'userman_ucp_templates' || $table == 'userman_call_activity_groups' || $table == 'userman_call_activity_users') {
 				$this->addDataToTableFromArray($table, $datas);
 			}
 		}
