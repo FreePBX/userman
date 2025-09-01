@@ -248,9 +248,13 @@ class Freepbx extends Auth {
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array(':username' => $username, ':directory' => $this->config['id']));
 		$result = $sth->fetch(\PDO::FETCH_ASSOC);
-
 		$passwordHasher = new PasswordHash(8,false);
-
+		if (\FreePBX::Modules()->checkStatus('pbxsaml')) {
+			$usamlenabled = $this->freepbx->Userman->getCombinedModuleSettingByID($result['id'], 'pbxsaml', 'enablesaml');
+			if($usamlenabled){
+				return "SAML Single Sign-On is enabled for your account. Please sign in using SSO.";
+			}
+		}
 		if(!empty($result) && (strlen($result['password']) === 40) && (sha1($password) === $result['password'])) {
 			$hash = $passwordHasher->HashPassword($password);
 			$sql = "UPDATE ".$this->userTable." SET password = :password WHERE username = :username";
