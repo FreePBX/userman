@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-02 11:13+0000\n"
+"POT-Creation-Date: 2025-09-02 10:09+0000\n"
 "PO-Revision-Date: 2016-12-21 00:22+0200\n"
 "Last-Translator: Alexander <alexander.schley@paranagua.pr.gov.br>\n"
 "Language-Team: Portuguese (Brazil) <http://weblate.freepbx.org/projects/"
@@ -249,12 +249,12 @@ msgstr ""
 msgid "Company"
 msgstr "Empresa"
 
-#: PasswordExpReminder.php:637 assets/js/adminPwdExpReminder.js:71
+#: PasswordExpReminder.php:650 assets/js/adminPwdExpReminder.js:71
 #: assets/js/adminPwdExpReminder.js:84
 msgid "Confirm password does not match"
 msgstr ""
 
-#: PasswordExpReminder.php:633
+#: PasswordExpReminder.php:646
 msgid "Confirm password is required"
 msgstr ""
 
@@ -882,7 +882,7 @@ msgstr "Herdar"
 msgid "Invalid Credentials"
 msgstr ""
 
-#: PasswordExpReminder.php:387
+#: PasswordExpReminder.php:400
 msgid "Invalid Login Credentials"
 msgstr ""
 
@@ -890,7 +890,7 @@ msgstr ""
 msgid "Invalid Password"
 msgstr ""
 
-#: PasswordExpReminder.php:625
+#: PasswordExpReminder.php:638
 msgid "Invalid Token"
 msgstr ""
 
@@ -1090,7 +1090,7 @@ msgstr "Nenhum"
 msgid "Not Connected"
 msgstr "Não Conectado"
 
-#: PasswordExpReminder.php:654 PasswordExpReminder.php:657
+#: PasswordExpReminder.php:667 PasswordExpReminder.php:670
 msgid "Not able to reset password"
 msgstr ""
 
@@ -1182,11 +1182,11 @@ msgid ""
 "they login, 5 days prior to the password expiry"
 msgstr ""
 
-#: PasswordExpReminder.php:530
+#: PasswordExpReminder.php:543
 msgid "Password expiry reminder Settings updated successfully"
 msgstr ""
 
-#: PasswordExpReminder.php:629
+#: PasswordExpReminder.php:642
 msgid "Password is required"
 msgstr ""
 
@@ -1300,6 +1300,11 @@ msgid ""
 msgstr ""
 "Restringir o modo de exibição deste usuário somente a Ramais, Grupos de "
 "Toque e Filas dentro deste intervalo."
+
+#: PasswordExpReminder.php:315
+msgid ""
+"SAML Single Sign-On is enabled for your account. Please sign in using SSO."
+msgstr ""
 
 #: Userman.class.php:726
 msgid "Saved"
@@ -2418,7 +2423,7 @@ msgid ""
 "features that require a login"
 msgstr ""
 
-#: PasswordExpReminder.php:325 PasswordExpReminder.php:358
+#: PasswordExpReminder.php:338 PasswordExpReminder.php:371
 msgid "You must reset your password before continuing"
 msgstr ""
 
@@ -2426,18 +2431,18 @@ msgstr ""
 msgid "Your %brand% Account"
 msgstr "A sua conta %brand%"
 
-#: PasswordExpReminder.php:652
+#: PasswordExpReminder.php:665
 msgid "Your password has been reset successfully"
 msgstr ""
 
-#: PasswordExpReminder.php:370 PasswordExpReminder.php:379
+#: PasswordExpReminder.php:383 PasswordExpReminder.php:392
 #, php-format
 msgid ""
 "Your password will expire in %s day(s). So, please change your password as "
 "soon as possible."
 msgstr ""
 
-#: PasswordExpReminder.php:377
+#: PasswordExpReminder.php:390
 #, php-format
 msgid ""
 "Your password will expire today. So, please change your password as soon as "
