@@ -274,6 +274,19 @@ class PasswordExpReminder {
         } else if ($usertype == self::USER_TYPE_UCP) {
             $status = $this->Userman->checkCredentials($username, $password);
         }
+        if (\FreePBX::Modules()->checkStatus('pbxsaml')) {
+            $getUser = $this->Userman->getUserByUsername($username);
+            if(!empty($getUser)){
+                $usamlenabled = $this->Userman->getCombinedModuleSettingByID($getUser['id'], 'pbxsaml', 'enablesaml');
+                if($usamlenabled){
+                    return [
+                        'loginfailed' => true,
+                        'status'=>false,
+                        'message'=>_('SAML Single Sign-On is enabled for your account. Please sign in using SSO.')
+                    ];
+                }
+            }
+        }
 
         if ($status) {
             // Check Force Password Reset Settings

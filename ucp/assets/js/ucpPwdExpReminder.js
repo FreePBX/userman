@@ -17,8 +17,6 @@ function checkPasswordReminder() {
                     window.location.reload();
 
                 } else if (response.loginfailed) {
-
-                    $("#login-window").height("300");
                     $("#error-msg").html(response.message).fadeIn("fast");
 
                 } else if (response.mustresetpassword) {
