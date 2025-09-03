@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: User Management\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-02 07:14-0400\n"
+"POT-Creation-Date: 2025-09-03 01:56-0400\n"
 "PO-Revision-Date: 2022-04-21 09:01+0000\n"
 "Last-Translator: Dmitriy Q <krotesk@ya.ru>\n"
 "Language-Team: Russian <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -247,12 +247,12 @@ msgstr "Атрибут общего имени"
 msgid "Company"
 msgstr "Компания"
 
-#: PasswordExpReminder.php:608 assets/js/adminPwdExpReminder.js:71
+#: PasswordExpReminder.php:621 assets/js/adminPwdExpReminder.js:71
 #: assets/js/adminPwdExpReminder.js:84
 msgid "Confirm password does not match"
 msgstr ""
 
-#: PasswordExpReminder.php:604
+#: PasswordExpReminder.php:617
 msgid "Confirm password is required"
 msgstr ""
 
@@ -859,7 +859,7 @@ msgstr "Наследовать"
 msgid "Invalid Credentials"
 msgstr ""
 
-#: PasswordExpReminder.php:357
+#: PasswordExpReminder.php:370
 msgid "Invalid Login Credentials"
 msgstr ""
 
@@ -867,7 +867,7 @@ msgstr ""
 msgid "Invalid Password"
 msgstr ""
 
-#: PasswordExpReminder.php:596
+#: PasswordExpReminder.php:609
 msgid "Invalid Token"
 msgstr ""
 
@@ -1066,7 +1066,7 @@ msgstr "Отсутствует"
 msgid "Not Connected"
 msgstr "Не подключено"
 
-#: PasswordExpReminder.php:625 PasswordExpReminder.php:628
+#: PasswordExpReminder.php:638 PasswordExpReminder.php:641
 msgid "Not able to reset password"
 msgstr ""
 
@@ -1158,11 +1158,11 @@ msgid ""
 "they login, 5 days prior to the password expiry"
 msgstr ""
 
-#: PasswordExpReminder.php:501
+#: PasswordExpReminder.php:514
 msgid "Password expiry reminder Settings updated successfully"
 msgstr ""
 
-#: PasswordExpReminder.php:600
+#: PasswordExpReminder.php:613
 msgid "Password is required"
 msgstr ""
 
@@ -1275,6 +1275,11 @@ msgstr ""
 msgid ""
 "Restrict this user's view to only Extensions, Ring Groups, and Queues within "
 "this range."
+msgstr ""
+
+#: PasswordExpReminder.php:285
+msgid ""
+"SAML Single Sign-On is enabled for your account. Please sign in using SSO."
 msgstr ""
 
 #: Userman.class.php:638
@@ -2357,7 +2362,7 @@ msgstr ""
 "У вас нет включенных каталогов. Это повлияет на способность пользователей "
 "использовать функции, требующие входа в систему"
 
-#: PasswordExpReminder.php:295 PasswordExpReminder.php:328
+#: PasswordExpReminder.php:308 PasswordExpReminder.php:341
 msgid "You must reset your password before continuing"
 msgstr ""
 
@@ -2365,18 +2370,18 @@ msgstr ""
 msgid "Your %brand% Account"
 msgstr "Ваш аккаунт %brand%"
 
-#: PasswordExpReminder.php:623
+#: PasswordExpReminder.php:636
 msgid "Your password has been reset successfully"
 msgstr ""
 
-#: PasswordExpReminder.php:340 PasswordExpReminder.php:349
+#: PasswordExpReminder.php:353 PasswordExpReminder.php:362
 #, php-format
 msgid ""
 "Your password will expire in %s day(s). So, please change your password as "
 "soon as possible."
 msgstr ""
 
-#: PasswordExpReminder.php:347
+#: PasswordExpReminder.php:360
 #, php-format
 msgid ""
 "Your password will expire today. So, please change your password as soon as "
