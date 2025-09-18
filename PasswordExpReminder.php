@@ -308,7 +308,7 @@ class PasswordExpReminder {
             $getUser = $this->Userman->getUserByUsername($username);
             if(!empty($getUser)){
                 $usamlenabled = $this->Userman->getCombinedModuleSettingByID($getUser['id'], 'pbxsaml', 'enablesaml');
-                if($usamlenabled){
+                if($usamlenabled && \FreePBX::Pbxsaml()->isLicensed()){
                     return [
                         'loginfailed' => true,
                         'status'=>false,
