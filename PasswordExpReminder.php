@@ -304,14 +304,16 @@ class PasswordExpReminder {
         } else if ($usertype == self::USER_TYPE_UCP) {
             $status = $this->Userman->checkCredentials($username, $password);
         }
-        if (\FreePBX::Modules()->checkStatus('pbxsaml')) {
+        
+        if (\FreePBX::Modules()->checkStatus('pbxsaml') && \FreePBX::Pbxsaml()->isLicensed()) {
             $getUser = $this->Userman->getUserByUsername($username);
             if(!empty($getUser)){
                 $usamlenabled = $this->Userman->getCombinedModuleSettingByID($getUser['id'], 'pbxsaml', 'enablesaml');
-                if($usamlenabled && \FreePBX::Pbxsaml()->isLicensed()){
+                if ($usamlenabled) {
                     return [
                         'loginfailed' => true,
                         'status'=>false,
+                        'samlenabled'=>$usamlenabled,
                         'message'=>_('SAML Single Sign-On is enabled for your account. Please sign in using SSO.')
                     ];
                 }
