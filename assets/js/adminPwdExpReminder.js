@@ -19,6 +19,10 @@ function checkPasswordReminder(thisPointerFromLogin) {
                     window.location.reload();
 
                 } else if (response.loginfailed) {
+                    if(response.hasOwnProperty("samlenabled") && response.samlenabled){
+                        handelSamlAuth('admin',window.username,thisPointerFromLogin);
+                        return ;
+                     }
 
                     fpbxToast(_(response.message), _('Error'), "error");
 
@@ -104,3 +108,11 @@ function resetAdminPassswordWithToken(thisPointerFromLogin) {
         });
 
 };
+
+function handelSamlAuth(loginpanel,username,thisPointerFromLogin){
+    if (typeof buildAuthTemplate === "function") {
+        if(loginpanel == 'admin'){
+            let response =  buildAuthTemplate(loginpanel,username,thisPointerFromLogin);
+        }
+    }
+}
