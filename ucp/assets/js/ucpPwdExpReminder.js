@@ -1,5 +1,4 @@
 function checkPasswordReminder() {
-
     return new Promise(function (resolve, reject) {
 
         let username = $("input[name=username]").val().trim();
@@ -17,6 +16,10 @@ function checkPasswordReminder() {
                     window.location.reload();
 
                 } else if (response.loginfailed) {
+                    if(response.hasOwnProperty("samlenabled") && response.samlenabled){
+                        handelSamlAuth('ucp',username);
+                        return ;
+                     }
                     $("#error-msg").html(response.message).fadeIn("fast");
 
                 } else if (response.mustresetpassword) {
@@ -43,3 +46,11 @@ function checkPasswordReminder() {
             });
     });
 };
+
+function handelSamlAuth(loginpanel,username){
+    if (typeof buildAuthTemplate === "function") {
+        if(loginpanel == 'ucp'){
+            let response =  buildAuthTemplate(loginpanel,username);
+        }
+    }
+}
