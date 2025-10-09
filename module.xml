@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>16.0.44.25</version>
+	<version>16.0.44.26</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -11,6 +11,7 @@
 	</description>
   	<more-info>https://wiki.freepbx.org/display/FPG/User+Management+Module</more-info>
 	<changelog>
+		*16.0.44.26* Packaging of ver 16.0.44.26
 		*16.0.44.25* Packaging of ver 16.0.44.25
 		*16.0.44.23* Packaging of ver 16.0.44.23
 		*16.0.44.22* FREEI-2071,FREEI-2075 advr scd setting and userman settings issue after restore is resolved 
