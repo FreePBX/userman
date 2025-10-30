@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-09 10:49+0000\n"
+"POT-Creation-Date: 2025-10-30 11:54+0000\n"
 "PO-Revision-Date: 2018-10-24 01:00+0000\n"
 "Last-Translator: Bastian Mertgen <b.mertgen@bastian-mertgen.de>\n"
 "Language-Team: German <http://*/projects/freepbx/userman/de/>\n"
@@ -250,12 +250,12 @@ msgstr "Allgemeines Namensattribut"
 msgid "Company"
 msgstr "Firma"
 
-#: PasswordExpReminder.php:652 assets/js/adminPwdExpReminder.js:75
+#: PasswordExpReminder.php:654 assets/js/adminPwdExpReminder.js:75
 #: assets/js/adminPwdExpReminder.js:88
 msgid "Confirm password does not match"
 msgstr ""
 
-#: PasswordExpReminder.php:648
+#: PasswordExpReminder.php:650
 msgid "Confirm password is required"
 msgstr ""
 
@@ -895,7 +895,7 @@ msgstr "Erben"
 msgid "Invalid Credentials"
 msgstr ""
 
-#: PasswordExpReminder.php:402
+#: PasswordExpReminder.php:404
 msgid "Invalid Login Credentials"
 msgstr ""
 
@@ -903,7 +903,7 @@ msgstr ""
 msgid "Invalid Password"
 msgstr ""
 
-#: PasswordExpReminder.php:640
+#: PasswordExpReminder.php:642
 msgid "Invalid Token"
 msgstr ""
 
@@ -1106,7 +1106,7 @@ msgstr "Kein*e"
 msgid "Not Connected"
 msgstr "Nicht verbunden"
 
-#: PasswordExpReminder.php:669 PasswordExpReminder.php:672
+#: PasswordExpReminder.php:671 PasswordExpReminder.php:674
 msgid "Not able to reset password"
 msgstr ""
 
@@ -1199,11 +1199,11 @@ msgid ""
 "they login, 5 days prior to the password expiry"
 msgstr ""
 
-#: PasswordExpReminder.php:545
+#: PasswordExpReminder.php:547
 msgid "Password expiry reminder Settings updated successfully"
 msgstr ""
 
-#: PasswordExpReminder.php:644
+#: PasswordExpReminder.php:646
 msgid "Password is required"
 msgstr ""
 
@@ -1318,7 +1318,7 @@ msgstr ""
 "Diesem Benutzer ausschließlich erlauben, Nebenstellen, Rufgruppen und "
 "Warteshlangen in diesem Bereich zu sehen."
 
-#: PasswordExpReminder.php:317
+#: PasswordExpReminder.php:319
 msgid ""
 "SAML Single Sign-On is enabled for your account. Please sign in using SSO."
 msgstr ""
@@ -2523,7 +2523,7 @@ msgstr ""
 "Sie haben keine Verzeichnisse aktiviert. Dadurch könnte die Nutzbarkeit von "
 "Funktionen, die eine Anmeldung erfordern, betroffen sein"
 
-#: PasswordExpReminder.php:340 PasswordExpReminder.php:373
+#: PasswordExpReminder.php:342 PasswordExpReminder.php:375
 msgid "You must reset your password before continuing"
 msgstr ""
 
@@ -2531,18 +2531,18 @@ msgstr ""
 msgid "Your %brand% Account"
 msgstr "Ihr %brand% Account"
 
-#: PasswordExpReminder.php:667
+#: PasswordExpReminder.php:669
 msgid "Your password has been reset successfully"
 msgstr ""
 
-#: PasswordExpReminder.php:385 PasswordExpReminder.php:394
+#: PasswordExpReminder.php:387 PasswordExpReminder.php:396
 #, php-format
 msgid ""
 "Your password will expire in %s day(s). So, please change your password as "
 "soon as possible."
 msgstr ""
 
-#: PasswordExpReminder.php:392
+#: PasswordExpReminder.php:394
 #, php-format
 msgid ""
 "Your password will expire today. So, please change your password as soon as "
