@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-25 03:43-0400\n"
+"POT-Creation-Date: 2025-10-30 07:54-0400\n"
 "PO-Revision-Date: 2017-07-03 12:33-0400\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -247,12 +247,12 @@ msgstr ""
 msgid "Company"
 msgstr ""
 
-#: PasswordExpReminder.php:623 assets/js/adminPwdExpReminder.js:75
+#: PasswordExpReminder.php:625 assets/js/adminPwdExpReminder.js:75
 #: assets/js/adminPwdExpReminder.js:88
 msgid "Confirm password does not match"
 msgstr ""
 
-#: PasswordExpReminder.php:619
+#: PasswordExpReminder.php:621
 msgid "Confirm password is required"
 msgstr ""
 
@@ -849,7 +849,7 @@ msgstr ""
 msgid "Invalid Credentials"
 msgstr ""
 
-#: PasswordExpReminder.php:372
+#: PasswordExpReminder.php:374
 msgid "Invalid Login Credentials"
 msgstr ""
 
@@ -857,7 +857,7 @@ msgstr ""
 msgid "Invalid Password"
 msgstr ""
 
-#: PasswordExpReminder.php:611
+#: PasswordExpReminder.php:613
 msgid "Invalid Token"
 msgstr ""
 
@@ -1056,7 +1056,7 @@ msgstr ""
 msgid "Not Connected"
 msgstr ""
 
-#: PasswordExpReminder.php:640 PasswordExpReminder.php:643
+#: PasswordExpReminder.php:642 PasswordExpReminder.php:645
 msgid "Not able to reset password"
 msgstr ""
 
@@ -1148,11 +1148,11 @@ msgid ""
 "they login, 5 days prior to the password expiry"
 msgstr ""
 
-#: PasswordExpReminder.php:516
+#: PasswordExpReminder.php:518
 msgid "Password expiry reminder Settings updated successfully"
 msgstr ""
 
-#: PasswordExpReminder.php:615
+#: PasswordExpReminder.php:617
 msgid "Password is required"
 msgstr ""
 
@@ -1267,7 +1267,7 @@ msgid ""
 "this range."
 msgstr ""
 
-#: PasswordExpReminder.php:287
+#: PasswordExpReminder.php:289
 msgid ""
 "SAML Single Sign-On is enabled for your account. Please sign in using SSO."
 msgstr ""
@@ -2350,7 +2350,7 @@ msgid ""
 "features that require a login"
 msgstr ""
 
-#: PasswordExpReminder.php:310 PasswordExpReminder.php:343
+#: PasswordExpReminder.php:312 PasswordExpReminder.php:345
 msgid "You must reset your password before continuing"
 msgstr ""
 
@@ -2358,18 +2358,18 @@ msgstr ""
 msgid "Your %brand% Account"
 msgstr ""
 
-#: PasswordExpReminder.php:638
+#: PasswordExpReminder.php:640
 msgid "Your password has been reset successfully"
 msgstr ""
 
-#: PasswordExpReminder.php:355 PasswordExpReminder.php:364
+#: PasswordExpReminder.php:357 PasswordExpReminder.php:366
 #, php-format
 msgid ""
 "Your password will expire in %s day(s). So, please change your password as "
 "soon as possible."
 msgstr ""
 
-#: PasswordExpReminder.php:362
+#: PasswordExpReminder.php:364
 #, php-format
 msgid ""
 "Your password will expire today. So, please change your password as soon as "
