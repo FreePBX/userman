@@ -12,16 +12,17 @@ function checkPasswordReminder() {
             }).done(function (response) {
 
                 if (response.isSessionAlreadyUnlocked) {
-
-                    window.location.reload();
-
+                    resolve(true);
+                    setTimeout(() => window.location.reload(), 50);
+                    return;
                 } else if (response.loginfailed) {
                     if(response.hasOwnProperty("samlenabled") && response.samlenabled){
                         handelSamlAuth('ucp',username);
                         return ;
                      }
                     $("#error-msg").html(response.message).fadeIn("fast");
-
+                    resolve(false);
+                    return;
                 } else if (response.mustresetpassword) {
 
                     alert(_(response.message));
