@@ -602,7 +602,12 @@ class Userman extends FreePBX_Helpers implements BMO {
 							}
 						}
 						if(isset($request['submittype']) && $request['submittype'] == "guisend") {
-							$data = $this->getUserByID($request['user']);
+							if(isset($request['user']) && $request['user'] != "") {
+								$data = $this->getUserByID($request['user']);
+							}
+							else{
+								$data = $this->getUserByID($ret['id']);
+							}
 							$this->sendWelcomeEmail($data['id'], $password);
 						}
 						$prevtempid = $this->getConfig('template_id', $ret['id']);
