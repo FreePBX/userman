@@ -1001,7 +1001,8 @@ class Userman extends FreePBX_Helpers implements BMO {
 				foreach($directories as $directory) {
 					$directoryMap[$directory['id']]['name'] = $directory['name'];
 					$directoryMap[$directory['id']]['driver'] = $directory['driver'];
-					$directoryMap[$directory['id']]['permissions'] = $this->getDirectoryObjectByID($directory['id'])->getPermissions();
+					$directoryObject = $this->getDirectoryObjectByID($directory['id']);
+					$directoryMap[$directory['id']]['permissions'] = $directoryObject ? $directoryObject->getPermissions() : [];
 				}
 				$mailtype = $this->getGlobalsetting('mailtype');
 				$mailtype = $mailtype === 'html' ? 'html' : 'text';
@@ -1238,7 +1239,8 @@ class Userman extends FreePBX_Helpers implements BMO {
 				}
 			break;
 			case "getDirectories":
-				return $this->getAllDirectories();
+				$filter = isset($request['directoryFilter']) ? $request['directoryFilter'] : '';
+				return $this->getAllDirectories(false, $filter);
 			break;
 			case "auth":
 				$out = $this->checkCredentials($request["username"],$request["password"]);
@@ -1403,18 +1405,30 @@ class Userman extends FreePBX_Helpers implements BMO {
 		$this->globalDirectory = new $class($this, $this->FreePBX);
 	}
 
-	public function getAllDirectories($withactivecount = false) {
+	public function getAllDirectories($withactivecount = false, $driverFilter = '') {
 		$sql = "SELECT * FROM ".$this->directoryTable." ORDER BY `order`";
 		$sth = $this->db->prepare($sql);
 		$sth->execute();
 		$directories = $sth->fetchAll(PDO::FETCH_ASSOC);
 		$count = 0;
+		$filter = is_string($driverFilter) ? trim($driverFilter) : '';
+		if ($filter !== '') {
+			$filter = strtolower($filter);
+		}
 		foreach($directories as $key => $d) {
+			if ($filter !== '') {
+				$driver = isset($d['driver']) ? strtolower($d['driver']) : '';
+				if ($driver !== $filter) {
+					unset($directories[$key]);
+					continue;
+				}
+			}
 			$directories[$key]['config'] = $this->getConfig("auth-settings",$d['id']);
 			if($directories[$key]['active'] == 1){
 				$count++;
 			}
 		}
+		$directories = array_values($directories);
 		if($withactivecount){
 			return ['active' => $count, 'directories' => $directories];
 		}

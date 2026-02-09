@@ -218,6 +218,12 @@ if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'showdirectory'){
 }else{
 	$heading = '<h1>' . _("Add Directory") . '</h1>';
 }
+$forced_authtype = null;
+$lock_authtype = false;
+if (!empty($_REQUEST['authtype']) && isset($auths[$_REQUEST['authtype']])) {
+	$forced_authtype = $_REQUEST['authtype'];
+	$lock_authtype = !empty($_REQUEST['lockauthtype']) && (empty($_REQUEST['action']) || $_REQUEST['action'] !== 'showdirectory');
+}
 $formaction = 'config.php?display=userman#directories';
 
 echo $heading;
@@ -243,11 +249,14 @@ if(!isset($brand)) $brand = '';
 											</div>
 											<div class="col-md-9">
 												<?php if(empty($config['driver'])) { ?>
-													<select id="authtype" name="authtype" class="form-control">
+													<select id="authtype" name="authtype" class="form-control" <?php echo $lock_authtype ? 'disabled' : ''?>>
 														<?php foreach($auths as $rawname => $auth) {?>
-															<option value="<?php echo $rawname?>"><?php echo $auth['name']?></option>
+															<option value="<?php echo $rawname?>" <?php echo (!empty($forced_authtype) && $forced_authtype === $rawname) ? 'selected' : ''?>><?php echo $auth['name']?></option>
 														<?php } ?>
 													</select>
+													<?php if ($lock_authtype && !empty($forced_authtype)) { ?>
+														<input type="hidden" id="authtype" name="authtype" value="<?php echo $forced_authtype?>">
+													<?php } ?>
 												<?php } else {?>
 													<input type="hidden" id="authtype" name="authtype" value="<?php echo $config['driver']?>">
 													<?php echo $auths[$config['driver']]['name']?>
@@ -356,7 +365,7 @@ if(!isset($brand)) $brand = '';
 <script>
 	var val = $("#authtype").val();
 	$("#" + val + "-auth-settings").removeClass("d-none");
-	if(val == "Freepbx") {
+	if(val == "Freepbx" || val == "Scim") {
 		$("#sync-container").addClass("d-none");
 	} else {
 		$("#sync-container").removeClass("d-none");
@@ -364,7 +373,7 @@ if(!isset($brand)) $brand = '';
 
 	$("#authtype").change(function() {
 		var val = $(this).val();
-		if(val == "Freepbx") {
+		if(val == "Freepbx" || val == "Scim") {
 			$("#sync-container").addClass("d-none");
 		} else {
 			$("#sync-container").removeClass("d-none");
@@ -373,7 +382,107 @@ if(!isset($brand)) $brand = '';
 		$("#" + val + "-auth-settings").removeClass("d-none");
 		$(".fpbx-submit input[type=text]:hidden").prop("disabled",true);
 		$(".fpbx-submit input:visible").prop("disabled",false);
+
+		if (val === "Scim") {
+			initScimFields();
+		}
 	});
 	$(".fpbx-submit input[type=text]:hidden").prop("disabled",true);
 	$(".fpbx-submit input:visible").prop("disabled",false);
+
+	function showScimMessage(message, type) {
+		var $msg = $("#scim-token-message");
+		if (!$msg.length) {
+			return;
+		}
+		$msg.removeClass("hidden").removeClass("alert-info alert-success alert-danger")
+			.addClass("alert-" + type)
+			.text(message);
+		setTimeout(function() {
+			$msg.addClass("hidden");
+		}, 3000);
+	}
+
+	function loadScimToken() {
+		var directoryId = $("input[name=id]").val();
+		if (!$("#scim-token").length || !$("#scim-base-url").length) {
+			return;
+		}
+		$.ajax({
+			url: "ajax.php?module=pbxsaml&command=getScimToken",
+			type: "GET",
+			dataType: "json",
+			data: directoryId ? { directory_id: directoryId } : {},
+			success: function(response) {
+				if (response && response.base_url) {
+					$("#scim-base-url").val(response.base_url);
+				}
+				if (response && response.status) {
+					if (directoryId && response.jwt_token) {
+						$("#scim-token").val(response.jwt_token);
+					}
+					return;
+				}
+				if (directoryId) {
+					showScimMessage(response.message || "<?php echo _('Failed to load SCIM token.'); ?>", "danger");
+				}
+			},
+			error: function() {
+				showScimMessage("<?php echo _('Failed to load SCIM token.'); ?>", "danger");
+			}
+		});
+	}
+
+	function rotateScimToken() {
+		var directoryId = $("input[name=id]").val();
+		if (!directoryId) {
+			return;
+		}
+		$.ajax({
+			url: "ajax.php?module=pbxsaml&command=rotateScimToken",
+			type: "POST",
+			dataType: "json",
+			data: {
+				directory_id: directoryId
+			},
+			success: function(response) {
+				if (response && response.status) {
+					$("#scim-base-url").val(response.base_url || "");
+					$("#scim-token").val(response.jwt_token || "");
+					showScimMessage("<?php echo _('SCIM token refreshed.'); ?>", "success");
+				} else {
+					showScimMessage(response.message || "<?php echo _('Failed to refresh SCIM token.'); ?>", "danger");
+				}
+			},
+			error: function() {
+				showScimMessage("<?php echo _('Failed to refresh SCIM token.'); ?>", "danger");
+			}
+		});
+	}
+
+	$(document).on("click", "#scim-rotate-token", function() {
+		rotateScimToken();
+	});
+
+	function generateScimToken() {
+		var chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+		var token = "";
+		for (var i = 0; i < 64; i++) {
+			token += chars.charAt(Math.floor(Math.random() * chars.length));
+		}
+		return token;
+	}
+
+	function initScimFields() {
+		var directoryId = $("input[name=id]").val();
+		var hasToken = $("#scim-token").val().trim() !== "";
+		if (!directoryId && !hasToken) {
+			$("#scim-token").val(generateScimToken());
+		}
+		loadScimToken();
+	}
+
+	if ($("#authtype").val() === "Scim") {
+		initScimFields();
+	}
 </script>
