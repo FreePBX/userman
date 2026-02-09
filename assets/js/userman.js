@@ -369,6 +369,39 @@ function setLocales(callback) {
 
 //from http://stackoverflow.com/a/26744533 loads url params to an array
 var params={};window.location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi,function(str,key,value){params[key] = value;});
+function applyDirectoryFilterFromParams() {
+	var rawFilter = params.directoryFilter || "";
+	if (!rawFilter) {
+		return;
+	}
+	var filter = decodeURIComponent(rawFilter);
+	if (!filter) {
+		return;
+	}
+	var $table = $("#table-directories");
+	if (!$table.length) {
+		return;
+	}
+	if ($table.data("directoryFilterApplied")) {
+		return;
+	}
+	var data = $table.bootstrapTable("getData", {useCurrentPage: false}) || [];
+	var target = filter.toLowerCase();
+	var filtered = data.filter(function(row) {
+		var driver = (row.driver || row.type || "").toString().toLowerCase();
+		return driver === target;
+	});
+	$table.data("directoryFilterApplied", true);
+	if (filtered.length) {
+		$table.bootstrapTable("load", filtered);
+	} else {
+		try {
+			$table.bootstrapTable('resetSearch', filter);
+		} catch (e) {
+			// no-op
+		}
+	}
+}
 //Tab and Button stuff
 $( document ).ready(function() {
 	call_activity_group_user_limit = $('#call_activity_user_limit').val();
@@ -399,6 +432,11 @@ $( document ).ready(function() {
 		$("#tempcreatediv").hide()
 	}
 	$(".nav-tabs a[href="+hash+"]").tab('show');
+	if (hash === '#directories' && params.directoryFilter) {
+		$("#table-directories").one("post-body.bs.table", function () {
+			applyDirectoryFilterFromParams();
+		});
+	}
 	//we should be at the user tab by default so we will show add user.
 	//on first load of groups tab disable add button as all directories is selected by default
 	$("#add-groups").addClass('addgrpdisable');
