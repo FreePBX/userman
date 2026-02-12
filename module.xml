@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>17.0.6.46</version>
+	<version>17.0.6.47</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -11,6 +11,7 @@
 	</description>
   	<more-info>https://sangomakb.atlassian.net/wiki/spaces/PG/pages/20024012/User+Management+Module</more-info>
 	<changelog>
+		*17.0.6.47* FREEI-2714 UCP Allowed Extensions - Breaks UCP 
 		*17.0.6.46* issues/942 - Made changes for fixing the user manager whoops error 
 		*17.0.6.45* FREEI-2525-Promise wasnt resolved in isSessionAlreadyUnlocked or loginfailed cases 
 		*17.0.6.44* FREEI-2494 Check the user exists in the saml table 
