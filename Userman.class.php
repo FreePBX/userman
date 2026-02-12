@@ -2759,7 +2759,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 								$gs[$i] = $user['default_extension'];
 							}
 						}
-						$gsoutput = $gs;
+						$gsoutput = is_array($gs) ? $gs : [$gs];
 						break;
 					}
 				}
