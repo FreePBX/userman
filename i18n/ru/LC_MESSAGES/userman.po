@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: User Management\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-16 06:24+0000\n"
+"POT-Creation-Date: 2026-02-16 08:43+0000\n"
 "PO-Revision-Date: 2022-04-21 09:01+0000\n"
 "Last-Translator: Dmitriy Q <krotesk@ya.ru>\n"
 "Language-Team: Russian <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -240,7 +240,7 @@ msgstr "Закрыть"
 
 #: functions.inc/auth/modules/Msad2.php:330
 #: functions.inc/auth/modules/Openldap2.php:342
-#: functions.inc/auth/modules/Scim.php:128
+#: functions.inc/auth/modules/Scim.php:130
 msgid "Common Name attribute"
 msgstr "Атрибут общего имени"
 
@@ -278,7 +278,7 @@ msgstr ""
 
 #: functions.inc/auth/modules/Msad2.php:305
 #: functions.inc/auth/modules/Openldap2.php:317
-#: functions.inc/auth/modules/Scim.php:103
+#: functions.inc/auth/modules/Scim.php:105
 msgid "Create Missing Extensions"
 msgstr "Создание отсутствующих расширений"
 
@@ -350,7 +350,7 @@ msgstr "Описание"
 
 #: functions.inc/auth/modules/Msad2.php:342
 #: functions.inc/auth/modules/Openldap2.php:354
-#: functions.inc/auth/modules/Scim.php:140
+#: functions.inc/auth/modules/Scim.php:142
 msgid "Description attribute"
 msgstr "Атрибут описания"
 
@@ -420,7 +420,7 @@ msgstr "Домен"
 
 #: functions.inc/auth/modules/Msad2.php:194
 #: functions.inc/auth/modules/Openldap2.php:204
-#: functions.inc/auth/modules/Scim.php:72
+#: functions.inc/auth/modules/Scim.php:74
 msgid "Don't Create"
 msgstr "Не создавать"
 
@@ -629,7 +629,7 @@ msgstr "DN группы"
 msgid "Group Description"
 msgstr "Описание группы"
 
-#: functions.inc/auth/modules/Scim.php:348
+#: functions.inc/auth/modules/Scim.php:350
 msgid "Group Description attribute"
 msgstr ""
 
@@ -641,7 +641,7 @@ msgstr "Детали группы"
 msgid "Group Does Not Exist"
 msgstr "Группа не существует"
 
-#: functions.inc/auth/modules/Scim.php:372
+#: functions.inc/auth/modules/Scim.php:374
 msgid "Group ID attribute"
 msgstr ""
 
@@ -649,7 +649,7 @@ msgstr ""
 msgid "Group Member Identifier Attribute"
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:360
+#: functions.inc/auth/modules/Scim.php:362
 msgid "Group Member attribute"
 msgstr ""
 
@@ -659,7 +659,7 @@ msgstr ""
 msgid "Group Name"
 msgstr "Название группы"
 
-#: functions.inc/auth/modules/Scim.php:336
+#: functions.inc/auth/modules/Scim.php:338
 msgid "Group Name attribute"
 msgstr ""
 
@@ -698,7 +698,7 @@ msgstr "Группа уже существует"
 
 #: functions.inc/auth/modules/Msad2.php:591
 #: functions.inc/auth/modules/Openldap2.php:599
-#: functions.inc/auth/modules/Scim.php:333
+#: functions.inc/auth/modules/Scim.php:335
 msgid "Group configuration"
 msgstr "Конфигурация группы"
 
@@ -791,7 +791,7 @@ msgstr ""
 
 #: functions.inc/auth/modules/Msad2.php:314
 #: functions.inc/auth/modules/Openldap2.php:326
-#: functions.inc/auth/modules/Scim.php:112
+#: functions.inc/auth/modules/Scim.php:114
 msgid ""
 "If enabled and the 'User extension Link attribute' is set, a new extension "
 "will be created and linked to this user if one does not exist previously"
@@ -1004,7 +1004,7 @@ msgstr ""
 
 #: functions.inc/auth/modules/Msad2.php:318
 #: functions.inc/auth/modules/Openldap2.php:330
-#: functions.inc/auth/modules/Scim.php:116
+#: functions.inc/auth/modules/Scim.php:118
 msgid "Manage groups locally"
 msgstr ""
 
@@ -1071,7 +1071,7 @@ msgid ""
 "directory. Groups synchronised from the remote directory will be read-only."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:124
+#: functions.inc/auth/modules/Scim.php:126
 msgid ""
 "New groups created in this directory will be local and not saved to the SCIM "
 "provider. Groups synchronised from the remote directory will be read-only."
@@ -1137,7 +1137,7 @@ msgstr ""
 
 #: functions.inc/auth/modules/Msad2.php:302
 #: functions.inc/auth/modules/Openldap2.php:314
-#: functions.inc/auth/modules/Scim.php:100
+#: functions.inc/auth/modules/Scim.php:102
 msgid "Operational Settings"
 msgstr ""
 
@@ -1295,7 +1295,7 @@ msgstr ""
 msgid "Rebuild Widgets"
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:96
+#: functions.inc/auth/modules/Scim.php:98
 msgid "Refresh Token"
 msgstr ""
 
@@ -1325,113 +1325,113 @@ msgid ""
 "SAML Single Sign-On is enabled for your account. Please sign in using SSO."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:76
+#: functions.inc/auth/modules/Scim.php:78
 msgid "SCIM Base URL"
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:87
+#: functions.inc/auth/modules/Scim.php:89
 msgid "SCIM Token"
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:57
+#: functions.inc/auth/modules/Scim.php:59
 msgid "SCIM User Provisioning"
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:136
+#: functions.inc/auth/modules/Scim.php:138
 msgid "SCIM attribute path for common name (Okta default: displayName)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:234
+#: functions.inc/auth/modules/Scim.php:236
 msgid "SCIM attribute path for company (Okta default: organization)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:246
+#: functions.inc/auth/modules/Scim.php:248
 msgid "SCIM attribute path for department (Okta default: department)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:148
+#: functions.inc/auth/modules/Scim.php:150
 msgid "SCIM attribute path for description (Okta default: title)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:210
+#: functions.inc/auth/modules/Scim.php:212
 msgid "SCIM attribute path for display name (Okta default: displayName)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:306
+#: functions.inc/auth/modules/Scim.php:308
 msgid ""
 "SCIM attribute path for email (Okta default: emails[type eq \"work\"].value)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:330
+#: functions.inc/auth/modules/Scim.php:332
 msgid ""
 "SCIM attribute path for extension (Okta default: pbxsaml extension schema)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:294
+#: functions.inc/auth/modules/Scim.php:296
 msgid ""
 "SCIM attribute path for fax (Okta default: phoneNumbers[type eq \"fax\"]."
 "value)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:186
+#: functions.inc/auth/modules/Scim.php:188
 msgid "SCIM attribute path for first name (Okta default: name.givenName)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:380
+#: functions.inc/auth/modules/Scim.php:382
 msgid "SCIM attribute path for group ID (Okta default: id)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:356
+#: functions.inc/auth/modules/Scim.php:358
 msgid "SCIM attribute path for group description (Okta default: description)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:368
+#: functions.inc/auth/modules/Scim.php:370
 msgid "SCIM attribute path for group members (Okta default: members)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:344
+#: functions.inc/auth/modules/Scim.php:346
 msgid "SCIM attribute path for group name (Okta default: displayName)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:318
+#: functions.inc/auth/modules/Scim.php:320
 msgid "SCIM attribute path for groups (Okta default: groups)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:282
+#: functions.inc/auth/modules/Scim.php:284
 msgid ""
 "SCIM attribute path for home phone (Okta default: phoneNumbers[type eq \"home"
 "\"].value)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:198
+#: functions.inc/auth/modules/Scim.php:200
 msgid "SCIM attribute path for last name (Okta default: name.familyName)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:270
+#: functions.inc/auth/modules/Scim.php:272
 msgid ""
 "SCIM attribute path for mobile phone (Okta default: phoneNumbers[type eq "
 "\"mobile\"].value)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:222
+#: functions.inc/auth/modules/Scim.php:224
 msgid "SCIM attribute path for title (Okta default: title)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:160
+#: functions.inc/auth/modules/Scim.php:162
 msgid "SCIM attribute path for unique identifier (Okta default: externalId)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:174
+#: functions.inc/auth/modules/Scim.php:176
 msgid "SCIM attribute path for username (Okta default: userName)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:258
+#: functions.inc/auth/modules/Scim.php:260
 msgid ""
 "SCIM attribute path for work phone (Okta default: phoneNumbers[type eq \"work"
 "\"].value)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:83
+#: functions.inc/auth/modules/Scim.php:85
 msgid "SCIM provisioning base URL"
 msgstr ""
 
@@ -2157,7 +2157,7 @@ msgstr ""
 
 #: functions.inc/auth/modules/Msad2.php:354
 #: functions.inc/auth/modules/Openldap2.php:366
-#: functions.inc/auth/modules/Scim.php:152
+#: functions.inc/auth/modules/Scim.php:154
 msgid "Unique identifier attribute"
 msgstr ""
 
@@ -2228,7 +2228,7 @@ msgstr "Использовать системный часовой пояс"
 msgid "Use TLS"
 msgstr "Использовать TLS"
 
-#: functions.inc/auth/modules/Scim.php:98
+#: functions.inc/auth/modules/Scim.php:100
 msgid "Use this token for SCIM provisioning"
 msgstr ""
 
@@ -2245,13 +2245,13 @@ msgstr "Пользователь '%s' не существует"
 
 #: functions.inc/auth/modules/Msad2.php:552
 #: functions.inc/auth/modules/Openldap2.php:550
-#: functions.inc/auth/modules/Scim.php:262
+#: functions.inc/auth/modules/Scim.php:264
 msgid "User Cell Phone attribute"
 msgstr ""
 
 #: functions.inc/auth/modules/Msad2.php:504
 #: functions.inc/auth/modules/Openldap2.php:502
-#: functions.inc/auth/modules/Scim.php:226
+#: functions.inc/auth/modules/Scim.php:228
 msgid "User Company attribute"
 msgstr ""
 
@@ -2263,7 +2263,7 @@ msgstr ""
 
 #: functions.inc/auth/modules/Msad2.php:516
 #: functions.inc/auth/modules/Openldap2.php:514
-#: functions.inc/auth/modules/Scim.php:238
+#: functions.inc/auth/modules/Scim.php:240
 msgid "User Department attribute"
 msgstr ""
 
@@ -2271,7 +2271,7 @@ msgstr ""
 msgid "User Details"
 msgstr "Сведения о пользователе"
 
-#: functions.inc/auth/modules/Scim.php:202
+#: functions.inc/auth/modules/Scim.php:204
 msgid "User Display Name attribute"
 msgstr ""
 
@@ -2279,27 +2279,27 @@ msgstr ""
 msgid "User Does Not Exist"
 msgstr "Пользователь не существует"
 
-#: functions.inc/auth/modules/Scim.php:298
+#: functions.inc/auth/modules/Scim.php:300
 msgid "User Email attribute"
 msgstr ""
 
 #: functions.inc/auth/modules/Msad2.php:564
 #: functions.inc/auth/modules/Openldap2.php:562
-#: functions.inc/auth/modules/Scim.php:286
+#: functions.inc/auth/modules/Scim.php:288
 msgid "User Fax attribute"
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:178
+#: functions.inc/auth/modules/Scim.php:180
 msgid "User First Name attribute"
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:310
+#: functions.inc/auth/modules/Scim.php:312
 msgid "User Group attribute"
 msgstr ""
 
 #: functions.inc/auth/modules/Msad2.php:528
 #: functions.inc/auth/modules/Openldap2.php:526
-#: functions.inc/auth/modules/Scim.php:274
+#: functions.inc/auth/modules/Scim.php:276
 msgid "User Home Phone attribute"
 msgstr "Атрибут домашнего телефона пользователя"
 
@@ -2307,7 +2307,7 @@ msgstr "Атрибут домашнего телефона пользовате�
 msgid "User Identity"
 msgstr "Идентификация пользователя"
 
-#: functions.inc/auth/modules/Scim.php:190
+#: functions.inc/auth/modules/Scim.php:192
 msgid "User Last Name attribute"
 msgstr ""
 
@@ -2349,7 +2349,7 @@ msgstr "Пользователь успешно обновлен"
 
 #: functions.inc/auth/modules/Msad2.php:492
 #: functions.inc/auth/modules/Openldap2.php:490
-#: functions.inc/auth/modules/Scim.php:214
+#: functions.inc/auth/modules/Scim.php:216
 msgid "User Title attribute"
 msgstr ""
 
@@ -2359,7 +2359,7 @@ msgstr ""
 
 #: functions.inc/auth/modules/Msad2.php:540
 #: functions.inc/auth/modules/Openldap2.php:538
-#: functions.inc/auth/modules/Scim.php:250
+#: functions.inc/auth/modules/Scim.php:252
 msgid "User Work Phone attribute"
 msgstr ""
 
@@ -2369,7 +2369,7 @@ msgstr "Пользователь уже существует"
 
 #: functions.inc/auth/modules/Msad2.php:369
 #: functions.inc/auth/modules/Openldap2.php:379
-#: functions.inc/auth/modules/Scim.php:163
+#: functions.inc/auth/modules/Scim.php:165
 msgid "User configuration"
 msgstr ""
 
@@ -2385,7 +2385,7 @@ msgstr ""
 
 #: functions.inc/auth/modules/Msad2.php:576
 #: functions.inc/auth/modules/Openldap2.php:586
-#: functions.inc/auth/modules/Scim.php:322
+#: functions.inc/auth/modules/Scim.php:324
 msgid "User extension Link attribute"
 msgstr ""
 
@@ -2410,7 +2410,7 @@ msgstr ""
 
 #: functions.inc/auth/modules/Msad2.php:408
 #: functions.inc/auth/modules/Openldap2.php:418
-#: functions.inc/auth/modules/Scim.php:166
+#: functions.inc/auth/modules/Scim.php:168
 msgid "User name attribute"
 msgstr "Атрибуты имени пользователя"
 
