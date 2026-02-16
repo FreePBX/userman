@@ -50,7 +50,9 @@ class Scim extends Freepbx {
 		if (!\FreePBX::Pbxsaml()->isLicensed()) {
 			return array();
 		}
-		if (\FreePBX\modules\Pbxsaml\licenseCheck::isExpired()) {
+		if (class_exists('\FreePBX\modules\Pbxsaml\licenseCheck')
+			&& method_exists('\FreePBX\modules\Pbxsaml\licenseCheck', 'isExpired')
+			&& \FreePBX\modules\Pbxsaml\licenseCheck::isExpired()) {
 			return array();
 		}
 		return array(
