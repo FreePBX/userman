@@ -422,14 +422,16 @@ echo $heading;
 			dataType: "json",
 			data: directoryId ? { directory_id: directoryId } : {},
 			success: function(response) {
+				if (response && response.base_url) {
+					$("#scim-base-url").val(response.base_url);
+				}
 				if (response && response.status) {
-					if (response.base_url) {
-						$("#scim-base-url").val(response.base_url);
-					}
 					if (directoryId && response.jwt_token) {
 						$("#scim-token").val(response.jwt_token);
 					}
-				} else {
+					return;
+				}
+				if (directoryId) {
 					showScimMessage(response.message || "<?php echo _('Failed to load SCIM token.'); ?>", "danger");
 				}
 			},

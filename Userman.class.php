@@ -1171,7 +1171,8 @@ class Userman extends FreePBX_Helpers implements BMO {
 				foreach($directories as $directory) {
 					$directoryMap[$directory['id']]['name'] = $directory['name'];
 					$directoryMap[$directory['id']]['driver'] = $directory['driver'];
-					$directoryMap[$directory['id']]['permissions'] = $this->getDirectoryObjectByID($directory['id'])->getPermissions();
+					$directoryObject = $this->getDirectoryObjectByID($directory['id']);
+					$directoryMap[$directory['id']]['permissions'] = $directoryObject ? $directoryObject->getPermissions() : [];
 				}
 				$mailtype = $this->getGlobalsetting('mailtype');
 				$mailtype = $mailtype === 'html' ? 'html' : 'text';

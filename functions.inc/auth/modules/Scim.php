@@ -27,7 +27,7 @@ class Scim extends Freepbx {
 		'userhomephoneattr' => "phoneNumbers['home'].value",
 		'userfaxphoneattr' => "phoneNumbers['fax'].value",
 		'usermailattr' => "emails['work'].value",
-		'usergroupmemberattr' => 'groups',
+		'usergroupmemberattr' => 'group',
 		'la' => 'extension.extension'
 	);
 
