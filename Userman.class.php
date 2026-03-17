@@ -1638,9 +1638,29 @@ class Userman extends FreePBX_Helpers implements BMO {
 			throw new Exception(_("ID was not numeric"));
 		}
 		set_time_limit(0);
+		// Get user before delete so we can delete linked extension for SCIM dirs if configured
+		$userBeforeDelete = $this->getUserByID($id, false);
+		$extensionToDelete = null;
+		if (!empty($userBeforeDelete['default_extension']) && $userBeforeDelete['default_extension'] !== 'none'
+			&& !empty($userBeforeDelete['auth'])) {
+			$dir = $this->getDirectoryByID($userBeforeDelete['auth']);
+			if (!empty($dir['driver']) && $dir['driver'] === 'Scim'
+				&& !empty($dir['config']['deleteextensiondeprovision'])) {
+				$extensionToDelete = $userBeforeDelete['default_extension'];
+			}
+		}
+
 		$status = $this->globalDirectory->deleteUserByID($id);
 		if(!$status['status']) {
 			return $status;
+		}
+
+		if (!empty($extensionToDelete) && $this->FreePBX->Core) {
+			try {
+				$this->FreePBX->Core->delUser($extensionToDelete);
+			} catch (\Exception $e) {
+				// Log but do not fail the user deletion
+			}
 		}
 
 		if ($this->FreePBX->Modules->checkStatus('sangomartapi')) {

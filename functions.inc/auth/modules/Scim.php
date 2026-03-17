@@ -8,6 +8,7 @@ namespace FreePBX\modules\Userman\Auth;
 class Scim extends Freepbx {
 	private static $operationalDefaults = array(
 		'createextensions' => '',
+		'deleteextensiondeprovision' => 0,
 		'localgroups' => 0,
 		'commonnameattr' => 'displayName',
 		'descriptionattr' => 'displayName',
@@ -112,6 +113,18 @@ class Scim extends Freepbx {
 					'text' 	=> 'shortName',
 				),
 				'help'		=> _("If enabled and the 'User extension Link attribute' is set, a new extension will be created and linked to this user if one does not exist previously"),
+			),
+			array(
+				'name' 		=> $typeauth.'-deleteextensiondeprovision',
+				'title'		=> _('Delete extension after deprovisioning'),
+				'type' 		=> 'radioset_yn',
+				'value' 	=> isset($config['deleteextensiondeprovision']) ? $config['deleteextensiondeprovision'] : $defaults['deleteextensiondeprovision'],
+				'values'	=> array(
+					'y'	=> '1',
+					'n'	=> '0',
+				),
+				'index'		=> true,
+				'help'		=> _("When set to Yes, the linked extension will be deleted from the PBX when a user is removed from this directory (deprovisioned)."),
 			),
 			array(
 				'name' 		=> $typeauth.'-localgroups',
