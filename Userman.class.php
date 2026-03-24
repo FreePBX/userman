@@ -2754,6 +2754,67 @@ class Userman extends FreePBX_Helpers implements BMO {
 		}
 	}
 
+	/**
+	 * UCP boolean-style settings inherited from groups: if any group grants (true), the effective value is true.
+	 * Previously only the first group with a stored value was used, so a deny in an earlier group hid a grant from another.
+	 */
+	private function isOrMergedGroupBooleanSetting($module, $setting) {
+		if(strpos((string) $module, 'ucp|') !== 0) {
+			return false;
+		}
+		if($module === 'ucp|Global' && in_array($setting, ['allowLogin', 'originate', 'tour'], true)) {
+			return true;
+		}
+		return in_array($setting, ['enable', 'enabled', 'playback', 'download', 'settings', 'greetings', 'vmxlocater', 'vmxlocator', 'vpn_enable'], true);
+	}
+
+	private function moduleSettingBoolIsTrue($v) {
+		if(is_bool($v)) {
+			return $v;
+		}
+		if(is_int($v) || is_float($v)) {
+			return ((int) $v) !== 0;
+		}
+		if(is_string($v)) {
+			$l = strtolower($v);
+			return $v === '1' || $l === 'true' || $l === 'yes' || $l === 'on';
+		}
+		return false;
+	}
+
+	/**
+	 * @return array{val: mixed, groupid: int}
+	 */
+	private function mergeBooleanModuleSettingAcrossGroups($module, $setting, $groups, $cached) {
+		$foundAny = false;
+		$anyTrue = false;
+		$groupid = -1;
+		$firstExplicitGroup = -1;
+		foreach($groups as $group) {
+			$gs = $this->getModuleSettingByGID($group, $module, $setting, true, $cached);
+			if($gs === null || $gs === '') {
+				continue;
+			}
+			$foundAny = true;
+			if($firstExplicitGroup < 0) {
+				$firstExplicitGroup = $group;
+			}
+			if($this->moduleSettingBoolIsTrue($gs)) {
+				$anyTrue = true;
+				if($groupid < 0) {
+					$groupid = $group;
+				}
+			}
+		}
+		if(!$foundAny) {
+			return ['val' => null, 'groupid' => -1];
+		}
+		if($anyTrue) {
+			return ['val' => 1, 'groupid' => $groupid];
+		}
+		return ['val' => 0, 'groupid' => $firstExplicitGroup];
+	}
+
 	public function getCombinedModuleSettingByID($id, $module, $setting, $detailed = false, $cached = true) {
 		$groupid = -1;
 		$groupname = "user";
@@ -2761,20 +2822,26 @@ class Userman extends FreePBX_Helpers implements BMO {
 		$output = ($output == "null") ? null : $output;
 		if(is_null($output)) {
 			$groups = $this->getGroupsByID($id);
-			foreach($groups as $group) {
-				$gs = $this->getModuleSettingByGID($group,$module,$setting,true,$cached);
-				if(!is_null($gs)) {
-					//Find and replace the word "self" with this users extension
-					if(is_array($gs) && in_array("self",$gs)) {
-						$i = array_search ("self", $gs);
-						$user = $this->getUserByID($id);
-						if($user['default_extension'] !== "none") {
-							$gs[$i] = $user['default_extension'];
+			if($this->isOrMergedGroupBooleanSetting($module, $setting)) {
+				$merged = $this->mergeBooleanModuleSettingAcrossGroups($module, $setting, $groups, $cached);
+				$output = $merged['val'];
+				$groupid = $merged['groupid'];
+			} else {
+				foreach($groups as $group) {
+					$gs = $this->getModuleSettingByGID($group,$module,$setting,true,$cached);
+					if(!is_null($gs)) {
+						//Find and replace the word "self" with this users extension
+						if(is_array($gs) && in_array("self",$gs)) {
+							$i = array_search ("self", $gs);
+							$user = $this->getUserByID($id);
+							if($user['default_extension'] !== "none") {
+								$gs[$i] = $user['default_extension'];
+							}
 						}
+						$output = $gs;
+						$groupid = $group;
+						break;
 					}
-					$output = $gs;
-					$groupid = $group;
-					break;
 				}
 			}
 		}else {
