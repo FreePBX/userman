@@ -671,7 +671,11 @@ abstract class Auth {
 		$default_extension = $data['default_extension'] ?? (!isset($data['default_extension']) && !empty($defaults['default_extension']) ? $defaults['default_extension'] : 'none');
 		$title = $data['title'] ?? (!isset($data['title']) && !empty($defaults['title']) ? $defaults['title'] : null);
 		$company = $data['company'] ?? (!isset($data['company']) && !empty($defaults['company']) ? $defaults['company'] : null);
-		$email = $data['email'] ?? (!isset($data['email']) && !empty($defaults['email']) ? $defaults['email'] : null);
+		if (array_key_exists('email', $data)) {
+			$email = trim((string) ($data['email'] ?? ''));
+		} else {
+			$email = !empty($defaults['email']) ? $defaults['email'] : null;
+		}
 		$cell = $data['cell'] ?? (!isset($data['cell']) && !empty($defaults['cell']) ? $defaults['cell'] : null);
 		$home = $data['home'] ?? (!isset($data['home']) && !empty($defaults['home']) ? $defaults['home'] : null);
 		$work = $data['work'] ?? (!isset($data['work']) && !empty($defaults['work']) ? $defaults['work'] : null);
