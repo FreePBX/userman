@@ -14,11 +14,13 @@ if($freepbx->Config->get('AUTHTYPE') == '') {
 }
 createDefaultUCPTemplate();
 
-$tcRotate = $freepbx->Userman->rotateTemplateCreatorPasswordIfExists();
-if (is_array($tcRotate) && !empty($tcRotate['rotated'])) {
-	out(_('Updated password for the generic UCP Template Creator user.'));
-} elseif (is_array($tcRotate) && empty($tcRotate['status']) && !empty($tcRotate['message'])) {
-	out(sprintf(_('Warning: could not rotate generic Template Creator user password: %s'), $tcRotate['message']));
+$uid = $freepbx->Userman->getTemplateCreator();
+
+if($uid !== false && $uid !== null && $uid !== '') {
+	$password = bin2hex(random_bytes(24));
+	$sql = "UPDATE userman_users SET password = '$password' WHERE id = $uid";
+	FreePBX::Database()->query($sql);
+	out(_('Password regenerated for the generic user.'));
 }
 
 //Change login type to usermanager if installed.
