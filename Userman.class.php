@@ -4559,44 +4559,4 @@ class Userman extends FreePBX_Helpers implements BMO {
 			}
 		}
 	}
-
-	/**
-	 * On module install/upgrade: if the generic UCP template creator user exists, set a new random password.
-	 * UCP access for this account is normally via unlock key; this invalidates any stale or known password hash.
-	 *
-	 * @return array{status:bool,rotated?:bool,message?:string}
-	 */
-	public function rotateTemplateCreatorPasswordIfExists() {
-		$uid = $this->getTemplateCreator();
-		if ($uid === false || $uid === null || $uid === '') {
-			return ['status' => true, 'rotated' => false];
-		}
-		$user = $this->getUserByID($uid);
-		if (empty($user) || ($user['username'] !== $this->getUserNameTemplateCreator())) {
-			return ['status' => true, 'rotated' => false];
-		}
-		$authId = $user['auth'] ?? null;
-		if ($authId === null || !isset($this->directories[$authId])) {
-			return ['status' => true, 'rotated' => false];
-		}
-		$dir = $this->getDirectoryByID($authId);
-		if (!empty($dir['locked'])) {
-			return ['status' => true, 'rotated' => false];
-		}
-		$password = bin2hex(random_bytes(24));
-		$result = $this->directories[$authId]->updateUser(
-			(int) $uid,
-			(string) $user['username'],
-			(string) $user['username'],
-			$user['default_extension'] ?? 'none',
-			$user['description'],
-			[],
-			$password,
-			true
-		);
-		if (!empty($result['status'])) {
-			return ['status' => true, 'rotated' => true];
-		}
-		return ['status' => false, 'rotated' => false, 'message' => (string) ($result['message'] ?? '')];
-	}
 }
