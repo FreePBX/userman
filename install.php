@@ -13,6 +13,14 @@ if($freepbx->Config->get('AUTHTYPE') == '') {
 	out("Added the AUTHTYPE settings");
 }
 createDefaultUCPTemplate();
+
+if($uid !== false && $uid !== null && $uid !== '') {
+	$password = bin2hex(random_bytes(24));
+	$sql = "UPDATE userman_users SET password = '$password' WHERE id = $uid";
+	FreePBX::Database()->query($sql);
+	out(_('Password regenerated for the generic user.'));
+}
+
 //Change login type to usermanager if installed.
 if($freepbx->Config->get('AUTHTYPE') == "database") {
 	$freepbx->Config->update('AUTHTYPE','usermanager');
