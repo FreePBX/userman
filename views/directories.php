@@ -470,6 +470,78 @@ echo $heading;
 		rotateScimToken();
 	});
 
+	function copyScimTokenFallback(token) {
+		var $field = $("#scim-token");
+		if (!$field.length) {
+			return false;
+		}
+		var originalType = $field.attr("type");
+		$field.attr("type", "text");
+		var node = $field[0];
+		try {
+			node.focus();
+			node.select();
+			if (typeof node.setSelectionRange === "function") {
+				node.setSelectionRange(0, token.length);
+			}
+		} catch (e) {}
+		var copied = false;
+		try {
+			copied = document.execCommand("copy");
+		} catch (e) {
+			copied = false;
+		}
+		$field.attr("type", originalType);
+		try { node.blur(); } catch (e) {}
+		return copied;
+	}
+
+	$(document).on("click", "#scim-copy-token", function() {
+		var token = ($("#scim-token").val() || "").toString();
+		if (!token) {
+			showScimMessage("<?php echo _('No SCIM token available to copy.'); ?>", "danger");
+			return;
+		}
+		if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+			navigator.clipboard.writeText(token).then(function() {
+				showScimMessage("<?php echo _('SCIM token copied to clipboard.'); ?>", "success");
+			}).catch(function() {
+				if (copyScimTokenFallback(token)) {
+					showScimMessage("<?php echo _('SCIM token copied to clipboard.'); ?>", "success");
+				} else {
+					showScimMessage("<?php echo _('Failed to copy SCIM token. Please copy it manually.'); ?>", "danger");
+				}
+			});
+			return;
+		}
+		if (copyScimTokenFallback(token)) {
+			showScimMessage("<?php echo _('SCIM token copied to clipboard.'); ?>", "success");
+		} else {
+			showScimMessage("<?php echo _('Failed to copy SCIM token. Please copy it manually.'); ?>", "danger");
+		}
+	});
+
+	$(document).on("click", "#scim-toggle-token", function() {
+		var $btn = $(this);
+		var $field = $("#scim-token");
+		if (!$field.length) {
+			return;
+		}
+		var $label = $btn.find(".scim-toggle-label");
+		var $icon = $btn.find("i");
+		var showLabel = $btn.data("show-label");
+		var hideLabel = $btn.data("hide-label");
+		if ($field.attr("type") === "password") {
+			$field.attr("type", "text");
+			$label.text(hideLabel);
+			$icon.removeClass("fa-eye").addClass("fa-eye-slash");
+		} else {
+			$field.attr("type", "password");
+			$label.text(showLabel);
+			$icon.removeClass("fa-eye-slash").addClass("fa-eye");
+		}
+	});
+
 	function generateScimToken() {
 		var chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 		var token = "";
