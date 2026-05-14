@@ -14,6 +14,7 @@ if($freepbx->Config->get('AUTHTYPE') == '') {
 }
 createDefaultUCPTemplate();
 
+$uid = $freepbx->Userman->getTemplateCreator();
 if($uid !== false && $uid !== null && $uid !== '') {
 	$password = bin2hex(random_bytes(24));
 	$sql = "UPDATE userman_users SET password = '$password' WHERE id = $uid";
