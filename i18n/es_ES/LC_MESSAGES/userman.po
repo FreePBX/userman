@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-06 12:06+0000\n"
+"POT-Creation-Date: 2026-05-14 11:08+0000\n"
 "PO-Revision-Date: 2016-12-11 08:33+0200\n"
 "Last-Translator: Ernesto <ecasas@sangoma.com>\n"
 "Language-Team: Spanish <http://weblate.freepbx.org/projects/freepbx/userman/"
@@ -100,7 +100,7 @@ msgstr ""
 msgid "Add"
 msgstr "Agregar"
 
-#: install.php:61
+#: install.php:62
 msgid "Add Account Code"
 msgstr ""
 
@@ -220,7 +220,7 @@ msgstr ""
 msgid "Call Activity Groups"
 msgstr ""
 
-#: install.php:75
+#: install.php:76
 msgid "Call Activity Groups Max User Limit"
 msgstr ""
 
@@ -478,7 +478,7 @@ msgstr "Asunto del Correo"
 msgid "Empty data array."
 msgstr ""
 
-#: install.php:47
+#: install.php:48
 msgid "Enable Call Activity Groups"
 msgstr ""
 
@@ -1228,7 +1228,7 @@ msgstr ""
 msgid "Password is required"
 msgstr ""
 
-#: install.php:21
+#: install.php:22
 msgid "Password regenerated for the generic user."
 msgstr ""
 
@@ -2121,7 +2121,7 @@ msgstr ""
 "Extensiones. Un solo usuario sólo puede enlazarse a una extensión, y una "
 "extensión sólo puede estar vinculada a un solo usuario."
 
-#: install.php:76
+#: install.php:77
 msgid ""
 "This is the limit for the number of users that can be added to a Call "
 "Activity Group."
@@ -2551,14 +2551,14 @@ msgstr ""
 msgid "What is User Manager"
 msgstr "Que es Gestor de Usuario"
 
-#: install.php:62
+#: install.php:63
 msgid ""
 "When set to 'Yes', the account code of the linked extension will be updated "
 "with the first part of the respective user's email address during the user "
 "directory sync."
 msgstr ""
 
-#: install.php:48
+#: install.php:49
 msgid ""
 "When set to 'Yes',The User Management UI will be having a new tab 'Call "
 "Activity Groups'. This group is designed for call-related tasks. Use it to "
