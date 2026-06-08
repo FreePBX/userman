@@ -90,15 +90,20 @@ class Scim extends Freepbx {
 				'title'		=> _("SCIM Token"),
 				'type' 		=> 'raw',
 				'value'		=> sprintf(
-					'<textarea id="%1$s-token" class="form-control" name="%1$s-token" rows="2" readonly></textarea>
+					'<input type="password" id="%1$s-token" class="form-control" name="%1$s-token" readonly autocomplete="off" spellcheck="false" />
 					<div class="scim-token-actions" style="margin-top: 8px;">
 						<button class="btn btn-warning" type="button" id="%1$s-rotate-token"><i class="fa fa-refresh"></i> %2$s</button>
+						<button class="btn btn-default" type="button" id="%1$s-copy-token"><i class="fa fa-clipboard"></i> %3$s</button>
+						<button class="btn btn-default" type="button" id="%1$s-toggle-token" data-show-label="%4$s" data-hide-label="%5$s"><i class="fa fa-eye"></i> <span class="scim-toggle-label">%4$s</span></button>
 					</div>
 					<div id="%1$s-token-message" class="alert alert-info hidden" style="margin-top: 10px;"></div>',
 					$typeauth,
-					_("Refresh Token")
+					_("Refresh Token"),
+					_("Copy Token"),
+					_("Show Token"),
+					_("Hide Token")
 				),
-				'help'		=> _("Use this token for SCIM provisioning"),
+				'help'		=> _("Use this token for SCIM provisioning. The value is masked by default; use the Show/Hide and Copy buttons to view or copy it."),
 			),
 			array('type' => 'fieldset_init', 'legend' => _("Operational Settings")),
 			array(
