@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-20 05:54-0400\n"
+"POT-Creation-Date: 2026-06-08 02:04-0400\n"
 "PO-Revision-Date: 2018-10-24 01:00+0000\n"
 "Last-Translator: Bastian Mertgen <b.mertgen@bastian-mertgen.de>\n"
 "Language-Team: German <http://*/projects/freepbx/userman/de/>\n"
@@ -243,7 +243,7 @@ msgstr "Schließen"
 
 #: functions.inc/auth/modules/Msad2.php:137
 #: functions.inc/auth/modules/Openldap2.php:327
-#: functions.inc/auth/modules/Scim.php:143
+#: functions.inc/auth/modules/Scim.php:148
 msgid "Common Name attribute"
 msgstr "Allgemeines Namensattribut"
 
@@ -271,6 +271,10 @@ msgstr "Verbunden"
 msgid "Context"
 msgstr "Kontext"
 
+#: functions.inc/auth/modules/Scim.php:102
+msgid "Copy Token"
+msgstr ""
+
 #: functions.inc/auth/modules/Voicemail.php:99
 msgid "Could not find the voicemail context"
 msgstr "Konnte den Kontext für Sprachnachrichten nicht finden"
@@ -281,7 +285,7 @@ msgstr ""
 
 #: functions.inc/auth/modules/Msad2.php:135
 #: functions.inc/auth/modules/Openldap2.php:302
-#: functions.inc/auth/modules/Scim.php:106
+#: functions.inc/auth/modules/Scim.php:111
 msgid "Create Missing Extensions"
 msgstr "Erzeuge fehlende Durchwahlen"
 
@@ -335,7 +339,7 @@ msgstr "Löschen"
 msgid "Delete Generic User"
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:119
+#: functions.inc/auth/modules/Scim.php:124
 msgid "Delete extension after deprovisioning"
 msgstr ""
 
@@ -356,7 +360,7 @@ msgstr "Beschreibung"
 
 #: functions.inc/auth/modules/Msad2.php:138
 #: functions.inc/auth/modules/Openldap2.php:339
-#: functions.inc/auth/modules/Scim.php:155
+#: functions.inc/auth/modules/Scim.php:160
 msgid "Description attribute"
 msgstr "Beschreibungs-Attribut"
 
@@ -566,6 +570,10 @@ msgstr ""
 msgid "Extension Link Attribute"
 msgstr "Verknüpfungsattribut der Nebenstelle"
 
+#: views/directories.php:506 views/directories.php:514
+msgid "Failed to copy SCIM token. Please copy it manually."
+msgstr ""
+
 #: views/directories.php:427 views/directories.php:431
 msgid "Failed to load SCIM token."
 msgstr ""
@@ -641,7 +649,7 @@ msgstr "Gruppen-DN"
 msgid "Group Description"
 msgstr "Beschreibung der Gruppe"
 
-#: functions.inc/auth/modules/Scim.php:363
+#: functions.inc/auth/modules/Scim.php:368
 msgid "Group Description attribute"
 msgstr ""
 
@@ -653,7 +661,7 @@ msgstr "Gruppendetails"
 msgid "Group Does Not Exist"
 msgstr "Gruppe existiert nicht"
 
-#: functions.inc/auth/modules/Scim.php:387
+#: functions.inc/auth/modules/Scim.php:392
 msgid "Group ID attribute"
 msgstr ""
 
@@ -661,7 +669,7 @@ msgstr ""
 msgid "Group Member Identifier Attribute"
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:375
+#: functions.inc/auth/modules/Scim.php:380
 msgid "Group Member attribute"
 msgstr ""
 
@@ -670,7 +678,7 @@ msgstr ""
 msgid "Group Name"
 msgstr "Gruppenname"
 
-#: functions.inc/auth/modules/Scim.php:351
+#: functions.inc/auth/modules/Scim.php:356
 msgid "Group Name attribute"
 msgstr ""
 
@@ -709,7 +717,7 @@ msgstr "Gruppe existiert bereits"
 
 #: functions.inc/auth/modules/Msad2.php:172
 #: functions.inc/auth/modules/Openldap2.php:584
-#: functions.inc/auth/modules/Scim.php:348
+#: functions.inc/auth/modules/Scim.php:353
 msgid "Group configuration"
 msgstr "Gruppenkonfiguration"
 
@@ -762,6 +770,10 @@ msgid ""
 "'asterisk'"
 msgstr ""
 
+#: functions.inc/auth/modules/Scim.php:104
+msgid "Hide Token"
+msgstr ""
+
 #: views/users.php:523
 msgid "Home Phone Number"
 msgstr "Telefonnummer"
@@ -804,7 +816,7 @@ msgstr ""
 
 #: functions.inc/auth/modules/Msad2.php:135
 #: functions.inc/auth/modules/Openldap2.php:311
-#: functions.inc/auth/modules/Scim.php:115
+#: functions.inc/auth/modules/Scim.php:120
 msgid ""
 "If enabled and the 'User extension Link attribute' is set, a new extension "
 "will be created and linked to this user if one does not exist previously"
@@ -1035,7 +1047,7 @@ msgstr ""
 
 #: functions.inc/auth/modules/Msad2.php:136
 #: functions.inc/auth/modules/Openldap2.php:315
-#: functions.inc/auth/modules/Scim.php:131
+#: functions.inc/auth/modules/Scim.php:136
 msgid "Manage groups locally"
 msgstr "Gruppen lokal verwalten"
 
@@ -1105,7 +1117,7 @@ msgstr ""
 "im LDAP-Verzeichnis gespeichert werden. Die Gruppen, die aus dem entfernten "
 "Verzeichnis synchronisiert werden, sind nur lesbar."
 
-#: functions.inc/auth/modules/Scim.php:139
+#: functions.inc/auth/modules/Scim.php:144
 msgid ""
 "New groups created in this directory will be local and not saved to the SCIM "
 "provider. Groups synchronised from the remote directory will be read-only."
@@ -1123,6 +1135,10 @@ msgstr "Nein"
 
 #: Userman.class.php:4380
 msgid "No Dashboards created"
+msgstr ""
+
+#: views/directories.php:496
+msgid "No SCIM token available to copy."
 msgstr ""
 
 #: Userman.class.php:2166
@@ -1172,7 +1188,7 @@ msgstr "OpenLDAP-Verzeichnis (Legacy)"
 
 #: functions.inc/auth/modules/Msad2.php:134
 #: functions.inc/auth/modules/Openldap2.php:299
-#: functions.inc/auth/modules/Scim.php:103
+#: functions.inc/auth/modules/Scim.php:108
 msgid "Operational Settings"
 msgstr "Betriebseinstellungen"
 
@@ -1338,7 +1354,7 @@ msgstr ""
 msgid "Rebuild Widgets"
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:99
+#: functions.inc/auth/modules/Scim.php:101
 msgid "Refresh Token"
 msgstr ""
 
@@ -1384,95 +1400,95 @@ msgstr ""
 msgid "SCIM User Provisioning"
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:151
+#: functions.inc/auth/modules/Scim.php:156
 msgid "SCIM attribute path for common name (Okta default: displayName)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:249
+#: functions.inc/auth/modules/Scim.php:254
 msgid "SCIM attribute path for company (Okta default: organization)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:261
+#: functions.inc/auth/modules/Scim.php:266
 msgid "SCIM attribute path for department (Okta default: department)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:163
+#: functions.inc/auth/modules/Scim.php:168
 msgid "SCIM attribute path for description (Okta default: title)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:225
+#: functions.inc/auth/modules/Scim.php:230
 msgid "SCIM attribute path for display name (Okta default: displayName)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:321
+#: functions.inc/auth/modules/Scim.php:326
 msgid ""
 "SCIM attribute path for email (Okta default: emails[type eq \"work\"].value)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:345
+#: functions.inc/auth/modules/Scim.php:350
 msgid ""
 "SCIM attribute path for extension (Okta default: pbxsaml extension schema)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:309
+#: functions.inc/auth/modules/Scim.php:314
 msgid ""
 "SCIM attribute path for fax (Okta default: phoneNumbers[type eq \"fax\"]."
 "value)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:201
+#: functions.inc/auth/modules/Scim.php:206
 msgid "SCIM attribute path for first name (Okta default: name.givenName)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:395
+#: functions.inc/auth/modules/Scim.php:400
 msgid "SCIM attribute path for group ID (Okta default: id)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:371
+#: functions.inc/auth/modules/Scim.php:376
 msgid "SCIM attribute path for group description (Okta default: description)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:383
+#: functions.inc/auth/modules/Scim.php:388
 msgid "SCIM attribute path for group members (Okta default: members)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:359
+#: functions.inc/auth/modules/Scim.php:364
 msgid "SCIM attribute path for group name (Okta default: displayName)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:333
+#: functions.inc/auth/modules/Scim.php:338
 msgid "SCIM attribute path for groups (Okta default: groups)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:297
+#: functions.inc/auth/modules/Scim.php:302
 msgid ""
 "SCIM attribute path for home phone (Okta default: phoneNumbers[type eq "
 "\"home\"].value)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:213
+#: functions.inc/auth/modules/Scim.php:218
 msgid "SCIM attribute path for last name (Okta default: name.familyName)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:285
+#: functions.inc/auth/modules/Scim.php:290
 msgid ""
 "SCIM attribute path for mobile phone (Okta default: phoneNumbers[type eq "
 "\"mobile\"].value)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:237
+#: functions.inc/auth/modules/Scim.php:242
 msgid "SCIM attribute path for title (Okta default: title)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:175
+#: functions.inc/auth/modules/Scim.php:180
 msgid "SCIM attribute path for unique identifier (Okta default: externalId)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:189
+#: functions.inc/auth/modules/Scim.php:194
 msgid "SCIM attribute path for username (Okta default: userName)."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:273
+#: functions.inc/auth/modules/Scim.php:278
 msgid ""
 "SCIM attribute path for work phone (Okta default: phoneNumbers[type eq "
 "\"work\"].value)."
@@ -1480,6 +1496,11 @@ msgstr ""
 
 #: functions.inc/auth/modules/Scim.php:86
 msgid "SCIM provisioning base URL"
+msgstr ""
+
+#: views/directories.php:501 views/directories.php:504
+#: views/directories.php:512
+msgid "SCIM token copied to clipboard."
 msgstr ""
 
 #: views/directories.php:452
@@ -1596,6 +1617,10 @@ msgstr "Durch Administrator festgelegt"
 #: views/welcome.php:23
 msgid "Settings"
 msgstr "Einstellungen"
+
+#: functions.inc/auth/modules/Scim.php:103
+msgid "Show Token"
+msgstr ""
 
 #: views/general.php:324
 msgid "Special"
@@ -2315,7 +2340,7 @@ msgstr "Kann den Benutzer nicht mit einem ungültigen Verzeichnis verknüpfen"
 
 #: functions.inc/auth/modules/Msad2.php:139
 #: functions.inc/auth/modules/Openldap2.php:351
-#: functions.inc/auth/modules/Scim.php:167
+#: functions.inc/auth/modules/Scim.php:172
 msgid "Unique identifier attribute"
 msgstr "Attribut für die eindeutige Kennung"
 
@@ -2385,8 +2410,10 @@ msgstr "System-Zeitzone verwenden"
 msgid "Use TLS"
 msgstr "TLS verwenden"
 
-#: functions.inc/auth/modules/Scim.php:101
-msgid "Use this token for SCIM provisioning"
+#: functions.inc/auth/modules/Scim.php:106
+msgid ""
+"Use this token for SCIM provisioning. The value is masked by default; use "
+"the Show/Hide and Copy buttons to view or copy it."
 msgstr ""
 
 #: functions.inc/auth/modules/Freepbx.php:104
@@ -2402,13 +2429,13 @@ msgstr "Benutzer '%s' existiert nicht"
 
 #: functions.inc/auth/modules/Msad2.php:168
 #: functions.inc/auth/modules/Openldap2.php:535
-#: functions.inc/auth/modules/Scim.php:277
+#: functions.inc/auth/modules/Scim.php:282
 msgid "User Cell Phone attribute"
 msgstr "Attribut für die Mobiltelefonnummer des Benutzers"
 
 #: functions.inc/auth/modules/Msad2.php:164
 #: functions.inc/auth/modules/Openldap2.php:487
-#: functions.inc/auth/modules/Scim.php:241
+#: functions.inc/auth/modules/Scim.php:246
 msgid "User Company attribute"
 msgstr "Attribut für die Firma des Benutzers"
 
@@ -2420,7 +2447,7 @@ msgstr "Benutzer-DN"
 
 #: functions.inc/auth/modules/Msad2.php:165
 #: functions.inc/auth/modules/Openldap2.php:499
-#: functions.inc/auth/modules/Scim.php:253
+#: functions.inc/auth/modules/Scim.php:258
 msgid "User Department attribute"
 msgstr "Attribut für die Abteilung des Benutzers"
 
@@ -2428,7 +2455,7 @@ msgstr "Attribut für die Abteilung des Benutzers"
 msgid "User Details"
 msgstr "Benutzer-Details"
 
-#: functions.inc/auth/modules/Scim.php:217
+#: functions.inc/auth/modules/Scim.php:222
 msgid "User Display Name attribute"
 msgstr ""
 
@@ -2436,27 +2463,27 @@ msgstr ""
 msgid "User Does Not Exist"
 msgstr "Benutzer existiert nicht"
 
-#: functions.inc/auth/modules/Scim.php:313
+#: functions.inc/auth/modules/Scim.php:318
 msgid "User Email attribute"
 msgstr ""
 
 #: functions.inc/auth/modules/Msad2.php:169
 #: functions.inc/auth/modules/Openldap2.php:547
-#: functions.inc/auth/modules/Scim.php:301
+#: functions.inc/auth/modules/Scim.php:306
 msgid "User Fax attribute"
 msgstr "Attribut für die Faxnummer des Benutzers"
 
-#: functions.inc/auth/modules/Scim.php:193
+#: functions.inc/auth/modules/Scim.php:198
 msgid "User First Name attribute"
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:325
+#: functions.inc/auth/modules/Scim.php:330
 msgid "User Group attribute"
 msgstr ""
 
 #: functions.inc/auth/modules/Msad2.php:166
 #: functions.inc/auth/modules/Openldap2.php:511
-#: functions.inc/auth/modules/Scim.php:289
+#: functions.inc/auth/modules/Scim.php:294
 msgid "User Home Phone attribute"
 msgstr "Attribut für die Private Telefonnummer des Benutzers"
 
@@ -2464,7 +2491,7 @@ msgstr "Attribut für die Private Telefonnummer des Benutzers"
 msgid "User Identity"
 msgstr "Benutzerkennung"
 
-#: functions.inc/auth/modules/Scim.php:205
+#: functions.inc/auth/modules/Scim.php:210
 msgid "User Last Name attribute"
 msgstr ""
 
@@ -2506,7 +2533,7 @@ msgstr "Benutzer erfolgreich geändert"
 
 #: functions.inc/auth/modules/Msad2.php:163
 #: functions.inc/auth/modules/Openldap2.php:475
-#: functions.inc/auth/modules/Scim.php:229
+#: functions.inc/auth/modules/Scim.php:234
 msgid "User Title attribute"
 msgstr "Attribut für den Titel des Benutzers"
 
@@ -2516,7 +2543,7 @@ msgstr ""
 
 #: functions.inc/auth/modules/Msad2.php:167
 #: functions.inc/auth/modules/Openldap2.php:523
-#: functions.inc/auth/modules/Scim.php:265
+#: functions.inc/auth/modules/Scim.php:270
 msgid "User Work Phone attribute"
 msgstr "Attribut für die dienstliche Telefonnummer des Benutzers"
 
@@ -2526,7 +2553,7 @@ msgstr "Benutzer existiert bereits"
 
 #: functions.inc/auth/modules/Msad2.php:141
 #: functions.inc/auth/modules/Openldap2.php:364
-#: functions.inc/auth/modules/Scim.php:178
+#: functions.inc/auth/modules/Scim.php:183
 msgid "User configuration"
 msgstr "Benutzerkonfiguration"
 
@@ -2542,7 +2569,7 @@ msgstr "Attribut für die E-Mail-Adresse des Benutzers"
 
 #: functions.inc/auth/modules/Msad2.php:170
 #: functions.inc/auth/modules/Openldap2.php:571
-#: functions.inc/auth/modules/Scim.php:337
+#: functions.inc/auth/modules/Scim.php:342
 msgid "User extension Link attribute"
 msgstr "Attribut für die Verknüpfung zwischen Benutzer und Nebenstelle"
 
@@ -2567,7 +2594,7 @@ msgstr ""
 
 #: functions.inc/auth/modules/Msad2.php:145
 #: functions.inc/auth/modules/Openldap2.php:403
-#: functions.inc/auth/modules/Scim.php:181
+#: functions.inc/auth/modules/Scim.php:186
 msgid "User name attribute"
 msgstr "Attribut für den Benutzernamen"
 
@@ -2659,7 +2686,7 @@ msgid ""
 "streamlining call monitoring assignments."
 msgstr ""
 
-#: functions.inc/auth/modules/Scim.php:127
+#: functions.inc/auth/modules/Scim.php:132
 msgid ""
 "When set to Yes, the linked extension will be deleted from the PBX when a "
 "user is removed from this directory (deprovisioned)."
