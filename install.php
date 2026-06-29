@@ -83,6 +83,49 @@ $set['type'] = CONF_TYPE_INT;
 $set['hidden'] = 0;
 $freepbx->Config->define_conf_setting('USERMAN_CALL_ACTIVITY_GRP_USER_LIMIT',$set);
 
+$displaynameSyncEnabled = false;
+if($freepbx->Config->conf_setting_exists('USERMAN_DISPLAYNAME_SYNC')) {
+	$existingDisplaynameSync = $freepbx->Config->conf_setting('USERMAN_DISPLAYNAME_SYNC');
+	if(!empty($existingDisplaynameSync['type']) && $existingDisplaynameSync['type'] === CONF_TYPE_FSELECT) {
+		$displaynameSyncEnabled = ($existingDisplaynameSync['value'] === 'enable');
+		$freepbx->Config->remove_conf_setting('USERMAN_DISPLAYNAME_SYNC');
+	}
+}
+
+$set['value'] = $displaynameSyncEnabled;
+$set['defaultval'] =& $set['value'];
+$set['options'] = '';
+$set['name'] = _('Enable Display Name Synchronization');
+$set['description'] = _("When set to Yes, display names will be synchronized between User Manager and linked extensions according to the configured direction.");
+$set['readonly'] = 0;
+$set['hidden'] = 0;
+$set['level'] = 0;
+$set['emptyok'] = 0;
+$set['sortorder'] = 50;
+$set['type'] = CONF_TYPE_BOOL;
+$freepbx->Config->define_conf_setting('USERMAN_DISPLAYNAME_SYNC',$set);
+unset($displaynameSyncEnabled);
+
+$set['value'] = 'userman_to_extension';
+$set['defaultval'] =& $set['value'];
+$set['options'] = array(
+	'userman_to_extension' => _('User Manager to Extension'),
+	'extension_to_userman' => _('Extension to User Manager'),
+);
+$set['name'] = _('Display Name Synchronization Direction');
+$set['description'] = _('Select the direction in which display names are synchronized between User Manager and linked Extensions.<br>
+<b>Extension → User Manager</b><br>
+Applies only to users that exist in the PBX internal directory. Display names configured on extensions are synchronized to the corresponding User Manager records.<br>
+<b>User Manager → Extension</b><br>
+Display names from User Manager are synchronized to linked extensions. This includes users managed directly in User Manager as well as users synchronized from external directory services such as LDAP.');
+$set['readonly'] = 0;
+$set['hidden'] = 0;
+$set['level'] = 0;
+$set['emptyok'] = 0;
+$set['sortorder'] = 51;
+$set['type'] = CONF_TYPE_FSELECT;
+$freepbx->Config->define_conf_setting('USERMAN_DISPLAYNAME_SYNC_DIRECTION',$set);
+
 cronjobEntry($freepbx);
 
 function cronjobEntry($freepbx){
