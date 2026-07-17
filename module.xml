@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>17.0.7.1</version>
+	<version>18.0.1</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -11,28 +11,7 @@
 	</description>
   	<more-info>https://sangomakb.atlassian.net/wiki/spaces/PG/pages/20024012/User+Management+Module</more-info>
 	<changelog>
-		*17.0.7.1* FREEI-2880 SCIM token masking in directory add/edit form
-		*17.0.7* FREEI-2843 - Changes done to fix Generic user ucp vulnerability
-		*17.0.6.50* Packaging of ver 17.0.6.50
-		*17.0.6.49* Packaging of ver 17.0.6.49
-		*17.0.6.48* Packaging of ver 17.0.6.48
-		*17.0.6.47* FREEI-2714 UCP Allowed Extensions - Breaks UCP 
-		*17.0.6.46* issues/942 - Made changes for fixing the user manager whoops error 
-		*17.0.6.45* FREEI-2525-Promise wasnt resolved in isSessionAlreadyUnlocked or loginfailed cases 
-		*17.0.6.44* FREEI-2494 Check the user exists in the saml table 
-		*17.0.6.43* Packaging of ver 17.0.6.43
-		*17.0.6.40* FREEI-2071,FREEI-2075 advr scd setting and userman settings issue after restore is resolved 
-		*17.0.6.39* FREEI-2058 issue with UCP Template Not Applying Widgets to New User 
-		*17.0.6.38* #754 Userman sync failed for MS LDAP 
-		*17.0.6.37* #720 freepbx 16 usermanager settings password management undefined index 
-		*17.0.6.36* #473 fix:decode sanitized password input before DB operations 
-		*17.0.6.35* Github Issue#537 and Issue#671 
-		*17.0.6.34* bump 
-		*17.0.6.33* FREEI-1767  added hook to callactivityupdate method 
-		*17.0.6.32* #612 Auto certation of account code on userman sync 
-		*17.0.6.31* FREEI-1522 fix: Added hooks on call activity group delete 
-		*17.0.6.30 Fixing FREEI-1452 Userman error on password change 
-		*17.0.6.29 FREEI-1108 AD integration adding support for the email format
+		*18.0.1* initial release
 	</changelog>
 	<info/>
 	<category>Admin</category>
@@ -40,9 +19,9 @@
 		<userman needsenginedb="yes">User Management</userman>
 	</menuitems>
 	<depends>
-		<phpversion>8.2.0</phpversion>
-		<version>17.0.1</version>
-		<module>core ge 17.0.1</module>
+		<phpversion>8.4.0</phpversion>
+		<version>18.0</version>
+		<module>core ge 18.0.1</module>
 	</depends>
 	<hooks>
 		<core class="Core" namespace="FreePBX\modules">
@@ -226,7 +205,7 @@
 		</table>
 	</database>
 	<supported>
-		<version>17.0</version>
+		<version>18.0</version>
 	</supported>
 	<console>
 		<command>
