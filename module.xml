@@ -48,6 +48,7 @@
 		<core class="Core" namespace="FreePBX\modules">
 			<method callingMethod="getQuickCreateDisplay" class="Userman" namespace="FreePBX\modules">getQuickCreateDisplay</method>
 			<method callingMethod="processQuickCreate" class="Userman" namespace="FreePBX\modules">processQuickCreate</method>
+			<method callingMethod="addUser" class="Userman" namespace="FreePBX\modules">syncDisplayNameFromExtension</method>
 		</core>
 		<bulkhandler class="Bulkhandler" namespace="FreePBX\modules" priority="150">
 			<method callingMethod="getHeaders" class="Userman" namespace="FreePBX\modules">bulkhandlerGetHeaders</method>

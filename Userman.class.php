@@ -43,6 +43,8 @@ class Userman extends FreePBX_Helpers implements BMO {
 	private array $allUsersCache = [];
 	private array $allGroupsByUserCache = [];
 
+	private static $displayNameSyncInProgress = false;
+
 	private string $displayNameTemplateCreator = 'Template Creator';
 	private string $userNameTemplateCreator = 'FreePBXUCPTemplateCreator';
 
@@ -468,6 +470,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 					}
 					if(method_exists($this->directories[$id] ?? '','sync')) {
 						$this->directories[$id]->sync();
+						$this->syncDisplayNamesAfterDirectorySync($id);
 					}
 				break;
 				case 'group':
@@ -2034,6 +2037,10 @@ class Userman extends FreePBX_Helpers implements BMO {
 			return $status;
 		}
 
+		if(!empty($status['id'])) {
+			$this->syncDisplayNameToExtension($status['id'], $extraData, $default);
+		}
+
 		return $status;
 	}
 
@@ -2080,6 +2087,11 @@ class Userman extends FreePBX_Helpers implements BMO {
 		if(!$status['status']) {
 			return $status;
 		}
+
+		if(!empty($status['id'])) {
+			$this->syncDisplayNameToExtension($status['id'], $extraData, $default);
+		}
+
 		return $status;
 	}
 	/*
@@ -2471,10 +2483,280 @@ class Userman extends FreePBX_Helpers implements BMO {
 		if(!$status['status']) {
 			return $status;
 		}
-		
+
+		$this->syncDisplayNameToExtension($uid, $extraData, $default);
 		$id = $status['id'];
-		
 		return $status;
+	}
+
+	/**
+	 * Core hook: sync extension display name to linked User Manager user.
+	 *
+	 * Only applies to users in the PBX internal directory. External directory
+	 * users (such as LDAP) are not updated from extension display names.
+	 *
+	 * @param string $extension The extension number
+	 * @param array  $settings  Extension settings from Core
+	 * @param bool   $editmode  Whether Core is in edit mode
+	 */
+	public function syncDisplayNameFromExtension($extension, $settings = [], $editmode = false) {
+		if(self::$displayNameSyncInProgress || !$this->isDisplayNameSyncEnabled() || $this->getDisplayNameSyncDirection() !== 'extension_to_userman') {
+			return;
+		}
+
+		if(empty($extension) || !isset($settings['name'])) {
+			return;
+		}
+
+		$user = $this->getUserByDefaultExtension($extension);
+		if(empty($user['id'])) {
+			return;
+		}
+
+		$name = freepbx_trim($settings['name']);
+		if($name === '' || $name === $user['displayname']) {
+			return;
+		}
+
+		if($this->isExternalDirectoryUser($user)) {
+			return;
+		}
+
+		self::$displayNameSyncInProgress = true;
+		try {
+			$sql = "UPDATE " . $this->userTable . " SET displayname = :displayname WHERE id = :id";
+			$sth = $this->db->prepare($sql);
+			$sth->execute([':displayname' => $name, ':id' => $user['id']]);
+		} finally {
+			self::$displayNameSyncInProgress = false;
+		}
+	}
+
+	/**
+	 * Sync User Manager display name to the linked extension when enabled.
+	 *
+	 * @param int         $uid       The User Manager user ID
+	 * @param array       $extraData Updated user fields
+	 * @param string|null $default   The user's default extension
+	 */
+	private function syncDisplayNameToExtension($uid, $extraData = [], $default = null) {
+		if(self::$displayNameSyncInProgress || !$this->isDisplayNameSyncEnabled() || $this->getDisplayNameSyncDirection() !== 'userman_to_extension') {
+			return;
+		}
+		if(!array_key_exists('displayname', $extraData)) {
+			return;
+		}
+		$user = $this->getUserByID($uid);
+		if(empty($user)) {
+			return;
+		}
+		$extension = ($default !== null && $default !== 'none') ? $default : ($user['default_extension'] ?? 'none');
+		if(empty($extension) || $extension === 'none') {
+			return;
+		}
+		$displayname = freepbx_trim($extraData['displayname'] ?? '');
+		$coreUser = $this->FreePBX->Core->getUser($extension);
+		if(empty($coreUser) || $displayname === ($coreUser['name'] ?? '')) {
+			return;
+		}
+		self::$displayNameSyncInProgress = true;
+		try {
+			$this->updateUserName($extension, $displayname);
+		} finally {
+			self::$displayNameSyncInProgress = false;
+		}
+	}
+
+	private function isDisplayNameSyncEnabled() {
+		return !empty($this->FreePBX->Config->get('USERMAN_DISPLAYNAME_SYNC'));
+	}
+
+	private function getDisplayNameSyncDirection() {
+		$direction = $this->FreePBX->Config->get('USERMAN_DISPLAYNAME_SYNC_DIRECTION');
+		return !empty($direction) ? $direction : 'userman_to_extension';
+	}
+
+	/**
+	 * Whether a directory is an external auth source (not the PBX internal directory).
+	 *
+	 * @param int $directoryId The directory ID
+	 * @return bool
+	 */
+	private function isExternalDirectory($directoryId) {
+		$directory = $this->getDirectoryByID($directoryId);
+		if(empty($directory['driver'])) {
+			return false;
+		}
+		return strtolower($directory['driver']) !== 'freepbx';
+	}
+
+	/**
+	 * Whether a User Manager user belongs to an external directory.
+	 *
+	 * @param array|int $user User record or directory ID
+	 * @return bool
+	 */
+	private function isExternalDirectoryUser($user) {
+		$directoryId = is_array($user) ? ($user['auth'] ?? null) : $user;
+		if(empty($directoryId)) {
+			return false;
+		}
+		return $this->isExternalDirectory($directoryId);
+	}
+
+	/**
+	 * Bulk sync display names between User Manager and linked extensions.
+	 *
+	 * Extension to User Manager sync skips users from external directories.
+	 *
+	 * @param string   $from      Sync source: userman or extension
+	 * @param bool     $dryRun    Preview changes without modifying records
+	 * @param int|null $directory Limit sync to users in this directory
+	 * @return array{scanned:int,updated:int,skipped:int,errors:array}
+	 */
+	public function bulkSyncDisplayNames($from, $dryRun = false, $directory = null) {
+		$from = strtolower(freepbx_trim($from));
+		if(!in_array($from, ['userman', 'extension'], true)) {
+			throw new Exception(_("Invalid --from value. Use userman or extension."));
+		}
+
+		$stats = ['scanned' => 0, 'updated' => 0, 'skipped' => 0, 'errors' => []];
+		$users = ($directory !== null) ? $this->getAllUsers($directory) : $this->getAllUsers();
+		if(!is_array($users)) {
+			return $stats;
+		}
+
+		foreach($users as $user) {
+			$stats['scanned']++;
+			$userId = $user['id'] ?? '';
+			$username = $user['username'] ?? '';
+			try {
+				if($from === 'extension' && $this->isExternalDirectoryUser($user)) {
+					$stats['skipped']++;
+					continue;
+				}
+
+				$extension = $user['default_extension'] ?? 'none';
+				if(empty($extension) || $extension === 'none') {
+					$stats['skipped']++;
+					continue;
+				}
+				$coreUser = $this->FreePBX->Core->getUser($extension);
+				if(empty($coreUser)) {
+					$stats['skipped']++;
+					continue;
+				}
+
+				$usermanName = freepbx_trim($user['displayname'] ?? '');
+				$extensionName = freepbx_trim($coreUser['name'] ?? '');
+
+				if($from === 'userman') {
+					if($usermanName === $extensionName) {
+						$stats['skipped']++;
+						continue;
+					}
+					if(!$dryRun) {
+						$this->updateUserName($extension, $usermanName);
+					}
+					$stats['updated']++;
+				} else {
+					if($extensionName === '') {
+						$stats['skipped']++;
+						continue;
+					}
+					if($extensionName === $usermanName) {
+						$stats['skipped']++;
+						continue;
+					}
+					if(!$dryRun) {
+						$sql = "UPDATE ".$this->userTable." SET displayname = :displayname WHERE id = :id";
+						$sth = $this->db->prepare($sql);
+						$sth->execute([':displayname' => $extensionName, ':id' => $userId]);
+					}
+					$stats['updated']++;
+				}
+			} catch (Exception $e) {
+				$stats['errors'][] = sprintf(_("User %s (id %s): %s"), $username, $userId, $e->getMessage());
+			}
+		}
+
+		return $stats;
+	}
+
+	/**
+	 * Sync display names after external directory synchronization for linked primary extensions.
+	 *
+	 * Only users with a primary extension are processed. When direction is
+	 * userman_to_extension, LDAP and other external directory display names are
+	 * pushed to extensions. Extension to User Manager does not apply to external
+	 * directory users.
+	 *
+	 * @param int $directory The directory ID
+	 * @return array{scanned:int,updated:int,skipped:int,errors:array}|null
+	 */
+	public function syncDisplayNamesAfterDirectorySync($directory) {
+		if(!$this->isDisplayNameSyncEnabled()) {
+			return null;
+		}
+
+		if($this->getDisplayNameSyncDirection() !== 'userman_to_extension') {
+			return null;
+		}
+
+		if(!$this->isExternalDirectory($directory)) {
+			return null;
+		}
+
+		return $this->bulkSyncDisplayNames('userman', false, $directory);
+	}
+
+	/**
+	 * Preview display name differences between User Manager and linked extensions.
+	 *
+	 * @return array{scanned:int,differences:array,skipped:int,errors:array}
+	 */
+	public function previewDisplayNameDifferences() {
+		$stats = ['scanned' => 0, 'differences' => [], 'skipped' => 0, 'errors' => []];
+		$users = $this->getAllUsers();
+		if(!is_array($users)) {
+			return $stats;
+		}
+
+		foreach($users as $user) {
+			$stats['scanned']++;
+			$userId = $user['id'] ?? '';
+			$username = $user['username'] ?? '';
+			try {
+				$extension = $user['default_extension'] ?? 'none';
+				if(empty($extension) || $extension === 'none') {
+					$stats['skipped']++;
+					continue;
+				}
+				$coreUser = $this->FreePBX->Core->getUser($extension);
+				if(empty($coreUser)) {
+					$stats['skipped']++;
+					continue;
+				}
+
+				$usermanName = freepbx_trim($user['displayname'] ?? '');
+				$extensionName = freepbx_trim($coreUser['name'] ?? '');
+				if($usermanName === $extensionName) {
+					$stats['skipped']++;
+					continue;
+				}
+
+				$stats['differences'][] = [
+					'username' => $username,
+					'extension' => $extension,
+					'userman_displayname' => $usermanName !== '' ? $usermanName : _('(empty)'),
+					'extension_displayname' => $extensionName !== '' ? $extensionName : _('(empty)'),
+				];
+			} catch (Exception $e) {
+				$stats['errors'][] = sprintf(_("User %s (id %s): %s"), $username, $userId, $e->getMessage());
+			}
+		}
+
+		return $stats;
 	}
 
 	/**
@@ -4589,5 +4871,33 @@ class Userman extends FreePBX_Helpers implements BMO {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Update the display name for a linked extension.
+	 *
+	 * Updates the users table and Asterisk cidname without using Core.
+	 *
+	 * @param string $extension The extension number
+	 * @param string $name      The display name
+	 * @return bool
+	 */
+	public function updateUserName($extension, $name) {
+		if (freepbx_trim($extension) === '') {
+			return false;
+		}
+		$name = preg_replace(['/</','/>/'], ['(',')'], freepbx_trim($name ?? ''));
+		$sql = "UPDATE users SET name = ? WHERE extension = ?";
+		$sth = $this->db->prepare($sql);
+		try {
+			$sth->execute([$name, $extension]);
+		} catch (\Exception $e) {
+			return false;
+		}
+		$astman = $this->FreePBX->astman;
+		if ($astman->connected()) {
+			$astman->database_put("AMPUSER", $extension."/cidname", $name);
+		}
+		return true;
 	}
 }

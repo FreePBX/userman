@@ -59,6 +59,19 @@ class Job implements TaskInterface {
 					$output->writeln("\t<error>".$e->getMessage()."</error>");
 				}
 				$userman->unlockDirectory($directory['id']);
+				if(\FreePBX::Config()->get("USERMAN_ACCOUNT_CODE")) {
+					$output->writeln("Updating account codes...");
+					$userman->updateUserAccountCodes($directory['id']);
+					$output->writeln("Done updating account codes.");
+				}
+				$displayNameStats = $userman->syncDisplayNamesAfterDirectorySync($directory['id']);
+				if($displayNameStats !== null) {
+					$output->writeln(sprintf(_("Updating display names... %d updated, %d skipped"), $displayNameStats['updated'], $displayNameStats['skipped']));
+					foreach($displayNameStats['errors'] as $error) {
+						$output->writeln("\t<error>".$error."</error>");
+					}
+					$output->writeln(_("Done updating display names."));
+				}
 				$output->writeln("Finished");
 			} else {
 				$output->writeln("Not syncing directory for another ".(($timeSince + $secondsSince)-$timeNow)." seconds");
