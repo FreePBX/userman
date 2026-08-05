@@ -1,7 +1,7 @@
 <module>
 	<rawname>userman</rawname>
 	<name>User Management</name>
-	<version>17.0.7.1</version>
+	<version>17.0.7.2</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>AGPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
@@ -11,6 +11,7 @@
 	</description>
   	<more-info>https://sangomakb.atlassian.net/wiki/spaces/PG/pages/20024012/User+Management+Module</more-info>
 	<changelog>
+		*17.0.7.2* FREEI-3093 Changes for fixing Userman - Uncaught TypeError 
 		*17.0.7.1* FREEI-2880 SCIM token masking in directory add/edit form
 		*17.0.7* FREEI-2843 - Changes done to fix Generic user ucp vulnerability
 		*17.0.6.50* Packaging of ver 17.0.6.50
