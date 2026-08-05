@@ -991,8 +991,13 @@ class Userman extends FreePBX_Helpers implements BMO {
 					}
 				}
 				$directories = $this->getAllDirectories(true);
-				$activedirectorycount = $directories['active'];
-				$directories = $directories['directories'];
+				$directories = array_values(array_filter($directories['directories'], [$this, 'isDirectoryVisibleInUi']));
+				$activedirectorycount = 0;
+				foreach ($directories as $d) {
+					if (!empty($d['active'])) {
+						$activedirectorycount++;
+					}
+				}
 				$dirwarn = '';
 				if($activedirectorycount === 0){
 					$dirwarn = '<div class="alert alert-warning" role="alert"><strong>'._("Warning")."</strong>: "._("You have no directories enabled. This will affect users ability to use features that require a login").'</div>';
@@ -1240,7 +1245,8 @@ class Userman extends FreePBX_Helpers implements BMO {
 			break;
 			case "getDirectories":
 				$filter = isset($request['directoryFilter']) ? $request['directoryFilter'] : '';
-				return $this->getAllDirectories(false, $filter);
+				$directories = $this->getAllDirectories(false, $filter);
+				return array_values(array_filter($directories, [$this, 'isDirectoryVisibleInUi']));
 			break;
 			case "auth":
 				$out = $this->checkCredentials($request["username"],$request["password"]);
@@ -1433,6 +1439,31 @@ class Userman extends FreePBX_Helpers implements BMO {
 			return ['active' => $count, 'directories' => $directories];
 		}
 		return $directories;
+	}
+
+	/**
+	 * Whether a directory should appear in User Management UI lists.
+	 * Hides SCIM directories when PBX SAML is missing, unlicensed, or expired.
+	 *
+	 * @param array $directory Directory row
+	 * @return bool
+	 */
+	private function isDirectoryVisibleInUi(array $directory) {
+		if (empty($directory['driver']) || strcasecmp((string) $directory['driver'], 'Scim') !== 0) {
+			return true;
+		}
+		$class = 'FreePBX\modules\Userman\Auth\Scim';
+		if (!class_exists($class)) {
+			$file = __DIR__.'/functions.inc/auth/modules/Scim.php';
+			if (!file_exists($file)) {
+				return false;
+			}
+			include $file;
+		}
+		if (!class_exists($class) || !is_callable([$class, 'getInfo'])) {
+			return false;
+		}
+		return !empty($class::getInfo($this, $this->FreePBX));
 	}
 
 	/**
