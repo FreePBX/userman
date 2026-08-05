@@ -602,7 +602,12 @@ class Userman extends FreePBX_Helpers implements BMO {
 							}
 						}
 						if(isset($request['submittype']) && $request['submittype'] == "guisend") {
-							$data = $this->getUserByID($request['user']);
+							if(isset($request['user']) && $request['user'] != "") {
+								$data = $this->getUserByID($request['user']);
+							}
+							else{
+								$data = $this->getUserByID($ret['id']);
+							}
 							$this->sendWelcomeEmail($data['id'], $password);
 						}
 						$prevtempid = $this->getConfig('template_id', $ret['id']);
@@ -986,8 +991,13 @@ class Userman extends FreePBX_Helpers implements BMO {
 					}
 				}
 				$directories = $this->getAllDirectories(true);
-				$activedirectorycount = $directories['active'];
-				$directories = $directories['directories'];
+				$directories = array_values(array_filter($directories['directories'], [$this, 'isDirectoryVisibleInUi']));
+				$activedirectorycount = 0;
+				foreach ($directories as $d) {
+					if (!empty($d['active'])) {
+						$activedirectorycount++;
+					}
+				}
 				$dirwarn = '';
 				if($activedirectorycount === 0){
 					$dirwarn = '<div class="alert alert-warning" role="alert"><strong>'._("Warning")."</strong>: "._("You have no directories enabled. This will affect users ability to use features that require a login").'</div>';
@@ -996,7 +1006,8 @@ class Userman extends FreePBX_Helpers implements BMO {
 				foreach($directories as $directory) {
 					$directoryMap[$directory['id']]['name'] = $directory['name'];
 					$directoryMap[$directory['id']]['driver'] = $directory['driver'];
-					$directoryMap[$directory['id']]['permissions'] = $this->getDirectoryObjectByID($directory['id'])->getPermissions();
+					$directoryObject = $this->getDirectoryObjectByID($directory['id']);
+					$directoryMap[$directory['id']]['permissions'] = $directoryObject ? $directoryObject->getPermissions() : [];
 				}
 				$mailtype = $this->getGlobalsetting('mailtype');
 				$mailtype = $mailtype === 'html' ? 'html' : 'text';
@@ -1233,7 +1244,9 @@ class Userman extends FreePBX_Helpers implements BMO {
 				}
 			break;
 			case "getDirectories":
-				return $this->getAllDirectories();
+				$filter = isset($request['directoryFilter']) ? $request['directoryFilter'] : '';
+				$directories = $this->getAllDirectories(false, $filter);
+				return array_values(array_filter($directories, [$this, 'isDirectoryVisibleInUi']));
 			break;
 			case "auth":
 				$out = $this->checkCredentials($request["username"],$request["password"]);
@@ -1398,22 +1411,59 @@ class Userman extends FreePBX_Helpers implements BMO {
 		$this->globalDirectory = new $class($this, $this->FreePBX);
 	}
 
-	public function getAllDirectories($withactivecount = false) {
+	public function getAllDirectories($withactivecount = false, $driverFilter = '') {
 		$sql = "SELECT * FROM ".$this->directoryTable." ORDER BY `order`";
 		$sth = $this->db->prepare($sql);
 		$sth->execute();
 		$directories = $sth->fetchAll(PDO::FETCH_ASSOC);
 		$count = 0;
+		$filter = is_string($driverFilter) ? trim($driverFilter) : '';
+		if ($filter !== '') {
+			$filter = strtolower($filter);
+		}
 		foreach($directories as $key => $d) {
+			if ($filter !== '') {
+				$driver = isset($d['driver']) ? strtolower($d['driver']) : '';
+				if ($driver !== $filter) {
+					unset($directories[$key]);
+					continue;
+				}
+			}
 			$directories[$key]['config'] = $this->getConfig("auth-settings",$d['id']);
 			if($directories[$key]['active'] == 1){
 				$count++;
 			}
 		}
+		$directories = array_values($directories);
 		if($withactivecount){
 			return ['active' => $count, 'directories' => $directories];
 		}
 		return $directories;
+	}
+
+	/**
+	 * Whether a directory should appear in User Management UI lists.
+	 * Hides SCIM directories when PBX SAML is missing, unlicensed, or expired.
+	 *
+	 * @param array $directory Directory row
+	 * @return bool
+	 */
+	private function isDirectoryVisibleInUi(array $directory) {
+		if (empty($directory['driver']) || strcasecmp((string) $directory['driver'], 'Scim') !== 0) {
+			return true;
+		}
+		$class = 'FreePBX\modules\Userman\Auth\Scim';
+		if (!class_exists($class)) {
+			$file = __DIR__.'/functions.inc/auth/modules/Scim.php';
+			if (!file_exists($file)) {
+				return false;
+			}
+			include $file;
+		}
+		if (!class_exists($class) || !is_callable([$class, 'getInfo'])) {
+			return false;
+		}
+		return !empty($class::getInfo($this, $this->FreePBX));
 	}
 
 	/**
@@ -1619,9 +1669,29 @@ class Userman extends FreePBX_Helpers implements BMO {
 			throw new Exception(_("ID was not numeric"));
 		}
 		set_time_limit(0);
+		// Get user before delete so we can delete linked extension for SCIM dirs if configured
+		$userBeforeDelete = $this->getUserByID($id, false);
+		$extensionToDelete = null;
+		if (!empty($userBeforeDelete['default_extension']) && $userBeforeDelete['default_extension'] !== 'none'
+			&& !empty($userBeforeDelete['auth'])) {
+			$dir = $this->getDirectoryByID($userBeforeDelete['auth']);
+			if (!empty($dir['driver']) && $dir['driver'] === 'Scim'
+				&& !empty($dir['config']['deleteextensiondeprovision'])) {
+				$extensionToDelete = $userBeforeDelete['default_extension'];
+			}
+		}
+
 		$status = $this->globalDirectory->deleteUserByID($id);
 		if(!$status['status']) {
 			return $status;
+		}
+
+		if (!empty($extensionToDelete) && $this->FreePBX->Core) {
+			try {
+				$this->FreePBX->Core->delUser($extensionToDelete);
+			} catch (\Exception $e) {
+				// Log but do not fail the user deletion
+			}
 		}
 
 		if ($this->FreePBX->Modules->checkStatus('sangomartapi')) {
@@ -2715,6 +2785,67 @@ class Userman extends FreePBX_Helpers implements BMO {
 		}
 	}
 
+	/**
+	 * UCP boolean-style settings inherited from groups: if any group grants (true), the effective value is true.
+	 * Previously only the first group with a stored value was used, so a deny in an earlier group hid a grant from another.
+	 */
+	private function isOrMergedGroupBooleanSetting($module, $setting) {
+		if(strpos((string) $module, 'ucp|') !== 0) {
+			return false;
+		}
+		if($module === 'ucp|Global' && in_array($setting, ['allowLogin', 'originate', 'tour'], true)) {
+			return true;
+		}
+		return in_array($setting, ['enable', 'enabled', 'playback', 'download', 'settings', 'greetings', 'vmxlocater', 'vmxlocator', 'vpn_enable'], true);
+	}
+
+	private function moduleSettingBoolIsTrue($v) {
+		if(is_bool($v)) {
+			return $v;
+		}
+		if(is_int($v) || is_float($v)) {
+			return ((int) $v) !== 0;
+		}
+		if(is_string($v)) {
+			$l = strtolower($v);
+			return $v === '1' || $l === 'true' || $l === 'yes' || $l === 'on';
+		}
+		return false;
+	}
+
+	/**
+	 * @return array{val: mixed, groupid: int}
+	 */
+	private function mergeBooleanModuleSettingAcrossGroups($module, $setting, $groups, $cached) {
+		$foundAny = false;
+		$anyTrue = false;
+		$groupid = -1;
+		$firstExplicitGroup = -1;
+		foreach($groups as $group) {
+			$gs = $this->getModuleSettingByGID($group, $module, $setting, true, $cached);
+			if($gs === null || $gs === '') {
+				continue;
+			}
+			$foundAny = true;
+			if($firstExplicitGroup < 0) {
+				$firstExplicitGroup = $group;
+			}
+			if($this->moduleSettingBoolIsTrue($gs)) {
+				$anyTrue = true;
+				if($groupid < 0) {
+					$groupid = $group;
+				}
+			}
+		}
+		if(!$foundAny) {
+			return ['val' => null, 'groupid' => -1];
+		}
+		if($anyTrue) {
+			return ['val' => 1, 'groupid' => $groupid];
+		}
+		return ['val' => 0, 'groupid' => $firstExplicitGroup];
+	}
+
 	public function getCombinedModuleSettingByID($id, $module, $setting, $detailed = false, $cached = true) {
 		$groupid = -1;
 		$groupname = "user";
@@ -2722,20 +2853,26 @@ class Userman extends FreePBX_Helpers implements BMO {
 		$output = ($output == "null") ? null : $output;
 		if(is_null($output)) {
 			$groups = $this->getGroupsByID($id);
-			foreach($groups as $group) {
-				$gs = $this->getModuleSettingByGID($group,$module,$setting,true,$cached);
-				if(!is_null($gs)) {
-					//Find and replace the word "self" with this users extension
-					if(is_array($gs) && in_array("self",$gs)) {
-						$i = array_search ("self", $gs);
-						$user = $this->getUserByID($id);
-						if($user['default_extension'] !== "none") {
-							$gs[$i] = $user['default_extension'];
+			if($this->isOrMergedGroupBooleanSetting($module, $setting)) {
+				$merged = $this->mergeBooleanModuleSettingAcrossGroups($module, $setting, $groups, $cached);
+				$output = $merged['val'];
+				$groupid = $merged['groupid'];
+			} else {
+				foreach($groups as $group) {
+					$gs = $this->getModuleSettingByGID($group,$module,$setting,true,$cached);
+					if(!is_null($gs)) {
+						//Find and replace the word "self" with this users extension
+						if(is_array($gs) && in_array("self",$gs)) {
+							$i = array_search ("self", $gs);
+							$user = $this->getUserByID($id);
+							if($user['default_extension'] !== "none") {
+								$gs[$i] = $user['default_extension'];
+							}
 						}
+						$output = $gs;
+						$groupid = $group;
+						break;
 					}
-					$output = $gs;
-					$groupid = $group;
-					break;
 				}
 			}
 		}else {
@@ -2754,7 +2891,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 								$gs[$i] = $user['default_extension'];
 							}
 						}
-						$gsoutput = $gs;
+						$gsoutput = is_array($gs) ? $gs : [$gs];
 						break;
 					}
 				}
@@ -3996,7 +4133,8 @@ class Userman extends FreePBX_Helpers implements BMO {
 		$directory = $this->getFreepbxDriverDirectory();
 		$groupid = 1;
 		$email = $this->getNotificationEmail();
-		$ret = $this->addUserByDirectory($directory['id'], $this->getUserNameTemplateCreator(), md5('1a2b3c@fd48jshs03123ld'), $unusedexten, _('Autogenerated user For Template Creation'), ['email' => $email, 'displayname' => $this->displayNameTemplateCreator]);
+		$password = bin2hex(random_bytes(24));
+		$ret = $this->addUserByDirectory($directory['id'], $this->getUserNameTemplateCreator(), $password, $unusedexten, _('Autogenerated user For Template Creation'), ['email' => $email, 'displayname' => $this->displayNameTemplateCreator]);
 		if($ret['status']) {
 			$directory = $directory['id'];
 			$uid = $ret['id'];
