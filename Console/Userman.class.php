@@ -22,11 +22,16 @@ class Userman extends Command {
 			->setDescription(_('User Manager'))
 			->setDefinition([new InputOption('syncall', null, InputOption::VALUE_NONE, _('Syncronize all directories')), new InputOption('sync', null, InputOption::VALUE_REQUIRED, _('Syncronize a single directory by id (obtained from --list)')), new InputOption('force', null, InputOption::VALUE_NONE, _('Force syncronization')), new InputOption('list', null, InputOption::VALUE_NONE, _('List directories')), new InputOption('deletegenerictemplate', null, InputOption::VALUE_NONE, _('Delete generic templates user'))]);
 	}
-	protected function execute(InputInterface $input, OutputInterface $output){
+	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$status = [];
-  		$force = $input->getOption('force');
-		$sync = $input->getOption('sync');
+		$force = $input->getOption('force');
 		$userman = FreePBX::create()->Userman;
+
+		if($input->getOption('syncall') && $input->getOption('sync')) {
+			$output->writeln("<error>Can not sync and syncall at the same time!</error>");
+			return 1;
+		}
+
 		if($input->getOption('list')) {
 			$table = new Table($output);
 			$table->setHeaders([_('ID'), _('Name')]);
@@ -37,11 +42,9 @@ class Userman extends Command {
 			}
 			$table->setRows($rows);
 			$table->render();
+			return 0;
 		}
-		if($input->getOption('syncall') && $input->getOption('sync')) {
-			$output->writeln("<error>Can not sync and syncall at the same time!</error>");
-			exit(-1);
-		}
+
 		if($input->getOption('syncall')) {
 			$this->setLock();
 			$directories = $userman->getAllDirectories();
@@ -49,30 +52,34 @@ class Userman extends Command {
 				$this->syncDirectory($directory,$output,$force);
 			}
 			$this->removeLock();
+			return 0;
 		}
+
 		if($input->getOption('deletegenerictemplate')) {
 			try {
 				$status = $userman->deletetemplatecreator();
 			} catch(Exception $e) {
 				$output->writeln("\t<error>".$e->getMessage()."</error>");
 				$output->writeln("\t Already Deleted ");
+				return 1;
 			}
-			if($status['status']){
+			if(!empty($status['status'])){
 				$output->writeln("Removed the Generic Template User");
+				return 0;
 			}
-			exit(-1);
+			return 1;
 		}
+
 		if($input->getOption('sync')) {
 			$this->setLock();
 			$id = $input->getOption('sync');
 			$directory = $userman->getDirectoryByID($id);
 			$this->syncDirectory($directory,$output,$force);
 			$this->removeLock();
+			return 0;
 		}
-		if(!$input->getOption('syncall') && !$input->getOption('sync') && !$input->getOption('list')) {
-			$this->outputHelp($input,$output);
-			exit(4);
-		}
+
+		return $this->outputHelp($input,$output);
 	}
 
 	private function syncDirectory($directory,$output,$force=false) {

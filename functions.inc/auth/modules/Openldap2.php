@@ -26,20 +26,21 @@
 
 
 namespace FreePBX\modules\Userman\Auth;
-use Adldap\Connections\Provider;
-use Adldap\Connections\ProviderInterface;
 use DateTime;
 use DateTimeZone;
 use Exception;
-use Adldap\Models\Group;
-use Adldap\Adldap;
-use Adldap\Exceptions\Auth\BindException;
+use LdapRecord\Auth\BindException;
+use LdapRecord\Connection;
+use LdapRecord\Models\OpenLDAP\Entry as OpenLdapEntry;
 class Openldap2 extends Auth {
-	private ?Provider $provider = null;
 	/**
-  * LDAP Object
-  */
- private ?ProviderInterface $ldap = null;
+	 * LDAP connection
+	 */
+	private ?Connection $connection = null;
+	/**
+	 * @deprecated Kept for callers expecting getLDAPObject()
+	 */
+	private ?Connection $ldap = null;
 	/**
   * Socket Timeout
   */
@@ -671,13 +672,12 @@ class Openldap2 extends Auth {
 	}
 
 	/**
-	 * Return the LDAP object after connect
-	 * @return object The LDAP object
+	 * Return the LDAP connection after connect
+	 * @return Connection The LDAP connection
 	 */
 	public function getLDAPObject() {
-		$openldap2 = null;
-  $openldap2->connect();
-		return $this->ldap;
+		$this->connect();
+		return $this->connection;
 	}
 
 	/**
@@ -696,37 +696,58 @@ class Openldap2 extends Auth {
 	 * Connect to the LDAP server
 	 */
 	public function connect($reconnect = false) {
-		if($reconnect || !$this->ldap) {
-			if(!class_exists(\App\Schemas\Openldap2::class,false)) {
-				include __DIR__."/openldap2/Openldap2Schema.class.php";
-			}
-			$mySchema = new \App\Schemas\Openldap2($this->config);
+		if($reconnect || !$this->connection) {
 			$config = [
-				// Mandatory Configuration Options
-				'hosts'				=> preg_split("/[ ,]/", (string) $this->config['host']),
-				'base_dn'    		=> $this->config['basedn'],
-				'username'      	=> $this->config['username'],
-				'password'      	=> $this->config['password'],
-
-				// Optional Configuration Options
-				'schema'			=> \App\Schemas\Openldap2::class,
-				'port'            	=> $this->config['port'],
-				'follow_referrals'  => false,
-				'use_ssl'           => ($this->config['connection'] == 'ssl'),
-				'use_tls'           => ($this->config['connection'] == 'tls'),
-				'timeout'           => $this->timeout,
-				'version'          	=> $this->validateVerProtoLDAP($this->config['version']),
+				'hosts'            => preg_split("/[ ,]/", (string) $this->config['host']),
+				'base_dn'          => $this->config['basedn'],
+				'username'         => $this->config['username'],
+				'password'         => $this->config['password'],
+				'port'             => (int) $this->config['port'],
+				'follow_referrals' => false,
+				'use_ssl'          => ($this->config['connection'] == 'ssl'),
+				'use_tls'          => ($this->config['connection'] == 'tls'),
+				'timeout'          => $this->timeout,
+				'version'          => $this->validateVerProtoLDAP($this->config['version']),
 			];
-			$this->provider = new Provider($config, $connection = null);
-			$this->provider->setSchema($mySchema);
-			$ad = new Adldap(["default" => $config]);
-			$ad->addProvider($this->provider, 'default');
+			$this->connection = new Connection($config);
 			try {
-				$this->ldap = $ad->connect();
+				$this->connection->connect();
 			} catch (BindException $e) {
 				throw new Exception("Unable to Connect to host! Reason: ".$e->getMessage());
 			}
+			$this->ldap = $this->connection;
 		}
+	}
+
+	/**
+	 * LDAP query builder for OpenLDAP entries
+	 */
+	private function ldapQuery() {
+		return $this->connection->query()->model(new OpenLdapEntry);
+	}
+
+	/**
+	 * First attribute value helper (replaces Adldap getAttribute($key, 0))
+	 */
+	private function firstAttr($entry, $attribute) {
+		if (empty($attribute) || !$entry) {
+			return null;
+		}
+		return $entry->getFirstAttribute($attribute);
+	}
+
+	/**
+	 * External ID from configured attribute (entryUUID converted when applicable)
+	 */
+	private function getExternalId($entry) {
+		$attr = $this->config['externalidattr'];
+		if (in_array(strtolower((string) $attr), ['entryuuid', 'objectguid'], true)) {
+			$converted = $entry->getConvertedGuid();
+			if (!empty($converted)) {
+				return $converted;
+			}
+		}
+		return $this->firstAttr($entry, $attr);
 	}
 
 	/**
@@ -916,10 +937,14 @@ class Openldap2 extends Auth {
 	 */
 	public function checkCredentials($username, $password) {
 		$user = [];
-  $this->connect();
+		$this->connect();
 
 		$userdn = !empty($this->config['userdn']) ? $this->config['userdn'].",".$this->config['basedn'] : $this->config['basedn'];
-		$res = $this->provider->auth()->attempt($this->config['usernameattr']."=".$username.",".$userdn, $password);
+		try {
+			$res = $this->connection->auth()->attempt($this->config['usernameattr']."=".$username.",".$userdn, $password);
+		} catch (Exception) {
+			$res = false;
+		}
 
 		if($res) {
 			$user = $this->getUserByUsername($username);
@@ -945,16 +970,16 @@ class Openldap2 extends Auth {
 		$process = [];
 		foreach($this->ucache as $usid => $user) {
 			$u = $this->getUserByAuthID($usid);
-			if(empty($user->getAttribute($this->config['userprimarygroupattr'],0))) {
+			if(empty($this->firstAttr($user, $this->config['userprimarygroupattr']))) {
 				$this->out("\tUser ".$u['username']." missing ".$this->config['userprimarygroupattr']." attribute. Cant determine primary group");
 				continue;
 			}
-			$primarygroup = $user->getAttribute($this->config['userprimarygroupattr'],0);
+			$primarygroup = $this->firstAttr($user, $this->config['userprimarygroupattr']);
 			foreach($groups as $gsid => $group) {
-				if(empty($group['cache']->getAttribute($this->config['groupgidnumberattr'],0))) {
+				if(empty($this->firstAttr($group['cache'], $this->config['groupgidnumberattr']))) {
 					$this->out("\tGroup ".$group['groupname']." missing ".$this->config['groupgidnumberattr']." attribute. Cant determine primary group");
 					continue;
-				} elseif($primarygroup == $group['cache']->getAttribute($this->config['groupgidnumberattr'],0)) {
+				} elseif($primarygroup == $this->firstAttr($group['cache'], $this->config['groupgidnumberattr'])) {
 					$this->out("\tUser ".$u['username']." primary group is ".$group['groupname']);
 					if(empty($process[$group['id']])) {
 						$process[$group['id']] = ["id" => $group['id'], "description" => $group['description'], "users" => $group['users'], "name" => $group['groupname']];
@@ -992,9 +1017,15 @@ class Openldap2 extends Auth {
 		$this->out("\t".'ldapsearch -w '.$this->config['password'].' -H "'.$ldapuri.'" -D "'.$this->config['username'].'" -b "'.$groupdn.'" -s sub "'.$this->config['groupobjectfilter'].'"');
 		$this->out("\tRetrieving all groups...");
 
-		$search = $this->ldap->search();
-		$paginator = $search->in($groupdn)->rawFilter("(&".$this->config['groupobjectfilter']."(objectclass=".$this->config['groupobjectclass']."))")->select(["*",$this->config['groupgidnumberattr'],$this->config['descriptionattr'],($this->config['groupnameattr'] ?? ''), $this->config['externalidattr'], $this->config['groupmemberattr']])->paginate($this->limit, 1);
-		$results = $paginator->getResults();
+		$select = array_values(array_filter([
+			'*',
+			$this->config['groupgidnumberattr'],
+			$this->config['descriptionattr'],
+			$this->config['commonnameattr'],
+			$this->config['externalidattr'],
+			$this->config['groupmemberattr'],
+		]));
+		$results = $this->ldapQuery()->in($groupdn)->rawFilter("(&".$this->config['groupobjectfilter']."(objectclass=".$this->config['groupobjectclass']."))")->select($select)->paginate($this->limit);
 
 		if((is_countable($results) ? count($results) : 0) == 0) {
 			$this->out("\tNo groups found! Perhaps your query is wrong?");
@@ -1003,45 +1034,30 @@ class Openldap2 extends Auth {
 		$this->out("\tGot ".(is_countable($results) ? count($results) : 0). " groups");
 
 		foreach($results as $result) {
-			$sid = $result->getObjectGuid();
+			$sid = $this->getExternalId($result);
 			if(empty($sid)) {
 				$this->out("\t\tERROR Group is missing ".$this->config['externalidattr']." attribute! Cant continue!!");
 				continue;
 			}
-			$groupname = $result->getCommonName();
+			$groupname = $this->firstAttr($result, $this->config['commonnameattr']);
 			if(empty($groupname)) {
 				$this->out("\t\tGroupname is blank! Skipping unknown group");
 				continue;
 			}
 			$this->gcache[$sid] = $result;
 			$um = $this->linkGroup($groupname, $sid);
-			$description = !is_null($result->getDescription()) ? $result->getDescription() : '';
+			$description = $this->firstAttr($result, $this->config['descriptionattr']) ?? '';
 			$members = [];
 			$this->out("\tWorking on ".$groupname);
 
-			// The list of users is obtained directly from the class array, since the getMembers function does 
-			// not return the users if it is not used with the command "$provider->search()->groups()".
-			// Open issues: https://github.com/Adldap2/Adldap2/issues/794
-			if ($this->config['groupmemberidentifierattr'] == "uid") {
-				$getMembers = $result[$this->config['groupmemberattr']];
-			} else if ($this->config['groupmemberidentifierattr'] == "cn") {
-				$getMembers = $result[$this->config['groupmemberattr']];
-			} else {
-				$getMembers = $result->getMembers();
-			}
-			if ($getMembers == null) {
-				$getMembers = [];
-			}
+			$getMembers = $result->getAttribute($this->config['groupmemberattr']) ?? [];
 			foreach($getMembers as $member) {
-				if ($member instanceof Group) {
-					$m = $this->getUserByUsername($member->getAccountName());
+				if ($this->config['groupmemberidentifierattr'] == "cn") {
+					$parts = explode("=", (string) $member, 2);
+					$stripped_username = isset($parts[1]) ? explode(",", $parts[1])[0] : (string) $member;
+					$m = $this->getUserByUsername($stripped_username);
 				} else {
-					if ($this->config['groupmemberidentifierattr'] == "cn") {
-						$stripped_username=explode(",", explode("=", $member)[1])[0];
-						$m = $this->getUserByUsername($stripped_username);
-					} else {
-						$m = $this->getUserByUsername($member);					
-					}
+					$m = $this->getUserByUsername($member);
 				}
 				if(!empty($m)) {
 					$this->out("\t\t\tAdding ".$m['username']." to group");
@@ -1089,9 +1105,7 @@ class Openldap2 extends Auth {
 		$this->out("\t".'ldapsearch -w '.$this->config['password'].' -H "'.$ldapuri.'" -D "'.$this->config['username'].'" -b "'.$userdn.'" -s sub "'.$this->config['userobjectfilter'].'" "'.$this->config['externalidattr'].'=*" '.$this->config['externalidattr']);
 		$this->out("\tRetrieving all users...");
 
-		$search = $this->ldap->search();
-		$paginator = $search->in($userdn)->rawFilter("(&".$this->config['userobjectfilter']."(objectclass=".$this->config['userobjectclass']."))")->select(['*',$this->config['externalidattr']])->paginate($this->limit, 1);
-		$results = $paginator->getResults();
+		$results = $this->ldapQuery()->in($userdn)->rawFilter("(&".$this->config['userobjectfilter']."(objectclass=".$this->config['userobjectclass']."))")->select(['*',$this->config['externalidattr']])->paginate($this->limit);
 
 		if((is_countable($results) ? count($results) : 0) == 0) {
 			$this->out("\tNo users found! Perhaps your query is wrong?");
@@ -1100,12 +1114,12 @@ class Openldap2 extends Auth {
 
 		$this->out("\tGot ".(is_countable($results) ? count($results) : 0). " users");
 		foreach($results as $result) {
-			$sid = $result->getObjectGuid();
+			$sid = $this->getExternalId($result);
 			if(empty($sid)) {
 				$this->out("\t\tERROR User is missing ".$this->config['externalidattr']." attribute! Cant continue!!");
 				continue;
 			}
-			$username = $result->getAccountName();
+			$username = $this->firstAttr($result, $this->config['usernameattr']);
 			if(empty($username)) {
 				$this->out("\t\tUsername is blank! Skipping unknown user");
 				continue;
@@ -1118,9 +1132,13 @@ class Openldap2 extends Auth {
 				} else {
 					$this->out("\t\tUpdating ".$username);
 				}
-				$data = ["description" => !is_null($result->getDescription()) ? $result->getDescription() : '', "primary_group" => !is_null($result->getPrimaryGroupId()) ? $result->getPrimaryGroupId() : '', "fname" => !is_null($result->getFirstName()) ? $result->getFirstName() : '', "lname" => !is_null($result->getLastName()) ? $result->getLastName() : '', "displayname" => !is_null($result->getDisplayName()) ? $result->getDisplayName() : '', "company" => !empty($this->config['usercompanyattr']) && !is_null($result->getAttribute($this->config['usercompanyattr'],0)) ? $result->getAttribute($this->config['usercompanyattr'],0) : '', "department" => !empty($this->config['userdepartmentattr']) && !is_null($result->getAttribute($this->config['userdepartmentattr'],0)) ? $result->getAttribute($this->config['userdepartmentattr'],0) : '', "title" => !is_null($result->getTitle()) ? $result->getTitle() : '', "email" => !is_null($result->getEmail()) ? $result->getEmail() : ((isset($result['mail']) && isset($result['mail'][0])) ? $result['mail'][0] : ''), "cell" => !empty($this->config['usercellphoneattr']) && !is_null($result->getAttribute($this->config['usercellphoneattr'],0)) ? $result->getAttribute($this->config['usercellphoneattr'],0) : '', "work" => !empty($this->config['userworkphoneattr']) && !is_null($result->getAttribute($this->config['userworkphoneattr'],0)) ? $result->getAttribute($this->config['userworkphoneattr'],0) : '', "fax" => !empty($this->config['userfaxphoneattr']) && !is_null($result->getAttribute($this->config['userfaxphoneattr'],0)) ? $result->getAttribute($this->config['userfaxphoneattr'],0) : '', "home" => !empty($this->config['userhomephoneattr']) && !is_null($result->getAttribute($this->config['userhomephoneattr'],0)) ? $result->getAttribute($this->config['userhomephoneattr'],0) : ''];
-				if(!empty($this->config['la']) && !is_null($result->getAttribute($this->config['la'],0))) {
-					$extension = $result->getAttribute($this->config['la'],0);
+				$email = $this->firstAttr($result, $this->config['usermailattr']);
+				if ($email === null) {
+					$email = $this->firstAttr($result, 'mail') ?? '';
+				}
+				$data = ["description" => $this->firstAttr($result, $this->config['descriptionattr']) ?? '', "primary_group" => $this->firstAttr($result, $this->config['userprimarygroupattr']) ?? '', "fname" => $this->firstAttr($result, $this->config['userfirstnameattr']) ?? '', "lname" => $this->firstAttr($result, $this->config['userlastnameattr']) ?? '', "displayname" => $this->firstAttr($result, $this->config['userdisplaynameattr']) ?? '', "company" => !empty($this->config['usercompanyattr']) ? ($this->firstAttr($result, $this->config['usercompanyattr']) ?? '') : '', "department" => !empty($this->config['userdepartmentattr']) ? ($this->firstAttr($result, $this->config['userdepartmentattr']) ?? '') : '', "title" => $this->firstAttr($result, $this->config['usertitleattr']) ?? '', "email" => $email, "cell" => !empty($this->config['usercellphoneattr']) ? ($this->firstAttr($result, $this->config['usercellphoneattr']) ?? '') : '', "work" => !empty($this->config['userworkphoneattr']) ? ($this->firstAttr($result, $this->config['userworkphoneattr']) ?? '') : '', "fax" => !empty($this->config['userfaxphoneattr']) ? ($this->firstAttr($result, $this->config['userfaxphoneattr']) ?? '') : '', "home" => !empty($this->config['userhomephoneattr']) ? ($this->firstAttr($result, $this->config['userhomephoneattr']) ?? '') : ''];
+				if(!empty($this->config['la']) && !is_null($this->firstAttr($result, $this->config['la']))) {
+					$extension = $this->firstAttr($result, $this->config['la']);
 					$d = $this->FreePBX->Core->getUser($extension);
 					if(!empty($d)) {
 						$this->out("\t\t\tLinking Extension ".$extension." to ".$username);
@@ -1131,9 +1149,8 @@ class Openldap2 extends Auth {
 							$tech = $this->config['createextensions'];
 							$this->out("\t\t\tCreating ".$tech." Extension ".$extension);
 							$settings = $this->FreePBX->Core->generateDefaultDeviceSettings($tech,$extension,$dn);
-							if (!empty($this->config['realmedpasswdattr']) && !is_null($result->getAttribute($this->config['realmedpasswdattr'],0))) {
-								//$a = $result->getAttribute($this->config['realmedpasswdattr'],0);
-								$settings['md5_cred']['value'] = $result->getAttribute($this->config['realmedpasswdattr'],0);
+							if (!empty($this->config['realmedpasswdattr']) && !is_null($this->firstAttr($result, $this->config['realmedpasswdattr']))) {
+								$settings['md5_cred']['value'] = $this->firstAttr($result, $this->config['realmedpasswdattr']);
 							}
 							if($this->FreePBX->Core->addDevice($extension,$tech,$settings)) {
 								$settings = $this->FreePBX->Core->generateDefaultUserSettings($tech,$dn);
@@ -1157,7 +1174,7 @@ class Openldap2 extends Auth {
 							$this->out("\t\t\tExtension ". $extension . " does not exist, skipping link");
 						}
 					}
-				} elseif(!empty($this->config['la']) && empty($result->getAttribute($this->config['la'],0))) {
+				} elseif(!empty($this->config['la']) && empty($this->firstAttr($result, $this->config['la']))) {
 					$data["default_extension"] = 'none';
 				}
 				$this->updateUserData($um['id'], $data);
@@ -1166,7 +1183,6 @@ class Openldap2 extends Auth {
 				} else {
 					$this->userHooks['update'][$um['id']] = [$um['id'], $um['prevUsername'], $username, $data['description'], null, $data];
 				}
-				$this->ucache[$sid]['userman'][0] = $um['id'];
 			} else {
 				$this->out("\t\t\tThere was an error linking '".$username."'. Error was '".$um['message']."'");
 			}
