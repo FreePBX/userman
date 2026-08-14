@@ -9,7 +9,6 @@ use ReflectionClass;
 use FreePBX\modules\Userman;
 use PDO;
 use Exception;
-#[\AllowDynamicProperties]
 abstract class Auth {
 	protected $userTable = 'userman_users';
 	protected $userSettingsTable = 'userman_users_settings';
@@ -18,7 +17,10 @@ abstract class Auth {
 	protected $directoryTable = 'userman_directories';
 	protected $contacts = [];
 	protected $auth;
-
+	protected $FreePBX;
+	protected $db;
+	protected $userman;
+	protected $output = null;
 	public function __construct($userman, $freepbx, protected $config=[]) {
 		$this->FreePBX = $freepbx;
 		$this->db = $freepbx->Database;

@@ -432,7 +432,7 @@ $( document ).ready(function() {
 	if(params.action == 'adducptemplate'){
 		$("#tempcreatediv").hide()
 	}
-	$(".nav-tabs a[href="+hash+"]").tab('show');
+	$(".nav-tabs a[href='"+hash+"']").tab('show');
 	if (hash === '#directories' && params.directoryFilter) {
 		$("#table-directories").one("post-body.bs.table", function () {
 			applyDirectoryFilterFromParams();
@@ -449,7 +449,7 @@ $( document ).ready(function() {
 	}
 });
 //this fires when you change tabs
-$('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
+$('a[data-bs-toggle="tab"]').on('show.bs.tab', function (e) {
 	//Button Related
 	switch(e.target.hash){
 		case "#directories":

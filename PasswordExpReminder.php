@@ -7,13 +7,14 @@ use Exception;
 use PDOException;
 use ampuser;
 
-#[\AllowDynamicProperties]
 class PasswordExpReminder {
 
     final public const USER_TYPE_ADMIN = 'admin';
     final public const USER_TYPE_UCP = 'ucp';
     final public const NOTIFY_USER_BEFORE_X_DAYS_OF_PASSWORD_EXPIRATION = 5;
-
+    protected $FreePBX;
+    protected $db;
+    protected $Userman;
     private string $tokenExpiration = "1 day";
 
 	public function __construct()

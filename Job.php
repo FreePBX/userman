@@ -23,7 +23,7 @@ class Job implements TaskInterface {
 			return;
 		}
 		$dir = $userman->getDirectoryObjectByID($directory['id']);
-		if(method_exists($dir,"sync")) {
+		if($dir && method_exists($dir,"sync")) {
 			if(!$force && empty($directory['config']['sync'])) {
 				$output->writeln("Directory '".$directory['name']."' sync is None. Skipping (Unless --force flag is set)");
 				return;

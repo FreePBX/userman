@@ -1783,6 +1783,9 @@ class Userman extends FreePBX_Helpers implements BMO {
 	public function addDefaultGroupToDirectory($dirid) {
 		$obj = $this->getDirectoryObjectByID($dirid);
 		$dir = $this->getDirectoryByID($dirid);
+		if (!$obj) {
+			return false;
+		}
 		$groups = $obj->getAllGroups();
 		if(empty($groups)) {
 			$users = $obj->getAllUsers();
@@ -1881,7 +1884,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 	}
 
 	public function getDirectoryObjectByID($id) {
-		return $this->directories[$id];
+		return $this->directories[$id] ?? null;
 	}
 
 	/**

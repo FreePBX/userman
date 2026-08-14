@@ -17,7 +17,7 @@ use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Console\Command\HelpCommand;
 class Userman extends Command {
-	protected function configure() {
+	protected function configure(): void{
 		$this->setName('userman')
 			->setDescription(_('User Manager'))
 			->setDefinition([new InputOption('syncall', null, InputOption::VALUE_NONE, _('Syncronize all directories')), new InputOption('sync', null, InputOption::VALUE_REQUIRED, _('Syncronize a single directory by id (obtained from --list)')), new InputOption('force', null, InputOption::VALUE_NONE, _('Force syncronization')), new InputOption('list', null, InputOption::VALUE_NONE, _('List directories')), new InputOption('deletegenerictemplate', null, InputOption::VALUE_NONE, _('Delete generic templates user'))]);
@@ -94,7 +94,7 @@ class Userman extends Command {
 				return;
 			}
 			$dir = $userman->getDirectoryObjectByID($directory['id']);
-			if(method_exists($dir,"sync")) {
+			if($dir && method_exists($dir,"sync")) {
 				if(!$force && empty($directory['config']['sync'])) {
 					$output->writeln("Directory '".$directory['name']."' sync is None. Skipping (Unless --force flag is set)");
 					return;

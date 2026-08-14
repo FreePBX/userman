@@ -17,13 +17,13 @@
 					<?php } ?>
 					<div role="tabpanel">
 						<ul class="nav nav-tabs" role="tablist">
-							<li role="presentation" class="active"><a href="#users" aria-controls="users" role="tab" data-toggle="tab"><?php echo _("Users"); ?></a></li>
-							<li role="presentation"><a href="#groups" aria-controls="groups" role="tab" data-toggle="tab"><?php echo _("Groups"); ?></a></li>
-							<li role="presentation"><a href="#directories" aria-controls="directories" role="tab" data-toggle="tab"><?php echo _("Directories"); ?></a></li>
-							<li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab"><?php echo _("Settings"); ?></a></li>
-							<li role="presentation"><a href="#ucptemplates" aria-controls="settings" role="tab" data-toggle="tab"><?php echo _("UCP Templates"); ?></a></li>
+							<li role="presentation" class="nav-item"><a href="#users" aria-controls="users" role="tab" class="nav-link active" data-bs-toggle="tab"><?php echo _("Users"); ?></a></li>
+							<li role="presentation"><a href="#groups" aria-controls="groups" role="tab"  data-bs-toggle="tab"><?php echo _("Groups"); ?></a></li>
+							<li role="presentation"><a href="#directories" aria-controls="directories" role="tab" data-bs-toggle="tab"><?php echo _("Directories"); ?></a></li>
+							<li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-bs-toggle="tab"><?php echo _("Settings"); ?></a></li>
+							<li role="presentation"><a href="#ucptemplates" aria-controls="settings" role="tab" data-bs-toggle="tab"><?php echo _("UCP Templates"); ?></a></li>
 							<?php if($isCallActivityEnabled){ ?> 
-							<li role="presentation"><a href="#call_activity_groups" aria-controls="settings" role="tab" data-toggle="tab"><?php echo _("Call Activity Groups"); ?></a></li>
+							<li role="presentation"><a href="#call_activity_groups" aria-controls="settings" role="tab" data-bs-toggle="tab"><?php echo _("Call Activity Groups"); ?></a></li>
 							<?php } ?>
 						</ul>
 						<div class="tab-content">

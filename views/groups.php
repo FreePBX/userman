@@ -30,13 +30,13 @@ echo $heading;
 								<div class="scroller scroller-right"><i class="fa fa-chevron-right"></i></div>
 								<div class="wrapper">
 									<ul class="nav nav-tabs list pb-0 mt-2p" role="tablist">
-										<li role="presentation"><a href="#usermanlogin" aria-controls="usermanlogin" role="tab" class="nav-link active" data-toggle="tab"><?php echo _("Group Details")?></a></li>
-										<li role="presentation"><a href="#advanced" aria-controls="usermanlogin" role="tab" class="nav-link" data-toggle="tab"><?php echo _("Advanced")?></a></li>
+										<li role="presentation"><a href="#usermanlogin" aria-controls="usermanlogin" role="tab" class="nav-link active" data-bs-toggle="tab"><?php echo _("Group Details")?></a></li>
+										<li role="presentation"><a href="#advanced" aria-controls="usermanlogin" role="tab" class="nav-link" data-bs-toggle="tab"><?php echo _("Advanced")?></a></li>
 										<?php if(\FreePBX::Config()->get('AUTHTYPE') == "usermanager") { ?>
-											<li role="presentation"><a href="#pbx" aria-controls="pbx" role="tab" class="nav-link" data-toggle="tab"><?php echo sprintf(_("%s Administration GUI"),$brand)?></a></li>
+											<li role="presentation"><a href="#pbx" aria-controls="pbx" role="tab" class="nav-link" data-bs-toggle="tab"><?php echo sprintf(_("%s Administration GUI"),$brand)?></a></li>
 										<?php } ?>
 										<?php foreach($sections as $section) { ?>
-											<li role="presentation"><a href="#usermanhook<?php echo $section['rawname']?>" aria-controls="usermanhook<?php echo $section['rawname']?>" role="tab" class="nav-link" data-toggle="tab"><?php echo $section['title']?></a></li>
+											<li role="presentation"><a href="#usermanhook<?php echo $section['rawname']?>" aria-controls="usermanhook<?php echo $section['rawname']?>" role="tab" class="nav-link" data-bs-toggle="tab"><?php echo $section['title']?></a></li>
 										<?php } ?>
 									</ul>
 								</div>
@@ -107,17 +107,11 @@ echo $heading;
 															<i class="fa fa-question-circle fpbx-help-icon" data-for="language"></i>
 														</div>
 														<div class="col-md-9">
-															<div class="input-group">
-																<div>
-																	<?php echo FreePBX::View()->languageDrawSelect('language',$group['language'] ?? '',_("Use System Language")); ?>
-																</div>
-																<div  class="ml-auto">
-																	<!--<span class="input-group-btn">-->
-																		<a href="#" class="btn btn-default" id="browserlang"><?php echo _("Use Browser Language")?></a>
-																	<!--</span>-->
-																	<!--<span class="input-group-btn">-->
-																		<a href="#" class="btn btn-default" id="systemlang"><?php echo _("Use PBX Language")?></a>
-																	<!--</span>-->
+															<div class="lang-tz-controls">
+																<?php echo FreePBX::View()->languageDrawSelect('language',$group['language'] ?? '',_("Use System Language")); ?>
+																<div class="lang-tz-actions">
+																	<a href="#" class="btn btn-default" id="browserlang"><?php echo _("Use Browser Language")?></a>
+																	<a href="#" class="btn btn-default" id="systemlang"><?php echo _("Use PBX Language")?></a>
 																</div>
 															</div>
 														</div>
@@ -143,17 +137,11 @@ echo $heading;
 															<i class="fa fa-question-circle fpbx-help-icon" data-for="timezone"></i>
 														</div>
 														<div class="col-md-9">
-															<div class="input-group">
-																<div>
-																	<?php echo FreePBX::View()->timezoneDrawSelect('timezone',$group['timezone'] ?? '',_("Use System Timezone")); ?>
-																</div>
-																<div class="ml-auto">
-																	<!--<span class="input-group-btn">-->
-																		<a href="#" class="btn btn-default" id="browsertz"><?php echo _("Use Browser Timezone")?></a>
-																	<!--</span>-->
-																	<!--<span class="input-group-btn">-->
-																		<a href="#" class="btn btn-default" id="systemtz"><?php echo _("Use PBX Timezone")?></a>
-																	<!--</span>-->
+															<div class="lang-tz-controls">
+																<?php echo FreePBX::View()->timezoneDrawSelect('timezone',$group['timezone'] ?? '',_("Use System Timezone")); ?>
+																<div class="lang-tz-actions">
+																	<a href="#" class="btn btn-default" id="browsertz"><?php echo _("Use Browser Timezone")?></a>
+																	<a href="#" class="btn btn-default" id="systemtz"><?php echo _("Use PBX Timezone")?></a>
 																</div>
 															</div>
 														</div>

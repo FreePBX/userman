@@ -6,9 +6,9 @@
 		<div class="scroller scroller-right"><i class="fa fa-chevron-right"></i></div>
 		<div class="wrapper">
 			<ul class="nav nav-tabs list" role="tablist">
-				<li data-name="tab1" class="change-tab active"><a href="#tab1" aria-controls="tab1" role="tab" data-toggle="tab"><?php echo _("Email Settings")?></a></li>
-				<li data-name="tab2" class="change-tab"><a href="#tab2" aria-controls="tab2" role="tab" data-toggle="tab"><?php echo _("Authentication Settings")?></a></li>
-				<li data-name="tab3" class="change-tab"><a href="#tab3" aria-controls="tab3" role="tab" data-toggle="tab"><?php echo _("Password Management")?></a></li>
+				<li data-name="tab1" class="change-tab nav-item"><a href="#tab1" aria-controls="tab1" role="tab" class="nav-link active" data-bs-toggle="tab"><?php echo _("Email Settings")?></a></li>
+				<li data-name="tab2" class="change-tab"><a href="#tab2" aria-controls="tab2" role="tab" data-bs-toggle="tab"><?php echo _("Authentication Settings")?></a></li>
+				<li data-name="tab3" class="change-tab"><a href="#tab3" aria-controls="tab3" role="tab" data-bs-toggle="tab"><?php echo _("Password Management")?></a></li>
 			</ul>
 		</div>
 	</div>
