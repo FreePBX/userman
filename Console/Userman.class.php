@@ -83,9 +83,13 @@ class Userman extends Command {
 	}
 
 	private function syncDirectory($directory,$output,$force=false) {
-		if(isset($directory)) {
+		if(!is_array($directory) || empty($directory)) {
+			$output->writeln("Directory not found");
+			return;
+		}
+
 			$userman = FreePBX::create()->Userman;
-			if(!$directory['active']) {
+		if(empty($directory['active'])) {
 				$output->writeln("Directory '".$directory['name']."' is not active. Skipping");
 				return;
 			}
@@ -99,7 +103,7 @@ class Userman extends Command {
 				$timeSince = !empty($timeSince) ? $timeSince : 0;
 				$timeNow = time();
 				$secondsSince = 0;
-				switch($directory['config']['sync']) {
+				switch($directory['config']['sync'] ?? '') {
 					case "*/15 * * * *":
 						$secondsSince = 900;
 					break;
@@ -139,9 +143,6 @@ class Userman extends Command {
 			} else {
 				$output->writeln("Directory '".$directory['name']."' does not support syncing");
 			}
-		} else {
-			$output->writeln("Directory not found");
-		}
 	}
 
 	private function setLock() {
