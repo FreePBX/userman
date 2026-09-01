@@ -491,11 +491,16 @@ $('a[data-bs-toggle="tab"]').on('show.bs.tab', function (e) {
 });
 
 //Making Password Modal work
-$(document).on("click", 'a[id^="pwmlink"]', function(){
+$(document).on("click", 'a[id^="pwmlink"]', function(e){
+	e.preventDefault();
 	var pwuid = $(this).data('pwuid');
 	$("#pwuid").val(pwuid);
 	$("#pwsub").attr("disabled", false);
 	$("#pwsub").html(_("Update Password"));
+	var modalEl = document.getElementById("setpw");
+	if (modalEl && typeof bootstrap !== "undefined" && bootstrap.Modal) {
+		bootstrap.Modal.getOrCreateInstance(modalEl).show();
+	}
 });
 $("#pwsub").on("click", function(){
 	var button = $(this);
@@ -615,7 +620,7 @@ function directoryActive(value, row, index) {
 function userActions(value, row, index) {
 	var html = '<a href="?display=userman&amp;action=showuser&amp;user='+row.id+'&amp;directory='+row.auth+'"><i class="fa fa-edit"></i></a>';
 	if(row.auth in directoryMapValues && directoryMapValues[row.auth].permissions.changePassword) {
-		html += '<a data-toggle="modal" data-pwuid="'+row.id+'" data-target="#setpw" id="pwmlink'+row.id+'" class="clickable"><i class="fa fa-key"></i></a>';
+		html += '<a href="#" data-bs-toggle="modal" data-pwuid="'+row.id+'" data-bs-target="#setpw" id="pwmlink'+row.id+'" class="clickable"><i class="fa fa-key"></i></a>';
 	}
 
 	if(row.auth in directoryMapValues && directoryMapValues[row.auth].permissions.removeUser) {

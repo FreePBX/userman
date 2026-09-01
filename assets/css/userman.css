@@ -1,3 +1,10 @@
+/* Bootstrap 5 fades .modal-dialog with transform. Password managers
+   (LastPass, etc.) measure the field during that animation and leave
+   their icon stuck on the modal header instead of the input. */
+#setpw.modal.fade .modal-dialog {
+	transform: none;
+}
+
 .rnav-heading {
 	text-align: center;
 	font-weight: bold;
