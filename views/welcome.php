@@ -39,7 +39,7 @@
 										<button id="email-users" class="btn btn-info btn-send" data-type="users" disabled data-section="users">
 											<i class="fa fa-envelope-o"></i> <span><?php echo _('Send Email')?></span>
 										</button>
-										<select id="directory-users" class="form-control" style="display: inline-block;width: inherit;">
+										<select id="directory-users" class="form-select" style="display: inline-block; width: auto;">
 											<option value=""><?php echo _('All Directories')?></option>
 											<?php foreach($directories as $directory) {?>
 												<option value="<?php echo $directory['id']?>"<?php echo (sizeof($directories)==1 ? ' selected':'')?>><?php echo $directory['name']?></option>
@@ -73,7 +73,7 @@
 										<button id="remove-groups" class="btn btn-danger btn-remove" disabled data-type="groups" data-section="groups">
 											<i class="fa fa-user-times"></i> <span><?php echo _('Delete')?></span>
 										</button>
-										<select id="directory-groups" class="form-control" style="display: inline-block;width: inherit;">
+										<select id="directory-groups" class="form-select" style="display: inline-block; width: auto;">
 											<option value=""><?php echo _("All Directories")?></option>
 											<?php foreach($directories as $directory) {?>
 												<option value="<?php echo $directory['id']?>"<?php echo (sizeof($directories)==1 ? " selected":'')?>><?php echo $directory['name']?></option>
