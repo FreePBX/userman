@@ -496,13 +496,14 @@ $(document).on("click", 'a[id^="pwmlink"]', function(){
 	$("#pwuid").val(pwuid);
 	$("#pwsub").attr("disabled", false);
 	$("#pwsub").html(_("Update Password"));
+	$("#userman-pw-update-error").remove();
 });
-$("#pwsub").on("click", function(){
+$(document).on("click", "#pwsub", function(){
 	var button = $(this);
 	button.html(_('Updating'));
 	button.attr("disabled", true);
 	var uid = $("#pwuid").val();
-	var pass = $("#password").val();
+	var pass = $("#setpw input.password-meter").val();
 	$.ajax({
 		url: window.FreePBX.ajaxurl,
 		data: {
@@ -516,17 +517,33 @@ $("#pwsub").on("click", function(){
 		success: function(data){
 			if(data.status){
 				button.html(data.message);
-			}else{
-				button.html(_('Update Password'));
-				button.attr("disabled", false);
+				return;
 			}
+			button.html(_('Update Password'));
+			button.attr("disabled", false);
+			var message = $("<div/>").html(data.message || _("Invalid attempt")).text();
+			$("#setpw").one("hidden.bs.modal", function() {
+				$("#userman-pw-update-error").remove();
+				$(".fpbx-container h1").after(
+					$('<div id="userman-pw-update-error" class="alert alert-danger" role="alert"></div>').text(message)
+				);
+			}).modal("hide");
 		},
 		error: function(xhr, status, e){
 			console.dir(xhr);
 			console.log(status);
 			console.log(e);
+			button.html(_('Update Password'));
+			button.attr("disabled", false);
+			var message = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : _("Invalid attempt");
+			$("#setpw").one("hidden.bs.modal", function() {
+				$("#userman-pw-update-error").remove();
+				$(".fpbx-container h1").after(
+					$('<div id="userman-pw-update-error" class="alert alert-danger" role="alert"></div>').text(message)
+				);
+			}).modal("hide");
 		},
-		always: function() {
+		complete: function() {
 			button.attr("disabled", false);
 		}
 	});

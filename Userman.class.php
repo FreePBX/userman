@@ -46,6 +46,13 @@ class Userman extends FreePBX_Helpers implements BMO {
 	private string $displayNameTemplateCreator = 'Template Creator';
 	private string $userNameTemplateCreator = 'FreePBXUCPTemplateCreator';
 
+	private const REMOTE_AUTH_MAX_ATTEMPTS = 5;
+	private const REMOTE_AUTH_WINDOW = 60;
+	private const REMOTE_AUTH_LOCKOUT = 900;
+	private const REMOTE_AUTH_BACKOFF_BASE_MS = 250;
+	private const REMOTE_AUTH_BACKOFF_MAX_MS = 4000;
+	private const REMOTE_AUTH_CSRF_PURPOSE = 'userman-remote-auth';
+
 	public function getUserNameTemplateCreator() {
 		return $this->userNameTemplateCreator;
 	}
@@ -1163,7 +1170,11 @@ class Userman extends FreePBX_Helpers implements BMO {
 			break;
 			case "auth":
 				$ips = $this->getConfig('remoteips');
-				if(empty($ips) || !is_array($ips) || !in_array($_SERVER['REMOTE_ADDR'],$ips)) {
+				$remoteIp = $_SERVER['REMOTE_ADDR'] ?? '';
+				if(empty($ips) || !is_array($ips) || $remoteIp === '' || !in_array($remoteIp, $ips, true)) {
+					return false;
+				}
+				if(!$this->isValidRemoteAuthRequest()) {
 					return false;
 				}
 				$setting['authenticate'] = false;
@@ -1249,12 +1260,30 @@ class Userman extends FreePBX_Helpers implements BMO {
 				return array_values(array_filter($directories, [$this, 'isDirectoryVisibleInUi']));
 			break;
 			case "auth":
-				$out = $this->checkCredentials($request["username"],$request["password"]);
-				if($out) {
-					return ["status" => true];
-				} else {
+				$username = isset($request['username']) ? (string) $request['username'] : '';
+				$password = $request['password'] ?? '';
+				$remoteIp = $_SERVER['REMOTE_ADDR'] ?? '';
+				if($username === '' || $password === '') {
+					$this->applyRemoteAuthBackoff(1);
+					$this->logRemoteAuthAttempt($username, $remoteIp, false, 'missing_credentials');
 					return ["status" => false];
 				}
+				if($this->isRemoteAuthRateLimited($remoteIp, $username)) {
+					$this->applyRemoteAuthBackoff(self::REMOTE_AUTH_MAX_ATTEMPTS);
+					$this->logRemoteAuthAttempt($username, $remoteIp, false, 'rate_limited');
+					return ["status" => false];
+				}
+				$out = $this->checkCredentials($username, $password);
+				if($out) {
+					$this->clearRemoteAuthFailures($remoteIp, $username);
+					$this->logRemoteAuthAttempt($username, $remoteIp, true);
+					return ["status" => true];
+				}
+				$attempts = $this->recordRemoteAuthFailure($remoteIp, $username);
+				$this->applyRemoteAuthBackoff($attempts);
+				$reason = ($attempts >= self::REMOTE_AUTH_MAX_ATTEMPTS) ? 'lockout' : 'invalid_credentials';
+				$this->logRemoteAuthAttempt($username, $remoteIp, false, $reason);
+				return ["status" => false];
 			break;
 			case "updateDirectorySort":
 				$sort = json_decode(htmlspecialchars_decode((string) $request['sort']),true, 512, JSON_THROW_ON_ERROR);
@@ -1317,8 +1346,16 @@ class Userman extends FreePBX_Helpers implements BMO {
 			case "updatePassword":
 				$uid = $request['id'];
 				$newpass = $request['newpass'];
+				$isSelf = ((string) $_SESSION['AMP_user']->id === (string) $uid) ? true : false;
+				$isAdmin = !empty($_SESSION['AMP_user']) && is_object($_SESSION['AMP_user']) && method_exists($_SESSION['AMP_user'], 'getSections') && in_array('*', (array) $_SESSION['AMP_user']->getSections(), true);
+				if (!$isSelf && !$isAdmin) {
+					return ['status' => false, 'type' => 'danger', 'message' => _('Permission denied')];
+				}
 				$extra = [];
 				$user = $this->getUserByID($uid);
+				if (empty($user)) {
+					return ['status' => false, 'message' => _('Invalid User')];
+				}
 				return $this->updateUser($uid, $user['username'], $user['username'], $user['default_extension'], $user['description'], $extra, $newpass);
 			break;
 			case 'delete':
@@ -2541,6 +2578,120 @@ class Userman extends FreePBX_Helpers implements BMO {
 			return $status;
 		}
 		return $status;
+	}
+
+	private function getRemoteAuthAttemptKey($ip, $username) {
+		return hash('sha256', strtolower((string) $username)."\0".(string) $ip);
+	}
+
+	private function getRemoteAuthAttempts() {
+		$attempts = $this->getConfig('remoteAuthAttempts');
+		return is_array($attempts) ? $attempts : [];
+	}
+
+	public function getRemoteAuthApiKey() {
+		$key = $this->getConfig('remoteAuthKey');
+		if(!is_string($key) || strlen($key) < 32) {
+			$key = bin2hex(random_bytes(32));
+			$this->setConfig('remoteAuthKey', $key);
+		}
+		return $key;
+	}
+
+	public function getRemoteAuthCsrfToken() {
+		return hash_hmac('sha256', self::REMOTE_AUTH_CSRF_PURPOSE, $this->getRemoteAuthApiKey());
+	}
+
+	private function getRequestHeaderValue($headerName) {
+		if(function_exists('getallheaders')) {
+			$headers = getallheaders();
+			if(is_array($headers)) {
+				foreach($headers as $name => $value) {
+					if(strcasecmp((string) $name, $headerName) === 0) {
+						return (string) $value;
+					}
+				}
+			}
+		}
+		$serverKey = 'HTTP_'.strtoupper(str_replace('-', '_', $headerName));
+		return isset($_SERVER[$serverKey]) ? (string) $_SERVER[$serverKey] : '';
+	}
+
+	private function isValidRemoteAuthRequest() {
+		$providedKey = $this->getRequestHeaderValue('X-FreePBX-Userman-Auth-Key');
+		$providedCsrf = $this->getRequestHeaderValue('X-CSRF-Token');
+		$expectedKey = $this->getRemoteAuthApiKey();
+		$expectedCsrf = $this->getRemoteAuthCsrfToken();
+		if($providedKey === '' || $providedCsrf === '') {
+			return false;
+		}
+		return hash_equals($expectedKey, $providedKey) && hash_equals($expectedCsrf, $providedCsrf);
+	}
+
+	private function applyRemoteAuthBackoff($attemptNumber) {
+		$attemptNumber = max(1, (int) $attemptNumber);
+		$delayMs = (int) min(self::REMOTE_AUTH_BACKOFF_MAX_MS, self::REMOTE_AUTH_BACKOFF_BASE_MS * (2 ** min($attemptNumber - 1, 4)));
+		usleep($delayMs * 1000);
+	}
+
+	private function logRemoteAuthAttempt($username, $ip, $success, $reason = '') {
+		if(!function_exists('freepbx_log_security')) {
+			return;
+		}
+		$user = $username !== '' ? $username : 'unknown';
+		if($success) {
+			freepbx_log_security('Remote auth success for '.$user.' from '.$ip.' via userman auth AJAX');
+			return;
+		}
+		$suffix = $reason !== '' ? ' ('.$reason.')' : '';
+		freepbx_log_security('Remote auth failure for '.$user.' from '.$ip.' via userman auth AJAX'.$suffix);
+	}
+
+	private function isRemoteAuthRateLimited($ip, $username) {
+		$attempts = $this->getRemoteAuthAttempts();
+		$key = $this->getRemoteAuthAttemptKey($ip, $username);
+		if(empty($attempts[$key]['locked_until'])) {
+			return false;
+		}
+		if(time() < (int) $attempts[$key]['locked_until']) {
+			return true;
+		}
+		unset($attempts[$key]);
+		$this->setConfig('remoteAuthAttempts', $attempts);
+		return false;
+	}
+
+	private function recordRemoteAuthFailure($ip, $username) {
+		$attempts = $this->getRemoteAuthAttempts();
+		$key = $this->getRemoteAuthAttemptKey($ip, $username);
+		$now = time();
+		$entry = $attempts[$key] ?? ['failures' => [], 'locked_until' => 0];
+		$entry['failures'] = array_values(array_filter($entry['failures'] ?? [], fn($ts) => ($now - (int) $ts) < self::REMOTE_AUTH_WINDOW));
+		$entry['failures'][] = $now;
+		$count = count($entry['failures']);
+		if($count >= self::REMOTE_AUTH_MAX_ATTEMPTS) {
+			$entry['locked_until'] = $now + self::REMOTE_AUTH_LOCKOUT;
+			$entry['failures'] = [];
+		}
+		$attempts[$key] = $entry;
+		foreach($attempts as $k => $v) {
+			$locked = !empty($v['locked_until']) && (int) $v['locked_until'] > $now;
+			$recent = !empty($v['failures']);
+			if(!$locked && !$recent) {
+				unset($attempts[$k]);
+			}
+		}
+		$this->setConfig('remoteAuthAttempts', $attempts);
+		return $count;
+	}
+
+	private function clearRemoteAuthFailures($ip, $username) {
+		$attempts = $this->getRemoteAuthAttempts();
+		$key = $this->getRemoteAuthAttemptKey($ip, $username);
+		if(isset($attempts[$key])) {
+			unset($attempts[$key]);
+			$this->setConfig('remoteAuthAttempts', $attempts);
+		}
 	}
 
 	/**
