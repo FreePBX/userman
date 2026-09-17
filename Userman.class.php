@@ -175,7 +175,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 		return $this->getConfig("autoGroup");
 	}
 	public function uninstall() {
-		$settings_to_remove = array('AMPUSERMANEMAILFROM, USERMAN_ENABLE_CALL_ACTIVITY_GROUPS', 'USERMAN_CALL_ACTIVITY_GRP_USER_LIMIT');
+		$settings_to_remove = array('AMPUSERMANEMAILFROM, USERMAN_ENABLE_CALL_ACTIVITY_GROUPS', 'USERMAN_CALL_ACTIVITY_GRP_USER_LIMIT', 'USERMAN_REMOTE_IP_SOURCE');
 		$this->FreePBX->Config->remove_conf_settings($settings_to_remove);
 	}
 	public function backup(){
@@ -1353,7 +1353,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 			break;
 			case "auth":
 				$ips = $this->getConfig('remoteips');
-				$remoteIp = $_SERVER['REMOTE_ADDR'] ?? '';
+				$remoteIp = $this->getRemoteClientIp();
 				if(empty($ips) || !is_array($ips) || $remoteIp === '' || !in_array($remoteIp, $ips, true)) {
 					return false;
 				}
@@ -1449,7 +1449,7 @@ class Userman extends FreePBX_Helpers implements BMO {
 			case "auth":
 				$username = isset($request['username']) ? (string) $request['username'] : '';
 				$password = $request['password'] ?? '';
-				$remoteIp = $_SERVER['REMOTE_ADDR'] ?? '';
+				$remoteIp = $this->getRemoteClientIp();
 				if($username === '' || $password === '') {
 					$this->applyRemoteAuthBackoff(1);
 					$this->logRemoteAuthAttempt($username, $remoteIp, false, 'missing_credentials');
@@ -2737,6 +2737,26 @@ class Userman extends FreePBX_Helpers implements BMO {
 			return $status;
 		}
 		return $status;
+	}
+
+	/**
+	 * Resolve the remote client IP from Advanced Settings.
+	 * Defaults to REMOTE_ADDR. When USERMAN_REMOTE_IP_SOURCE is HTTP_X_FORWARDED_FOR,
+	 * the first valid IP from that header is used, falling back to REMOTE_ADDR.
+	 *
+	 * @return string
+	 */
+	private function getRemoteClientIp() {
+		$source = $this->FreePBX->Config->get('USERMAN_REMOTE_IP_SOURCE');
+		if($source === 'HTTP_X_FORWARDED_FOR') {
+			$forwarded = $this->getRequestHeaderValue('X-Forwarded-For');
+			foreach(array_map('trim', explode(',', $forwarded)) as $ip) {
+				if($ip !== '' && filter_var($ip, FILTER_VALIDATE_IP)) {
+					return $ip;
+				}
+			}
+		}
+		return $_SERVER['REMOTE_ADDR'] ?? '';
 	}
 
 	private function getRemoteAuthAttemptKey($ip, $username) {

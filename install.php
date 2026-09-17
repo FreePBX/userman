@@ -68,6 +68,19 @@ $set['type'] = CONF_TYPE_BOOL;
 $set['hidden'] = 0;
 $freepbx->Config->define_conf_setting('USERMAN_ACCOUNT_CODE',$set);
 
+$set['value'] = 'REMOTE_ADDR';
+$set['defaultval'] =& $set['value'];
+$set['options'] = ['REMOTE_ADDR', 'HTTP_X_FORWARDED_FOR'];
+$set['sortorder'] = 3;
+$set['name'] = _('Remote Authentication Client IP Source');
+$set['description'] = _("The PHP server variable used to determine the client IP for User Management remote authentication IP allow-listing. Use HTTP_X_FORWARDED_FOR only when FreePBX is behind a trusted reverse proxy or load balancer. The X-Forwarded-For header can be spoofed if the proxy is not trusted. When HTTP_X_FORWARDED_FOR is selected but missing or invalid, REMOTE_ADDR is used as a fallback.");
+$set['emptyok'] = 0;
+$set['level'] = 1;
+$set['readonly'] = 0;
+$set['type'] = CONF_TYPE_SELECT;
+$set['hidden'] = 0;
+$freepbx->Config->define_conf_setting('USERMAN_REMOTE_IP_SOURCE',$set,true);
+
 
 $set['value'] = '30';
 $set['defaultval'] =& $set['value'];
