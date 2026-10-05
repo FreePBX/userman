@@ -20,9 +20,23 @@ class Userman extends Command {
 	protected function configure() {
 		$this->setName('userman')
 			->setDescription(_('User Manager'))
-			->setDefinition([new InputOption('syncall', null, InputOption::VALUE_NONE, _('Syncronize all directories')), new InputOption('sync', null, InputOption::VALUE_REQUIRED, _('Syncronize a single directory by id (obtained from --list)')), new InputOption('force', null, InputOption::VALUE_NONE, _('Force syncronization')), new InputOption('list', null, InputOption::VALUE_NONE, _('List directories')), new InputOption('deletegenerictemplate', null, InputOption::VALUE_NONE, _('Delete generic templates user'))]);
+			->setDefinition([
+				new InputArgument('subcommand', InputArgument::OPTIONAL, _('Sub-command (syncdisplaynames)')),
+				new InputOption('syncall', null, InputOption::VALUE_NONE, _('Syncronize all directories')),
+				new InputOption('sync', null, InputOption::VALUE_REQUIRED, _('Syncronize a single directory by id (obtained from --list)')),
+				new InputOption('force', null, InputOption::VALUE_NONE, _('Force syncronization')),
+				new InputOption('list', null, InputOption::VALUE_NONE, _('List directories')),
+				new InputOption('deletegenerictemplate', null, InputOption::VALUE_NONE, _('Delete generic templates user')),
+				new InputOption('from', null, InputOption::VALUE_REQUIRED, _('Display name sync source: userman or extension')),
+				new InputOption('dry-run', null, InputOption::VALUE_NONE, _('Preview display name sync changes without modifying records'))
+			]);
 	}
 	protected function execute(InputInterface $input, OutputInterface $output){
+		$subcommand = $input->getArgument('subcommand');
+		if($subcommand === 'syncdisplaynames') {
+			return $this->syncDisplayNames($input, $output);
+		}
+
 		$status = [];
   		$force = $input->getOption('force');
 		$sync = $input->getOption('sync');
@@ -69,10 +83,79 @@ class Userman extends Command {
 			$this->syncDirectory($directory,$output,$force);
 			$this->removeLock();
 		}
-		if(!$input->getOption('syncall') && !$input->getOption('sync') && !$input->getOption('list')) {
+		if(!$input->getOption('syncall') && !$input->getOption('sync') && !$input->getOption('list') && !$input->getOption('deletegenerictemplate')) {
 			$this->outputHelp($input,$output);
 			exit(4);
 		}
+	}
+
+	/**
+	 * @return int
+	 */
+	private function syncDisplayNames(InputInterface $input, OutputInterface $output) {
+		$from = $input->getOption('from');
+		$dryRun = (bool)$input->getOption('dry-run');
+		$userman = FreePBX::create()->Userman;
+
+		if($dryRun && empty($from)) {
+			try {
+				$stats = $userman->previewDisplayNameDifferences();
+			} catch (Exception $e) {
+				$output->writeln('<error>'.$e->getMessage().'</error>');
+				return Command::FAILURE;
+			}
+
+			$output->writeln('<info>'._('Display name differences (no records modified)').'</info>');
+			if(!empty($stats['differences'])) {
+				$table = new Table($output);
+				$table->setHeaders([_('Username'), _('Extension'), _('User Manager Display Name'), _('Extension Display Name')]);
+				$rows = [];
+				foreach($stats['differences'] as $diff) {
+					$rows[] = [$diff['username'], $diff['extension'], $diff['userman_displayname'], $diff['extension_displayname']];
+				}
+				$table->setRows($rows);
+				$table->render();
+			} else {
+				$output->writeln(_('No display name differences found.'));
+			}
+
+			$output->writeln(sprintf(_('Total records scanned: %d'), $stats['scanned']));
+			$output->writeln(sprintf(_('Total records with differences: %d'), count($stats['differences'])));
+			$output->writeln(sprintf(_('Total records skipped: %d'), $stats['skipped']));
+			$output->writeln(sprintf(_('Errors encountered: %d'), count($stats['errors'])));
+			foreach($stats['errors'] as $error) {
+				$output->writeln('<error>'.$error.'</error>');
+			}
+
+			return empty($stats['errors']) ? Command::SUCCESS : Command::FAILURE;
+		}
+
+		if(empty($from)) {
+			$output->writeln('<error>'._('The --from option is required when not using --dry-run. Use --from=userman or --from=extension').'</error>');
+			return Command::FAILURE;
+		}
+
+		try {
+			$stats = $userman->bulkSyncDisplayNames($from, $dryRun);
+		} catch (Exception $e) {
+			$output->writeln('<error>'.$e->getMessage().'</error>');
+			return Command::FAILURE;
+		}
+
+		if($dryRun) {
+			$output->writeln('<info>'._('Dry run mode: no records were modified.').'</info>');
+		}
+
+		$output->writeln(sprintf(_('Sync direction: %s -> %s'), $from, $from === 'userman' ? 'extension' : 'userman'));
+		$output->writeln(sprintf(_('Total records scanned: %d'), $stats['scanned']));
+		$output->writeln(sprintf(_('Total records updated: %d'), $stats['updated']));
+		$output->writeln(sprintf(_('Total records skipped: %d'), $stats['skipped']));
+		$output->writeln(sprintf(_('Errors encountered: %d'), count($stats['errors'])));
+		foreach($stats['errors'] as $error) {
+			$output->writeln('<error>'.$error.'</error>');
+		}
+
+		return empty($stats['errors']) ? Command::SUCCESS : Command::FAILURE;
 	}
 
 	private function syncDirectory($directory,$output,$force=false) {
@@ -124,6 +207,14 @@ class Userman extends Command {
                         	                $userman->updateUserAccountCodes($directory['id']);
                                 	        $output->writeln("Done updating account codes.");
         	                        }
+					$displayNameStats = $userman->syncDisplayNamesAfterDirectorySync($directory['id']);
+					if($displayNameStats !== null) {
+						$output->writeln(sprintf(_("Updating display names... %d updated, %d skipped"), $displayNameStats['updated'], $displayNameStats['skipped']));
+						foreach($displayNameStats['errors'] as $error) {
+							$output->writeln("\t<error>".$error."</error>");
+						}
+						$output->writeln(_("Done updating display names."));
+					}
 					$output->writeln("Finished");
 				} else {
 					$output->writeln("Not syncing directory for another ".(($timeSince + $secondsSince)-$timeNow)." seconds");
