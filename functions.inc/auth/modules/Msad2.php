@@ -439,7 +439,7 @@ class Msad2 extends Auth {
 		if (isset($this->config['usernameattr']) && strtolower($this->config['usernameattr']) =='mail') {
 			$res = $this->attemptLogin($username, $password, 'mail');
 		}
-		else if (isset($this->config['usernameattr']) && strtolower($this->config['usernameattr']) =='userprinicipalname') {
+		else if (isset($this->config['usernameattr']) && strtolower($this->config['usernameattr']) =='userprincipalname') {
 			$res = $this->attemptLogin($username, $password, 'userPrincipalName');
 		} else {
 			$res = $this->provider->auth()->attempt($username, $password);
