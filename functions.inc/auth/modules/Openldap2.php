@@ -31,7 +31,7 @@ use Adldap\Connections\ProviderInterface;
 use DateTime;
 use DateTimeZone;
 use Exception;
-use Adldap\Models\Group;
+use Adldap\Models\User;
 use Adldap\Adldap;
 use Adldap\Exceptions\Auth\BindException;
 class Openldap2 extends Auth {
@@ -169,7 +169,7 @@ class Openldap2 extends Auth {
 	 * @param  object $userman The userman object
 	 * @param  object $freepbx The FreePBX BMO object
 	 * @return string          array with the name of the authentication device, and an array
-	 * 						   with all the configurations of this authentication device 
+	 * 						   with all the configurations of this authentication device
 	 */
 	public static function getConfig($userman, $freepbx, $config) {
 		$status = ["connected" => false, "type" => "info", "message" => _("Not Connected")];
@@ -1019,7 +1019,7 @@ class Openldap2 extends Auth {
 			$members = [];
 			$this->out("\tWorking on ".$groupname);
 
-			// The list of users is obtained directly from the class array, since the getMembers function does 
+			// The list of users is obtained directly from the class array, since the getMembers function does
 			// not return the users if it is not used with the command "$provider->search()->groups()".
 			// Open issues: https://github.com/Adldap2/Adldap2/issues/794
 			if ($this->config['groupmemberidentifierattr'] == "uid") {
@@ -1033,14 +1033,14 @@ class Openldap2 extends Auth {
 				$getMembers = [];
 			}
 			foreach($getMembers as $member) {
-				if ($member instanceof Group) {
+				if ($member instanceof User) {
 					$m = $this->getUserByUsername($member->getAccountName());
 				} else {
 					if ($this->config['groupmemberidentifierattr'] == "cn") {
 						$stripped_username=explode(",", explode("=", $member)[1])[0];
 						$m = $this->getUserByUsername($stripped_username);
 					} else {
-						$m = $this->getUserByUsername($member);					
+						$m = $this->getUserByUsername($member);
 					}
 				}
 				if(!empty($m)) {
@@ -1205,11 +1205,11 @@ class Openldap2 extends Auth {
 			$op = @fsockopen($host, $port, $errno, $errstr, $timeout);
 			if ($op) {
 				fclose($op); //explicitly close open socket connection
-				return 1; //DC is up & running, 
+				return 1; //DC is up & running,
 						  //we can safely connect with ldap_connect
 			}
 		}
-		return 0; //DC is N/A 
+		return 0; //DC is N/A
 	}
 
 	private function buildldapuri($connection, $hosts, $port) {
@@ -1226,4 +1226,3 @@ class Openldap2 extends Auth {
 		return implode(" ", $uriarray);
 	}
 }
-
